@@ -17,18 +17,30 @@ flowchart TD
 ```
 
 ## 3. Estructura del Proyecto y Enrutamiento
-- **Módulos:**
-  - `features/backlog/components/`: Componentes específicos de gestión de backlog.
-  - `core/`: Servicios base (API, Auth).
+- **Módulos (`app/frontend/src/app/`):**
+  - `features/backlog/components/create-backlog-item/`: `CreateBacklogItemComponent` (`.ts`, `.html`, `.scss` sin reglas de maquetación, `.spec.ts`).
+  - `features/backlog/models/`: `backlog-item.models.ts` (contratos tipados: request, response, `RegisteredApplication`, `ProblemDetails`) y `backlog-item.constants.ts` (catálogo de tipos y prioridades, y `TECHNICAL_BACKLOG_ITEM_TYPES` como única fuente de los tipos técnicos).
+  - `features/backlog/services/backlog-api.service.ts`: `BacklogApiService` (`createItem`, `getApplications`).
+  - Configuración del proyecto (HU-001, T033): `package.json`, `angular.json`, `tsconfig*.json`, `jest.config.ts`, `src/setup-jest.ts`, `src/styles.scss` (importa PrimeFlex), `src/main.ts`, `app.config.ts` (zoneless + `provideHttpClient` + tema Aura).
 - **Rutas Principales:**
 ```mermaid
 flowchart TD
-    Inicio[/ / ] --> Backlog[/ /backlog ]
-    Backlog --> NuevoItem[/ /backlog/nuevo ]
+    Inicio["/"] --> Backlog["/backlog"]
+    Backlog --> NuevoItem["/backlog/nuevo"]
 ```
 
 ## 4. Gestión de Estado y Autenticación
-- **Estado Local:** Manejado mediante Signals de Angular 22 (`isSubmitting`, `sessionExpired`, `serverError`).
+- **Estado Local:** Manejado mediante Signals de Angular 22 (`isSubmitting`, `sessionExpired`, `serverError`, `applicationsLoadFailed`, `fieldErrors`). `selectedType`, `charsCount` y el catálogo de aplicaciones se derivan con `toSignal`/`computed` (sin `subscribe()` manual salvo los dos flujos con `takeUntilDestroyed`: activar/desactivar `qaPoints` y el envío `exhaustMap`).
+- **Formulario:** `FormGroup<BacklogItemForm>` fuertemente tipado (`NonNullableFormBuilder`); `qaPoints` inicia en `null`.
+
+```mermaid
+flowchart LR
+    API["GET /api/applications"] -- toSignal --> Apps["applicationList → applications() (label=name, value=Guid)"]
+    Type["form.type.valueChanges"] -- toSignal --> Sel["selectedType → isQaNotApplicable()"]
+    Type -- takeUntilDestroyed --> QA["qaPoints: null + disable (tipos técnicos)"]
+    Submit["onSubmit()"] -- Subject + exhaustMap --> Post["POST /api/backlog/items"]
+    Post --> Res["handleResult → signals + Toast"]
+```
 - **Autenticación:** OIDC con Keycloak. Las llamadas fallidas (401) muestran un diálogo bloqueante para reautenticación forzada.
 
 ## 5. Comunicación con Backend y Manejo de Errores
@@ -46,8 +58,10 @@ sequenceDiagram
         API-->>UI: 201 Created (UUID)
         UI-->>U: Muestra Toast de Éxito y Resetea Formulario
     else Error Validación (400)
-        API-->>UI: 400 Bad Request
-        UI-->>U: Muestra Mensaje de Error / Asigna invalidApp a Dropdown
+        API-->>UI: 400 ProblemDetails { errors: { Campo: [mensajes] } }
+        UI-->>U: Asigna cada mensaje al campo (fieldErrors + setErrors server); errores sin campo (Request) van al Toast
+    else Cancelar
+        U->>UI: onCancel(): reset del formulario y limpieza de errores
     else Expira Sesión (401)
         API-->>UI: 401 Unauthorized
         UI-->>U: Muestra Diálogo Bloqueante de Reautenticación
@@ -55,6 +69,28 @@ sequenceDiagram
         API-->>UI: 500 Internal Server Error
         UI-->>U: Muestra Mensaje de Error (Mantiene estado)
     end
+```
+
+### Retrabajo de interfaz (speckit-implement, 2026-10-03, T032–T036)
+- **T032 / DEF-07:** las aplicaciones se cargan con `BacklogApiService.getApplications()` (`GET /api/applications`, `{ id: Guid, name }[]`); se eliminó el valor `app-id-101`. Si la carga falla se informa y el campo sigue siendo opcional.
+- **T033 / DEF-08:** se creó `create-backlog-item.component.scss` (sin maquetación) y la configuración `package.json`, `angular.json`, `tsconfig*.json`, `jest.config.ts`. Dependencias: Angular 22.2, PrimeNG 22.1, PrimeFlex 3, Jest 30 + `jest-preset-angular` 17 (modo zoneless), TypeScript 6.0 (exigido por `@angular/build` 22).
+- **T034:** `qaPoints` inicia en `null` y se envía `null` en UserStory/Bug sin estimación y en todo tipo técnico; ya no se envía `0`.
+- **T035:** el 400 se interpreta como `ProblemDetails`; `errors` (`Title`, `Type`, `Priority`, `DevPoints`, `QAPoints`, `ApplicationId`, `Description`, `AcceptanceCriteria`) se muestra por campo; las claves sin campo (`Request`) y `title` van al Toast.
+- **T036:** `subscribe()` manuales sustituidos por `toSignal`/`takeUntilDestroyed`; plantilla con `@if`/`@else if` (sin `*ngIf` ni `CommonModule`); handler `onCancel()`; tipos técnicos centralizados en `TECHNICAL_BACKLOG_ITEM_TYPES`; `p-dropdown` → `p-select` y `p-inputnumber` según la API de PrimeNG 22.
+- **Verificación:** Jest 19/19 en verde; `ngc -p tsconfig.app.json --noEmit` sin errores con `strictTemplates`. `ng build` no se ejecutó: el CLI exige Node ≥ 22.22.3 y el entorno tiene 22.20.0.
+- **Puntos abiertos:** (1) el backend no expone aún `GET /api/applications` (solo `IApplicationModuleApi.ExistsAsync`) ni `contracts/api.md` lo documenta; el cliente asume `[{ id, name }]` y requiere una tarea de servidor. (2) T037 (integración servidor + QA) sigue abierta.
+
+```mermaid
+flowchart LR
+    Comp["CreateBacklogItemComponent"] --> Svc["BacklogApiService"]
+    Comp --> Const["backlog-item.constants (TECHNICAL_BACKLOG_ITEM_TYPES)"]
+    Svc -- "GET /api/applications" --> Apps["Módulo Application"]
+    Svc -- "POST /api/backlog/items" --> Back["Módulo Backlog"]
+```
+
+```mermaid
+flowchart LR
+    Form["CreateBacklogItemComponent<br/>(Reactive Form tipado)"] -- "POST {title, description, type, priority, acceptanceCriteria, devPoints, qaPoints, applicationId}" --> API["/api/backlog/items"]
 ```
 
 ## 6. Registros de Decisiones de Arquitectura (ADRs)

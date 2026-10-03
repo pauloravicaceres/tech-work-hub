@@ -45,6 +45,9 @@ Como usuario autenticado, quiero registrar una investigación técnica prelimina
 - ¿Qué sucede si el `type` enviado no está en el catálogo oficial (UserStory, Bug, TechEvolution, TechRequirement, TechDebt, Research, Spike)? El sistema debe rechazarlo con HTTP 400.
 - ¿Cómo se maneja un intento de establecer estimaciones numéricas negativas? La validación debe bloquearlo y devolver HTTP 400 indicando que los puntos deben ser >= 0.
 - ¿Qué pasa si el `applicationId` provisto no existe en la base de datos? Debe retornar HTTP 400 (NotFoundException) fallando la validación de integridad.
+- ¿Qué pasa si se envía `qaPoints` con valor para un ítem de tipo técnico (`TechEvolution`, `TechRequirement`, `TechDebt`, `Research`, `Spike`)? El sistema debe rechazarlo con HTTP 400 indicando que los ítems técnicos no admiten puntos de QA; no se descarta el valor en silencio (FR-008).
+- ¿Qué pasa si falta el claim de identidad del usuario al auditar `CreatedBy`? La petición se rechaza con HTTP 401; nunca se persiste un `CreatedBy` vacío (FR-009).
+- ¿Qué pasa si `description` o `acceptanceCriteria` exceden el límite? El sistema debe rechazarlo con HTTP 400 (FR-012).
 - ¿Qué pasa si la conexión a base de datos falla al guardar el registro? La transacción falla (HTTP 500) y ningún evento de dominio es emitido al bus.
 
 ## Requirements *(mandatory)*
@@ -58,13 +61,16 @@ Como usuario autenticado, quiero registrar una investigación técnica prelimina
 - **FR-005**: El sistema DEBE validar que el tipo de elemento pertenezca al catálogo permitido.
 - **FR-006**: El sistema DEBE validar que los puntos de estimación (`devPoints` y `qaPoints`), si están presentes, sean mayores o iguales a 0.
 - **FR-007**: El sistema DEBE verificar la existencia de `applicationId` si este es proporcionado en la carga útil.
-- **FR-008**: El sistema DEBE disociar el esfuerzo estimativo permitiendo almacenar valores nulos para los puntos de QA en ítems técnicos.
-- **FR-009**: El sistema DEBE inyectar automáticamente metadatos de auditoría (`CreatedAt` y `CreatedBy`).
+- **FR-008**: El sistema DEBE disociar el esfuerzo estimativo permitiendo almacenar valores nulos para los puntos de QA en ítems técnicos. Para un ítem técnico, `qaPoints` DEBE ser nulo: si llega con valor se rechaza con HTTP 400 (no se descarta en silencio). La regla es un invariante del agregado `BacklogItem`, no solo del handler ni del cliente. Para `UserStory` y `Bug`, un `qaPoints` ausente se persiste como nulo ("no estimado"); el cliente no debe enviar `0` como valor por defecto.
+- **FR-009**: El sistema DEBE inyectar automáticamente metadatos de auditoría (`CreatedAt` y `CreatedBy`). `CreatedBy` se toma del claim de identidad del token JWT; si el claim falta, la petición se rechaza con HTTP 401.
 - **FR-010**: El sistema DEBE publicar un evento de dominio (`BacklogItemCreatedDomainEvent`) internamente mediante MediatR una vez completada la persistencia.
+- **FR-011**: El sistema DEBE aceptar y persistir la prioridad (`priority`) del elemento, con valores del catálogo `Low`, `Medium`, `High`, `Critical`. En JSON se serializa como texto (p. ej. `"High"`), no como entero.
+- **FR-012**: El sistema DEBE aceptar y persistir los criterios de aceptación (`acceptanceCriteria`, texto opcional). `description` y `acceptanceCriteria` tienen un límite máximo de longitud definido en el plan.
+- **FR-013**: Toda respuesta HTTP 400 DEBE usar el formato `ProblemDetails` con el diccionario `errors` por campo (incluidos los fallos de `applicationId` inexistente), de modo que el cliente muestre el error específico leyendo `errors`.
 
 ### Key Entities *(include if feature involves data)*
 
-- **BacklogItem**: Representa un elemento de trabajo dentro de la planificación ágil. Sus atributos principales son Id, Title, Description, Type, Status, DevPoints, QAPoints, ApplicationId y metadatos de auditoría.
+- **BacklogItem**: Representa un elemento de trabajo dentro de la planificación ágil. Sus atributos principales son Id, Title, Description, Type, Priority, AcceptanceCriteria, Status, DevPoints, QAPoints, ApplicationId y metadatos de auditoría.
 - **Application**: Entidad externa a la que puede vincularse un elemento de backlog mediante `applicationId`.
 
 ## Success Criteria *(mandatory)*

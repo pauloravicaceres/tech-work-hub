@@ -54,10 +54,21 @@ specs/001-registro-backlog-multitipo/
 
 ### Código Fuente (Raíz del Repositorio)
 
+Por la constitución (Estructura de carpetas del workspace), todo archivo de producción vive bajo `app/backend/` o `app/frontend/`.
+
 ```text
-src/
- Modules/
+app/backend/
+ src/
+  Bootstrapper/Api/
+    Program.cs                       # Host único: AddBacklogModule/UseBacklogModule, CustomExceptionHandler, JsonStringEnumConverter, auth Keycloak
+    Api.csproj
+  BuildingBlocks/Shared/             # Reutilizar: ValidationBehavior, LoggingBehavior, AuditableEntityInterceptor, DispatchDomainEventsInterceptor, Aggregate<T>, excepciones base
+  Modules/
    Backlog/
+     BacklogModule.cs                # AddBacklogModule(): DbContext, interceptores de Shared, validadores, IApplicationModuleApi
+     Backlog.csproj
+     Contracts/
+       IApplicationModuleApi.cs      # Interfaz cross-module (la implementa el módulo Application; no se define en el handler)
      Features/
        BacklogItems/
          CreateBacklogItem/
@@ -70,14 +81,37 @@ src/
          BacklogItem.cs
          BacklogItemType.cs
          BacklogItemStatus.cs
+         BacklogItemPriority.cs
          Events/
            BacklogItemCreatedDomainEvent.cs
      Data/
+       BacklogDbContext.cs           # Schema propio `backlog`
        Configurations/
          BacklogItemConfiguration.cs
+       Migrations/                   # Migración alineada con data-model.md
+ tests/
+  Unit/Backlog/
+  Integration/Backlog/               # WebApplicationFactory<Program> + Testcontainers (PostgreSQL)
+app/frontend/
+ package.json, angular.json, jest.config.*, tsconfig*.json
+ src/app/backlog/create-backlog-item/
+   create-backlog-item.component.ts / .html / .scss / .spec.ts
 ```
 
 **Decisión Estructural**: Implementación de Vertical Slice Architecture en un sub-módulo `Backlog` dentro de la arquitectura modular monolítica general. Se respeta la directiva inmutable de agrupar el Endpoint (Carter), Comando, Handler (MediatR) y Validador (FluentValidation) dentro de la carpeta descriptiva de la feature `CreateBacklogItem`.
+
+## Decisiones Técnicas Complementarias (retrabajo iteración 1/2)
+
+- **Host e infraestructura (DEF-06)**: el slice requiere `Program.cs`, `.csproj`, `BacklogDbContext` (schema `backlog`), registro DI en `BacklogModule.cs` e implementación de `IApplicationModuleApi`. Las interfaces `IBacklogDbContext` e `IApplicationModuleApi` se definen fuera del archivo del handler.
+- **Pipeline (DEF-01/03)**: se registra `ValidationBehavior<,>` de `Shared` y los validadores del ensamblado; `CustomExceptionHandler` mapea `ValidationException` a HTTP 400 `ProblemDetails` con `errors` (FR-013) y `NotFoundException` de `applicationId` a 400 con la clave `ApplicationId`.
+- **Interceptores (DEF-04/05)**: se registran los interceptores de `Shared` (`AuditableEntityInterceptor` asigna `CreatedAt`/`CreatedBy` desde el claim; `DispatchDomainEventsInterceptor` publica los eventos). No se reimplementan stubs locales (constitución §3).
+- **Cancelación**: el endpoint recibe `CancellationToken` y lo pasa a `mediator.Send`.
+- **Serialización**: `JsonStringEnumConverter` global; `priority` y `type` viajan como texto. El handler usa `Enum.TryParse`, no `Enum.Parse`.
+- **Invariante QAPoints (FR-008)**: la regla "tipo técnico ⇒ `qaPoints` nulo, si llega con valor se rechaza" vive en `BacklogItem.Create`; la lista de tipos técnicos se define una sola vez en el dominio y el frontend la consume de una constante única. El tipo de `DevPoints`/`QAPoints` es el de `data-model.md` y el mismo en comando, entidad y columna.
+- **Límites de longitud (FR-012)**: `Description` ≤ 4000 y `AcceptanceCriteria` ≤ 4000 caracteres, en validador y en la configuración EF.
+- **Persistencia**: el schema se llama `backlog` (minúscula, constitución §3) y el tipo de columna `Type` coincide con `data-model.md`; se entrega migración Code-First.
+- **Frontend (DEF-07/08)**: componente standalone con `@if`/`@for`, `Signals`/`toSignal`/`takeUntilDestroyed` en lugar de `subscribe()` manual, lista de aplicaciones cargada desde la API del módulo Application (valores `Guid`), `qaPoints: null` por defecto, lectura de `errors` del `ProblemDetails`, handler del botón Cancelar, estilos `.scss` y configuración `package.json`/`angular.json`/`jest.config`.
+- **Pruebas**: integración con `WebApplicationFactory<Program>` y Testcontainers (INT-01..INT-10) sobre el host real; Jest para el componente.
 
 ## Seguimiento de Complejidad
 

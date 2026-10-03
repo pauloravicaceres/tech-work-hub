@@ -142,11 +142,11 @@ description: "Lista de tareas para la implementación de la funcionalidad de Reg
 
 ### Capa CODE — interfaz
 
-- [ ] T032 [fix:CODE:DEF-07] Cargar la lista de aplicaciones desde la API del módulo Application con `Guid` reales, sin el valor `app-id-101` [interfaz]
-- [ ] T033 [fix:CODE:DEF-08] Crear `create-backlog-item.component.scss` y la configuración `package.json`, `angular.json` y `jest.config` para que el build y Jest funcionen [interfaz]
-- [ ] T034 [fix:CODE:12] Enviar `qaPoints: null` por defecto para UserStory/Bug en lugar de `0` [interfaz]
-- [ ] T035 [fix:CODE:14] Leer `errors` del `ProblemDetails` en lugar de `err.error?.message?.includes('aplicación')` y mostrar el error por campo [interfaz]
-- [ ] T036 [fix:CODE:5] Reemplazar los `subscribe()` manuales por `Signals`/`toSignal`/`takeUntilDestroyed`, usar `@if`/`@for` en lugar de `*ngIf`, añadir el handler de Cancelar y centralizar la lista de tipos técnicos en una constante [interfaz]
+- [X] T032 [fix:CODE:DEF-07] Cargar la lista de aplicaciones desde la API del módulo Application con `Guid` reales, sin el valor `app-id-101` [interfaz]
+- [X] T033 [fix:CODE:DEF-08] Crear `create-backlog-item.component.scss` y la configuración `package.json`, `angular.json` y `jest.config` para que el build y Jest funcionen [interfaz]
+- [X] T034 [fix:CODE:12] Enviar `qaPoints: null` por defecto para UserStory/Bug en lugar de `0` [interfaz]
+- [X] T035 [fix:CODE:14] Leer `errors` del `ProblemDetails` en lugar de `err.error?.message?.includes('aplicación')` y mostrar el error por campo [interfaz]
+- [X] T036 [fix:CODE:5] Reemplazar los `subscribe()` manuales por `Signals`/`toSignal`/`takeUntilDestroyed`, usar `@if`/`@for` en lugar de `*ngIf`, añadir el handler de Cancelar y centralizar la lista de tipos técnicos en una constante [interfaz]
 
 ### Capa TASKS y verificación
 

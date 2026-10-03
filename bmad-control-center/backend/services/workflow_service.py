@@ -43,7 +43,11 @@ ROLE_TO_KEY = {
     "Senior Frontend Developer": "DEV-FRONT",
     "QA Automation": "QA-AUTO",
     "SecOps": "CR",
+    "Code Review": "CR",
 }
+
+MAX_REWORK_DEFAULT = 2
+DEV_STAGE_KEYS = ("DEV-BACK", "DEV-FRONT")
 
 TOKEN_TO_KEY = {
     "BS": "BS",
@@ -70,6 +74,28 @@ class WorkflowService:
 
     def __init__(self, tracker_path: Optional[Path] = None):
         self.tracker_path = tracker_path or settings.TRACKER_FILE
+
+    @staticmethod
+    def _watcher_key(prev_key: Optional[str]) -> str:
+        """Etapa del WATCHER según el último agente canónico que lo precede.
+
+        La Fase D (W-IMP) abarca también a DEV-BACK/DEV-FRONT: el watcher sigue
+        escribiendo bloques mientras implementa el frontend.
+        """
+        if prev_key == "SA":
+            return "W-SA"
+        if prev_key in ("QT", "DEV-BACK", "DEV-FRONT", "CR", "QA-AUTO"):
+            # CR/QA-AUTO: el watcher corre el ciclo de retrabajo (converge + implement) tras un rechazo
+            return "W-IMP"
+        return "W-QA"
+
+    def _watcher_key_before(self, blocks: List[Dict[str, Any]], index: int) -> str:
+        """Etapa del bloque WATCHER en `index`, mirando el primer autor no-WATCHER anterior."""
+        for i in range(index - 1, -1, -1):
+            role_i = blocks[i]["author_role"]
+            if role_i != "WATCHER":
+                return self._watcher_key(ROLE_TO_KEY.get(role_i))
+        return "W-QA"
 
     def _parse_blocks(self, content: str) -> List[Dict[str, Any]]:
         """Extracts audit blocks and directives from tracker text."""
@@ -102,6 +128,15 @@ class WorkflowService:
             target_token = handoff_match.group(1).strip().upper() if handoff_match else None
             handoff_directive = handoff_match.group(0).strip() if handoff_match else ""
 
+            # Todos los destinatarios del handoff (puede asignar a varios agentes a la vez)
+            handoff_idx = chunk.find("**Handoff:**")
+            handoff_section = chunk[handoff_idx:] if handoff_idx != -1 else ""
+            handoff_targets: List[str] = []
+            for tok in re.findall(r'@([A-Za-z0-9_-]+):', handoff_section):
+                tkey = TOKEN_TO_KEY.get(tok.upper())
+                if tkey and tkey not in handoff_targets:
+                    handoff_targets.append(tkey)
+
             # Attempt ISO timestamp parse
             iso_timestamp = None
             try:
@@ -121,10 +156,48 @@ class WorkflowService:
                 "status_description": status_desc,
                 "target_token": target_token,
                 "handoff_directive": handoff_directive,
+                "handoff_targets": handoff_targets,
                 "timestamp": iso_timestamp,
             })
 
         return blocks
+
+    @staticmethod
+    def _detect_rework(blocks: List[Dict[str, Any]], completed_stage_map: Dict[str, Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+        """Detecta un ciclo de retrabajo: el último revisor (CR / QA-AUTO) rechazó y aún hay correcciones pendientes."""
+        last_review: Optional[Tuple[str, Dict[str, Any]]] = None
+        for b in blocks:
+            key = ROLE_TO_KEY.get(b["author_role"])
+            if key in ("CR", "QA-AUTO"):
+                last_review = (key, b)
+        if not last_review or "RECHAZ" not in last_review[1]["status_description"].upper():
+            return None
+
+        origin_key, rejected = last_review
+        pending: List[str] = []
+        for t in rejected.get("handoff_targets", []):
+            if t in DEV_STAGE_KEYS + ("QA-AUTO",) and t != origin_key:
+                done = completed_stage_map.get(t)
+                if not done or done["block_index"] <= rejected["block_index"]:
+                    pending.append(t)
+
+        iteration, max_iterations = 0, MAX_REWORK_DEFAULT
+        for b in blocks:
+            if b["block_index"] > rejected["block_index"] and b["author_role"] == "WATCHER":
+                m = re.search(r'Iteración\s+(\d+)/(\d+)', b["status_description"])
+                if m:
+                    iteration, max_iterations = int(m.group(1)), int(m.group(2))
+
+        return {
+            "active": True,
+            "origin_stage": origin_key,
+            "origin_role": rejected["author_role"],
+            "iteration": iteration,
+            "max_iterations": max_iterations,
+            "reason": rejected["status_description"][:240],
+            "pending_stages": pending,
+            "since_block_index": rejected["block_index"],
+        }
 
     def get_workflow_status(self, include_history: bool = True) -> WorkflowStatusResponse:
         """Projects memory state of the workflow from documents/tracker_bmad.md."""
@@ -178,14 +251,7 @@ class WorkflowService:
                 completed_stage_map[key] = block
                 last_canonical_key = key
             elif role == "WATCHER":
-                if last_canonical_key == "QA":
-                    key = "W-QA"
-                elif last_canonical_key == "SA":
-                    key = "W-SA"
-                elif last_canonical_key == "QT":
-                    key = "W-IMP"
-                else:
-                    key = "W-QA"
+                key = self._watcher_key(last_canonical_key)
                 completed_stage_map[key] = block
 
         # Check last block to find what is next
@@ -201,7 +267,7 @@ class WorkflowService:
             target = last_block.get("target_token")
 
             # Check if all completed
-            if last_block["author_role"] == "SecOps" and target in ["WATCHER", "PM"]:
+            if last_block["author_role"] in ("SecOps", "Code Review") and target in ["WATCHER", "PM"]:
                 overall_status = "COMPLETED"
                 active_stage_key = "COMPLETED"
                 active_agent_role = None
@@ -209,16 +275,7 @@ class WorkflowService:
             elif target == "HUMANO":
                 # Si el último bloque fue WATCHER, activar W-QA o W-SA o W-IMP
                 if last_block["author_role"] == "WATCHER":
-                    author_key = "W-QA"
-                    for i in range(len(blocks) - 2, -1, -1):
-                        role_i = blocks[i]["author_role"]
-                        if role_i != "WATCHER":
-                            prev_key = ROLE_TO_KEY.get(role_i)
-                            if prev_key == "SA":
-                                author_key = "W-SA"
-                            elif prev_key == "QT":
-                                author_key = "W-IMP"
-                            break
+                    author_key = self._watcher_key_before(blocks, len(blocks) - 1)
                 else:
                     author_key = ROLE_TO_KEY.get(last_block["author_role"])
                 active_stage_key = author_key or "HUMANO"
@@ -232,16 +289,7 @@ class WorkflowService:
             else:
                 # Si el autor es WATCHER y no hay target (está procesando en silencio)
                 if last_block["author_role"] == "WATCHER":
-                    active_stage_key = "W-QA"
-                    for i in range(len(blocks) - 2, -1, -1):
-                        role_i = blocks[i]["author_role"]
-                        if role_i != "WATCHER":
-                            prev_key = ROLE_TO_KEY.get(role_i)
-                            if prev_key == "SA":
-                                active_stage_key = "W-SA"
-                            elif prev_key == "QT":
-                                active_stage_key = "W-IMP"
-                            break
+                    active_stage_key = self._watcher_key_before(blocks, len(blocks) - 1)
                     active_agent_role = "Spec Kit"
                 else:
                     # If target is unknown, deduce from completed stages
@@ -251,6 +299,7 @@ class WorkflowService:
                             active_agent_role = stage["role"]
                             break
 
+        rework = self._detect_rework(blocks, completed_stage_map)
         parallel_active_keys = [active_stage_key] if active_stage_key else []
         if active_stage_key == "W-IMP" and blocks:
             msg = blocks[-1].get("status_description", "")
@@ -262,8 +311,11 @@ class WorkflowService:
         # Build 15 canonical steps
         stage_steps: List[WorkflowStageStep] = []
         completed_count = len(completed_stage_map)
-        if completed_count >= len(CANONICAL_STAGES):
+        if completed_count >= len(CANONICAL_STAGES) and not rework:
             overall_status = "COMPLETED"
+        elif rework and overall_status == "COMPLETED":
+            # Un rechazo activo de Code Review / QA-AUTO reabre el pipeline
+            overall_status = "IN_PROGRESS"
 
         for stage in CANONICAL_STAGES:
             s_key = stage["key"]
@@ -308,6 +360,22 @@ class WorkflowService:
                     origin_block_index=None,
                     generated_artifact_path=None,
                 )
+            if rework and overall_status != "COMPLETED":
+                if s_key == rework["origin_stage"] and step.status == "COMPLETED":
+                    step.rework_state = "REJECTED"
+                elif s_key in rework["pending_stages"]:
+                    step.rework_state = "REWORK"
+                    if step.status == "COMPLETED":
+                        # La etapa ya había terminado pero el revisor la rechazó: vuelve a estar pendiente.
+                        # Solo pasa a IN_PROGRESS la que el watcher está ejecutando (parallel_active_keys);
+                        # las demás quedan "en cola" hasta que les toque.
+                        step.status = "PENDING"
+                        step.is_active = False
+                        step.completed_at = None
+                if step.rework_state:
+                    step.rework_iteration = rework["iteration"]
+                    step.rework_max = rework["max_iterations"]
+                    step.rework_reason = rework["reason"]
             stage_steps.append(step)
 
         # Prepare history if requested
@@ -336,4 +404,5 @@ class WorkflowService:
             current_stage=active_agent_role or active_stage_key,
             status=overall_status,
             history=history_list,
+            rework=rework,
         )

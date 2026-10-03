@@ -264,3 +264,19 @@ Awaiting your response to the question above.
 - **Artefacto generado:** `documents/qa-auto/qa-report.md`
 - **Estado:** ✅ Retrabajo 1/2: backend 61/61 + 22/22, Jest 19/19, DEF-02 confirmado. Dictamen: **APROBADO CON RESERVA** (integración sobre SQLite; Testcontainers pendiente, Docker inactivo; T037 abierta).
 - **Handoff:** @CODE-REVIEW: Resultados idénticos a la ejecución anterior; `app/frontend` sigue sin commitear.
+
+### [03-10-2026] Code Review
+- **Hora:** 16:10:40
+- **Artefacto generado:** `code-review/impact-analysis-report.md` (4.ª iteración; evidencia: `documents/qa-auto/qa-report.md`)
+- **Estado:** ✅ **[APROBADO CON RESERVAS]** HU-001. Verificado de forma independiente: `dotnet test` 61/61 unitarias + 22/22 integración y `npx jest` 19/19. DEF-01..DEF-08 y los hallazgos #11..#15 y 1 cerrados en código. No se emite GITOPS-MERGE-CLOSE: queda pendiente de confirmación del usuario.
+- **❓ Puntos Abiertos:**
+  - [CAPA:PLAN] Reserva PostgreSQL: integración sobre SQLite con `EnsureCreated()`; las migraciones, longitudes `varchar`, `numeric(18,2)`, `timestamptz` y el rollback (CB-05) no están probados en PostgreSQL. Keycloak/JWT y `ApplicationModuleApi` real tampoco se ejercen.
+  - [CAPA:CODE] #16: el front llama `GET /api/applications` y ese endpoint no existe en el backend.
+  - [CAPA:CODE] #17: el front no adjunta el Bearer token (sin interceptor) y `/auth/login` no está definida; contra el backend real el POST devuelve 401.
+  - [CAPA:PLAN] #18: `ssl-required: none` y `verify-token-audience: false` en `appsettings.json` base; ningún paso de despliegue aplica migraciones.
+  - [CAPA:CODE] #19: la identidad se resuelve en `SaveChanges`, tras consultar el catálogo de aplicaciones.
+- **Handoff:**
+  - @QA-AUTO: ejecutar INT-01..INT-10 contra PostgreSQL (Testcontainers) y aplicar las migraciones cuando haya Docker; cerrar la reserva.
+  - @DEV-BACK: endpoint `GET /api/applications` (#16), configuración Keycloak por entorno y paso de migraciones (#18), resolver identidad antes del catálogo (#19).
+  - @DEV-FRONT: interceptor Bearer y ruta de reautenticación (#17).
+  - @USUARIO: confirmar si se emite `@WATCHER: GITOPS-MERGE-CLOSE feat/001-HU_registro_elementos_backlog_multitipo` con estas reservas, o si #16 y #17 deben cerrarse antes.

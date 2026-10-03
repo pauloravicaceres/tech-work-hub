@@ -9,6 +9,22 @@
       </span>
     </div>
 
+    <!-- Banner de retrabajo SDD (rechazo de Code Review / QA-AUTO) -->
+    <div
+      v-if="reworkBanner"
+      class="mb-3 flex items-start gap-2 rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-xs text-amber-900"
+      role="status"
+    >
+      <span class="font-bold">↻ Retrabajo {{ reworkBanner.iteration }}/{{ reworkBanner.max }}</span>
+      <span class="opacity-90">
+        {{ reworkBanner.origin }} rechazó la implementación. Se corrige desde la capa de origen
+        (spec → plan → tasks → código) con converge e implement.
+      </span>
+      <span v-if="reworkBanner.reason" class="hidden md:inline truncate opacity-70" :title="reworkBanner.reason">
+        — {{ reworkBanner.reason }}
+      </span>
+    </div>
+
     <!-- Stepper horizontal con scroll responsivo -->
     <div class="flex items-center gap-3 overflow-x-auto py-2">
       <template v-for="(group, gIndex) in groupedStages" :key="group.name">
@@ -26,16 +42,7 @@
               <button
                 type="button"
                 @click="onStageClick(stage)"
-                :class="[
-                  'flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 border whitespace-nowrap focus:outline-none focus:ring-offset-1',
-                  isStagePendingApproval(stage)
-                    ? 'bg-orange-50 text-orange-900 shadow-sm ' + (localSelectedStageKey === stage.stage_key ? 'border-orange-600 ring-2 ring-orange-500 scale-[1.02]' : 'border-orange-500 ring-1 ring-orange-200')
-                    : stage.is_active || stage.status === 'IN_PROGRESS'
-                      ? 'bg-blue-50 text-blue-900 shadow-sm ' + (localSelectedStageKey === stage.stage_key ? 'border-blue-600 ring-2 ring-blue-500 scale-[1.02]' : 'border-blue-500 ring-1 ring-blue-200')
-                      : stage.status === 'COMPLETED'
-                        ? 'bg-emerald-50 text-emerald-800 cursor-pointer ' + (localSelectedStageKey === stage.stage_key ? 'border-emerald-600 ring-2 ring-emerald-500 scale-[1.02]' : 'border-emerald-300 hover:bg-emerald-100')
-                        : 'bg-white text-gray-400 cursor-pointer ' + (localSelectedStageKey === stage.stage_key ? 'border-gray-500 ring-2 ring-gray-400 bg-gray-50 scale-[1.02]' : 'border-gray-200 hover:bg-gray-50')
-                ]"
+                :class="getStageClass(stage)"
                 :title="stage.agent_role"
               >
                 <!-- Status Icon -->
@@ -46,13 +53,22 @@
                       <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-orange-600"></span>
                     </span>
                   </template>
+                  <template v-else-if="stage.rework_state === 'REJECTED'">
+                    <span class="text-red-600">✗</span>
+                  </template>
                   <template v-else-if="stage.status === 'COMPLETED'">
                     <span class="text-emerald-600">✓</span>
                   </template>
                   <template v-else-if="stage.is_active || stage.status === 'IN_PROGRESS'">
                     <span class="relative flex h-2.5 w-2.5">
-                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                      <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-600"></span>
+                      <span
+                        class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
+                        :class="stage.rework_state === 'REWORK' ? 'bg-amber-400' : 'bg-blue-400'"
+                      ></span>
+                      <span
+                        class="relative inline-flex rounded-full h-2.5 w-2.5"
+                        :class="stage.rework_state === 'REWORK' ? 'bg-amber-600' : 'bg-blue-600'"
+                      ></span>
                     </span>
                   </template>
                   <template v-else>
@@ -71,6 +87,20 @@
                     class="text-[10px] text-orange-600 font-semibold tracking-wide"
                   >
                     [● POR APROBAR]
+                  </span>
+                  <span
+                    v-else-if="stage.rework_state === 'REJECTED'"
+                    class="text-[10px] text-red-600 font-semibold tracking-wide"
+                    :title="stage.rework_reason || ''"
+                  >
+                    [✗ RECHAZADO]
+                  </span>
+                  <span
+                    v-else-if="stage.rework_state === 'REWORK'"
+                    class="text-[10px] text-amber-600 font-semibold tracking-wide"
+                    :title="stage.rework_reason || ''"
+                  >
+                    [{{ stage.is_active || stage.status === 'IN_PROGRESS' ? '● EN PROGRESO' : '↻ EN COLA' }} · RETRABAJO {{ stage.rework_iteration || 0 }}/{{ stage.rework_max || 0 }}]
                   </span>
                   <span
                     v-else-if="stage.is_active || stage.status === 'IN_PROGRESS'"
@@ -153,6 +183,19 @@ const completedCount = computed<number>(() => {
   return props.stages.filter((s) => s.status === 'COMPLETED').length
 })
 
+// Retrabajo SDD: se deduce de las etapas que el backend marca como REJECTED / REWORK
+const reworkBanner = computed(() => {
+  const rejected = props.stages.find((s) => s.rework_state === 'REJECTED')
+  if (!rejected) return null
+  const marked = props.stages.find((s) => s.rework_state === 'REWORK') || rejected
+  return {
+    origin: rejected.stage_name,
+    iteration: marked.rework_iteration || 0,
+    max: marked.rework_max || rejected.rework_max || 0,
+    reason: rejected.rework_reason || '',
+  }
+})
+
 const totalCount = computed<number>(() => {
   return props.stages.length || 12
 })
@@ -186,7 +229,49 @@ const groupedStages = computed(() => {
   return groups
 })
 
+const getStageClass = (stage: WorkflowStageStep) => {
+  const isSelected = localSelectedStageKey.value === stage.stage_key;
+  const isWatcher = stage.stage_key.startsWith('W-');
+  const baseClasses = 'flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 border whitespace-nowrap focus:outline-none focus:ring-offset-1';
+  
+  if (isStagePendingApproval(stage)) {
+    return baseClasses + ' bg-orange-50 text-orange-900 shadow-sm ' + (isSelected ? 'border-orange-600 ring-2 ring-orange-500 scale-[1.02]' : 'border-orange-500 ring-1 ring-orange-200');
+  }
+  
+  if (stage.rework_state === 'REJECTED') {
+    return baseClasses + ' bg-red-50 text-red-900 cursor-pointer ' + (isSelected ? 'border-red-600 ring-2 ring-red-500 scale-[1.02]' : 'border-red-400 hover:bg-red-100');
+  }
+
+  if (stage.rework_state === 'REWORK') {
+    const running = stage.is_active || stage.status === 'IN_PROGRESS';
+    if (!running) {
+      // En cola: espera su turno dentro del ciclo de retrabajo
+      return baseClasses + ' bg-amber-50/50 text-amber-800 opacity-80 cursor-pointer ' + (isSelected ? 'border-amber-500 ring-2 ring-amber-400 scale-[1.02]' : 'border-amber-300 border-dashed');
+    }
+    return baseClasses + ' bg-amber-50 text-amber-900 shadow-sm cursor-pointer ' + (isSelected ? 'border-amber-600 ring-2 ring-amber-500 scale-[1.02]' : 'border-amber-500 ring-2 ring-amber-200');
+  }
+
+  if (stage.is_active || stage.status === 'IN_PROGRESS') {
+    if (isWatcher) {
+      return baseClasses + ' bg-blue-50 text-blue-900 shadow-sm ' + (isSelected ? 'border-blue-800 border-2 scale-[1.02]' : 'border-blue-800 border-2 border-dashed');
+    }
+    return baseClasses + ' bg-blue-50 text-blue-900 shadow-sm ' + (isSelected ? 'border-blue-600 ring-2 ring-blue-500 scale-[1.02]' : 'border-blue-500 ring-1 ring-blue-200');
+  }
+  
+  if (stage.status === 'COMPLETED') {
+    if (isWatcher) {
+      return baseClasses + ' bg-emerald-50 text-emerald-800 opacity-60 cursor-not-allowed ' + (isSelected ? 'border-emerald-600 ring-2 ring-emerald-500 scale-[1.02]' : 'border-emerald-300');
+    }
+    return baseClasses + ' bg-emerald-50 text-emerald-800 cursor-pointer ' + (isSelected ? 'border-emerald-600 ring-2 ring-emerald-500 scale-[1.02]' : 'border-emerald-300 hover:bg-emerald-100');
+  }
+  
+  return baseClasses + ' bg-white text-gray-400 cursor-pointer ' + (isSelected ? 'border-gray-500 ring-2 ring-gray-400 bg-gray-50 scale-[1.02]' : 'border-gray-200 hover:bg-gray-50');
+};
+
 const onStageClick = (stage: WorkflowStageStep): void => {
+  if (stage.stage_key.startsWith('W-') && stage.status === 'COMPLETED') {
+    return;
+  }
   localSelectedStageKey.value = stage.stage_key
   emit('select-stage', stage)
   if (stage.generated_artifact_path) {
@@ -194,4 +279,11 @@ const onStageClick = (stage: WorkflowStageStep): void => {
   }
 }
 </script>
+
+
+
+
+
+
+
 
