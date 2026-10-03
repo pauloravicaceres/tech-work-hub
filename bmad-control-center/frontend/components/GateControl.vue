@@ -3,11 +3,7 @@
     <h2 class="text-xl font-bold">Estado: {{ status }}</h2>
     <div v-if="status === 'PENDING_DECISION'" class="space-y-4">
       <p>Hay una compuerta esperando decisión.</p>
-      <input 
-        v-model="epicId"
-        class="w-full border rounded p-2 text-sm"
-        placeholder="ID Épica (opcional - auto extraído, ej. 001-HU_epic)"
-      />
+
       <textarea 
         v-model="feedback"
         class="w-full border rounded p-2"
@@ -41,7 +37,6 @@ import { ref, onMounted } from 'vue'
 const status = ref('UNKNOWN')
 const gateId = '123'
 const feedback = ref('')
-const epicId = ref('')
 
 const fetchStatus = async () => {
   try {
@@ -58,7 +53,7 @@ const approve = async () => {
     await fetch(`http://localhost:8000/api/v1/gates/${gateId}/decision`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'APPROVE', feedback: feedback.value, epic_id: epicId.value })
+      body: JSON.stringify({ action: 'APPROVE', feedback: feedback.value })
     })
     fetchStatus()
   } catch (e) {

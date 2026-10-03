@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="w-full bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
     <div class="flex items-center justify-between mb-3">
       <h3 class="text-xs font-bold uppercase tracking-wider text-gray-500">
@@ -28,17 +28,25 @@
                 @click="onStageClick(stage)"
                 :class="[
                   'flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 border whitespace-nowrap focus:outline-none focus:ring-offset-1',
-                  stage.is_active || stage.status === 'IN_PROGRESS'
-                    ? 'bg-blue-50 text-blue-900 shadow-sm ' + (localSelectedStageKey === stage.stage_key ? 'border-blue-600 ring-2 ring-blue-500 scale-[1.02]' : 'border-blue-500 ring-1 ring-blue-200')
-                    : stage.status === 'COMPLETED'
-                      ? 'bg-emerald-50 text-emerald-800 cursor-pointer ' + (localSelectedStageKey === stage.stage_key ? 'border-emerald-600 ring-2 ring-emerald-500 scale-[1.02]' : 'border-emerald-300 hover:bg-emerald-100')
-                      : 'bg-white text-gray-400 cursor-pointer ' + (localSelectedStageKey === stage.stage_key ? 'border-gray-500 ring-2 ring-gray-400 bg-gray-50 scale-[1.02]' : 'border-gray-200 hover:bg-gray-50')
+                  isStagePendingApproval(stage)
+                    ? 'bg-orange-50 text-orange-900 shadow-sm ' + (localSelectedStageKey === stage.stage_key ? 'border-orange-600 ring-2 ring-orange-500 scale-[1.02]' : 'border-orange-500 ring-1 ring-orange-200')
+                    : stage.is_active || stage.status === 'IN_PROGRESS'
+                      ? 'bg-blue-50 text-blue-900 shadow-sm ' + (localSelectedStageKey === stage.stage_key ? 'border-blue-600 ring-2 ring-blue-500 scale-[1.02]' : 'border-blue-500 ring-1 ring-blue-200')
+                      : stage.status === 'COMPLETED'
+                        ? 'bg-emerald-50 text-emerald-800 cursor-pointer ' + (localSelectedStageKey === stage.stage_key ? 'border-emerald-600 ring-2 ring-emerald-500 scale-[1.02]' : 'border-emerald-300 hover:bg-emerald-100')
+                        : 'bg-white text-gray-400 cursor-pointer ' + (localSelectedStageKey === stage.stage_key ? 'border-gray-500 ring-2 ring-gray-400 bg-gray-50 scale-[1.02]' : 'border-gray-200 hover:bg-gray-50')
                 ]"
                 :title="stage.agent_role"
               >
                 <!-- Status Icon -->
                 <span class="flex items-center justify-center w-5 h-5 rounded-full text-[11px] font-bold">
-                  <template v-if="stage.status === 'COMPLETED'">
+                  <template v-if="isStagePendingApproval(stage)">
+                    <span class="relative flex h-2.5 w-2.5">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-orange-600"></span>
+                    </span>
+                  </template>
+                  <template v-else-if="stage.status === 'COMPLETED'">
                     <span class="text-emerald-600">✓</span>
                   </template>
                   <template v-else-if="stage.is_active || stage.status === 'IN_PROGRESS'">
@@ -59,7 +67,13 @@
                     <span class="text-[11px] opacity-80 hidden sm:inline">{{ stage.stage_name }}</span>
                   </div>
                   <span
-                    v-if="stage.is_active || stage.status === 'IN_PROGRESS'"
+                    v-if="isStagePendingApproval(stage)"
+                    class="text-[10px] text-orange-600 font-semibold tracking-wide"
+                  >
+                    [● POR APROBAR]
+                  </span>
+                  <span
+                    v-else-if="stage.is_active || stage.status === 'IN_PROGRESS'"
                     class="text-[10px] text-blue-600 font-semibold tracking-wide"
                   >
                     [● EN PROGRESO]
@@ -96,14 +110,28 @@ import type { WorkflowStageStep } from '../../types'
 interface Props {
   stages: WorkflowStageStep[]
   activeStageKey?: string
+  overallStatus?: string
+  activeAgentRole?: string | null
   selectedPath?: string | null
 }
 
 const props = withDefaults(defineProps<Props>(), {
   stages: () => [],
   activeStageKey: '',
+  overallStatus: 'IDLE',
+  activeAgentRole: null,
   selectedPath: null,
 })
+
+const isStagePendingApproval = (stage: WorkflowStageStep): boolean => {
+  const statusStr = stage.status as string
+  if (statusStr === 'PENDING_APPROVAL' || statusStr === 'PENDING_DECISION') return true
+  
+  const isWaitingForHuman = props.activeAgentRole?.includes('@HUMANO') || props.overallStatus === 'PAUSED_HITL'
+  if (stage.stage_key === props.activeStageKey && isWaitingForHuman) return true
+  
+  return false
+}
 
 const localSelectedStageKey = ref<string | null>(null)
 
