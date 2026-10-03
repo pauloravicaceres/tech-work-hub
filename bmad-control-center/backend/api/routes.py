@@ -69,7 +69,7 @@ async def make_decision(gate_id: str, payload: DecisionPayload):
                 handoff_text = f"@PA: La idea de usuario ha sido auditada y aprobada por negocio en el archivo {filename}. Procede con la creación del PRODUCT BRIEF."
             elif author in ["Product Manager", "PM"]:
                 import re
-                handoff_str = last_block.get("handoff") or ""
+                handoff_str = last_block.get("handoff_directive") or ""
                 # Determinar si es cierre de inicio de épica o cierre final
                 if "100% concluido" in handoff_str or "no hay más épicas" in handoff_str.lower():
                     handoff_text = "@HUMANO: Proyecto completado exitosamente. No hay más acciones requeridas por el enjambre."
