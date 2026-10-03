@@ -19,6 +19,8 @@
 
 Re-ejecución 03-10-2026 tras `afda58a` y los cambios del componente Angular: `dotnet test TechWorkHub.sln` (61 + 22) y `npx jest` en `app/frontend` (19, antes 14: el spec fue ampliado).
 
+Segunda re-ejecución (misma fecha): `dotnet test app/backend/TechWorkHub.sln` 61/61 + 22/22 y Jest 19/19, sin cambios de resultado; `Validate_ConTipoNulo_DebeFallarEnType` en verde. Docker sigue inactivo: T037 permanece abierta (Testcontainers pendiente). El código de interfaz (`app/frontend`) está probado pero **sin commitear** en el árbol de trabajo.
+
 **Reserva (no bloqueante):** la integración usa el host, MediatR, validación, interceptores y manejador de excepciones REALES, pero la BD es **SQLite en memoria**, el catálogo de aplicaciones (otro módulo) es un doble y la autenticación es un esquema de prueba que sustituye a Keycloak/JWT. **No se migró a Testcontainers PostgreSQL**: el demonio de Docker no está activo (`dockerDesktopLinuxEngine` no disponible). Riesgo residual: comportamiento específico de PostgreSQL (tipos, migraciones, concurrencia).
 
 Ejecución: `dotnet test` en `tests/Unit/Backlog/Backlog.UnitTests.csproj` (net8.0, xUnit 2.9.2, NSubstitute 5.3, FluentAssertions 6.12.2).
