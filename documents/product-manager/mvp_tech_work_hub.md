@@ -517,4 +517,10 @@ Al finalizar un Sprint, el Líder Técnico debe poder consultar TechWorkHub y re
 
 ---
 
-**Documento preparado para continuar el flujo BMAD.**
+## 10. ORDEN DE DELEGACIÓN PARA EL BA Y GITOPS
+
+*(Instrucción que se inyecta en tracker_bmad.md)*
+
+@WATCHER: GITOPS-BRANCH-CREATE feat/001-HU_registro_elementos_backlog_multitipo
+
+El Business Analyst (@BA:) debe iniciar el análisis de negocio y redacción formal de la especificación para la Historia de Usuario `001-HU_registro_elementos_backlog_multitipo` correspondiente a la Épica [P1], creando físicamente el archivo `documents/business-analyst/001-HU_registro_elementos_backlog_multitipo.md` bajo la plantilla canónica de HU y respetando estrictamente el identificador universal asignado.
