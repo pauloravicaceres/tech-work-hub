@@ -68,7 +68,20 @@ async def make_decision(gate_id: str, payload: DecisionPayload):
             elif author in ["Business Storyteller", "BS"]:
                 handoff_text = f"@PA: La idea de usuario ha sido auditada y aprobada por negocio en el archivo {filename}. Procede con la creación del PRODUCT BRIEF."
             elif author in ["Product Manager", "PM"]:
-                handoff_text = f"@BA: El MVP y Backlog han sido aprobados en el archivo {filename}. Procede con el análisis de negocio y redacción de Historias de Usuario."
+                import re
+                handoff_str = last_block.get("handoff") or ""
+                # Determinar si es cierre de inicio de épica o cierre final
+                if "100% concluido" in handoff_str or "no hay más épicas" in handoff_str.lower():
+                    handoff_text = "@HUMANO: Proyecto completado exitosamente. No hay más acciones requeridas por el enjambre."
+                else:
+                    epic = payload.epic_id.strip() if payload.epic_id and payload.epic_id.strip() else None
+                    if not epic:
+                        match = re.search(r"delegar es\s+(\d{3}-HU_[\w_]+)", handoff_str)
+                        if match:
+                            epic = match.group(1)
+                        else:
+                            epic = "001-HU_epic_generica"
+                    handoff_text = f"@WATCHER: GITOPS-BRANCH-CREATE feat/{epic}\n@BA: El MVP y Backlog han sido aprobados en el archivo {filename}. La rama feat/{epic} ha sido creada. Procede con el análisis de negocio y redacción de Historias de Usuario para la épica {epic}. Usa el identificador universal estricto para crear el archivo físico en documents/business-analyst."
             elif author in ["Business Analyst", "BA"]:
                 handoff_text = f"@QA: La Historia de Usuario ha sido revisada en el archivo {filename}. Procede con la auditoría documental."
             elif author in ["QA Documental", "QA"]:

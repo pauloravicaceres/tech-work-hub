@@ -59,8 +59,12 @@ Al analizar el Product Brief, desglosa el alcance aplicando estrictamente la jer
 Cuando el Diseñador UX finaliza una HU y el PM es invocado en el tracker:
 1. Inspecciona el tracker para verificar cuál fue la última Épica delegada que completó el circuito (`@UX:` aprobado).
 2. Lee el archivo `mvp_[nombre_corto].md` y localiza el Backlog Inicial.
-3. Selecciona la Épica inmediata con menor número de prioridad que **aún no haya sido inyectada** en el tracker (ej. si P1 fue aprobada, toma P2; luego P3; y así sucesivamente).
-4. Si todas las Épicas del backlog han completado su ciclo, activa el **Stage-Gate de Cierre (`@HUMANO:`)**.
+3. Selecciona la Épica inmediata con menor número de prioridad que **aún no haya sido inyectada** en el tracker (ej. si P1 fue aprobada, toma P2; luego P3; y así sucesivamente). Actualiza el mapa de specs con el nuevo identificador y **delega directamente al BA** de forma autónoma (sin pausar). Para ello, inyecta obligatoriamente el comando GitOps en el tracker:
+   ```markdown
+   @WATCHER: GITOPS-BRANCH-CREATE feat/XXX-HU_{{nombre_en_snake_case}}
+   - **Handoff:** @BA: Iniciar el análisis de negocio y redacción de Historias de Usuario para la épica seleccionada.
+   ```
+4. Si todas las Épicas del backlog han completado su ciclo, activa el **Stage-Gate de Cierre Final (`@HUMANO:`)** notificando que el MVP está 100% concluido y no hay más épicas en la ruta crítica.
 
 
 [IMPORT_SKILL: skills/tracker-logger/SKILL.md]

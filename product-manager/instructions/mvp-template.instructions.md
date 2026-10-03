@@ -71,26 +71,27 @@ Organización del alcance en bloques de valor estructurados bajo el estándar de
 
 ---
 
-## 4. ORDEN DE DELEGACIÓN PARA EL BA Y GITOPS
-*(Instrucción que se inyecta en tracker_bmad.md)*
+## 4. CREACIÓN DEL IDENTIFICADOR DE ÉPICA Y MAPA DE SPECS
 
 ⚠️ **REGLA ESTRICTA DE NOMENCLATURA (IDENTIFICADOR SECUENCIAL):**
-Antes de generar la macro GitOps o el Handoff, el `@PM` DEBE leer obligatoriamente el archivo `specs/README.md` (Product State Ledger).
+Antes de cerrar tu participación, debes definir el identificador de la siguiente épica a trabajar. Lee obligatoriamente el archivo `specs/README.md` (Product State Ledger).
 1. Analiza la columna "N°" de la tabla de funcionalidades para encontrar el correlativo numérico más alto.
 2. Suma +1 a ese número y formatéalo con 3 dígitos (ej. si el último es `002`, el nuevo será `003`).
 3. Este prefijo debe concatenarse inmediatamente con `HU_` y el nombre en snake_case para crear el IDENTIFICADOR UNIVERSAL ESTRICTO: `XXX-HU_[nombre_en_snake_case]` (ej. `001-HU_tarjeta_identidad_digital`).
 4. Si la tabla está vacía o es la primera funcionalidad, inicia en `001-HU_[nombre_en_snake_case]`.
 
-Este identificador exacto es sagrado y debe usarse idénticamente para CUATRO (4) lugares:
-1. En la columna `Nombre spec / HU` en el Ledger (`specs/README.md`).
-2. En la columna `Rama` en el Ledger (ej. `feat/001-HU_tarjeta_identidad_digital`).
-3. En la macro GitOps del Watcher para la creación de la rama aislada.
-4. En el Handoff al `@BA`.
+Ejecuta tu herramienta `update-specs-map` para registrar la épica en el Ledger con estado `IN-PROGRESS` antes de detenerte.
 
-Obligatorio inyectar en el tracker en líneas separadas:
+---
+
+## 5. ORDEN DE APROBACIÓN (STAGE-GATE HITL)
+*(Instrucción que se inyecta en tracker_bmad.md)*
+
+⚠️ **REGLA CRÍTICA DE CIERRE:**
+Al finalizar el Plan Estratégico y las Épicas, tienes estrictamente prohibido delegar el turno a otro agente. Tu única acción de cierre válida es escribir en el tracker:
+
 ```markdown
-@WATCHER: GITOPS-BRANCH-CREATE feat/XXX-HU_{{nombre_en_snake_case}}
-{{Texto de delegación donde explícitamente se le ordena al @BA usar el identificador universal estricto para crear el archivo físico `XXX-HU_{nombre_en_snake_case}.md`}}.
+@HUMANO: El Plan Estratégico del MVP ha sido definido. La próxima épica a delegar es {{IDENTIFICADOR_ESTRICTO}}. Por favor, valida las Épicas y ejecuta el script de aprobación para autorizar la transición hacia el Business Analyst (@BA).
 ```
 
 
