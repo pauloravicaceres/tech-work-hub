@@ -185,3 +185,69 @@ Awaiting your response to the question above.
 - **Estado:** ⚠️ Matriz de pruebas diseñada y ejecutada. Dictamen **RECHAZADO**. Backend unitarias 43 (42 ✅ / 1 ❌), integración 10 (5 ✅ / 5 ❌, TestServer en memoria), frontend Jest 14 escritas pero sin ejecutar (falta workspace Angular/Jest). Los 6 fallos corresponden a defectos de producción (DEF-02, DEF-03, DEF-04, DEF-05 y persistencia de QAPoints); detalle en el qa-report.
 - **❓ Puntos Abiertos:** DEF-06 (sin `Program`/DbContext real; sin Testcontainers) y configuración del entorno Jest del frontend.
 - **Handoff:** @CODE-REVIEW: Revisa el código de HU-001 (módulo Backlog y CreateBacklogItemComponent) con el qa-report.md como evidencia. Los defectos DEF-02..DEF-05 y el de QAPoints requieren corrección de DEV-BACK/DEV-FRONT.
+
+### [03-10-2026] Code Review
+- **Hora:** 15:36:00
+- **Artefacto generado:** `code-review/impact-analysis-report.md` (re-auditoría 3.ª iteración, evidencia: `documents/qa-auto/qa-report.md`)
+- **Estado:** ❌ **[RECHAZADO]** HU-001. No se emite GITOPS-MERGE-CLOSE. Lógica pura (dominio, handler, validador) sólida; pipeline, infraestructura y contrato FE↔BE siguen incompletos. DEF-02 corregido en working tree (`CreateBacklogItemValidator.cs:14-17` tiene `.NotEmpty()`), pendiente de commit y de re-ejecución del test `Validate_ConTipoNulo_DebeFallarEnType`. No se ejecutaron tests en esta revisión (solo lectura de código y diff).
+- **❓ Puntos Abiertos:**
+  - [CAPA:CODE] DEF-01 (crítico): sin `ValidationBehavior<,>` ni registro de validadores; SC-03/04/05 devuelven 201.
+  - [CAPA:CODE] DEF-03: `ValidationException` sin mapeo a HTTP 400 (CB-04 devuelve 500).
+  - [CAPA:CODE] DEF-04 (crítico): `AuditableEntityInterceptor` es no-op; `CreatedAt`/`CreatedBy` son `IsRequired`, el primer insert falla.
+  - [CAPA:CODE] DEF-05: sin `DispatchDomainEventsInterceptor`; `BacklogItemCreatedDomainEvent` nunca se publica.
+  - [CAPA:PLAN] DEF-06 (crítico): sin `Program`, `.csproj` de módulo, `DbContext` ni implementaciones de `IBacklogDbContext`/`IApplicationModuleApi` (interfaces definidas dentro del archivo del handler).
+  - [CAPA:CODE] Endpoint sin `CancellationToken` hacia `mediator.Send` (`CreateBacklogItemEndpoint.cs:13-15`); sin `JsonStringEnumConverter` (`priority:"High"` → 400, DEF-07 lado servidor).
+  - [CAPA:CODE] DEF-07 (front): `applications` hardcodeado `'app-id-101'` no es `Guid` (`component.ts:60`).
+  - [CAPA:CODE] DEF-08 (front): `styleUrls` apunta a `.scss` inexistente; sin `package.json`/`angular.json`/`jest.config` (Jest 14 pruebas sin ejecutar).
+  - [CAPA:CODE] QAPoints: la regla "ítem técnico ⇒ QAPoints null" solo se aplica en el handler (`Handler.cs:51-54`), no en el agregado `BacklogItem.Create`; el front envía `qaPoints: 0` por defecto en lugar de `null` (`component.ts:49,94`).
+  - [CAPA:SPEC] QAPoints: se descarta en silencio (Spike con `qaPoints=8` → 201 y `null`); la spec/contrato no define si debe descartarse o responder 400.
+  - [CAPA:SPEC] Contrato: `specs/001-registro-backlog-multitipo/contracts/api.md` no incluye `priority` ni `acceptanceCriteria`, que el comando exige; el 400 documentado usa `errors{}` pero el front lee `err.error?.message` y `includes('aplicación')` no coincide con el mensaje en inglés.
+  - [CAPA:TASKS] T009, T010, T015 y T018 figuran `[X]` sin implementación real detrás (T018 = interceptor vacío); faltan tareas para ValidationBehavior, exception handler, DispatchDomainEventsInterceptor, Program/DbContext y configuración Angular/Jest.
+  - [CAPA:CODE] Menores: sin `MaximumLength` en `Description`/`AcceptanceCriteria`; `Enum.Parse` en vez de `TryParse`; lista de tipos técnicos duplicada FE/BE; `subscribe()` manual sin `takeUntilDestroyed`; botón Cancelar sin handler; `*ngIf` en vez de `@if`; cambio `Type` string→int y schema `backlog` sin migración alineada con `data-model.md`.
+- **Handoff:**
+  - @DEV-BACK: corregir los hallazgos de servidor: DEF-01, DEF-03, DEF-04, DEF-05, DEF-06, `CancellationToken` en endpoint, `JsonStringEnumConverter`, mover regla QAPoints al dominio, límites de longitud, `TryParse`, migración y alineación de schema; commitear DEF-02. Alinear `contracts/api.md` con @SA/@API (priority, acceptanceCriteria, formato del 400 y política de QAPoints).
+  - @DEV-FRONT: corregir los hallazgos de interfaz: DEF-07 (cargar aplicaciones con `Guid` reales desde la API), DEF-08 (`.scss`, `package.json`/`angular.json`/`jest.config`), enviar `qaPoints: null`, leer `errors` del `ProblemDetails`, reemplazar `subscribe()` manual por signals/`takeUntilDestroyed`, handler de Cancelar, control flow `@if`, centralizar lista de tipos técnicos.
+  - @QA-AUTO: tras las correcciones de DEV-BACK y DEV-FRONT, ejecutar INT-01..INT-10 (migrar a `WebApplicationFactory<Program>` + Testcontainers cuando exista host real) y la suite Jest (14 pruebas); re-ejecutar `Validate_ConTipoNulo` para confirmar DEF-02; actualizar `qa-report.md` y devolver a @CODE-REVIEW.
+
+### [03-10-2026] WATCHER
+- **Hora:** 15:36:04
+- **Mensaje:** 🔁 [SDD Retrabajo] Iteración 1/2 (origen: Code Review). Reconciliando spec, plan y tasks (/speckit-converge)...
+
+### [03-10-2026] WATCHER
+- **Hora:** 15:39:20
+- **Mensaje:** 📌 [SDD Retrabajo] spec.md/plan.md actualizados por converge (capas: PLAN, SPEC). Los artefactos de diseño de BA, API y DA deben sincronizarse con el cambio.
+
+### [03-10-2026] WATCHER
+- **Hora:** 15:39:20
+- **Mensaje:** ⚡ [SDD Auto-Runner] Ejecutando implementación Backend (/speckit.implement)...
+
+
+### [03-10-2026] DEV-BACK
+- **Hora:** 20:55:00
+- **Artefacto generado:** `documents/dev-backend/backend-architecture.md`, `app/backend/` (host Api, Shared, módulos Backlog y Application, migraciones), `specs/001-registro-backlog-multitipo/contracts/api.md`, `specs/001-registro-backlog-multitipo/data-model.md`
+- **Estado:** Retrabajo de servidor HU-001 completado y commiteado (afda58a): DEF-01, DEF-02, DEF-03, DEF-04, DEF-05, DEF-06, CancellationToken en endpoint, JsonStringEnumConverter, regla QAPoints en el agregado (400 en tipos técnicos), límites de longitud 4000, Enum.TryParse, migraciones Code-First (schemas backlog y application) y contratos alineados en UTF-8. Tareas T013, T014, T018, T019 y T020-T031 marcadas. dotnet test: 61 unitarias y 22 de integración correctas sobre el Program real.
+- **⚠️ Puntos Abiertos:** Integración con SQLite en memoria (sin Docker para Testcontainers); migraciones no aplicadas contra PostgreSQL real; T017 (cURL del quickstart) y T037 (Testcontainers, Jest, qa-report) siguen abiertas; Shared no existía en el repo y se creó con el mínimo necesario (ADR-06); tareas de interfaz T032-T036 pendientes de dev-frontend.
+- **Handoff:** @QA-AUTO: Re-ejecutar INT-01..INT-10 y la prueba Validate_ConTipoNulo_DebeFallarEnType sobre app/backend (dotnet test app/backend/TechWorkHub.sln), migrar la fábrica a Testcontainers cuando haya Docker, actualizar qa-report.md y devolver a code-review una vez cerradas las tareas de interfaz.
+
+### [03-10-2026] Senior Backend Developer
+- **Hora:** 15:55:42
+- **Artefacto generado:** `documents/dev-backend/backend-architecture.md`
+- **Estado:** Implementación backend finalizada exitosamente mediante SDD SpecKit.
+- **Handoff:** @DEV-FRONT: Inicia implementación frontend.
+
+### [03-10-2026] WATCHER
+- **Hora:** 15:55:43
+- **Mensaje:** ⚡ [SDD Auto-Runner] Ejecutando implementación Frontend (/speckit.implement)...
+
+### [03-10-2026] Senior Frontend Developer
+- **Hora:** 16:04:09
+- **Artefacto generado:** `documents/dev-frontend/frontend-architecture.md`
+- **Estado:** Implementación frontend finalizada exitosamente mediante SDD SpecKit.
+- **Handoff:** @QA-AUTO: Retrabajo 1/2 aplicado sobre los hallazgos de Code Review. tras las correcciones de DEV-BACK y DEV-FRONT, ejecutar INT-01..INT-10 (migrar a `WebApplicationFactory<Program>` + Testcontainers cuando exista host real) y la suite Jest (14 pruebas); re-ejecutar `Validate_ConTipoNulo` para confirmar DEF-02; actualizar `qa-report.md` y devolver a @CODE-REVIEW. Ejecuta y valida las pruebas y, al aprobar, deriva a @CODE-REVIEW.
+
+### [03-10-2026] QA Automation
+- **Hora:** 16:30:00
+- **Artefacto generado:** `documents/qa-auto/qa-report.md`
+- **Estado:** ✅ Re-ejecución completada tras las correcciones de DEV-BACK/DEV-FRONT. Backend unitarias 61/61, integración 22/22 (`WebApplicationFactory<Program>`), Jest 19/19. `Validate_ConTipoNulo` en verde: DEF-02 confirmado; DEF-01..DEF-08 cerrados. Dictamen: **APROBADO CON RESERVA**.
+- **❓ Puntos Abiertos:** No se migró a Testcontainers PostgreSQL: el demonio de Docker no está activo en este entorno. La integración usa SQLite en memoria y autenticación de prueba (no Keycloak/JWT).
+- **Handoff:** @CODE-REVIEW: Revisa HU-001 con `documents/qa-auto/qa-report.md` como evidencia. Considera la reserva de PostgreSQL en tu dictamen.

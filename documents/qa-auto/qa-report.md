@@ -6,17 +6,20 @@
 ## 1. AI QA Review Dashboard
 
 ```
-┌──────────────────────────── HU-001 · DICTAMEN: [RECHAZADO] ────────────────────────────┐
+┌─────────────── HU-001 · DICTAMEN: [APROBADO CON RESERVA] (re-ejecución) ──────────────┐
 │ Capa                    Escritos  Ejecutados  Pasados  Fallados  Bloqueados             │
-│ Backend · Unitarias        43         43        42        1         0                  │
-│ Backend · Integración      10         10        5         5         0  (TestServer)     │
-│ Frontend · Jest            14          0         0        0        14 (sin workspace)   │
+│ Backend · Unitarias        61         61        61        0         0                  │
+│ Backend · Integración      22         22        22        0         0  (Program real)   │
+│ Frontend · Jest            19         19        19        0         0                  │
 │ ─────────────────────────────────────────────────────────────────────────────────────── │
-│ Cobertura funcional de CA (SC-01..SC-06): 6/6 con prueba real · 3/6 en verde (SC-01,02,06)│
-│ Nivel de riesgo: ALTO  (pipeline de validación, auditoría y eventos no existen)          │
+│ Cobertura funcional de CA (SC-01..SC-06): 6/6 con prueba real · 6/6 en verde            │
+│ Nivel de riesgo: MEDIO  (BD de integración = SQLite, no PostgreSQL; ver reserva)         │
 └──────────────────────────────────────────────────────────────────────────────────────────┘
-* Sin `Program` ni DbContext reales (DEF-06): la integración corre en un host en memoria (TestServer) con el endpoint, MediatR y handler REALES; la BD y el catálogo de apps son dobles en memoria. No sustituye a Testcontainers.
 ```
+
+Re-ejecución 03-10-2026 tras `afda58a` y los cambios del componente Angular: `dotnet test TechWorkHub.sln` (61 + 22) y `npx jest` en `app/frontend` (19, antes 14: el spec fue ampliado).
+
+**Reserva (no bloqueante):** la integración usa el host, MediatR, validación, interceptores y manejador de excepciones REALES, pero la BD es **SQLite en memoria**, el catálogo de aplicaciones (otro módulo) es un doble y la autenticación es un esquema de prueba que sustituye a Keycloak/JWT. **No se migró a Testcontainers PostgreSQL**: el demonio de Docker no está activo (`dockerDesktopLinuxEngine` no disponible). Riesgo residual: comportamiento específico de PostgreSQL (tipos, migraciones, concurrencia).
 
 Ejecución: `dotnet test` en `tests/Unit/Backlog/Backlog.UnitTests.csproj` (net8.0, xUnit 2.9.2, NSubstitute 5.3, FluentAssertions 6.12.2).
 
@@ -36,36 +39,36 @@ flowchart LR
 
   SC01 --> U1[Domain: Create_ConDatosValidos_DebeFijarEstado ✅]
   SC01 --> U2[Handler: Handle_ConUserStoryYPuntosCompletos ✅]
-  SC01 --> I1[INT-01 POST 201 ⛔ BLOQUEADO]
+  SC01 --> I1[INT-01 POST 201 ✅]
   SC02 --> U3[Handler: ConTipoTecnico ForzarQaPointsNulo x5 ✅]
   SC02 --> U4[Domain: Create_ConQaPointsNulos ✅]
-  SC02 --> F1[FE: onSubmit_ConSpike ⛔ no ejecutado]
+  SC02 --> F1[FE: onSubmit_ConSpike ✅]
   SC03 --> V1[Validator: TituloVacioONulo x3 ✅]
-  SC03 --> I2[INT-03 400 + sin persistencia ⛔]
+  SC03 --> I2[INT-03 400 + sin persistencia ✅]
   SC04 --> V2[Validator: TipoFueraDelCatalogo x4 ✅]
-  SC04 --> V3[Validator: ConTipoNulo ❌ DEF-02]
+  SC04 --> V3[Validator: ConTipoNulo ✅ corregido]
   SC05 --> V4[Validator: Dev/QA negativos ✅]
-  SC06 --> I3[INT-06 401 sin token ⛔ BLOQUEADO]
-  SC06 --> F2[FE: onSubmit_ConRespuesta401 ⛔ no ejecutado]
+  SC06 --> I3[INT-06 401 sin token ✅]
+  SC06 --> F2[FE: onSubmit_ConRespuesta401 ✅]
   CB04 --> U5[Handler: AppIdInexistente lanza ValidationException ✅]
-  CB04 --> I4[INT-04 mapeo a HTTP 400 ❌ DEF-03]
+  CB04 --> I4[INT-04 mapeo a HTTP 400 ✅ corregido]
   POST --> D1[Domain: evento BacklogItemCreatedDomainEvent ✅]
-  POST --> I5[INT-07 CreatedAt/CreatedBy ❌ DEF-04]
-  POST --> I6[INT-08 evento despachado ❌ DEF-05]
+  POST --> I5[INT-07 CreatedAt/CreatedBy ✅ corregido]
+  POST --> I6[INT-08 evento despachado ✅ corregido]
 ```
 
 | CA | Pruebas automatizadas | Estado |
 |---|---|---|
-| SC-01 | `BacklogItemDomainTests.Create_ConDatosValidos_*`, `Handler.Handle_ConUserStoryYPuntosCompletos_*`; INT-01 | Unit ✅ · HTTP 201 / persistencia ⛔ |
-| SC-02 | `Handler.Handle_ConTipoTecnico..._DebeForzarQaPointsNulo` (5 tipos), `Domain.Create_ConQaPointsNulos_*` | ✅ |
-| SC-03 | `Validator.Validate_ConTituloVacioONulo_*` (3), título 200/201 (CB-01) | ✅ (400 HTTP ⛔, depende de DEF-01) |
-| SC-04 | `Validator.Validate_ConTipoFueraDelCatalogo_*` (4), `ConTipoNulo` | 4 ✅ · 1 ❌ (DEF-02) |
-| SC-05 | `Validator.Validate_Con{Dev,Qa}PointsNegativos_*` | ✅ (400 HTTP ⛔, DEF-01) |
-| SC-06 / CB-06 | INT-06, `FE.onSubmit_ConRespuesta401_*` | ⛔ Bloqueado |
-| CB-04 | `Handler.Handle_ConApplicationIdInexistente_*` | Unit ✅ · mapeo 400 ❌ (DEF-03) |
-| CB-05 | `Handler.Handle_CuandoSaveChangesFalla_*` | Propagación ✅ · rollback ⛔ |
+| SC-01 | `BacklogItemDomainTests.Create_ConDatosValidos_*`, `Handler.Handle_ConUserStoryYPuntosCompletos_*`; INT-01 | ✅ Unit + HTTP 201 + persistencia |
+| SC-02 | `Handler.Handle_ConTipoTecnico..._DebeForzarQaPointsNulo` (5 tipos), `Domain.Create_ConQaPointsNulos_*`; INT-02 | ✅ |
+| SC-03 | `Validator.Validate_ConTituloVacioONulo_*` (3), título 200/201 (CB-01); INT-03 | ✅ (400 HTTP, sin fila) |
+| SC-04 | `Validator.Validate_ConTipoFueraDelCatalogo_*` (4), `ConTipoNulo`; INT `SinTipo` | ✅ (DEF-02 confirmado) |
+| SC-05 | `Validator.Validate_Con{Dev,Qa}PointsNegativos_*`; INT-05 | ✅ (400 HTTP) |
+| SC-06 / CB-06 | INT-06, `FE.onSubmit_ConRespuesta401_*` | ✅ |
+| CB-04 | `Handler.Handle_ConApplicationIdInexistente_*`; INT-04 | ✅ mapeo a 400 |
+| CB-05 | `Handler.Handle_CuandoSaveChangesFalla_*` | Propagación ✅ · rollback no verificado con PostgreSQL |
 
-Integración ejecutada en `tests/Integration/Backlog` (hallazgo 9 del Code Review): 5 ✅ (201 numérico, Spike→qaPoints null, 401 x2, appId existente) y 5 ❌ (título vacío, tipo inválido y puntos negativos devuelven 201 → DEF-01; appId inexistente → DEF-03; `priority:"High"` como texto, payload oficial de la HU → 400 → DEF-07). Cuando exista host real se migra a `WebApplicationFactory<Program>` + Testcontainers PostgreSQL con `ICollectionFixture`. Diseño original: INT-01 201 completo; INT-02 Spike con qaPoints null; INT-03 título vacío 400 sin fila; INT-04 appId inexistente 400; INT-05 puntos negativos sin evento; INT-06 sin token 401; INT-07 auditoría; INT-08 evento; INT-09 enums como string en JSON; INT-10 título de 201 caracteres.
+**Estado tras la re-ejecución (22/22 ✅):** `app/backend/tests/Integration/Backlog` corre sobre `WebApplicationFactory<Program>`; SC-01..SC-06, CB-04 y las postcondiciones pasan. `Validate_ConTipoNulo_DebeFallarEnType` pasa (DEF-02 confirmado corregido) y el caso HTTP `CreateBacklogItem_SinTipo_DebeResponder400SinPersistir` también. Correspondencia INT-01..INT-10: INT-01 `ConPayloadNumericoValido…201`; INT-02 `ConSpike…`/`ConTipoTecnicoSinQaPoints…`; INT-03 `ConTituloVacio…400`; INT-04 `ConApplicationIdInexistente…400`; INT-05 `ConDevPointsNegativos…400`; INT-06 `SinTokenOConTokenInvalido…401` y `ConTokenSinClaimDeIdentidad…401`; INT-07 `…AuditarCreatedAtYCreatedBy`; INT-08 `…PublicarBacklogItemCreatedDomainEvent`; INT-09 `ConPrioridadComoTextoSegunHU…201`; INT-10 `ConTextoEnElLimite…201` y `ConTextoMasLargoQueElLimite…400`. Pendiente: Testcontainers PostgreSQL (la BD actual es SQLite). Histórico de la ejecución anterior: 5 ✅ y 5 ❌ (DEF-01, DEF-03, DEF-07). Diseño original: INT-01 201 completo; INT-02 Spike con qaPoints null; INT-03 título vacío 400 sin fila; INT-04 appId inexistente 400; INT-05 puntos negativos sin evento; INT-06 sin token 401; INT-07 auditoría; INT-08 evento; INT-09 enums como string en JSON; INT-10 título de 201 caracteres.
 
 ## 3. Failure Impact Diagram
 
@@ -84,7 +87,9 @@ flowchart TD
   X7[DEF-08 FE: sin package.json/jest y falta .scss] --> B8[Frontend no compila ni se prueba]
 ```
 
-| ID | Severidad | Hallazgo | Responsable |
+> **Re-ejecución 03-10-2026:** el diagrama y la tabla son el **histórico** de la ejecución rechazada. DEF-01..DEF-08 están verificados como **CORREGIDOS** (todas las pruebas asociadas en verde). DEF-06 queda cerrado en lo funcional; la migración a Testcontainers sigue pendiente (reserva del dashboard).
+
+| ID | Severidad | Hallazgo (original) | Responsable |
 |---|---|---|---|
 | DEF-01 | Crítica | No existe `ValidationBehavior<,>` ni registro de validadores: los validadores no se invocan. | DEV-BACK |
 | DEF-02 | Alta | `Type = null` pasa el validador (`IsEnumName`) y revienta en el handler (test rojo). Añadir `NotEmpty()`. | DEV-BACK |
@@ -123,10 +128,10 @@ flowchart LR
     D[Domain BacklogItem — 4 tests · alta]
     V[Validator — 24 casos · alta]
     H[Handler — 15 casos · alta]
-    E[Endpoint Carter — 0 · NULA]
-    P[Pipeline MediatR — 0 · NULA]
-    I[Interceptors EF — 0 · NULA]
-    F[Componente Angular — 14 escritos · sin ejecutar]
+    E[Endpoint Carter — INT 22 · alta]
+    P[Pipeline MediatR — INT · alta]
+    I[Interceptors EF — INT-07/08 · media]
+    F[Componente Angular — 19 · alta]
   end
   V:::hot
   P:::hot
@@ -135,7 +140,7 @@ flowchart LR
   classDef hot fill:#ffd6d6,stroke:#c00;
 ```
 
-Hotspots de defectos: pipeline/infra del módulo Backlog (DEF-01, 03, 04, 05, 06) y contrato FE↔BE (DEF-07). La lógica pura (dominio, handler, validador) está sólida salvo DEF-02.
+Hotspots: ya no hay defectos abiertos; el riesgo residual es la BD de integración (SQLite en lugar de PostgreSQL).
 
 ## Hallazgo 9 (Code Review) — stubs reemplazados
 
@@ -147,7 +152,9 @@ Hotspots de defectos: pipeline/infra del módulo Backlog (DEF-01, 03, 04, 05, 06
 
 ## Dictamen
 
-**[RECHAZADO]** — Se devuelve el turno a `@DEV-BACK` y `@DEV-FRONT`. Los criterios SC-03/04/05/06 y las postcondiciones (auditoría, evento) no pueden cumplirse con la implementación actual. Al corregirse, QA-AUTO debe añadir y ejecutar INT-01..INT-10.
+**[APROBADO CON RESERVA]** — 102/102 pruebas en verde (61 unitarias, 22 de integración, 19 Jest); DEF-01..DEF-08 corregidos y SC-01..SC-06 cubiertos. Reserva: integración sobre SQLite y no sobre PostgreSQL (Docker no disponible), por lo que no se ha comprobado el comportamiento específico de PostgreSQL. Se devuelve el turno a `@CODE-REVIEW`.
+
+_Histórico: el dictamen previo fue **[RECHAZADO]** (47/53 en verde, 6 defectos de producción)._
 
 ## Notas de gobernanza
 
