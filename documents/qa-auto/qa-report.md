@@ -9,13 +9,13 @@
 ┌──────────────────────────── HU-001 · DICTAMEN: [RECHAZADO] ────────────────────────────┐
 │ Capa                    Escritos  Ejecutados  Pasados  Fallados  Bloqueados             │
 │ Backend · Unitarias        43         43        42        1         0                  │
-│ Backend · Integración       0*         0         0        0        10 (diseñados)       │
+│ Backend · Integración      10         10        5         5         0  (TestServer)     │
 │ Frontend · Jest            14          0         0        0        14 (sin workspace)   │
 │ ─────────────────────────────────────────────────────────────────────────────────────── │
-│ Cobertura funcional de CA (SC-01..SC-06): 2/6 verificados end-to-end · 6/6 diseñados     │
+│ Cobertura funcional de CA (SC-01..SC-06): 6/6 con prueba real · 3/6 en verde (SC-01,02,06)│
 │ Nivel de riesgo: ALTO  (pipeline de validación, auditoría y eventos no existen)          │
 └──────────────────────────────────────────────────────────────────────────────────────────┘
-* No se puede escribir un test de integración compilable: no existe `Program`, `.csproj` del módulo ni DbContext.
+* Sin `Program` ni DbContext reales (DEF-06): la integración corre en un host en memoria (TestServer) con el endpoint, MediatR y handler REALES; la BD y el catálogo de apps son dobles en memoria. No sustituye a Testcontainers.
 ```
 
 Ejecución: `dotnet test` en `tests/Unit/Backlog/Backlog.UnitTests.csproj` (net8.0, xUnit 2.9.2, NSubstitute 5.3, FluentAssertions 6.12.2).
@@ -65,7 +65,7 @@ flowchart LR
 | CB-04 | `Handler.Handle_ConApplicationIdInexistente_*` | Unit ✅ · mapeo 400 ❌ (DEF-03) |
 | CB-05 | `Handler.Handle_CuandoSaveChangesFalla_*` | Propagación ✅ · rollback ⛔ |
 
-Integración diseñada y pendiente de host (`WebApplicationFactory<Program>` + Testcontainers PostgreSQL con `ICollectionFixture`): INT-01 201 completo; INT-02 Spike con qaPoints null; INT-03 título vacío 400 sin fila; INT-04 appId inexistente 400; INT-05 puntos negativos sin evento; INT-06 sin token 401; INT-07 auditoría; INT-08 evento; INT-09 enums como string en JSON; INT-10 título de 201 caracteres.
+Integración ejecutada en `tests/Integration/Backlog` (hallazgo 9 del Code Review): 5 ✅ (201 numérico, Spike→qaPoints null, 401 x2, appId existente) y 5 ❌ (título vacío, tipo inválido y puntos negativos devuelven 201 → DEF-01; appId inexistente → DEF-03; `priority:"High"` como texto, payload oficial de la HU → 400 → DEF-07). Cuando exista host real se migra a `WebApplicationFactory<Program>` + Testcontainers PostgreSQL con `ICollectionFixture`. Diseño original: INT-01 201 completo; INT-02 Spike con qaPoints null; INT-03 título vacío 400 sin fila; INT-04 appId inexistente 400; INT-05 puntos negativos sin evento; INT-06 sin token 401; INT-07 auditoría; INT-08 evento; INT-09 enums como string en JSON; INT-10 título de 201 caracteres.
 
 ## 3. Failure Impact Diagram
 
@@ -137,11 +137,19 @@ flowchart LR
 
 Hotspots de defectos: pipeline/infra del módulo Backlog (DEF-01, 03, 04, 05, 06) y contrato FE↔BE (DEF-07). La lógica pura (dominio, handler, validador) está sólida salvo DEF-02.
 
+## Hallazgo 9 (Code Review) — stubs reemplazados
+
+| Tarea | Antes | Ahora |
+|---|---|---|
+| T009 | `[Fact]` comentado + `Task.CompletedTask` | 201 con persistencia y 401 (token ausente/inválido) contra el endpoint real |
+| T010 | Cuerpo vacío | 24 casos de `AbstractValidator` con `TestValidate` |
+| T015 | `[Fact]` comentado | Spike con `qaPoints=8` persiste `QAPoints == null` vía HTTP |
+
 ## Dictamen
 
 **[RECHAZADO]** — Se devuelve el turno a `@DEV-BACK` y `@DEV-FRONT`. Los criterios SC-03/04/05/06 y las postcondiciones (auditoría, evento) no pueden cumplirse con la implementación actual. Al corregirse, QA-AUTO debe añadir y ejecutar INT-01..INT-10.
 
 ## Notas de gobernanza
 
-- No se modificó código de producción. El stub de validador (T010) era una tautología y fue reemplazado. El stub `tests/Integration/Backlog/CreateBacklogItemTests.cs` (T009/T015: `[Fact]` comentado y `Task.CompletedTask`) se deja intacto hasta que exista host.
+- No se modificó código de producción. El stub de validador (T010) era una tautología y fue reemplazado. El stub de integración (T009/T015) también fue reemplazado por pruebas reales.
 - Las tareas T009, T010 y T015 de `tasks.md` están marcadas `[X]` sin pruebas reales detrás.
