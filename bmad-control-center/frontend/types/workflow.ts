@@ -1,4 +1,4 @@
-export type StageKey = 'PM' | 'BA' | 'QA' | 'UX' | 'SA' | 'DA' | 'API' | 'QT'
+export type StageKey = 'PM' | 'BA' | 'QA' | 'W-QA' | 'UX' | 'SA' | 'W-SA' | 'DA' | 'API' | 'QT' | 'W-IMP' | 'DEV-BACK' | 'DEV-FRONT' | 'QA-AUTO' | 'CR'
 
 export type StageStatus = 'COMPLETED' | 'IN_PROGRESS' | 'PENDING'
 

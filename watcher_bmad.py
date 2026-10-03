@@ -24,6 +24,8 @@ if sys.platform.startswith('win'):
 DIRECTORIO_RAIZ = Path(__file__).resolve().parent
 TRACKER_PATH = str(DIRECTORIO_RAIZ / "documents" / "tracker_bmad.md")
 
+last_implement_trigger = 0
+
 def write_watcher_log(mensaje):
     from datetime import datetime
     dt_str = datetime.now().strftime("%d-%m-%Y")
@@ -307,7 +309,7 @@ Lee obligatoriamente la plantilla maestra en dev-backend/templates/backend-archi
                 print("🏃 [SpecKit] Ejecutando implementación de Backend...")
                 write_watcher_log("⚡ [SDD Auto-Runner] Ejecutando implementación Backend (/speckit.implement)...")
                 
-                res_back = subprocess.run('agy --dangerously-skip-permissions "/speckit.implement"', shell=True, cwd=DIRECTORIO_RAIZ, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                res_back = subprocess.run('agy --dangerously-skip-permissions -p "/speckit.implement"', shell=True, cwd=DIRECTORIO_RAIZ, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                 if res_back.returncode != 0:
                     print("❌ [SpecKit] Falló la ejecución del subproceso para Backend.")
                     return False
@@ -358,7 +360,7 @@ Lee obligatoriamente la plantilla maestra en dev-frontend/templates/frontend-arc
                 print("🏃 [SpecKit] Ejecutando implementación de Frontend...")
                 write_watcher_log("⚡ [SDD Auto-Runner] Ejecutando implementación Frontend (/speckit.implement)...")
                 
-                res_front = subprocess.run('agy --dangerously-skip-permissions "/speckit.implement"', shell=True, cwd=DIRECTORIO_RAIZ, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                res_front = subprocess.run('agy --dangerously-skip-permissions -p "/speckit.implement"', shell=True, cwd=DIRECTORIO_RAIZ, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                 if res_front.returncode != 0:
                     print("❌ [SpecKit] Falló la ejecución del subproceso para Frontend.")
                     return False
@@ -425,6 +427,7 @@ def is_tracker_paused_for_human() -> bool:
     return False
 
 def extraer_instrucciones(linea):
+    global last_implement_trigger
     agentes = {
         "@BS:": "business-storyteller",
         "@PA:": "product-analyst",
@@ -556,6 +559,9 @@ def extraer_instrucciones(linea):
     # SDD GATEKEEPER 3: Intercepción de QT (Implementación Automática)
     # ==========================================
     if ("@dev-back:" in linea_lower or "@dev-front:" in linea_lower) and "arquitectura" in linea_lower:
+        if time.time() - last_implement_trigger < 60:
+            return []
+        last_implement_trigger = time.time()
         print("\n" + "=" * 80)
         print("💡 [GATILLO SDD DETECTADO] INICIANDO FASE D AUTOMÁTICA")
         print("=" * 80)
@@ -831,5 +837,10 @@ def iniciar_watcher():
 
 if __name__ == "__main__":
     iniciar_watcher()
+
+
+
+
+
 
 

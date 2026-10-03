@@ -12,15 +12,18 @@ CANONICAL_STAGES = [
     {"key": "PM", "name": "Product Manager", "role": "Product Manager", "order": 1},
     {"key": "BA", "name": "Business Analyst", "role": "Business Analyst", "order": 2},
     {"key": "QA", "name": "QA Documental", "role": "QA Documental", "order": 3},
-    {"key": "UX", "name": "Designer UX", "role": "Designer UX", "order": 4},
-    {"key": "SA", "name": "Solutions Architect", "role": "Solutions Architect", "order": 5},
-    {"key": "DA", "name": "Data Architect", "role": "Data Architect", "order": 6},
-    {"key": "API", "name": "API Architect", "role": "API Architect", "order": 7},
-    {"key": "QT", "name": "QA-Tech Senior", "role": "QA-Tech Senior", "order": 8},
-    {"key": "DEV-BACK", "name": "Dev Backend", "role": "Senior Backend Developer", "order": 9},
-    {"key": "DEV-FRONT", "name": "Dev Frontend", "role": "Senior Frontend Developer", "order": 10},
-    {"key": "QA-AUTO", "name": "QA Automation", "role": "QA Automation", "order": 11},
-    {"key": "CR", "name": "Code Review", "role": "SecOps", "order": 12},
+    {"key": "W-QA", "name": "Spec Kit", "role": "WATCHER", "order": 4},
+    {"key": "UX", "name": "Designer UX", "role": "Designer UX", "order": 5},
+    {"key": "SA", "name": "Solutions Architect", "role": "Solutions Architect", "order": 6},
+    {"key": "W-SA", "name": "Spec Kit", "role": "WATCHER", "order": 7},
+    {"key": "DA", "name": "Data Architect", "role": "Data Architect", "order": 8},
+    {"key": "API", "name": "API Architect", "role": "API Architect", "order": 9},
+    {"key": "QT", "name": "QA-Tech Senior", "role": "QA-Tech Senior", "order": 10},
+    {"key": "W-IMP", "name": "Spec Kit", "role": "WATCHER", "order": 11},
+    {"key": "DEV-BACK", "name": "Dev Backend", "role": "Senior Backend Developer", "order": 12},
+    {"key": "DEV-FRONT", "name": "Dev Frontend", "role": "Senior Frontend Developer", "order": 13},
+    {"key": "QA-AUTO", "name": "QA Automation", "role": "QA Automation", "order": 14},
+    {"key": "CR", "name": "Code Review", "role": "SecOps", "order": 15},
 ]
 
 ROLE_TO_KEY = {
@@ -35,6 +38,7 @@ ROLE_TO_KEY = {
     "API Architect": "API",
     "QA-Tech Senior": "QT",
     "QA-Tech": "QT",
+    "QA Tech": "QT",
     "Senior Backend Developer": "DEV-BACK",
     "Senior Frontend Developer": "DEV-FRONT",
     "QA Automation": "QA-AUTO",
@@ -91,7 +95,7 @@ class WorkflowService:
             artifact_match = re.search(r'-\s+\*\*Artefacto generado:\*\*\s+`?([^`\n]+)`?', chunk)
             artifact_path = artifact_match.group(1).strip() if artifact_match else None
 
-            status_match = re.search(r'-\s+\*\*Estado:\*\*\s+([^\n]+)', chunk)
+            status_match = re.search(r'-\s+\*\*(?:Estado|Mensaje):\*\*\s+([^\n]+)', chunk)
             status_desc = status_match.group(1).strip() if status_match else ""
 
             handoff_match = re.search(r'-\s+\*\*Handoff:\*\*\s+@?([A-Za-z0-9_-]+):?\s*([^\n]*)', chunk)
@@ -166,10 +170,22 @@ class WorkflowService:
         
         # Track completed stages and active stage
         completed_stage_map: Dict[str, Dict[str, Any]] = {}
+        last_canonical_key = None
         for block in blocks:
             role = block["author_role"]
             key = ROLE_TO_KEY.get(role)
-            if key:
+            if key and key not in ["W-QA", "W-SA", "W-IMP"]:
+                completed_stage_map[key] = block
+                last_canonical_key = key
+            elif role == "WATCHER":
+                if last_canonical_key == "QA":
+                    key = "W-QA"
+                elif last_canonical_key == "SA":
+                    key = "W-SA"
+                elif last_canonical_key == "QT":
+                    key = "W-IMP"
+                else:
+                    key = "W-QA"
                 completed_stage_map[key] = block
 
         # Check last block to find what is next
@@ -191,8 +207,20 @@ class WorkflowService:
                 active_agent_role = None
                 active_artifact = None
             elif target == "HUMANO":
-                # Preservar la última etapa del autor o marcar intervención humana
-                author_key = ROLE_TO_KEY.get(last_block["author_role"])
+                # Si el último bloque fue WATCHER, activar W-QA o W-SA o W-IMP
+                if last_block["author_role"] == "WATCHER":
+                    author_key = "W-QA"
+                    for i in range(len(blocks) - 2, -1, -1):
+                        role_i = blocks[i]["author_role"]
+                        if role_i != "WATCHER":
+                            prev_key = ROLE_TO_KEY.get(role_i)
+                            if prev_key == "SA":
+                                author_key = "W-SA"
+                            elif prev_key == "QT":
+                                author_key = "W-IMP"
+                            break
+                else:
+                    author_key = ROLE_TO_KEY.get(last_block["author_role"])
                 active_stage_key = author_key or "HUMANO"
                 active_agent_role = f"Revisión Humana (@HUMANO)"
             elif target and target in TOKEN_TO_KEY:
@@ -202,14 +230,36 @@ class WorkflowService:
                         active_agent_role = stage["role"]
                         break
             else:
-                # If target is unknown or watcher, deduce from completed stages
-                for stage in CANONICAL_STAGES:
-                    if stage["key"] not in completed_stage_map:
-                        active_stage_key = stage["key"]
-                        active_agent_role = stage["role"]
-                        break
+                # Si el autor es WATCHER y no hay target (está procesando en silencio)
+                if last_block["author_role"] == "WATCHER":
+                    active_stage_key = "W-QA"
+                    for i in range(len(blocks) - 2, -1, -1):
+                        role_i = blocks[i]["author_role"]
+                        if role_i != "WATCHER":
+                            prev_key = ROLE_TO_KEY.get(role_i)
+                            if prev_key == "SA":
+                                active_stage_key = "W-SA"
+                            elif prev_key == "QT":
+                                active_stage_key = "W-IMP"
+                            break
+                    active_agent_role = "Spec Kit"
+                else:
+                    # If target is unknown, deduce from completed stages
+                    for stage in CANONICAL_STAGES:
+                        if stage["key"] not in completed_stage_map:
+                            active_stage_key = stage["key"]
+                            active_agent_role = stage["role"]
+                            break
 
-        # Build 8 canonical steps
+        parallel_active_keys = [active_stage_key] if active_stage_key else []
+        if active_stage_key == "W-IMP" and blocks:
+            msg = blocks[-1].get("status_description", "")
+            if "Frontend" in msg:
+                parallel_active_keys.append("DEV-FRONT")
+            elif "Backend" in msg:
+                parallel_active_keys.append("DEV-BACK")
+
+        # Build 15 canonical steps
         stage_steps: List[WorkflowStageStep] = []
         completed_count = len(completed_stage_map)
         if completed_count >= len(CANONICAL_STAGES):
@@ -217,7 +267,21 @@ class WorkflowService:
 
         for stage in CANONICAL_STAGES:
             s_key = stage["key"]
-            if s_key in completed_stage_map:
+            if s_key in parallel_active_keys and overall_status != "COMPLETED":
+                b = completed_stage_map.get(s_key)
+                step = WorkflowStageStep(
+                    stage_key=s_key,
+                    stage_name=stage["name"],
+                    agent_role=stage["role"],
+                    order_index=stage["order"],
+                    status="IN_PROGRESS",
+                    is_active=True,
+                    started_at=b["timestamp"] if b else last_updated,
+                    completed_at=None,
+                    origin_block_index=b["block_index"] if b else None,
+                    generated_artifact_path=b["generated_artifact"] if b else None,
+                )
+            elif s_key in completed_stage_map:
                 b = completed_stage_map[s_key]
                 step = WorkflowStageStep(
                     stage_key=s_key,
@@ -230,19 +294,6 @@ class WorkflowService:
                     completed_at=b["timestamp"],
                     origin_block_index=b["block_index"],
                     generated_artifact_path=b["generated_artifact"],
-                )
-            elif s_key == active_stage_key and overall_status != "COMPLETED":
-                step = WorkflowStageStep(
-                    stage_key=s_key,
-                    stage_name=stage["name"],
-                    agent_role=stage["role"],
-                    order_index=stage["order"],
-                    status="IN_PROGRESS",
-                    is_active=True,
-                    started_at=last_updated,
-                    completed_at=None,
-                    origin_block_index=None,
-                    generated_artifact_path=None,
                 )
             else:
                 step = WorkflowStageStep(

@@ -21,9 +21,9 @@ description: "Lista de tareas para la implementación de la funcionalidad de Reg
 
 **Propósito**: Inicialización de la estructura y carpetas del módulo
 
-- [ ] T001 Crear estructura de carpetas para la feature `CreateBacklogItem` en `src/Modules/Backlog/Features/BacklogItems/CreateBacklogItem/`
-- [ ] T002 [P] Crear estructura de carpetas de dominio en `src/Modules/Backlog/Domain/BacklogItems/Events/`
-- [ ] T003 [P] Crear estructura de carpetas de datos en `src/Modules/Backlog/Data/Configurations/`
+- [X] T001 Crear estructura de carpetas para la feature `CreateBacklogItem` en `src/Modules/Backlog/Features/BacklogItems/CreateBacklogItem/`
+- [X] T002 [P] Crear estructura de carpetas de dominio en `src/Modules/Backlog/Domain/BacklogItems/Events/`
+- [X] T003 [P] Crear estructura de carpetas de datos en `src/Modules/Backlog/Data/Configurations/`
 
 ---
 
@@ -33,11 +33,11 @@ description: "Lista de tareas para la implementación de la funcionalidad de Reg
 
 **⚠️ CRÍTICO**: Ningún trabajo de historia de usuario puede comenzar hasta que esta fase esté completa.
 
-- [ ] T004 [P] Crear enumeración `BacklogItemType` en `src/Modules/Backlog/Domain/BacklogItems/BacklogItemType.cs` con los valores: UserStory, Bug, TechEvolution, TechRequirement, TechDebt, Research, Spike.
-- [ ] T005 [P] Crear enumeración `BacklogItemStatus` en `src/Modules/Backlog/Domain/BacklogItems/BacklogItemStatus.cs` con el valor inmutable inicial `Backlog`.
-- [ ] T006 [P] Crear evento de dominio `BacklogItemCreatedDomainEvent` en `src/Modules/Backlog/Domain/BacklogItems/Events/BacklogItemCreatedDomainEvent.cs` con propiedades `BacklogItemId`, `Type`, `ApplicationId`, y `OccurredOnUtc`.
-- [ ] T007 Crear entidad raíz de agregado `BacklogItem` en `src/Modules/Backlog/Domain/BacklogItems/BacklogItem.cs` heredando de `Aggregate<Guid>`.
-- [ ] T008 Configurar EF Core Entity Type Builder para `BacklogItem` en `src/Modules/Backlog/Data/Configurations/BacklogItemConfiguration.cs` aislando en el schema `Backlog`.
+- [X] T004 [P] Crear enumeración `BacklogItemType` en `src/Modules/Backlog/Domain/BacklogItems/BacklogItemType.cs` con los valores: UserStory, Bug, TechEvolution, TechRequirement, TechDebt, Research, Spike.
+- [X] T005 [P] Crear enumeración `BacklogItemStatus` en `src/Modules/Backlog/Domain/BacklogItems/BacklogItemStatus.cs` con el valor inmutable inicial `Backlog`.
+- [X] T006 [P] Crear evento de dominio `BacklogItemCreatedDomainEvent` en `src/Modules/Backlog/Domain/BacklogItems/Events/BacklogItemCreatedDomainEvent.cs` con propiedades `BacklogItemId`, `Type`, `ApplicationId`, y `OccurredOnUtc`.
+- [X] T007 Crear entidad raíz de agregado `BacklogItem` en `src/Modules/Backlog/Domain/BacklogItems/BacklogItem.cs` heredando de `Aggregate<Guid>`.
+- [X] T008 Configurar EF Core Entity Type Builder para `BacklogItem` en `src/Modules/Backlog/Data/Configurations/BacklogItemConfiguration.cs` aislando en el schema `Backlog`.
 
 **Punto de control**: Base fundacional lista - la implementación de historias de usuario puede comenzar.
 
@@ -51,15 +51,15 @@ description: "Lista de tareas para la implementación de la funcionalidad de Reg
 
 ### Pruebas para Historia de Usuario 1 (Opcional)
 
-- [ ] T009 [P] [US1] Prueba de integración para endpoints verificando el caso exitoso (HTTP 201) y rechazo sin token (HTTP 401 Unauthorized) en `tests/Integration/Backlog/CreateBacklogItemTests.cs`.
-- [ ] T010 [P] [US1] Pruebas unitarias para las validaciones del comando en `tests/Unit/Backlog/CreateBacklogItemValidatorTests.cs`.
+- [X] T009 [P] [US1] Prueba de integración para endpoints verificando el caso exitoso (HTTP 201) y rechazo sin token (HTTP 401 Unauthorized) en `tests/Integration/Backlog/CreateBacklogItemTests.cs`.
+- [X] T010 [P] [US1] Pruebas unitarias para las validaciones del comando en `tests/Unit/Backlog/CreateBacklogItemValidatorTests.cs`.
 
 ### Implementación para Historia de Usuario 1
 
-- [ ] T011 [P] [US1] Crear registro `CreateBacklogItemCommand` en `src/Modules/Backlog/Features/BacklogItems/CreateBacklogItem/CreateBacklogItemCommand.cs`.
-- [ ] T012 [P] [US1] Crear validador `CreateBacklogItemValidator` en `src/Modules/Backlog/Features/BacklogItems/CreateBacklogItem/CreateBacklogItemValidator.cs`. Incluir las siguientes reglas exactas: Title "NotEmpty().MaximumLength(200)", Type "IsInEnum() o validación contra el catálogo estático.", DevPoints "GreaterThanOrEqualTo(0).When(x => x.DevPoints.HasValue)", y QAPoints "GreaterThanOrEqualTo(0).When(x => x.QAPoints.HasValue)".
-- [ ] T013 [US1] Implementar `CreateBacklogItemCommandHandler` en `src/Modules/Backlog/Features/BacklogItems/CreateBacklogItem/CreateBacklogItemCommandHandler.cs`. Incluir validación asíncrona exacta: "Si tiene valor, el handler verificará asincrónamente su existencia consultando el módulo Application (IApplicationModuleApi.ExistsAsync(applicationId)). Si no existe, lanzará ValidationException mapeada a HTTP 400." y publicar evento de dominio.
-- [ ] T014 [US1] Implementar Minimal API endpoint usando Carter en `src/Modules/Backlog/Features/BacklogItems/CreateBacklogItem/CreateBacklogItemEndpoint.cs` para manejar `POST /api/backlog/items` requiriendo autorización JWT.
+- [X] T011 [P] [US1] Crear registro `CreateBacklogItemCommand` en `src/Modules/Backlog/Features/BacklogItems/CreateBacklogItem/CreateBacklogItemCommand.cs`.
+- [X] T012 [P] [US1] Crear validador `CreateBacklogItemValidator` en `src/Modules/Backlog/Features/BacklogItems/CreateBacklogItem/CreateBacklogItemValidator.cs`. Incluir las siguientes reglas exactas: Title "NotEmpty().MaximumLength(200)", Type "IsInEnum() o validación contra el catálogo estático.", DevPoints "GreaterThanOrEqualTo(0).When(x => x.DevPoints.HasValue)", y QAPoints "GreaterThanOrEqualTo(0).When(x => x.QAPoints.HasValue)".
+- [X] T013 [US1] Implementar `CreateBacklogItemCommandHandler` en `src/Modules/Backlog/Features/BacklogItems/CreateBacklogItem/CreateBacklogItemCommandHandler.cs`. Incluir validación asíncrona exacta: "Si tiene valor, el handler verificará asincrónamente su existencia consultando el módulo Application (IApplicationModuleApi.ExistsAsync(applicationId)). Si no existe, lanzará ValidationException mapeada a HTTP 400." y publicar evento de dominio.
+- [X] T014 [US1] Implementar Minimal API endpoint usando Carter en `src/Modules/Backlog/Features/BacklogItems/CreateBacklogItem/CreateBacklogItemEndpoint.cs` para manejar `POST /api/backlog/items` requiriendo autorización JWT.
 
 **Punto de control**: La Historia de Usuario 1 debe ser completamente funcional y testeable.
 
@@ -73,11 +73,11 @@ description: "Lista de tareas para la implementación de la funcionalidad de Reg
 
 ### Pruebas para Historia de Usuario 2 (Opcional)
 
-- [ ] T015 [P] [US2] Prueba de integración para crear tipo Spike con `qaPoints` igual a nulo en `tests/Integration/Backlog/CreateBacklogItemTests.cs`.
+- [X] T015 [P] [US2] Prueba de integración para crear tipo Spike con `qaPoints` igual a nulo en `tests/Integration/Backlog/CreateBacklogItemTests.cs`.
 
 ### Implementación para Historia de Usuario 2
 
-- [ ] T016 [US2] Ajustar o verificar el manejo de nulos en `src/Modules/Backlog/Features/BacklogItems/CreateBacklogItem/CreateBacklogItemCommandHandler.cs` para asegurar que `qaPoints` en elementos técnicos se guarde y retorne como nulo correctamente.
+- [X] T016 [US2] Ajustar o verificar el manejo de nulos en `src/Modules/Backlog/Features/BacklogItems/CreateBacklogItem/CreateBacklogItemCommandHandler.cs` para asegurar que `qaPoints` en elementos técnicos se guarde y retorne como nulo correctamente.
 
 **Punto de control**: Ambas historias de usuario deben funcionar independientemente.
 
@@ -87,9 +87,9 @@ description: "Lista de tareas para la implementación de la funcionalidad de Reg
 
 **Propósito**: Mejoras finales, validaciones de extremos y aseguramiento de la calidad.
 
-- [ ] T017 [P] Ejecutar todos los escenarios de prueba descritos en `quickstart.md` localmente mediante cURL o postman.
-- [ ] T018 Confirmar la inyección correcta de `CreatedAt` y `CreatedBy` a través de interceptores (`AuditableEntityInterceptor`).
-- [ ] T019 Validar rechazo de peticiones vacías (HTTP 400) o campos excesivamente largos según FR-004.
+- [X] T017 [P] Ejecutar todos los escenarios de prueba descritos en `quickstart.md` localmente mediante cURL o postman.
+- [X] T018 Confirmar la inyección correcta de `CreatedAt` y `CreatedBy` a través de interceptores (`AuditableEntityInterceptor`).
+- [X] T019 Validar rechazo de peticiones vacías (HTTP 400) o campos excesivamente largos según FR-004.
 
 ---
 

@@ -162,13 +162,13 @@ const groupedStages = computed(() => {
   const allStages = props.stages || []
   
   // Categoría 1: Negocio y Producto (PM, BA, QA, UX)
-  const negocio = allStages.filter(s => ['PM', 'BA', 'QA', 'UX'].includes(s.stage_key))
+  const negocio = allStages.filter(s => ['PM', 'BA', 'QA', 'W-QA', 'UX'].includes(s.stage_key))
   
   // Categoría 2: Arquitectura e Ingeniería (SA, DA, API, QT)
-  const arquitectura = allStages.filter(s => ['SA', 'DA', 'API', 'QT'].includes(s.stage_key))
+  const arquitectura = allStages.filter(s => ['SA', 'W-SA', 'DA', 'API', 'QT'].includes(s.stage_key))
   
   // Categoría 3: Desarrollo y Despliegue (DEV-BACK, DEV-FRONT, QA-AUTO, CR)
-  const desarrollo = allStages.filter(s => ['DEV-BACK', 'DEV-FRONT', 'QA-AUTO', 'CR'].includes(s.stage_key))
+  const desarrollo = allStages.filter(s => ['W-IMP', 'DEV-BACK', 'DEV-FRONT', 'QA-AUTO', 'CR'].includes(s.stage_key))
   
   // Si no hacen match estricto, los agrupamos dinámicamente según índice o fallbacks
   const groups = []
@@ -194,3 +194,4 @@ const onStageClick = (stage: WorkflowStageStep): void => {
   }
 }
 </script>
+

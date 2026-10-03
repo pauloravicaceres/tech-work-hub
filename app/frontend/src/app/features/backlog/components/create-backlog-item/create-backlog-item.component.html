@@ -1,0 +1,85 @@
+<p-toast></p-toast>
+
+<p-card header="REGISTRO DE ELEMENTO EN BACKLOG MULTITIPO" [style]="{width: '100%'}">
+  <p>Diligencie los campos requeridos para incorporar el requerimiento a la planificación.</p>
+  
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="p-fluid grid">
+      <div class="col-12 md:col-6 lg:col-4 mb-3">
+        <label for="title">TÍTULO DEL ELEMENTO (*)</label>
+        <input pInputText id="title" formControlName="title" placeholder="Ej: Implementar autenticación..." />
+        <small class="block">{{ charsCount() }}/200</small>
+        <small class="p-error block" *ngIf="form.get('title')?.invalid && form.get('title')?.touched">
+          El título es un campo obligatorio y no puede exceder los 200 caracteres.
+        </small>
+      </div>
+
+      <div class="col-12 md:col-6 lg:col-4 mb-3">
+        <label for="type">TIPO (*)</label>
+        <p-dropdown id="type" [options]="types" formControlName="type"></p-dropdown>
+      </div>
+
+      <div class="col-12 md:col-6 lg:col-4 mb-3">
+        <label for="priority">PRIORIDAD (*)</label>
+        <p-dropdown id="priority" [options]="priorities" formControlName="priority"></p-dropdown>
+      </div>
+
+      <div class="col-12 md:col-6 lg:col-4 mb-3">
+        <label for="applicationId">APLICACIÓN VINCULADA (Opcional)</label>
+        <p-dropdown id="applicationId" [options]="applications" formControlName="applicationId" [showClear]="true" placeholder="(Sin aplicación vinculada)"></p-dropdown>
+        <small class="p-error block" *ngIf="form.get('applicationId')?.hasError('invalidApp')">
+          La aplicación seleccionada ya no existe en el catálogo o no se encuentra disponible.
+        </small>
+      </div>
+
+      <div class="col-12 md:col-6 lg:col-4 mb-3">
+        <label for="status">ESTADO INICIAL (Fijo)</label>
+        <input pInputText id="status" formControlName="status" />
+      </div>
+
+      <div class="col-12 md:col-6 lg:col-4 mb-3"></div>
+
+      <div class="col-12 md:col-6 lg:col-4 mb-3">
+        <label for="devPoints">ESTIMACIÓN DESARROLLO (DevPoints)</label>
+        <p-inputNumber id="devPoints" formControlName="devPoints" [min]="0" [step]="0.5" mode="decimal"></p-inputNumber>
+        <small class="p-error block" *ngIf="form.get('devPoints')?.invalid && form.get('devPoints')?.touched">
+          Los puntos de estimación deben ser mayores o iguales a cero.
+        </small>
+      </div>
+
+      <div class="col-12 md:col-6 lg:col-4 mb-3">
+        <label for="qaPoints">ESTIMACIÓN QA (QAPoints)</label>
+        <p-inputNumber id="qaPoints" formControlName="qaPoints" [min]="0" [step]="0.5" mode="decimal" placeholder="{{ isQaNotApplicable() ? 'N/A' : '' }}"></p-inputNumber>
+        <small class="block text-secondary" *ngIf="isQaNotApplicable()">
+          * Este tipo de ítem técnico no requiere validación QA *
+        </small>
+      </div>
+
+      <div class="col-12 mb-3">
+        <label for="description">DESCRIPCIÓN TÉCNICA</label>
+        <textarea pTextarea id="description" formControlName="description" rows="4"></textarea>
+      </div>
+
+      <div class="col-12 mb-3">
+        <label for="acceptanceCriteria">CRITERIOS DE ACEPTACIÓN (Opcional)</label>
+        <textarea pTextarea id="acceptanceCriteria" formControlName="acceptanceCriteria" rows="4"></textarea>
+      </div>
+    </div>
+
+    <p-message severity="error" text="Formulario incompleto: Corrija los errores marcados antes de continuar." *ngIf="form.invalid && form.touched"></p-message>
+    <p-message severity="error" text="ERROR 500: Ocurrió un error transaccional en el servidor al intentar guardar el ítem. Sus datos se han conservado; intente nuevamente." *ngIf="serverError()"></p-message>
+
+    <div class="flex justify-content-end gap-2 mt-3">
+      <p-button label="Cancelar" icon="pi pi-times" severity="secondary" [outlined]="true"></p-button>
+      <p-button label="{{ serverError() ? 'Reintentar Envío' : 'Guardar Elemento' }}" icon="{{ serverError() ? 'pi pi-refresh' : 'pi pi-check' }}" type="submit" [disabled]="form.invalid" [loading]="isSubmitting()"></p-button>
+    </div>
+  </form>
+</p-card>
+
+<p-dialog header="SESIÓN EXPIRADA O INVÁLIDA" [modal]="true" [(visible)]="sessionExpired" [closable]="false" [dismissableMask]="false">
+  <p>Su sesión de trabajo en Keycloak ha expirado o no cuenta con un token de autorización válido para registrar ítems.</p>
+  <p>Para preservar la seguridad, vuelva a autenticarse.</p>
+  <ng-template pTemplate="footer">
+    <p-button label="Reautenticar con Keycloak" icon="pi pi-arrow-right" (click)="reauthenticate()"></p-button>
+  </ng-template>
+</p-dialog>
