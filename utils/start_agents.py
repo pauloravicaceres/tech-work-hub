@@ -32,26 +32,26 @@ TABS_CONFIG = {
     "Negocio y Producto": [
         # Fila 1
         {"name": "business-storyteller", "model": "Gemini 3.6 Flash", "effort": "low"},
-        {"name": "product-analyst",     "model": "Gemini 3.6 Flash", "effort": "low", "target": "business-storyteller", "direction": "right"},
-        {"name": "product-manager",     "model": "Gemini 3.6 Flash", "effort": "low", "target": "product-analyst", "direction": "right"},
+        {"name": "product-manager",     "model": "Gemini 3.8 Flash", "effort": "medium", "target": "business-storyteller", "direction": "right"},
+        {"name": "business-analyst",    "model": "Gemini 3.8 Flash", "effort": "medium", "target": "product-manager", "direction": "right"},
 
         # Fila 2
-        {"name": "business-analyst",    "model": "Gemini 3.6 Flash", "effort": "low", "target": "business-storyteller", "direction": "down"},
-        {"name": "qa-documental",       "model": "Gemini 3.6 Flash", "effort": "low", "target": "product-analyst", "direction": "down"},
-        {"name": "designer-ux",         "model": "Gemini 3.6 Flash", "effort": "low", "target": "product-manager", "direction": "down"},
+        {"name": "product-analyst",     "model": "Gemini 3.8 Flash", "effort": "low", "target": "business-storyteller", "direction": "down"},
+        {"name": "qa-documental",       "model": "Gemini 3.8 Flash", "effort": "medium", "target": "product-manager", "direction": "down"},
+        {"name": "designer-ux",         "model": "Gemini 3.8 Flash", "effort": "medium", "target": "business-analyst", "direction": "down"},
     ],
     "Arquitectura e Ingeniería": [
-        {"name": "solutions-architect", "model": "Gemini 3.6 Flash", "effort": "low"},
-        {"name": "data-architect",      "model": "Gemini 3.6 Flash", "effort": "low", "target": "solutions-architect", "direction": "right"},
-        {"name": "api-architect",       "model": "Gemini 3.6 Flash", "effort": "low", "target": "solutions-architect", "direction": "down"},
-        {"name": "qa-tech",             "model": "Gemini 3.6 Flash", "effort": "low", "target": "data-architect", "direction": "down"},
+        {"name": "solutions-architect", "model": "Gemini 3.1 Pro", "effort": "high"},
+        {"name": "data-architect",      "model": "Gemini 3.1 Pro", "effort": "high", "target": "solutions-architect", "direction": "right"},
+        {"name": "api-architect",       "model": "Gemini 3.1 Pro", "effort": "high", "target": "solutions-architect", "direction": "down"},
+        {"name": "qa-tech",             "model": "Gemini 3.1 Pro", "effort": "high", "target": "data-architect", "direction": "down"},
     ],
     "Desarrollo y Despliegue": [
         # Fase D automatizada: @DEV-BACK y @DEV-FRONT son asimilados por SpecKit.
         # Solo mantenemos a los auditores e infraestructura.
-        {"name": "qa-auto",      "model": "Gemini 3.6 Flash", "effort": "low"},
-        {"name": "code-review",  "model": "Gemini 3.6 Flash", "effort": "low", "target": "qa-auto", "direction": "right"},
-        {"name": "devops",       "model": "Gemini 3.6 Flash", "effort": "low", "target": "code-review", "direction": "right"},
+        {"name": "qa-auto",      "model": "Gemini 3.7 Flash", "effort": "medium"},
+        {"name": "code-review",  "model": "Gemini 3.7 Flash", "effort": "medium", "target": "qa-auto", "direction": "right"},
+        {"name": "devops",       "model": "Gemini 3.6 Flash", "effort": "medium", "target": "code-review", "direction": "right"},
     ]
 }
 

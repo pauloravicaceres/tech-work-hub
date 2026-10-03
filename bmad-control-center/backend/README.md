@@ -90,7 +90,7 @@ bmad-control-center/backend/
 
 #### Con `uv` (Recomendado por alto rendimiento):
 ```bash
-cd bmad-control-center/backend
+cd "bmad-control-center/backend"
 uv venv .venv --python 3.14
 uv pip install -r requirements.txt
 ```
