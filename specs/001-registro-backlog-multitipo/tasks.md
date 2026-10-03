@@ -87,7 +87,7 @@ description: "Lista de tareas para la implementación de la funcionalidad de Reg
 
 **Propósito**: Mejoras finales, validaciones de extremos y aseguramiento de la calidad.
 
-- [X] T017 [P] Ejecutar todos los escenarios de prueba descritos en `quickstart.md` localmente mediante cURL o postman.
+- [ ] T017 [P] Ejecutar todos los escenarios de prueba descritos en `quickstart.md` localmente mediante cURL o postman.
 - [X] T018 Confirmar la inyección correcta de `CreatedAt` y `CreatedBy` a través de interceptores (`AuditableEntityInterceptor`).
 - [X] T019 Validar rechazo de peticiones vacías (HTTP 400) o campos excesivamente largos según FR-004.
 
@@ -115,3 +115,39 @@ description: "Lista de tareas para la implementación de la funcionalidad de Reg
 1. Completar Configuración + Fundacional → La base está lista.
 2. Añadir Historia de Usuario 1 → Probar de manera independiente → Entregar MVP.
 3. Añadir Historia de Usuario 2 → Probar de manera independiente → Desplegar MVP mejorado.
+
+---
+
+## Fase 6: Convergencia (Retrabajo iteración 1/2)
+
+**Origen**: rechazo de Code Review (`code-review/impact-analysis-report.md`, 3.ª iteración). Etiqueta `[fix:<CAPA>:<hallazgo>]`; entre corchetes finales, el responsable: **servidor** (@DEV-BACK) o **interfaz** (@DEV-FRONT). La spec y el plan ya se corrigieron; estas tareas llevan el código a ese estado. T013, T014, T017, T018 y T019 se desmarcaron arriba por estar cerradas sin cumplirse.
+
+### Capa SPEC y PLAN (artefactos de diseño)
+
+- [X] T020 [fix:SPEC:13] Alinear `specs/001-registro-backlog-multitipo/contracts/api.md` con FR-008: documentar que `qaPoints` con valor en un tipo técnico devuelve HTTP 400 (no se descarta). El archivo tiene codificación no UTF-8 (acentos corruptos): reescribirlo completo en UTF-8 [servidor]
+- [X] T021 [fix:SPEC:14] Completar `contracts/api.md` y `data-model.md` con `priority` (texto: Low, Medium, High, Critical), `acceptanceCriteria`, límites de `description`/`acceptanceCriteria`, formato `ProblemDetails` con `errors{}` (FR-011, FR-012, FR-013) y el tipo único de `DevPoints`/`QAPoints` [servidor]
+- [X] T022 [fix:PLAN:DEF-06] Crear bajo `app/backend/src/` el host `Bootstrapper/Api/Program.cs` y `.csproj`, `BacklogModule.cs`, `BacklogDbContext` (schema `backlog`) que aplique `BacklogItemConfiguration`, y la implementación de `IApplicationModuleApi`; mover `IBacklogDbContext` e `IApplicationModuleApi` fuera del handler y trasladar el código de `src/Modules/Backlog` a `app/backend/` según la constitución [servidor]
+
+### Capa CODE — servidor
+
+- [X] T023 [fix:CODE:DEF-01] Registrar `ValidationBehavior<,>` de `Shared` y los validadores del ensamblado en `BacklogModule.cs`, para que `CreateBacklogItemValidator` se ejecute antes del handler (T013) [servidor]
+- [X] T024 [fix:CODE:DEF-03] Mapear `ValidationException` y la `NotFoundException` de `applicationId` a HTTP 400 `ProblemDetails` con `errors` mediante `CustomExceptionHandler` en `Program.cs` (FR-007, FR-013) [servidor]
+- [X] T025 [fix:CODE:DEF-04] Sustituir el `AuditableEntityInterceptor` vacío por el de `Shared`, registrado en el `DbContext`, que asigne `CreatedAt` y `CreatedBy` desde el claim; sin claim, HTTP 401 (FR-009, T018) [servidor]
+- [X] T026 [fix:CODE:DEF-05] Registrar `DispatchDomainEventsInterceptor` de `Shared` para publicar `BacklogItemCreatedDomainEvent` antes del commit (FR-010) [servidor]
+- [X] T027 [fix:CODE:1] Recibir `CancellationToken` en la lambda de `CreateBacklogItemEndpoint.cs` y pasarlo a `mediator.Send` (T014) [servidor]
+- [X] T028 [fix:CODE:DEF-07] Registrar `JsonStringEnumConverter` global para que `priority` y `type` se acepten como texto (FR-011) [servidor]
+- [X] T029 [fix:CODE:11] Mover la regla "tipo técnico ⇒ `qaPoints` nulo, con valor se rechaza" al agregado `BacklogItem.Create`, definir la lista de tipos técnicos una sola vez y quitar la duplicación del handler (FR-008) [servidor]
+- [X] T030 [fix:CODE:menores-servidor] Añadir `MaximumLength` a `Description` y `AcceptanceCriteria` en validador y `BacklogItemConfiguration`; cambiar `Enum.Parse` por `Enum.TryParse`; generar la migración Code-First y alinear el schema `backlog` y el tipo de `Type` con `data-model.md`; quitar el `using` sin uso de `Aggregate.cs` [servidor]
+- [X] T031 [fix:CODE:DEF-02] Commitear `.NotEmpty()` en `Type` de `CreateBacklogItemValidator.cs:14-17` y confirmar que `Validate_ConTipoNulo_DebeFallarEnType` pasa (T012) [servidor]
+
+### Capa CODE — interfaz
+
+- [ ] T032 [fix:CODE:DEF-07] Cargar la lista de aplicaciones desde la API del módulo Application con `Guid` reales, sin el valor `app-id-101` [interfaz]
+- [ ] T033 [fix:CODE:DEF-08] Crear `create-backlog-item.component.scss` y la configuración `package.json`, `angular.json` y `jest.config` para que el build y Jest funcionen [interfaz]
+- [ ] T034 [fix:CODE:12] Enviar `qaPoints: null` por defecto para UserStory/Bug en lugar de `0` [interfaz]
+- [ ] T035 [fix:CODE:14] Leer `errors` del `ProblemDetails` en lugar de `err.error?.message?.includes('aplicación')` y mostrar el error por campo [interfaz]
+- [ ] T036 [fix:CODE:5] Reemplazar los `subscribe()` manuales por `Signals`/`toSignal`/`takeUntilDestroyed`, usar `@if`/`@for` en lugar de `*ngIf`, añadir el handler de Cancelar y centralizar la lista de tipos técnicos en una constante [interfaz]
+
+### Capa TASKS y verificación
+
+- [ ] T037 [fix:TASKS:15] Tras T022–T036, ejecutar INT-01..INT-10 con `WebApplicationFactory<Program>` y Testcontainers (sustituir `FakeBacklogDb`), añadir pruebas del endpoint con token cancelado y del interceptor, ejecutar la suite Jest (14 pruebas y `.spec.ts` del componente), actualizar `documents/qa-auto/qa-report.md` y volver a marcar `[X]` T013, T014, T017, T018 y T019 solo con evidencia [servidor + interfaz, QA]
