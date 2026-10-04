@@ -160,6 +160,10 @@ Toda solicitud procesada por MediatR transita por dos behaviors globales en `Sha
 1. **`ValidationBehavior<TRequest, TResponse>`:** Aplica a todo `ICommand<TResponse>`. Ejecuta en paralelo los `AbstractValidator<TCommand>` registrados para el comando. Si existen fallos de validación, interrumpe el flujo y lanza `ValidationException` (manejada globalmente como `400 Bad Request`).
 2. **`LoggingBehavior<TRequest, TResponse>`:** Aplica a todo request (`ICommand` e `IQuery`). Inicia cronómetro (`Stopwatch`), registra log contextual al iniciar y finalizar, y emite un `LogWarning` si la ejecución supera los **3 segundos** para alertar cuellos de botella.
 
+### ⏱️ Propagación de `CancellationToken`
+* **Código de producción (OBLIGATORIO):** todo método asíncrono (`Task`) que realice E/S recibe y propaga el `CancellationToken` hasta EF Core o `HttpClient`.
+* **Código de prueba y helpers de soporte (RECOMENDADO):** se aconseja propagarlo, pero su ausencia no bloquea la revisión; se registra como deuda técnica.
+
 ### 🚨 Manejo Centralizado de Excepciones
 Implementado mediante `CustomExceptionHandler` (`IExceptionHandler` de ASP.NET Core) en `Program.cs`. El `@API` y `@SA` deben apoyarse en las excepciones base provistas en `Shared`:
 * `NotFoundException` → Traduce automáticamente a respuesta HTTP `404 Not Found`.
