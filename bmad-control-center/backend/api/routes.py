@@ -1,4 +1,6 @@
 import json
+import re
+from typing import Optional
 from fastapi import APIRouter, HTTPException
 
 from models.schemas import DecisionPayload
@@ -43,15 +45,44 @@ async def get_gate_status():
     return {"status": status, "content": content}
 
 
+_REVISOR_TOKEN = {"Code Review": "@CODE-REVIEW:", "QA Automation": "@QA-AUTO:"}
+
+
+def _handoff_a_revisor(payload: DecisionPayload) -> Optional[str]:
+    """
+    Si el último bloque es una consulta de un revisor (Code Review / QA Automation) dirigida al humano,
+    devuelve el handoff que le entrega la respuesta. Sin él la decisión queda registrada en el tracker pero
+    ningún agente la lee y el cierre de la HU no avanza.
+    """
+    from services.workflow_service import WorkflowService
+    blocks = WorkflowService()._parse_blocks(tracker_service.read_tracker())
+    if not blocks:
+        return None
+    last = blocks[-1]
+    token = _REVISOR_TOKEN.get(last.get("author_role"))
+    if not token or "HUMANO" not in last.get("handoff_targets", []):
+        return None
+
+    accion = "APROBÓ" if payload.action.value == "APPROVE" else "RECHAZÓ"
+    # Una sola línea y sin '@' en las menciones del texto libre: sanitize_feedback deja "[@PM:_ESCAPED]", que
+    # todavía contiene la etiqueta y el Watcher (que busca por coincidencia de texto) podría despachar a ese agente.
+    respuesta = re.sub(r"@(?=[A-Za-z])", "", " ".join((payload.feedback or "").split()))[:1500]
+    detalle = f" Respuesta: {respuesta}" if respuesta else " Sin comentarios adicionales."
+    return (
+        f"{token} El humano {accion} tu consulta de cierre.{detalle} "
+        "Procede según su decisión; si autorizó cerrar la rama, emite el cierre como línea independiente."
+    )
+
+
 @router.post("/gates/{gate_id}/decision")
 async def make_decision(gate_id: str, payload: DecisionPayload):
     """Records human decision with token sanitization into tracker (HU-001)."""
     from datetime import datetime
     dt_str = datetime.now().strftime("%d-%m-%Y")
     hr_str = datetime.now().strftime("%H:%M:%S")
-    
-    handoff_text = None
-    if payload.action.value == "APPROVE":
+
+    handoff_text = _handoff_a_revisor(payload)
+    if payload.action.value == "APPROVE" and not handoff_text:
         content_tracker = tracker_service.read_tracker()
         from services.workflow_service import WorkflowService
         ws = WorkflowService()
