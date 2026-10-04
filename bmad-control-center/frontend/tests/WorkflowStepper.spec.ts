@@ -109,3 +109,31 @@ describe('WorkflowStepper Component (T009 / US1)', () => {
     expect(wrapper.emitted('select-artifact')?.[0]).toEqual(['documents/business-analyst/002-HU_monitoreo.md'])
   })
 })
+
+describe('WorkflowStepper - Retrabajo SDD', () => {
+  const conRetrabajo = (): WorkflowStageStep[] =>
+    buildDefaultStages('CR').map((s) => {
+      if (s.stage_key === 'CR') {
+        return { ...s, status: 'COMPLETED', is_active: false, rework_state: 'REJECTED', rework_iteration: 1, rework_max: 2, rework_reason: 'RECHAZADO: falta ValidationBehavior' } as WorkflowStageStep
+      }
+      if (s.stage_key === 'DEV-BACK') {
+        return { ...s, status: 'IN_PROGRESS', is_active: true, rework_state: 'REWORK', rework_iteration: 1, rework_max: 2, rework_reason: 'RECHAZADO: falta ValidationBehavior' } as WorkflowStageStep
+      }
+      return s
+    })
+
+  it('DebeMarcarRechazadoAlRevisorYRetrabajoALaEtapaACorregir', () => {
+    const wrapper = mount(WorkflowStepper, { props: { stages: conRetrabajo(), activeStageKey: 'DEV-BACK' } })
+
+    expect(wrapper.text()).toContain('[✗ RECHAZADO]')
+    expect(wrapper.text()).toContain('[● EN PROGRESO · RETRABAJO 1/2]')
+    expect(wrapper.text()).toContain('Retrabajo 1/2')
+  })
+
+  it('NoDebeMostrarBannerNiMarcasSiNoHayRetrabajo', () => {
+    const wrapper = mount(WorkflowStepper, { props: { stages: buildDefaultStages('UX'), activeStageKey: 'UX' } })
+
+    expect(wrapper.text()).not.toContain('RETRABAJO')
+    expect(wrapper.text()).not.toContain('RECHAZADO')
+  })
+})

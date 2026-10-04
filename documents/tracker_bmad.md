@@ -377,4 +377,3 @@ Awaiting your response to the question above.
 - **⚠️ Puntos Abiertos:** T017 (quickstart manual) y T037 abiertas; el commit de este tracker queda a cargo del auto-commit previo al cambio de rama.
 @WATCHER: GITOPS-MERGE-CLOSE feat/001-HU_registro_elementos_backlog_multitipo
 - **Handoff:** @PM: Código certificado y rama consolidada en dev. Procede a asignar la siguiente historia del backlog (002-HU_pruebas_integracion_keycloak_y_catalogo_application).
-

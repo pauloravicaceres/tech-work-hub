@@ -5,6 +5,7 @@ import json
 import subprocess
 import random
 import re
+import shutil
 from pathlib import Path
 
 # Configuración de codificación UTF-8 para stdout/stderr en Windows
@@ -24,6 +25,8 @@ if sys.platform.startswith('win'):
 DIRECTORIO_RAIZ = Path(__file__).resolve().parent
 TRACKER_PATH = str(DIRECTORIO_RAIZ / "documents" / "tracker_bmad.md")
 
+last_implement_trigger = 0
+
 def write_watcher_log(mensaje):
     from datetime import datetime
     dt_str = datetime.now().strftime("%d-%m-%Y")
@@ -33,6 +36,240 @@ def write_watcher_log(mensaje):
         f.write(block)
 
 SKILLS_DIR = DIRECTORIO_RAIZ / "skills"  # NUEVO: Directorio global de habilidades
+
+# ==========================================
+# SPEC KIT SOBRE CLAUDE CODE
+# Spec Kit está instalado con la integración copilot (.github/skills/speckit-*),
+# pero Claude Code solo carga skills desde .claude/skills/.
+# ==========================================
+def sincronizar_skills_speckit():
+    origen = DIRECTORIO_RAIZ / ".github" / "skills"
+    destino = DIRECTORIO_RAIZ / ".claude" / "skills"
+    if not origen.exists():
+        return
+    destino.mkdir(parents=True, exist_ok=True)
+    for skill_dir in origen.glob("speckit-*"):
+        if skill_dir.is_dir():
+            shutil.copytree(skill_dir, destino / skill_dir.name, dirs_exist_ok=True)
+
+def ejecutar_speckit(skill, argumentos="", directiva=None):
+    """
+    Ejecuta una skill de Spec Kit con Claude Code en modo headless.
+    - directiva: archivo con el "alma" del agente; se añade al system prompt (Claude no lee
+      .specify/memory/active_agent_directive.md por sí solo).
+    Captura la salida; si falla, deja el motivo en el tracker (antes el error se perdía en DEVNULL).
+    """
+    nombre = f"/speckit-{skill}"
+    prompt = nombre + (f" {argumentos}" if argumentos else "")
+    cmd = ["claude", "-p", "--dangerously-skip-permissions"]
+    if directiva and Path(directiva).exists():
+        cmd += ["--append-system-prompt-file", str(directiva)]
+    cmd.append(prompt)
+    try:
+        res = subprocess.run(
+            cmd, cwd=DIRECTORIO_RAIZ, capture_output=True, text=True,
+            encoding="utf-8", errors="replace"
+        )
+    except FileNotFoundError:
+        res = subprocess.CompletedProcess([], 127, "", "No se encontró el ejecutable 'claude' en el PATH.")
+    if res.returncode != 0:
+        detalle = (res.stderr.strip() or res.stdout.strip())[-500:].replace("\n", " ")
+        write_watcher_log(f"🚨 ERROR en {nombre} (código {res.returncode}): {detalle}")
+    return res
+
+ALCANCES_IMPLEMENTACION = {
+    "backend": (
+        "ALCANCE: SOLO BACKEND (.NET: API, dominio, datos, pruebas del servidor). "
+        "Ignora y NO ejecutes tareas de frontend/UI (componentes, vistas, Angular/Vue)."
+    ),
+    "frontend": (
+        "ALCANCE: SOLO FRONTEND (UI: componentes, vistas, servicios y pruebas del cliente). "
+        "Ignora y NO ejecutes tareas de backend; no repitas tareas ya marcadas [X] en tasks.md."
+    ),
+}
+
+def sin_tokens(texto):
+    """Quita las '@' de las menciones a agentes. Un Handoff del Watcher debe llevar un único token de despacho
+    (el del siguiente agente); cualquier otra referencia va como texto plano para que nada la despache."""
+    return re.sub(r"@(?=[A-Za-z])", "", texto or "").replace("  ", " ").strip()
+
+NO_TOCAR_TRACKER = (
+    "NO escribas en documents/tracker_bmad.md ni emitas handoffs (@AGENTE:): el Watcher registra tu bloque y "
+    "decide el siguiente agente. Un bloque propio despacharía a QA antes de tiempo."
+)
+
+def instruccion_doc_viva(ruta_doc, alcance=None):
+    """Argumento de /speckit-implement: delimita el alcance y obliga a generar la documentación viva."""
+    prefijo = (ALCANCES_IMPLEMENTACION.get(alcance, "") + " ") if alcance else ""
+    return prefijo + NO_TOCAR_TRACKER + " " + (
+        f"OBLIGATORIO al finalizar todas las tareas: crea o edita el archivo '{ruta_doc}' "
+        "(créalo si no existe, incluida su carpeta) documentando con diagramas Mermaid solo lo que "
+        "alteraste. Aunque no hayas cambiado código, debes crear o tocar ese archivo indicando que la "
+        "arquitectura actual está vigente. Sin este archivo la ejecución se considera fallida."
+    )
+
+# ==========================================
+# RETRABAJO SDD (RECHAZOS DE CODE-REVIEW / QA-AUTO)
+# Un rechazo no se parchea: se clasifica por capa de origen (SPEC/PLAN/TASKS/CODE),
+# se reconcilia con /speckit-converge y recién entonces se re-implementa con /speckit-implement.
+# ==========================================
+AUTORES_REVISORES = ("Code Review", "QA Automation")
+MAX_ITERACIONES_RETRABAJO = 2
+RETRABAJO_STATE_PATH = DIRECTORIO_RAIZ / ".specify" / "memory" / "rework_state.json"
+RETRABAJO_CLASIFICACION_PATH = DIRECTORIO_RAIZ / ".specify" / "memory" / "rework_last_classification.md"
+retrabajos_procesados = set()
+contexto_bloque = {"autor": None, "hora": None}
+
+def actualizar_contexto_bloque(linea):
+    """Recuerda a qué bloque del tracker pertenece la línea que se está procesando."""
+    m = re.match(r"###\s+\[[^\]]+\]\s+(.+)", linea.strip())
+    if m:
+        contexto_bloque.update(autor=m.group(1).strip(), hora=None)
+        return
+    h = re.search(r"\*\*Hora:\*\*\s+([\d:]+)", linea)
+    if h:
+        contexto_bloque["hora"] = h.group(1)
+
+def buscar_bloque_tracker(autor=None, hora=None):
+    """Devuelve (autor, hora, texto) del bloque indicado, o del último bloque si autor es None."""
+    try:
+        contenido = Path(TRACKER_PATH).read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return None, None, ""
+    bloques = [b for b in re.split(r"(?=^### \[)", contenido, flags=re.MULTILINE) if b.startswith("### [")]
+    for b in reversed(bloques):
+        m = re.match(r"### \[[^\]]+\]\s+([^\n]+)", b)
+        h = re.search(r"\*\*Hora:\*\*\s+([\d:]+)", b)
+        if not m:
+            continue
+        if autor is None or (m.group(1).strip() == autor and (hora is None or (h and h.group(1) == hora))):
+            return m.group(1).strip(), (h.group(1) if h else None), b
+    return None, None, ""
+
+def extraer_segmentos_handoff(bloque):
+    """Separa el handoff de un revisor en lo que corresponde a backend, frontend y QA."""
+    idx = bloque.find("**Handoff:**")
+    seccion = bloque[idx:] if idx != -1 else bloque
+    marcas = list(re.finditer(r"@(DEV-BACK|DEV-FRONT|QA-AUTO|CODE-REVIEW|CR|HUMANO):", seccion))
+    claves = {"DEV-BACK": "backend", "DEV-FRONT": "frontend", "QA-AUTO": "qa"}
+    segmentos = {}
+    for i, m in enumerate(marcas):
+        fin = marcas[i + 1].start() if i + 1 < len(marcas) else len(seccion)
+        clave = claves.get(m.group(1))
+        if clave:
+            segmentos[clave] = seccion[m.end():fin].strip()
+    return segmentos
+
+def _leer_estado_retrabajo():
+    try:
+        return json.loads(RETRABAJO_STATE_PATH.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+
+def _guardar_estado_retrabajo(estado):
+    RETRABAJO_STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    RETRABAJO_STATE_PATH.write_text(json.dumps(estado, indent=2), encoding="utf-8")
+
+def resetear_retrabajo(clave):
+    estado = _leer_estado_retrabajo()
+    if estado.pop(clave, None) is not None:
+        _guardar_estado_retrabajo(estado)
+
+def ejecutar_sdd_retrabajo(autor, bloque):
+    """
+    Ciclo de convergencia ante un rechazo:
+      analyze -> converge (clasifica por capa, corrige spec/plan, reabre tasks) -> implement -> QA-AUTO.
+    Tras MAX_ITERACIONES_RETRABAJO ciclos escala al humano: la causa suele estar en la spec o el plan.
+    """
+    segmentos = extraer_segmentos_handoff(bloque)
+    if not segmentos.get("backend") and not segmentos.get("frontend"):
+        return True
+
+    clave = get_current_branch() or "sin-rama"
+    estado = _leer_estado_retrabajo()
+    n = estado.get(clave, 0) + 1
+    m_art = re.search(r"\*\*Artefacto generado:\*\*\s+`?([^`\n]+)`?", bloque)
+    artefacto = m_art.group(1).strip() if m_art else "(sin artefacto)"
+    m_est = re.search(r"\*\*Estado:\*\*\s+([^\n]+)", bloque)
+    hallazgos = m_est.group(1).strip() if m_est else ""
+
+    if n > MAX_ITERACIONES_RETRABAJO:
+        from datetime import datetime
+        ahora = datetime.now()
+        with open(TRACKER_PATH, "a", encoding="utf-8") as f:
+            f.write(
+                f"\n### [{ahora.strftime('%d-%m-%Y')}] WATCHER\n- **Hora:** {ahora.strftime('%H:%M:%S')}\n"
+                f"- **Mensaje:** 🛑 [SDD Retrabajo] Límite de {MAX_ITERACIONES_RETRABAJO} iteraciones alcanzado sin aprobación de {autor}.\n"
+                f"- **Handoff:** @HUMANO: El retrabajo automático no converge; la causa suele estar en la spec o el plan, no en el código. "
+                f"Revisa {artefacto}, corrige spec.md/plan.md si corresponde y define cómo continuar.\n"
+            )
+        print("🛑 [SDD Retrabajo] Límite de iteraciones alcanzado. Escalando a @HUMANO.")
+        return False
+
+    estado[clave] = n
+    _guardar_estado_retrabajo(estado)
+    write_watcher_log(
+        f"🔁 [SDD Retrabajo] Iteración {n}/{MAX_ITERACIONES_RETRABAJO} (origen: {autor}). "
+        "Reconciliando spec, plan y tasks (/speckit-converge)..."
+    )
+
+    # 1. Analyze: auditoría de consistencia entre artefactos (solo lectura)
+    informe = (ejecutar_speckit("analyze").stdout or "").strip()[-2500:]
+
+    # 2. Converge: clasificar por capa, corregir spec/plan y reconciliar tasks.md
+    capas = set(re.findall(r"\[CAPA:(SPEC|PLAN|TASKS|CODE)\]", bloque))
+    if capas and capas <= {"CODE", "TASKS"}:
+        guia_capas = (
+            "Todos los hallazgos vienen etiquetados CODE/TASKS: spec.md y plan.md son correctos, NO los modifiques. "
+        )
+    elif capas:
+        guia_capas = (
+            f"El revisor etiquetó capas {sorted(capas)}: respétalas y corrige primero, en spec.md/plan.md, "
+            "los hallazgos [CAPA:SPEC] y [CAPA:PLAN] antes de tocar tasks.md. "
+        )
+    else:
+        guia_capas = "El revisor no etiquetó capas: clasifícalas tú con criterio conservador (ante la duda, la capa superior). "
+    prompt = (
+        guia_capas +
+        "La constitución (.specify/memory/constitution.md) es el árbitro: si un hallazgo la viola, se corrige el código; "
+        "si la constitución es ambigua, NO la reinterpretes, señálalo para enmendarla con /speckit-constitution. "
+        f"MODO RETRABAJO (iteración {n}/{MAX_ITERACIONES_RETRABAJO}). El revisor '{autor}' RECHAZÓ la implementación. "
+        f"Informe del revisor: {artefacto}. Hallazgos: {hallazgos[:3000]} "
+        f"Asignación: {json.dumps(segmentos, ensure_ascii=False)[:1500]} "
+        f"Informe previo de consistencia (/speckit-analyze): {informe} "
+        "INSTRUCCIONES: (1) Clasifica cada hallazgo por capa de origen: SPEC (contrato o requisito erróneo/ambiguo), "
+        "PLAN (diseño técnico incompleto), TASKS (tarea marcada [X] sin cumplirse o ausente) o CODE (defecto de implementación). "
+        "(2) Si hay hallazgos SPEC o PLAN, corrige primero spec.md y plan.md con el cambio mínimo, respetando la constitución. "
+        "(3) Desmarca las tareas falsamente cerradas y agrega al final de tasks.md una tarea nueva por hallazgo, con ID consecutivo, "
+        "etiqueta [fix:<CAPA>:<n° de hallazgo>] e indicando si es de servidor o de interfaz. "
+        "(4) NO implementes código en este paso. (5) Termina con una tabla: hallazgo | capa | tarea. "
+        + NO_TOCAR_TRACKER
+    )
+    res_conv = ejecutar_speckit("converge", prompt)
+    if res_conv.returncode != 0:
+        return False
+    try:
+        RETRABAJO_CLASIFICACION_PATH.parent.mkdir(parents=True, exist_ok=True)
+        RETRABAJO_CLASIFICACION_PATH.write_text(
+            f"# Clasificación de retrabajo (iteración {n}, origen: {autor})\n\n{(res_conv.stdout or '').strip()}\n",
+            encoding="utf-8",
+        )
+    except OSError:
+        pass
+
+    if capas & {"SPEC", "PLAN"}:
+        # Trazabilidad: la spec/plan cambiaron, los artefactos de diseño derivados deben sincronizarse.
+        # Mensaje informativo (sin tokens @TAG:) para que no despache agentes ni reabra la cadena de diseño.
+        write_watcher_log(
+            "📌 [SDD Retrabajo] spec.md/plan.md actualizados por converge "
+            f"(capas: {', '.join(sorted(capas & {'SPEC', 'PLAN'}))}). "
+            "Los artefactos de diseño de BA, API y DA deben sincronizarse con el cambio."
+        )
+
+    # 3. Implement acotado a las tareas [fix:*]; el último bloque DEV deriva a @QA-AUTO
+    return ejecutar_sdd_fase_implementacion(retrabajo={
+        "autor": autor, "iteracion": n, "max": MAX_ITERACIONES_RETRABAJO, "segmentos": segmentos,
+    })
 
 # ==========================================
 # NUEVO: MOTOR DE COMPILACIÓN CON INYECCIÓN DE SKILLS
@@ -126,6 +363,150 @@ def guardar_historial(agente_id, instruccion):
             espera = random.uniform(0.5, 2.0)
             time.sleep(espera)
 
+# ==========================================
+# VIGILANTE DE CIERRE
+# Un agente puede terminar su turno (idle/done) mostrando el dictamen solo en su chat, sin registrar el bloque
+# en el tracker. Como el tracker es el único bus, el flujo se detiene en silencio. El vigilante lo detecta,
+# le recuerda al agente que registre y, si no lo hace tras MAX_RECORDATORIOS, deja constancia en el tracker.
+# ==========================================
+ROLES_TRACKER_POR_AGENTE = {
+    "business-storyteller": ("Business Storyteller",),
+    "product-analyst": ("Product Analyst",),
+    "product-manager": ("Product Manager",),
+    "business-analyst": ("Business Analyst",),
+    "qa-documental": ("QA Documental",),
+    "designer-ux": ("Designer UX",),
+    "solutions-architect": ("Solutions Architect",),
+    "data-architect": ("Data Architect",),
+    "api-architect": ("API Architect",),
+    "qa-tech": ("QA Tech", "QA-Tech"),
+    "qa-auto": ("QA Automation",),
+    "code-review": ("Code Review", "SecOps"),
+    "devops": ("DevOps", "SRE"),
+}
+MAX_RECORDATORIOS = 2
+GRACIA_SIN_TRABAJO_S = 90     # si el agente nunca pasa a 'working', se evalúa tras este tiempo
+IDLE_MINIMO_S = 20            # tiempo mínimo en idle/done antes de considerarlo terminado
+INTERVALO_VIGILANTE_S = 8
+seguimiento_agentes = {}
+_ultimo_chequeo_vigilante = 0
+
+def autores_en_tracker():
+    """Autores de todos los bloques del tracker, en orden."""
+    try:
+        contenido = Path(TRACKER_PATH).read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return []
+    return [a.strip() for a in re.findall(r"^###\s+\[[^\]]+\]\s+(.+)$", contenido, flags=re.MULTILINE)]
+
+def agente_registro_bloque(agente, desde_indice):
+    roles = ROLES_TRACKER_POR_AGENTE.get(agente)
+    if not roles:
+        return True  # agente sin rol conocido: no se vigila
+    return any(a.lower().startswith(r.lower()) for a in autores_en_tracker()[desde_indice:] for r in roles)
+
+def registrar_seguimiento(agente, pane_id, ahora=None):
+    """Llamar justo después de despachar una tarea al agente."""
+    if agente not in ROLES_TRACKER_POR_AGENTE:
+        return
+    seguimiento_agentes[agente] = {
+        "pane_id": pane_id, "bloques_al_despachar": len(autores_en_tracker()),
+        "despachado": ahora if ahora is not None else time.time(),
+        "vio_trabajando": False, "idle_desde": None, "recordatorios": 0,
+    }
+
+def texto_recordatorio(agente):
+    return (
+        "[WATCHER] Tu turno terminó pero NO hay un bloque tuyo nuevo en documents/tracker_bmad.md, y el flujo no puede "
+        "avanzar sin él. Registra ahora tu resultado con la skill tracker-logger (formato estándar: Hora, Artefacto generado, "
+        "Estado, Puntos Abiertos y Handoff con el token del siguiente agente). Si tu dictamen es RECHAZADO, etiqueta cada "
+        "hallazgo con [CAPA:SPEC|PLAN|TASKS|CODE] y asigna DEV-BACK, DEV-FRONT o QA-AUTO en el Handoff. Si necesitas una "
+        "decisión humana, regístralo igualmente con Handoff hacia HUMANO."
+    )
+
+def vigilar_agentes_inactivos(ahora=None, forzar=False):
+    """Revisa los agentes con tarea despachada; recuerda o escala si terminaron sin registrar en el tracker."""
+    global _ultimo_chequeo_vigilante
+    ahora = ahora if ahora is not None else time.time()
+    if not seguimiento_agentes or (not forzar and ahora - _ultimo_chequeo_vigilante < INTERVALO_VIGILANTE_S):
+        return
+    _ultimo_chequeo_vigilante = ahora
+
+    for agente in list(seguimiento_agentes):
+        est = seguimiento_agentes[agente]
+        if agente_registro_bloque(agente, est["bloques_al_despachar"]):
+            del seguimiento_agentes[agente]
+            continue
+
+        pane_id, estado = obtener_info_agente(agente)
+        if not pane_id:
+            continue
+        est["pane_id"] = pane_id
+
+        if estado not in ("idle", "done"):
+            est["vio_trabajando"] = est["vio_trabajando"] or estado == "working"
+            est["idle_desde"] = None
+            continue
+
+        if est["idle_desde"] is None:
+            est["idle_desde"] = ahora
+        terminado = est["vio_trabajando"] or ahora - est["despachado"] >= GRACIA_SIN_TRABAJO_S
+        if not terminado or ahora - est["idle_desde"] < IDLE_MINIMO_S:
+            continue
+
+        if est["recordatorios"] >= MAX_RECORDATORIOS:
+            write_watcher_log(
+                f"⚠️ [Vigilante] El agente '{agente}' terminó su turno {est['recordatorios'] + 1} veces sin registrar su "
+                "bloque en el tracker. El flujo está detenido: pídele el registro manualmente o escribe el handoff tú."
+            )
+            print(f"🛑 [Vigilante] '{agente}' no registró tras {est['recordatorios']} recordatorios. Escalado.")
+            del seguimiento_agentes[agente]
+            continue
+
+        try:
+            subprocess.run(["herdr", "pane", "run", pane_id, texto_recordatorio(agente)],
+                           check=True, capture_output=True, text=True, encoding="utf-8", errors="replace")
+            est["recordatorios"] += 1
+            print(f"🔔 [Vigilante] '{agente}' terminó sin registrar en el tracker. Recordatorio {est['recordatorios']}/{MAX_RECORDATORIOS}.")
+        except (subprocess.CalledProcessError, OSError) as e:
+            print(f"⚠️ [Vigilante] No se pudo recordar a '{agente}': {e}")
+            continue
+        est.update(despachado=ahora, vio_trabajando=False, idle_desde=None)
+
+def limpiar_sesiones_agentes():
+    """
+    Al cerrar una HU, vacía la conversación de cada agente de la flota con /clear.
+    Una sesión larga reenvía todo su historial en cada turno; empezar la HU siguiente con contexto limpio
+    abarata cada paso. /clear conserva el rol (AGENTS.md se recarga solo). Solo toca agentes libres.
+    """
+    try:
+        res = subprocess.run(["herdr", "agent", "list"], capture_output=True, text=True, encoding="utf-8",
+                             errors="replace", check=True)
+        agentes = json.loads(res.stdout).get("result", {}).get("agents", [])
+    except (subprocess.CalledProcessError, OSError, ValueError) as e:
+        print(f"⚠️ [Sesiones] No se pudo listar los agentes para limpiarlos: {e}")
+        return
+
+    limpiados, omitidos = [], []
+    for ag in agentes:
+        nombre = ag.get("name")
+        if nombre not in ROLES_TRACKER_POR_AGENTE:
+            continue
+        if ag.get("agent_status") not in ("idle", "done"):
+            omitidos.append(nombre)  # trabajando: no se interrumpe
+            continue
+        try:
+            subprocess.run(["herdr", "pane", "run", ag["pane_id"], "/clear"], capture_output=True, text=True,
+                           encoding="utf-8", errors="replace", check=True)
+            limpiados.append(nombre)
+        except (subprocess.CalledProcessError, OSError, KeyError):
+            omitidos.append(nombre)
+
+    seguimiento_agentes.clear()
+    print(f"🧹 [Sesiones] Contexto limpiado en {len(limpiados)} agente(s)"
+          + (f"; omitidos (ocupados o con error): {', '.join(omitidos)}" if omitidos else "") + ".")
+    # Sin escribir en el tracker: tras la fusión el árbol queda en la rama base y no debe ensuciarse.
+
 def obtener_info_agente(nombre_agente):
     try:
         resultado = subprocess.run("herdr agent list", shell=True, capture_output=True, text=True, encoding="utf-8", errors="replace")
@@ -181,11 +562,12 @@ def ejecutar_sdd_fase_negocio(ruta_hu: str):
     try:
         # 1. Specify
         write_watcher_log("⚙️ [SDD Auto-Runner] Ejecutando análisis funcional (/speckit.specify)...")
-        subprocess.run(f'agy --dangerously-skip-permissions --print "/speckit.specify {ruta_hu}"', shell=True, check=True, cwd=DIRECTORIO_RAIZ)
-        
+        if ejecutar_speckit("specify", ruta_hu).returncode != 0:
+            return False
+
         # 2. Clarify (HITL por Excepción)
         write_watcher_log("⚙️ [SDD Auto-Runner] Verificando ambigüedades (/speckit.clarify)...")
-        res_clarify = subprocess.run('agy --dangerously-skip-permissions --print "/speckit.clarify"', shell=True, capture_output=True, text=True, encoding="utf-8", errors="replace", cwd=DIRECTORIO_RAIZ)
+        res_clarify = ejecutar_speckit("clarify")
         if "?" in res_clarify.stdout or "ambiguity" in res_clarify.stdout.lower() or res_clarify.returncode != 0:
             print("⚠️ [HITL] Ambigüedad detectada en /speckit.clarify. Pausando para intervención humana.")
             print(res_clarify.stdout)
@@ -230,15 +612,17 @@ def ejecutar_sdd_fase_arquitectura(ruta_hu: str = ""):
     try:
         # 1. Plan & Tasks
         write_watcher_log("⚙️ [SDD Auto-Runner] Estructurando plan de arquitectura técnica (/speckit.plan)...")
-        subprocess.run('agy --dangerously-skip-permissions --print "/speckit.plan"', shell=True, check=True, cwd=DIRECTORIO_RAIZ)
-        
+        if ejecutar_speckit("plan").returncode != 0:
+            return False
+
         write_watcher_log("⚙️ [SDD Auto-Runner] Desglosando tareas de implementación (/speckit.tasks)...")
-        subprocess.run('agy --dangerously-skip-permissions --print "/speckit.tasks"', shell=True, check=True, cwd=DIRECTORIO_RAIZ)
+        if ejecutar_speckit("tasks").returncode != 0:
+            return False
 
         # 2. Analyze (Auditoría Técnica)
         print("🔍 [SDD Arquitectura] Ejecutando auditoría /speckit.analyze...")
         write_watcher_log("⚙️ [SDD Auto-Runner] Ejecutando auditoría técnica (/speckit.analyze)...")
-        res_analyze = subprocess.run('agy --dangerously-skip-permissions --print "/speckit.analyze"', shell=True, cwd=DIRECTORIO_RAIZ)
+        res_analyze = ejecutar_speckit("analyze")
         if res_analyze.returncode != 0:
             print("🛑 [HITL] Auditoría fallida. Violación de constitución técnica. Pausando.")
             return False
@@ -265,9 +649,11 @@ def ejecutar_sdd_fase_arquitectura(ruta_hu: str = ""):
         print(f"❌ [SDD Arquitectura] Error inesperado: {e}")
         return False
 
-def ejecutar_sdd_fase_implementacion():
+def ejecutar_sdd_fase_implementacion(retrabajo=None):
     """
     Hito 3 del SDD Auto-Runner: Fase D (Implementación) usando SpecKit + Soul Mounting.
+    retrabajo: {"autor", "iteracion", "max", "segmentos"} cuando se re-implementa tras un rechazo;
+    limita el alcance a las capas con hallazgos y a las tareas [fix:*] de tasks.md.
     """
     print(f"\n⚙️ [SDD Implementación] Iniciando Fase D (Fuerza Bruta + Alma Agéntica)...")
     import json
@@ -287,6 +673,28 @@ def ejecutar_sdd_fase_implementacion():
             
         involucra_backend = project_type in ["fullstack", "headless"]
         involucra_frontend = project_type in ["fullstack", "ui"]
+
+        segmentos = retrabajo["segmentos"] if retrabajo else {}
+        if retrabajo:
+            involucra_backend = involucra_backend and bool(segmentos.get("backend"))
+            involucra_frontend = involucra_frontend and bool(segmentos.get("frontend"))
+            texto_qa = (
+                f"Retrabajo {retrabajo['iteracion']}/{retrabajo['max']} aplicado sobre los hallazgos de {retrabajo['autor']}. "
+                f"{sin_tokens(segmentos.get('qa')) or 'Revalida la HU.'} Ejecuta y valida las pruebas y, al aprobar, deriva a Code Review."
+            )
+        else:
+            texto_qa = (
+                "La Fase D (Implementación) ha finalizado exitosamente mediante motor SDD. Inicia el diseño de la "
+                "matriz de pruebas automatizadas basándote en los criterios de la HU; al terminar, deriva a Code Review."
+            )
+
+        def arg_retrabajo(capa):
+            if not retrabajo:
+                return ""
+            return (
+                " MODO RETRABAJO: ejecuta SOLO las tareas reabiertas o nuevas con etiqueta [fix:*] de tasks.md "
+                f"que correspondan a este alcance; no rehagas tareas ya validadas. Hallazgos a resolver: {segmentos.get(capa, '')}"
+            )
         
         # 1. Ejecutar Backend si aplica
         if involucra_backend:
@@ -298,7 +706,7 @@ def ejecutar_sdd_fase_implementacion():
                 # TAREA FANTASMA PARA BACKEND (Ruta estricta en documents/)
                 tarea_fantasma_back = """
 \n\n# TASK-FINAL: Generación de Documentación Viva
-Lee obligatoriamente la plantilla maestra en dev-backend/templates/backend-architecture-template.md (si existe) o básate en tus reglas. Luego, crea o edita obligatoriamente el archivo 'documents/dev-backend/backend-architecture.md'. APLICA RENDERIZADO SELECTIVO: No regeneres la arquitectura base; únicamente documenta y genera los diagramas Mermaid para las rutas, esquemas o componentes que alteraste en las tareas anteriores. Este paso es un requisito crítico arquitectónico para finalizar.
+Lee obligatoriamente la plantilla maestra en dev-backend/templates/backend-architecture-template.md (si existe) o básate en tus reglas. Luego, crea o edita obligatoriamente el archivo 'documents/dev-backend/backend-architecture.md'. APLICA RENDERIZADO SELECTIVO: No regeneres la arquitectura base; únicamente documenta y genera los diagramas Mermaid para las rutas, esquemas o componentes que alteraste en las tareas anteriores. Este paso es un requisito crítico arquitectónico para finalizar. AÚN SI NO HICISTE CAMBIOS EN EL CÓDIGO, DEBES CREAR O TOCAR EL ARCHIVO indicando que la arquitectura actual está vigente.
 """
                 active_directive_path.write_text(alma_backend + tarea_fantasma_back, encoding="utf-8")
             
@@ -307,15 +715,21 @@ Lee obligatoriamente la plantilla maestra en dev-backend/templates/backend-archi
                 print("🏃 [SpecKit] Ejecutando implementación de Backend...")
                 write_watcher_log("⚡ [SDD Auto-Runner] Ejecutando implementación Backend (/speckit.implement)...")
                 
-                res_back = subprocess.run('agy --dangerously-skip-permissions "/speckit.implement"', shell=True, cwd=DIRECTORIO_RAIZ, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                doc_back_path = DIRECTORIO_RAIZ / "documents" / "dev-backend" / "backend-architecture.md"
+                doc_back_path.parent.mkdir(parents=True, exist_ok=True)
+                res_back = ejecutar_speckit(
+                    "implement",
+                    instruccion_doc_viva("documents/dev-backend/backend-architecture.md", alcance="backend") + arg_retrabajo("backend"),
+                    directiva=active_directive_path,
+                )
                 if res_back.returncode != 0:
                     print("❌ [SpecKit] Falló la ejecución del subproceso para Backend.")
                     return False
 
                 # POST-CHECK DE VALIDACIÓN: Backend Architecture Doc
-                doc_back_path = DIRECTORIO_RAIZ / "documents" / "dev-backend" / "backend-architecture.md"
                 if not doc_back_path.exists() or doc_back_path.stat().st_mtime < (ts_inicio_back - 2):
-                    msg_err = "@WATCHER: 🚨 ERROR: SpecKit omitió la documentación viva de Backend en 'documents/dev-backend/backend-architecture.md'"
+                    salida = (res_back.stdout or "").strip()[-300:].replace("\n", " ")
+                    msg_err = f"@WATCHER: 🚨 ERROR: SpecKit omitió la documentación viva de Backend en 'documents/dev-backend/backend-architecture.md'. Salida de Claude: {salida}"
                     print(f"❌ {msg_err}")
                     write_watcher_log(msg_err)
                     return False
@@ -323,8 +737,8 @@ Lee obligatoriamente la plantilla maestra en dev-backend/templates/backend-archi
                 from datetime import datetime
                 dt_str = datetime.now().strftime("%d-%m-%Y")
                 hr_str = datetime.now().strftime("%H:%M:%S")
-                handoff_target = "@DEV-FRONT:" if involucra_frontend else "@CODE-REVIEW:"
-                handoff_text = "Inicia implementación frontend." if involucra_frontend else "Backend completado sin frontend."
+                handoff_target = "@DEV-FRONT:" if involucra_frontend else "@QA-AUTO:"
+                handoff_text = "Inicia implementación frontend." if involucra_frontend else texto_qa
                 block = f"""
 ### [{dt_str}] Senior Backend Developer
 - **Hora:** {hr_str}
@@ -349,7 +763,7 @@ Lee obligatoriamente la plantilla maestra en dev-backend/templates/backend-archi
                 # TAREA FANTASMA PARA FRONTEND (Ruta estricta en documents/)
                 tarea_fantasma_front = """
 \n\n# TASK-FINAL: Generación de Documentación Viva
-Lee obligatoriamente la plantilla maestra en dev-frontend/templates/frontend-architecture-template.md (si existe) o básate en tus reglas. Luego, crea o edita obligatoriamente el archivo 'documents/dev-frontend/frontend-architecture.md'. APLICA RENDERIZADO SELECTIVO: No regeneres la arquitectura base; únicamente documenta y genera los diagramas Mermaid para las rutas, esquemas o componentes que alteraste en las tareas anteriores. Este paso es un requisito crítico arquitectónico para finalizar.
+Lee obligatoriamente la plantilla maestra en dev-frontend/templates/frontend-architecture-template.md (si existe) o básate en tus reglas. Luego, crea o edita obligatoriamente el archivo 'documents/dev-frontend/frontend-architecture.md'. APLICA RENDERIZADO SELECTIVO: No regeneres la arquitectura base; únicamente documenta y genera los diagramas Mermaid para las rutas, esquemas o componentes que alteraste en las tareas anteriores. Este paso es un requisito crítico arquitectónico para finalizar. AÚN SI NO HICISTE CAMBIOS EN EL CÓDIGO, DEBES CREAR O TOCAR EL ARCHIVO indicando que la arquitectura actual está vigente.
 """
                 active_directive_path.write_text(alma_frontend + tarea_fantasma_front, encoding="utf-8")
             
@@ -358,15 +772,21 @@ Lee obligatoriamente la plantilla maestra en dev-frontend/templates/frontend-arc
                 print("🏃 [SpecKit] Ejecutando implementación de Frontend...")
                 write_watcher_log("⚡ [SDD Auto-Runner] Ejecutando implementación Frontend (/speckit.implement)...")
                 
-                res_front = subprocess.run('agy --dangerously-skip-permissions "/speckit.implement"', shell=True, cwd=DIRECTORIO_RAIZ, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                doc_front_path = DIRECTORIO_RAIZ / "documents" / "dev-frontend" / "frontend-architecture.md"
+                doc_front_path.parent.mkdir(parents=True, exist_ok=True)
+                res_front = ejecutar_speckit(
+                    "implement",
+                    instruccion_doc_viva("documents/dev-frontend/frontend-architecture.md", alcance="frontend") + arg_retrabajo("frontend"),
+                    directiva=active_directive_path,
+                )
                 if res_front.returncode != 0:
                     print("❌ [SpecKit] Falló la ejecución del subproceso para Frontend.")
                     return False
 
                 # POST-CHECK DE VALIDACIÓN: Frontend Architecture Doc
-                doc_front_path = DIRECTORIO_RAIZ / "documents" / "dev-frontend" / "frontend-architecture.md"
                 if not doc_front_path.exists() or doc_front_path.stat().st_mtime < (ts_inicio_front - 2):
-                    msg_err = "@WATCHER: 🚨 ERROR: SpecKit omitió la documentación viva de Frontend en 'documents/dev-frontend/frontend-architecture.md'"
+                    salida = (res_front.stdout or "").strip()[-300:].replace("\n", " ")
+                    msg_err = f"@WATCHER: 🚨 ERROR: SpecKit omitió la documentación viva de Frontend en 'documents/dev-frontend/frontend-architecture.md'. Salida de Claude: {salida}"
                     print(f"❌ {msg_err}")
                     write_watcher_log(msg_err)
                     return False
@@ -379,7 +799,7 @@ Lee obligatoriamente la plantilla maestra en dev-frontend/templates/frontend-arc
 - **Hora:** {hr_str}
 - **Artefacto generado:** `documents/dev-frontend/frontend-architecture.md`
 - **Estado:** Implementación frontend finalizada exitosamente mediante SDD SpecKit.
-- **Handoff:** @CODE-REVIEW: Procede con la auditoría de seguridad y GitOps.
+- **Handoff:** @QA-AUTO: {texto_qa}
 """
                 with open(TRACKER_PATH, "a", encoding="utf-8") as f:
                     f.write(block)
@@ -388,15 +808,10 @@ Lee obligatoriamente la plantilla maestra en dev-frontend/templates/frontend-arc
                     active_directive_path.unlink()
                     print("🧹 [Soul Mounting] Alma de @DEV-FRONT desmontada.")
 
-        # 3. Handoff Final (El Pase de Testigo)
-        print("✅ [Handoff Final] Despachando a @CODE-REVIEW y @QA-AUTO...")
-        handoff_msg = """
-@CODE-REVIEW: La Fase D (Implementación) ha finalizado exitosamente mediante motor SDD. Inicia la auditoría de seguridad, arquitectura estricta e impacto.
-@QA-AUTO: Inicia el diseño de la matriz de pruebas automatizadas basándote en los criterios de la HU.
-"""
-        with open(TRACKER_PATH, "a", encoding="utf-8") as f:
-            f.write(f"\n{handoff_msg}\n")
-            
+        # 3. Handoff Final: lo emite el último bloque DEV (-> @QA-AUTO:, que luego deriva a @CODE-REVIEW:).
+        # No se escribe un handoff extra: duplicaría el despacho y saltaría QA-AUTO.
+        print("✅ [Handoff Final] Despachado a @QA-AUTO (luego @CODE-REVIEW).")
+
         print("✅ [SDD Implementación] Fase D completada con éxito.")
         return True
 
@@ -425,6 +840,7 @@ def is_tracker_paused_for_human() -> bool:
     return False
 
 def extraer_instrucciones(linea):
+    global last_implement_trigger
     agentes = {
         "@BS:": "business-storyteller",
         "@PA:": "product-analyst",
@@ -444,6 +860,12 @@ def extraer_instrucciones(linea):
 
     tareas = []
     todas_las_etiquetas = list(agentes.keys())
+
+    # Los bloques "DEV-BACK"/"DEV-FRONT" los escribe por su cuenta la sesión headless de SpecKit (el alma
+    # montada trae la skill tracker-logger). El handoff legítimo lo emite el Watcher en los bloques
+    # "Senior ... Developer"; despachar también estos duplicaría la tarea y adelantaría a QA-AUTO.
+    if contexto_bloque.get("autor") in ("DEV-BACK", "DEV-FRONT"):
+        return []
 
     # Salvaguarda Global: Si el tracker está en estado pausado esperando al @HUMANO:
     paused = is_tracker_paused_for_human()
@@ -482,7 +904,7 @@ def extraer_instrucciones(linea):
         print("🚀 [PAUSA SDD INTERCEPTADA] RESPUESTA HUMANA RECIBIDA PARA CLARIFY")
         print("=" * 80)
         write_watcher_log(f"⚙️ [SDD Auto-Runner] Inyectando respuesta humana a Spec Kit: {respuesta_inferida}")
-        res = subprocess.run(f'agy --dangerously-skip-permissions -p "/speckit.clarify {respuesta_inferida}"', shell=True, cwd=DIRECTORIO_RAIZ)
+        res = ejecutar_speckit("clarify", respuesta_inferida)
         
         # Continuar con el handoff dinámico a UX o SA
         handoff = determinar_handoff_fase_a(TRACKER_PATH)
@@ -553,14 +975,39 @@ def extraer_instrucciones(linea):
         return []
 
     # ==========================================
+    # SDD GATEKEEPER 4: Retrabajo tras rechazo de CODE-REVIEW / QA-AUTO
+    # ==========================================
+    if "@dev-back:" in linea_lower or "@dev-front:" in linea_lower:
+        autor, hora, bloque = buscar_bloque_tracker(contexto_bloque["autor"], contexto_bloque["hora"])
+        if autor is None:
+            autor, hora, bloque = buscar_bloque_tracker()
+        if autor in AUTORES_REVISORES and "rechaz" in bloque.lower():
+            clave_bloque = f"{autor}|{hora}"
+            if clave_bloque in retrabajos_procesados:
+                return []
+            retrabajos_procesados.add(clave_bloque)
+            print("\n" + "=" * 80)
+            print(f"🔁 [RETRABAJO SDD] RECHAZO DE {autor.upper()} DETECTADO")
+            print("=" * 80)
+            exito = ejecutar_sdd_retrabajo(autor, bloque)
+            if not exito:
+                print("❌ [HITL] El retrabajo SDD no se completó. Pausando el orquestador.")
+            print("=" * 80 + "\n")
+            return []
+
+    # ==========================================
     # SDD GATEKEEPER 3: Intercepción de QT (Implementación Automática)
     # ==========================================
     if ("@dev-back:" in linea_lower or "@dev-front:" in linea_lower) and "arquitectura" in linea_lower:
+        if time.time() - last_implement_trigger < 60:
+            return []
+        last_implement_trigger = time.time()
         print("\n" + "=" * 80)
         print("💡 [GATILLO SDD DETECTADO] INICIANDO FASE D AUTOMÁTICA")
         print("=" * 80)
         print(f"Iniciando SDD Fase de Implementación...\n")
         exito = ejecutar_sdd_fase_implementacion()
+        last_implement_trigger = time.time()  # el antirrebote cuenta desde que termina, no desde que empieza
         if not exito:
             print("❌ [HITL] Fallo en SDD Implementación. Pausando el orquestador.")
         print("=" * 80 + "\n")
@@ -626,6 +1073,7 @@ def auto_commit_security():
 def gitops_branch_create(branch_name):
     print(f"\n🌿 [GITOPS] Interceptada macro de creación de rama: {branch_name}")
     auto_commit_security()
+    resetear_retrabajo(branch_name)
     
     base_branch = get_base_branch()
     current = get_current_branch()
@@ -653,6 +1101,8 @@ def gitops_merge_close(branch_name):
         subprocess.run(["git", "merge", "--no-ff", "--no-edit", branch_name], check=True, cwd=DIRECTORIO_RAIZ)
         subprocess.run(["git", "branch", "-d", branch_name], check=True, cwd=DIRECTORIO_RAIZ)
         print(f"✅ [GITOPS] Fusión exitosa. Rama {branch_name} eliminada.")
+        resetear_retrabajo(branch_name)
+        limpiar_sesiones_agentes()
     except subprocess.CalledProcessError:
         print("🛑 [GITOPS] Conflicto de fusión detectado. Abortando merge...")
         subprocess.run(["git", "merge", "--abort"], cwd=DIRECTORIO_RAIZ, stderr=subprocess.DEVNULL)
@@ -663,6 +1113,18 @@ def gitops_merge_close(branch_name):
         print(f"⏸️ [HITL] Se requiere intervención humana. Pausando el orquestador.")
         sys.exit(1)
 
+def macro_gitops(linea, accion):
+    """
+    Rama de una macro GitOps (`BRANCH-CREATE` / `MERGE-CLOSE`) solo si la línea ES la orden.
+
+    La macro debe abrir la línea (tras viñetas y el prefijo `- **Handoff:**`). Una mención dentro de prosa
+    (p. ej. "confirmar si se emite `@WATCHER: GITOPS-MERGE-CLOSE x`") no la ejecuta: antes cualquier cita
+    en un dictamen cerraba y fusionaba la rama real.
+    """
+    limpia = re.sub(r"^\s*(?:[-*]\s+)*(?:\*\*Handoff:\*\*\s*)?", "", linea)
+    m = re.match(rf"@WATCHER:\s*GITOPS-{accion}\s+([^\s`'\"]+)", limpia.strip())
+    return m.group(1) if m else None
+
 def hydration_gitops():
     if not os.path.exists(TRACKER_PATH):
         return None
@@ -671,14 +1133,12 @@ def hydration_gitops():
     
     orphaned_branch = None
     for linea in lineas:
-        if "@WATCHER: GITOPS-BRANCH-CREATE" in linea:
-            match = re.search(r"@WATCHER:\s*GITOPS-BRANCH-CREATE\s+([^\s]+)", linea)
-            if match:
-                orphaned_branch = match.group(1)
-        elif "@WATCHER: GITOPS-MERGE-CLOSE" in linea:
-            match = re.search(r"@WATCHER:\s*GITOPS-MERGE-CLOSE\s+([^\s]+)", linea)
-            if match and match.group(1) == orphaned_branch:
-                orphaned_branch = None
+        rama_crear = macro_gitops(linea, "BRANCH-CREATE")
+        rama_cerrar = macro_gitops(linea, "MERGE-CLOSE")
+        if rama_crear:
+            orphaned_branch = rama_crear
+        elif rama_cerrar and rama_cerrar == orphaned_branch:
+            orphaned_branch = None
     return orphaned_branch
 
 def validar_constitucion_gitops():
@@ -704,6 +1164,7 @@ def validar_constitucion_gitops():
 
 def iniciar_watcher():
     compilar_agentes_modulares()
+    sincronizar_skills_speckit()
     validar_constitucion_gitops()
     print("-" * 50)
     
@@ -725,6 +1186,7 @@ def iniciar_watcher():
             print(f"✅ [GITOPS] Estado sincronizado. Continuando en la rama {orphaned}")
 
     num_lineas_leidas = 0
+    avisos_espera = {}
     cola_tareas = []
     hash_tareas_historicas = set()
     
@@ -760,15 +1222,14 @@ def iniciar_watcher():
                         for idx, linea in enumerate(nuevas_lineas):
                             
                             # GITOPS Live Interception
-                            if "@WATCHER: GITOPS-BRANCH-CREATE" in linea:
-                                match = re.search(r"@WATCHER:\s*GITOPS-BRANCH-CREATE\s+([^\s]+)", linea)
-                                if match:
-                                    gitops_branch_create(match.group(1))
-                            elif "@WATCHER: GITOPS-MERGE-CLOSE" in linea:
-                                match = re.search(r"@WATCHER:\s*GITOPS-MERGE-CLOSE\s+([^\s]+)", linea)
-                                if match:
-                                    gitops_merge_close(match.group(1))
+                            rama_crear = macro_gitops(linea, "BRANCH-CREATE")
+                            rama_cerrar = macro_gitops(linea, "MERGE-CLOSE")
+                            if rama_crear:
+                                gitops_branch_create(rama_crear)
+                            elif rama_cerrar:
+                                gitops_merge_close(rama_cerrar)
 
+                            actualizar_contexto_bloque(linea)
                             nuevas_tareas = extraer_instrucciones(linea)
                             numero_linea_absoluta = num_lineas_leidas + idx
                             
@@ -802,7 +1263,10 @@ def iniciar_watcher():
                     continue
                     
                 if estado not in ["idle", "done"]:
-                    print(f"⏳ [Watcher] '{agente}' está {estado}. Esperando turno...")
+                    ahora_espera = time.time()
+                    if ahora_espera - avisos_espera.get(agente, 0) >= 60:  # un aviso por minuto, no uno cada 2 s
+                        avisos_espera[agente] = ahora_espera
+                        print(f"⏳ [Watcher] '{agente}' está {estado}. Esperando turno ({len(cola_tareas)} tarea(s) en cola)...")
                     tareas_no_procesadas.append(tarea)
                     continue 
 
@@ -813,13 +1277,15 @@ def iniciar_watcher():
                 try:
                     subprocess.run(comando, shell=True, check=True)
                     print(f"✅ [Watcher] Éxito. Tarea despachada a {agente}.")
-                    
+                    registrar_seguimiento(agente, pane_id)
+
                     candado_disparo = True
                 except subprocess.CalledProcessError as e:
                     print(f"❌ [Watcher] Error de inyección. Código: {e.returncode}")
                     tareas_no_procesadas.append(tarea)
 
             cola_tareas = tareas_no_procesadas
+            vigilar_agentes_inactivos()
                                 
         except KeyboardInterrupt:
             print("\n🛑 Watcher detenido por el usuario.")
@@ -831,5 +1297,11 @@ def iniciar_watcher():
 
 if __name__ == "__main__":
     iniciar_watcher()
+
+
+
+
+
+
 
 

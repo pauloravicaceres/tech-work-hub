@@ -14,6 +14,11 @@ class WorkflowStageStep(BaseModel):
     completed_at: Optional[str] = None
     origin_block_index: Optional[int] = None
     generated_artifact_path: Optional[str] = None
+    # Ciclo de retrabajo SDD: REJECTED (revisor que rechazó) | REWORK (etapa que debe corregirse)
+    rework_state: Optional[str] = None
+    rework_iteration: Optional[int] = None
+    rework_max: Optional[int] = None
+    rework_reason: Optional[str] = None
 
 
 class WorkflowStatusResponse(BaseModel):
@@ -32,6 +37,10 @@ class WorkflowStatusResponse(BaseModel):
     current_stage: Optional[str] = None
     status: Optional[str] = None
     history: List[Dict[str, Any]] = Field(default_factory=list)
+    # Retrabajo activo tras un rechazo de Code Review / QA Automation (None si no hay)
+    rework: Optional[Dict[str, Any]] = None
+    # Retrabajo activo tras un rechazo de Code Review / QA Automation (None si no hay)
+    rework: Optional[Dict[str, Any]] = None
 
 
 # Alias for WorkflowStatusResponse

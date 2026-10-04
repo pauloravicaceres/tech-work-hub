@@ -12,6 +12,7 @@ Antes de iniciar un proyecto, asegúrate de tener instalado en tu máquina:
 - **Python 3.10+** (Para ejecutar el orquestador y los scripts).
 - **Git** (Obligatorio para que los agentes hagan *Commits Atómicos* y el orquestador gestione ramas).
 - **GitHub Spec Kit CLI** (Obligatorio para la transición automática entre negocio y arquitectura).
+- **Claude Code CLI** (`claude`): ejecuta los agentes y las skills de Spec Kit (`/speckit-*`). Si Spec Kit se instaló con otra integración (p. ej. `copilot`, skills en `.github/skills/`), el Watcher las copia a `.claude/skills/` al iniciar; añade `.claude/` a `.gitignore` si no quieres versionar la copia.
 
 ---
 

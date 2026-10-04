@@ -18,7 +18,8 @@ Para mantener el determinismo del *Ledger*, los agentes mutadores y lectores uti
 
 | N° | Épica Origen | Nombre spec / HU | Qué aporta | Estado | Rama |
 |----|--------------|------------------|------------|--------|------|
-| 001 | [P1] Planificación y Control de Sprints con Backlog Multitipo | 001-HU_registro_elementos_backlog_multitipo | Registro y tipificación de ítems en backlog multitipo con estimación por rol (Dev/QA) | IN-PROGRESS | feat/001-HU_registro_elementos_backlog_multitipo |
+| 001 | [P1] Planificación y Control de Sprints con Backlog Multitipo | 001-HU_registro_elementos_backlog_multitipo | Registro y tipificación de ítems en backlog multitipo con estimación por rol (Dev/QA) | READY-FOR-DEV | feat/001-HU_registro_elementos_backlog_multitipo |
+| 002 | [P1] Planificación y Control de Sprints con Backlog Multitipo | 002-HU_pruebas_integracion_keycloak_y_catalogo_application | Cubre el riesgo residual de HU-001: pruebas de integración contra un Keycloak real (emisión y validación de JWT) y contra el catálogo real del módulo Application (`ApplicationModuleApi` y `GET /api/applications` sin dobles), más una semilla del catálogo | BACKLOG | N/A |
 
 ---
 
