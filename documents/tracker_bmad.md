@@ -377,3 +377,11 @@ Awaiting your response to the question above.
 - **⚠️ Puntos Abiertos:** T017 (quickstart manual) y T037 abiertas; el commit de este tracker queda a cargo del auto-commit previo al cambio de rama.
 @WATCHER: GITOPS-MERGE-CLOSE feat/001-HU_registro_elementos_backlog_multitipo
 - **Handoff:** @PM: Código certificado y rama consolidada en dev. Procede a asignar la siguiente historia del backlog (002-HU_pruebas_integracion_keycloak_y_catalogo_application).
+
+### [03-10-2026] Product Manager
+- **Hora:** 20:19:00
+- **Artefacto generado:** `specs/README.md`
+- **Estado:** Ledger actualizado: la fila 002-HU_pruebas_integracion_keycloak_y_catalogo_application pasó de BACKLOG a IN-PROGRESS con la rama feat/002-HU_pruebas_integracion_keycloak_y_catalogo_application (verificado por lectura). La HU nace del riesgo residual aceptado en HU-001 (Keycloak real y catálogo real del módulo Application sin prueba) y se ubica en la épica P1 del plan `documents/product-manager/mvp_tech_work_hub.md`. Es una historia derivada de un riesgo de calidad, no una épica nueva; no se añade alcance fuera del Product Brief.
+- **⚠️ Puntos Abiertos:** ⚠️ [PROPUESTO]: la historia no figura como épica en el MVP y se trata como extensión de P1; el business analyst debe acotar su alcance y no asumir reglas de negocio no documentadas (roles de Keycloak, contenido de la semilla del catálogo). ❓ No documentado: criterio de aceptación del entorno de pruebas con Keycloak real (realm, usuarios y clientes de prueba).
+@WATCHER: GITOPS-BRANCH-CREATE feat/002-HU_pruebas_integracion_keycloak_y_catalogo_application
+- **Handoff:** @BA: Iniciar el análisis de negocio y redacción de Historias de Usuario para la épica seleccionada: 002-HU_pruebas_integracion_keycloak_y_catalogo_application, que cubre el riesgo residual de HU-001 (pruebas contra Keycloak real y catálogo real del módulo Application, más semilla del catálogo).
