@@ -103,3 +103,43 @@ flowchart LR
 - **Contexto:** Las tareas técnicas (Spikes, TechDebt) no requieren esfuerzo QA.
 - **Decisión:** Inactivación reactiva del campo `qaPoints` con payload dinámico (`qaPoints: null`) basado en el selector de tipo.
 - **Consecuencias:** Payload flexible alineado al FR-008.
+
+### Retrabajo de interfaz (speckit-implement, 2026-10-03, T039 / [CAPA:PLAN] #17)
+Autenticación del cliente (FR-001, FR-009): login Keycloak (Authorization Code + PKCE S256), `HttpInterceptorFn` con el Bearer, guard de ruta y reautenticación ante 401.
+
+- **Archivos nuevos (`app/frontend/src/app/`):**
+  - `core/auth/auth.config.ts`: tokens `KEYCLOAK_CONFIG` (url, realm `techworkhub`, clientId `techworkhub-web`) y `KEYCLOAK` (instancia de `keycloak-js`, sustituible en pruebas).
+  - `core/auth/auth.service.ts`: `AuthService` (`init`, `token`, `login`, `reauthenticate`, `refreshToken`, signal `isAuthenticated`).
+  - `core/auth/bearer-token.interceptor.ts`: `bearerTokenInterceptor` (solo `/api/**`).
+  - `core/auth/auth.guard.ts`: `authGuard` (`CanActivateFn`).
+  - `app.routes.ts`: `/backlog/nuevo` con `canActivate: [authGuard]` y `loadComponent`; `''` y `**` redirigen a esa ruta.
+- **Modificados:** `app.config.ts` (`provideRouter`, `withInterceptors([bearerTokenInterceptor])`, `provideAppInitializer` → `AuthService.init()`), `app.component.ts` (ahora `<router-outlet />`), `CreateBacklogItemComponent.reauthenticate()` (delega en `AuthService.reauthenticate()`, ya no navega a `/auth/login`), `jest.config.ts` (transforma `keycloak-js` ESM) y `tsconfig.spec.json` (`allowJs`). Dependencia añadida: `keycloak-js`.
+
+```mermaid
+sequenceDiagram
+    actor U as Usuario
+    participant App as Angular (APP_INITIALIZER)
+    participant G as authGuard
+    participant KC as Keycloak (Code + PKCE)
+    participant I as bearerTokenInterceptor
+    participant API as /api/**
+
+    App->>KC: init(check-sso, S256)
+    U->>G: navega a /backlog/nuevo
+    alt Sin sesión
+        G->>KC: login(redirectUri) y bloquea la ruta
+        KC-->>App: regresa con código, token emitido
+    else Con sesión
+        G-->>U: activa ruta (renderiza el componente)
+    end
+    U->>I: HttpClient → /api/...
+    I->>API: Authorization: Bearer token
+    alt 401
+        API-->>I: 401
+        I->>KC: updateToken(-1) y reintenta una vez
+        alt Renovación fallida o nuevo 401
+            I-->>U: propaga 401, el diálogo llama a reauthenticate() → login Keycloak
+        end
+    end
+```
+- **Verificación:** Jest 31/31 en verde (interceptor, guard, `AuthService`, más las pruebas previas); `ngc -p tsconfig.app.json --noEmit` sin errores. `ng build` no se ejecutó (Node 22.20.0 < 22.22.3 exigido por el CLI). La URL/realm/clientId de Keycloak son valores por defecto de desarrollo (`KEYCLOAK_CONFIG`); el cliente `techworkhub-web` debe existir como cliente público en el realm.

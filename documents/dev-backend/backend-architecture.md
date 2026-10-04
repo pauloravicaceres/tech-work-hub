@@ -1,7 +1,7 @@
 # 🏗️ ARQUITECTURA BACKEND VIVA
 
 - **Sistema:** TechWorkHub (Modulith .NET 8, PostgreSQL)
-- **Última actualización:** 2026-10-03 (retrabajo servidor, convergencia iteración 1/2)
+- **Última actualización:** 2026-10-03 (retrabajo servidor, convergencia iteración 2/2: hallazgos #16, #18, #19)
 - **HU vigente:** 001 – Registro de Elementos en Backlog Multitipo
 - **Fuente de verdad:** `specs/001-registro-backlog-multitipo/` (`plan.md`, `data-model.md`, `contracts/api.md`) y `documents/qa-tech/tech-design_001_registro_elementos_backlog_multitipo.md`
 
@@ -175,10 +175,76 @@ Tareas cerradas: T013, T014, T018, T019 (con evidencia de pruebas), T020–T031 
 
 Verificación: `dotnet test TechWorkHub.sln` → 61 unitarias + 22 de integración correctas.
 
-## 8. Puntos abiertos
+## 8. Cambios iteración 2/2 (hallazgos #16, #18, #19) — renderizado selectivo
 
-- Las pruebas de integración usan SQLite en memoria en lugar de PostgreSQL con Testcontainers (no hay Docker disponible en este entorno); T037 sigue abierta hasta ejecutarlas con Testcontainers.
-- T017 (escenarios de `quickstart.md` por cURL contra un PostgreSQL y Keycloak reales) no se ejecutó.
-- Las migraciones se generaron y compilaron pero no se aplicaron contra un PostgreSQL real.
-- `appsettings.json` trae valores de desarrollo para Keycloak (`realm`, `resource`) que deben confirmarse con el entorno real; la cadena de conexión solo está en `appsettings.Development.json`.
-- Tareas de interfaz T032–T036 fuera de este alcance.
+Tareas cerradas (servidor): T038 (#16), T040 y T041 (#18), T042 (#19). Sin cambios: dominio, validadores, `Shared`, esquema de datos.
+
+### 8.1 #16 — `GET /api/applications` (ALTERADO)
+
+```mermaid
+sequenceDiagram
+    actor U as Cliente
+    participant A as Auth (Keycloak JWT)
+    participant E as ListApplicationsEndpoint (módulo Application)
+    participant AP as IApplicationModuleApi.ListAsync
+    participant DB as ApplicationDbContext (schema application)
+    U->>A: GET /api/applications (Bearer)
+    A-->>U: 401 sin token o inválido
+    A->>E: CancellationToken de la solicitud
+    E->>AP: ListAsync(ct)
+    AP->>DB: Applications AsNoTracking ordenado por Name
+    DB-->>AP: filas
+    AP-->>E: [ApplicationSummary(Id, Name)]
+    E-->>U: 200 [{id, name}]
+```
+
+- Slice `Application/Features/Applications/ListApplications/ListApplicationsEndpoint.cs` (Carter, `.RequireAuthorization()`, `CancellationToken`).
+- `IApplicationModuleApi` gana `ListAsync` y el record `ApplicationSummary(Guid Id, string Name)` (en `Backlog.Contracts`); `ApplicationModuleApi` lo implementa solo sobre el schema `application`.
+- `Application.csproj` añade `FrameworkReference Microsoft.AspNetCore.App` y `Carter`; Carter descubre el endpoint entre ensamblados.
+
+### 8.2 #19 — identidad antes del catálogo (ALTERADO)
+
+```mermaid
+sequenceDiagram
+    participant H as CreateBacklogItemCommandHandler
+    participant CU as ICurrentUser
+    participant AP as IApplicationModuleApi
+    participant DB as BacklogDbContext
+    H->>CU: UserId (sub)
+    CU-->>H: null → UnauthorizedAccessException → 401 (sin tocar catálogo ni BD)
+    H->>H: Enum.TryParse(Type)
+    H->>AP: ExistsAsync (solo con identidad válida)
+    H->>DB: Add + SaveChangesAsync
+```
+
+El interceptor de auditoría conserva su comprobación como defensa en profundidad.
+
+### 8.3 #18 — Keycloak por entorno y migraciones (ALTERADO)
+
+| Clave `Keycloak` | `appsettings.json` (base) | `appsettings.Development.json` |
+|---|---|---|
+| `ssl-required` | `external` | `none` |
+| `verify-token-audience` | `true` (audiencia = `resource`) | `false` |
+| `auth-server-url` | `https://keycloak.invalid/` (marcador; se inyecta `Keycloak__auth-server-url`) | `http://localhost:8080/` |
+
+- Sin secretos versionados: URL real y credenciales llegan por variables de entorno.
+- Migraciones: la API no migra fuera de Development (`Database:MigrateOnStartup=false` en la base). El despliegue ejecuta `app/backend/scripts/apply-migrations.sh|.ps1`, que generan y corren un bundle EF por módulo (`Application`, `Backlog`) con `ConnectionStrings__Database`.
+
+```mermaid
+flowchart LR
+    CI[Pipeline de despliegue] --> S[apply-migrations.sh / .ps1]
+    S --> B1[efbundle-application] --> PG[(PostgreSQL)]
+    S --> B2[efbundle-backlog] --> PG
+    API[API: MigrateOnStartup=false] -.sin migrar.-> PG
+```
+
+### 8.4 Verificación
+
+`dotnet test TechWorkHub.sln`: 62 unitarias y 29 de integración correctas. Nuevas: `ListApplicationsTests` (200 con token, 401 sin token y sin consultar el catálogo, 401 sin `sub` sin consultar el catálogo), `KeycloakConfigurationTests` (la base falla si queda insegura) y `MigrationsPostgresTests` (migraciones sobre PostgreSQL 16 real con Testcontainers, incluida idempotencia).
+
+## 9. Puntos abiertos
+
+- El resto de pruebas de integración sigue con SQLite en memoria; T037/T043 (INT-01..INT-10 sobre PostgreSQL) quedan para QA.
+- Los scripts `apply-migrations` no se ejecutaron: `dotnet-ef` no está instalado en este entorno, así que la generación del bundle no está verificada (sí lo está la migración sobre PostgreSQL).
+- `auth-server-url` base es un marcador: debe fijarse por entorno antes de desplegar.
+- T017 (quickstart por cURL), T018, T025 y T032 siguen abiertas a la espera de evidencia de QA (T043). T039 y T032 son de interfaz, fuera de este alcance.

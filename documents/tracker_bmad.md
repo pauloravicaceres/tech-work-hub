@@ -280,3 +280,84 @@ Awaiting your response to the question above.
   - @DEV-BACK: endpoint `GET /api/applications` (#16), configuración Keycloak por entorno y paso de migraciones (#18), resolver identidad antes del catálogo (#19).
   - @DEV-FRONT: interceptor Bearer y ruta de reautenticación (#17).
   - @USUARIO: confirmar si se emite `@WATCHER: GITOPS-MERGE-CLOSE feat/001-HU_registro_elementos_backlog_multitipo` con estas reservas, o si #16 y #17 deben cerrarse antes.
+
+### [03-10-2026] Code Review
+- **Hora:** 19:13:34
+- **Artefacto generado:** `documents/code-review/impact-analysis-report.md` (5.ª iteración)
+- **Estado:** ❌ **[RECHAZADO]** HU-001. Este dictamen sustituye al [APROBADO CON RESERVAS] de las 16:10:40: #16..#19 son bloqueantes y deben corregirse antes de cerrar la rama. No se emite la macro de cierre del Watcher. Las pruebas (61/61, 22/22, Jest 19/19) siguen en verde, pero cubren un entorno con SQLite y sin Keycloak, y no detectan estos defectos. Hallazgos: (1) [CAPA:PLAN] #16 el front llama `GET /api/applications`, que no existe en el backend; `contracts/api.md` y `plan.md` no lo definen (el plan solo prevé `IApplicationModuleApi` interno), así que el catálogo de aplicaciones no se puede cargar contra el servidor real. (2) [CAPA:PLAN] #17 no hay interceptor Bearer ni ruta de login en el front; ni `plan.md` ni `tasks.md` contemplan la autenticación del cliente, y contra el backend real el POST devuelve 401 (FR-001, FR-009). (3) [CAPA:PLAN] #18 `ssl-required: none` y `verify-token-audience: false` en `appsettings.json` base (configuración Keycloak insegura por defecto, sin override por entorno); ningún paso de despliegue aplica las migraciones y no hay migración probada en PostgreSQL. (4) [CAPA:CODE] #19 la identidad (`sub`) se resuelve en `SaveChanges` y no al inicio del handler, tras consultar el catálogo de aplicaciones; FR-009 exige rechazar con 401 antes de cualquier acceso a datos.
+- **⚠️ Puntos Abiertos:** Criterio de capa: #16, #17 y #18 pasan de CODE a PLAN porque el diseño no define la pieza que falta (regla de la capa superior); al corregirse, `spec.md`/`plan.md`/`tasks.md` deben actualizarse antes del código. Reserva PostgreSQL: INT-01..INT-10, migraciones, longitudes `varchar`, `numeric(18,2)`, `timestamptz` y rollback no se han probado contra PostgreSQL por falta de Docker (T037 abierta). No se necesita decisión humana en este ciclo.
+- **Handoff:**
+  - @DEV-BACK: [CAPA:PLAN] #16 endpoint `GET /api/applications` con `.RequireAuthorization()` y `CancellationToken`; [CAPA:PLAN] #18 configuración Keycloak por entorno (SSL y audiencia activos fuera de desarrollo) y paso de migraciones; [CAPA:CODE] #19 resolver identidad antes de consultar el catálogo.
+  - @DEV-FRONT: [CAPA:PLAN] #17 interceptor funcional del Bearer token y ruta de login/reautenticación.
+  - @QA-AUTO: ejecutar INT-01..INT-10 contra PostgreSQL (Testcontainers), aplicar las migraciones y cubrir #16..#19 cuando haya Docker.
+
+### [03-10-2026] WATCHER
+- **Hora:** 19:14:03
+- **Mensaje:** 🔁 [SDD Retrabajo] Iteración 2/2 (origen: Code Review). Reconciliando spec, plan y tasks (/speckit-converge)...
+
+### [03-10-2026] WATCHER
+- **Hora:** 19:16:14
+- **Mensaje:** 📌 [SDD Retrabajo] spec.md/plan.md actualizados por converge (capas: PLAN). Los artefactos de diseño de BA, API y DA deben sincronizarse con el cambio.
+
+### [03-10-2026] WATCHER
+- **Hora:** 19:16:14
+- **Mensaje:** ⚡ [SDD Auto-Runner] Ejecutando implementación Backend (/speckit.implement)...
+
+### [03-10-2026] Senior Backend Developer
+- **Hora:** 19:22:52
+- **Artefacto generado:** `documents/dev-backend/backend-architecture.md`
+- **Estado:** Implementación backend finalizada exitosamente mediante SDD SpecKit.
+- **Handoff:** @DEV-FRONT: Inicia implementación frontend.
+
+### [03-10-2026] WATCHER
+- **Hora:** 19:22:52
+- **Mensaje:** ⚡ [SDD Auto-Runner] Ejecutando implementación Frontend (/speckit.implement)...
+
+### [03-10-2026] Senior Frontend Developer
+- **Hora:** 19:28:31
+- **Artefacto generado:** `documents/dev-frontend/frontend-architecture.md`
+- **Estado:** Implementación frontend finalizada exitosamente mediante SDD SpecKit.
+- **Handoff:** @QA-AUTO: Retrabajo 2/2 aplicado sobre los hallazgos de Code Review. ejecutar INT-01..INT-10 contra PostgreSQL (Testcontainers), aplicar las migraciones y cubrir #16..#19 cuando haya Docker. Ejecuta y valida las pruebas y, al aprobar, deriva a Code Review.
+
+### [03-10-2026] QA Automation
+- **Hora:** 20:05:00
+- **Artefacto generado:** `documents/qa-auto/qa-report.md`
+- **Estado:** T043 ejecutada con Docker activo. INT-01..INT-10 y los casos #16..#19 migrados a PostgreSQL 16 con Testcontainers (PostgresFixture + ICollectionFixture, un contenedor por suite, una BD por prueba, migraciones aplicadas por el arranque real; SQLite eliminado). Resultados: unitarias 62/62, integración 31/31, Jest 31/31. Sin defectos nuevos.
+- **⚠️ Puntos Abiertos:** Keycloak/JWT y el catálogo del módulo Application siguen simulados en integración; no se probó concurrencia.
+- **Handoff:** @CODE-REVIEW: Validar los resultados de la re-ejecución de QA sobre PostgreSQL y emitir dictamen.
+
+### [03-10-2026] Code Review
+- **Hora:** 19:39:24
+- **Artefacto generado:** `documents/code-review/impact-analysis-report.md` (6.ª iteración; evidencia: `documents/qa-auto/qa-report.md`)
+- **Estado:** ✅ **[APROBADO CON RESERVAS]** HU-001: #16..#19 cerrados en código. Lectura física de 30 archivos (endpoint de aplicaciones, handler, `Program.cs`, `appsettings*.json`, módulo Application, interceptor/servicio/guard Bearer, componente y pruebas de integración). Ejecución propia con Docker activo: unitarias 62/62, integración 31/31 sobre PostgreSQL 16 (Testcontainers), Jest 31/31. Cero hallazgos zero-tolerance: sin TODO, sin AutoMapper, sin `[ApiController]`, sin `innerHTML` ni bypass del sanitizador; `CancellationToken` propagado en los endpoints nuevos y en el handler; sin bucles con consultas. Verificado: (1) #16 `GET /api/applications` existe con `.RequireAuthorization()`, `CancellationToken` y `AsNoTracking`. (2) #17 interceptor Bearer con renovación y reintento único ante 401, guard con PKCE S256 y reautenticación. (3) #18 `appsettings.json` base con `ssl-required: external` y `verify-token-audience: true`, relajado solo en Development, y migraciones por `MigrateOnStartup` y scripts `apply-migrations`. (4) #19 el handler resuelve la identidad en su primera línea, antes de consultar el catálogo. No emito la macro de cierre de rama por las reservas siguientes. Reservas: (1) [CAPA:TASKS] `tasks.md:91,135,145,164` deja T018, T025, T032 y T043 en `[ ]` aunque hay evidencia, y T017 (quickstart manual) sigue sin ejecutarse. (2) [CAPA:CODE] la mayor parte del código de #16..#19 sigue sin commitear en el working tree (backend, `app/frontend`, `specs/`); solo está commiteado el commit de pruebas 296f906. (3) [CAPA:PLAN] riesgo residual aceptado: `ApplicationModuleApi` y `ListApplicationsEndpoint` reales no se ejercen en integración (catálogo simulado), Keycloak/JWT real no se prueba y no hay semilla del catálogo de aplicaciones. Menores: `Application.csproj` referencia a `Backlog` para implementar su contrato; con un token sin `sub` y payload inválido responde 400 antes que 401 porque el validador corre primero.
+- **⚠️ Puntos Abiertos:** Cierre de rama pendiente de decisión humana (preguntas debajo del Handoff).
+- **Handoff:** @HUMANO: Decide cómo cerrar HU-001 (las reservas no bloquean el código; sí condicionan la fusión a la rama dev).
+  1. ¿Autorizas emitir el cierre de rama de `feat/001-HU_registro_elementos_backlog_multitipo` una vez commiteado el código pendiente (backend, `app/frontend` y `specs/`)?
+  2. ¿Se marcan T018, T025, T032 y T043 como `[X]` con la evidencia de `qa-report.md` y se acepta T017 como ejecución manual diferida?
+  3. ¿Se acepta como riesgo residual la ausencia de pruebas contra un Keycloak real y contra el catálogo real del módulo Application, o se abre una historia nueva para ello?
+
+### [03-10-2026] QA Automation
+- **Hora:** 20:20:00
+- **Artefacto generado:** `documents/qa-auto/qa-report.md`
+- **Estado:** Retrabajo 2/2 re-ejecutado sobre PostgreSQL 16 (Testcontainers). Resultado final: unitarias 62/62, integración 31/31 (INT-01..INT-10, casos 16 a 19 y migraciones), Jest 31/31. Una primera pasada de integración falló 27/31 por un error de conexión con el demonio Docker (DockerClient, antes de ejecutar lógica de prueba); al repetir con Docker estable pasó 31/31. Sin defectos de producción. No se modificó el informe: sus cifras siguen vigentes.
+- **⚠️ Puntos Abiertos:** Keycloak/JWT y el catálogo del módulo Application siguen simulados; el árbol de trabajo contiene cambios de producción y de jest sin commitear que no son de QA.
+- **Handoff:** @CODE-REVIEW: Validar la re-ejecución de QA sobre PostgreSQL y emitir dictamen.
+
+### [03-10-2026] Code Review
+- **Hora:** 19:42:10
+- **Artefacto generado:** `documents/code-review/impact-analysis-report.md` (6.ª iteración, confirmada)
+- **Estado:** ✅ **[APROBADO CON RESERVAS]** HU-001, sin cambios. La re-ejecución de QA (62/62, 31/31 sobre PostgreSQL 16, Jest 31/31) coincide con mi ejecución propia de las 19:39. Comprobado que ningún archivo de `app/backend`, `app/frontend` ni `specs/` se modificó desde esa revisión, por lo que no hay código nuevo que auditar. El fallo 27/31 de la primera pasada de QA fue un error de conexión con el demonio Docker antes de ejecutar lógica, no un defecto de producción; la repetición pasó 31/31. Las reservas siguen abiertas: (1) [CAPA:TASKS] T018, T025, T032 y T043 sin marcar `[X]` y T017 sin ejecutar. (2) [CAPA:CODE] cambios de producción y de interfaz sin commitear. (3) [CAPA:PLAN] Keycloak real y catálogo real del módulo Application sin prueba. Sin macro de cierre de rama.
+- **⚠️ Puntos Abiertos:** Sigue pendiente la respuesta humana del dictamen de las 19:39:24. Observación: las horas de las entradas de QA (20:05 y 20:20) son posteriores al reloj del sistema (19:42); conviene que QA use la hora real.
+- **Handoff:** @HUMANO: Responde las tres preguntas de la entrada de las 19:39:24 para poder cerrar HU-001.
+  1. ¿Autorizas el cierre de rama una vez commiteado el código pendiente?
+  2. ¿Se marcan T018, T025, T032 y T043 como `[X]` y se difiere T017?
+  3. ¿Se acepta como riesgo residual la falta de pruebas contra Keycloak y catálogo reales?
+
+### [03-10-2026] HUMANO
+- **Hora:** 19:51:57
+- **Estado:** APPROVE
+- **Feedback:** 1. Sí, autorizo el cierre de rama una vez commiteado el código pendiente. Commitea tú primero el backend, app/frontend y specs con mensajes claros (no dejes que lo haga el auto-commit genérico), y confirma que el árbol quedó limpio antes de emitir el cierre.
+2. Sí, marca T018, T025, T032 y T043 como [X], pero solo las que tengan evidencia en documents/qa-auto/qa-report.md. Si alguna no la tiene, déjala abierta y dímelo. T017 queda diferida como ejecución manual.
+3. Sí, acepto como riesgo residual la falta de pruebas contra un Keycloak real y contra el catálogo real del módulo Application, con una condición: registra una historia nueva en el backlog para cubrirlo.
+- **Handoff:** @CODE-REVIEW: El humano APROBÓ tu consulta de cierre. Respuesta: 1. Sí, autorizo el cierre de rama una vez commiteado el código pendiente. Commitea tú primero el backend, app/frontend y specs con mensajes claros (no dejes que lo haga el auto-commit genérico), y confirma que el árbol quedó limpio antes de emitir el cierre. 2. Sí, marca T018, T025, T032 y T043 como [X], pero solo las que tengan evidencia en documents/qa-auto/qa-report.md. Si alguna no la tiene, déjala abierta y dímelo. T017 queda diferida como ejecución manual. 3. Sí, acepto como riesgo residual la falta de pruebas contra un Keycloak real y contra el catálogo real del módulo Application, con una condición: registra una historia nueva en el backlog para cubrirlo. Procede según su decisión; si autorizó cerrar la rama, emite el cierre como línea independiente.
+
