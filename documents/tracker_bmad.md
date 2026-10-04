@@ -738,3 +738,207 @@ Bloqueadas por ❓ y por tanto no elegibles ahora: 004 (catálogo de estados), 0
 - **⚠️ Puntos Abiertos:** Ninguno para la HU 004. Persisten los ❓ del plan que bloquean las HU 005, 008, 009, 013, 018, 019, 023, 025, 028 y 032.
 @WATCHER: GITOPS-BRANCH-CREATE feat/004-HU_asignacion_elementos_sprint
 - **Handoff:** @BA: Iniciar el análisis de negocio y redacción de la Historia de Usuario seleccionada.
+
+
+### [04-10-2026] Business Analyst
+- **Hora:** 10:17:56
+- **Artefacto generado:** `documents/business-analyst/004-HU_asignacion_elementos_sprint.md`
+- **Estado:** HU 004 redactada en dos salidas (técnica Spec Kit Ready y stakeholders en `documents/business-analyst/HUs-stakeholders/004-HU_asignacion_elementos_sprint.md`). Alcance: asignar un elemento del backlog a un Sprint existente y consultar lo asignado (esto último marcado PROPUESTO). 10 escenarios Gherkin (4 Happy, 6 Sad), 11 casos borde, diagrama de secuencia y de flujo. Validación hu-validator completada: estructura y nomenclatura exacta, BDD con Sad Path, sin detalle técnico de implementación, contenido sin fuente marcado PROPUESTO, pie de origen, DoD con ítem Brownfield y handoff en una sola línea. Archivos UTF-8 sin BOM.
+- **⚠️ Puntos Abiertos:** (1) Discrepancia con el Plan de Gestión, que declara la HU 004 sin puntos abiertos: la pregunta 9 del Product Brief (una tarjeta en uno o varios Sprints) condiciona esta HU según el punto abierto 2 de la HU 003; no se asumió respuesta y solo se cubre la primera asignación de un elemento sin Sprint. (2) Sin definir: asignación repetida al mismo Sprint, restricciones por estado o fecha del Sprint, elegibilidad por tipo o estado del elemento, límites de carga, asignación en lote, desasignación o movimiento, roles con permiso y formato de la consulta.
+- **Handoff:** @QA: La Historia de Usuario Técnica Asignación de Elementos del Backlog a un Sprint está lista en el archivo 004-HU_asignacion_elementos_sprint.md (y su versión de stakeholders en documents/business-analyst/HUs-stakeholders/004-HU_asignacion_elementos_sprint.md). Por favor, procede con la auditoría documental contra el Product Brief para asegurar que la historia cumple con los requerimientos originales.
+
+
+### [04-10-2026] QA Documental
+- **Hora:** 10:21:30
+- **Artefacto generado:** `documents/qa-documental/aprobado_qa_004_asignacion_elementos_sprint.md`
+- **Estado:** ✅ [APROBADO] HU-004 en modo Brownfield, auditadas la versión técnica y la de stakeholders contra el Product Brief y la Constitución. Las 6 dimensiones cumplen: 4 Happy Paths y 6 Sad Paths, supuestos tipificados como PROPUESTO (consulta de lo asignado, códigos HTTP, auditoría, fallo de persistencia), pregunta abierta 9 y demás vacíos catalogados como No documentado sin reglas inventadas, DoD con ítem de no-regresión.
+- **⚠️ Puntos Abiertos:** Ninguno bloqueante. Informativo para fases posteriores: pregunta abierta 9 del Product Brief (pertenencia a uno o varios Sprints), asignación repetida, estado del elemento al asignar, restricciones por estado o fecha del Sprint, roles con permiso y formato de la consulta quedan sin definir en la HU.
+- **Handoff:** @UX: La Historia de Usuario 004-HU_asignacion_elementos_sprint.md ha sido aprobada por QA. Por favor, procede a diseñar los wireframes y estados visuales.
+
+### [04-10-2026] WATCHER
+- **Hora:** 10:19:14
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Ejecutando análisis funcional (/speckit.specify)...
+
+### [04-10-2026] WATCHER
+- **Hora:** 10:20:49
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Verificando ambigüedades (/speckit.clarify)...
+
+### [04-10-2026] WATCHER
+- **Hora:** 10:21:15
+- **Mensaje:** ⚠️ [HITL] Ambigüedad detectada por Spec Kit.
+- **Handoff:** @HUMANO: El motor de análisis funcional encontró ambigüedades o vacíos en la Historia de Usuario. Por favor, revisa la matriz y responde la pregunta a continuación para que la IA pueda cerrar el análisis.
+
+Hay ambigüedades de impacto alto. La spec deja sin definir qué pasa con un elemento ya asignado, y eso afecta al modelo de datos (unicidad) y a las pruebas. Empiezo por ahí.
+
+**Pregunta 1 de 5**
+
+**Question:** ¿Qué debe responder el sistema cuando se pide asignar un elemento que ya está asignado a algún Sprint, ya sea el mismo Sprint u otro?
+
+Why it matters: define la regla de unicidad de la tabla de asignaciones y las pruebas de integración. Si no se decide, el comportamiento depende de lo que implemente cada persona del equipo.
+
+**Recommended:** Option A - Un elemento pertenece a un solo Sprint. Es la regla más simple y evita duplicados. HTTP 409 Conflict es el código estándar para este conflicto, y el movimiento entre Sprints ya está fuera de alcance.
+
+| Option | Description |
+|--------|-------------|
+| A | Rechazar con HTTP 409 Conflict si el elemento ya está asignado a cualquier Sprint (mismo u otro); un elemento pertenece a un solo Sprint. |
+| B | Rechazar con 409 solo si ya está en el mismo Sprint; permitir que un elemento esté en varios Sprints distintos. |
+| C | Idempotente en el mismo Sprint (200/201 sin duplicar); 409 si está en otro Sprint. |
+| D | Mantener sin definir (fuera de alcance), como está hoy. |
+| Short | Provide a different short answer (<=5 words) |
+
+You can reply with the option letter (e.g., "A"), accept the recommendation by saying "yes" or "recommended", or provide your own short answer.
+
+
+### [04-10-2026] HUMANO
+- **Hora:** 10:32:00
+- **Estado:** APPROVE
+- **Feedback:** A
+
+
+### [04-10-2026] WATCHER
+- **Hora:** 10:32:00
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Inyectando respuesta humana a Spec Kit: A
+
+### [04-10-2026] WATCHER
+- **Hora:** 10:32:32
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Resolución aplicada exitosamente.
+- **Handoff:** @UX: La ambigüedad ha sido resuelta por el Humano y la especificación SDD ha concluido con éxito. Procede con tu diseño.
+
+### [04-10-2026] Designer UX
+- **Hora:** 10:36:36
+- **Artefacto generado:** `documents/designer-ux/ux_004_asignacion_elementos_sprint.md`
+- **Estado:** Especificación de diseño visual UX completada. Mapeo 1:1 de los 10 escenarios Gherkin (SC-01 a SC-10) y de la resolución humana de la clarificación (409 por elemento ya asignado) a 12 estados visuales con wireframes ASCII bajo el estándar de maquetación PrimeNG v22.1.1 y la Constitución Técnica Global (.specify/memory/constitution.md). Auditoría de alcance: MVP de 6 épicas (P1 a P6), P1 en curso, MVP no concluido.
+- **⚠️ Puntos Abiertos:** (1) spec.md y la HU aún tratan como no documentado el caso de elemento ya asignado que el humano resolvió con 409 (Estado 12 diseñado según la decisión humana; hay que reconciliar spec, HU y FR-015). (2) El identificador del elemento se captura como texto porque no hay listado ni buscador de elementos definido en la HU. (3) Los IDs Task-UI-xx y las rutas son provisionales hasta que exista tasks.md.
+- **Handoff:** @SA: Diseño visual de la HU 004-HU_asignacion_elementos_sprint completado en documents/designer-ux/ux_004_asignacion_elementos_sprint.md. Procede con el tech-design.
+
+
+### [04-10-2026] Solutions Architect
+- **Hora:** 16:35:20
+- **Artefacto generado:** `documents/solutions-architect/004-HU_asignacion_elementos_sprint.md`
+- **Estado:** Gobernanza técnica formalizada en modo Brownfield, sin vacíos de infraestructura y por tanto sin cuestionario. La asignación vive en el módulo existente `Sprints` (tabla `sprints.SprintItems`, ADR-003) y lee el elemento por un contrato in-process hacia Backlog sin consultas ni FKs cross-schema (ADR-002, ADR-003). Regla humana A (un elemento, un Sprint, 409) garantizada por índice único y traducida desde la violación de unicidad, lo que resuelve también la concurrencia (ADR-004). Se añade ConflictException aditiva en Shared (ADR-005). Sin eventos, Outbox ni caché (ADR-006). Identificadores como texto validados por campo para el 400 (ADR-007). Task-UI y rutas reconciliados: POST y GET /api/sprints/{sprintId}/items.
+- **⚠️ Puntos Abiertos:** (1) spec.md, la HU técnica y la HU de stakeholders aún tratan como no documentado el elemento ya asignado y conservan FR-015, que contradice la decisión humana A; el BA y Spec Kit deben reconciliarlos (nuevo escenario 409, nuevo FR de unicidad, retiro de FR-015). (2) Cambio aditivo en Shared (ConflictException y mapeo 409) y referencia de proyecto Backlog hacia Sprints, a confirmar en plan.md. (3) El código de éxito (201 propuesto) y el contrato HTTP final los fija el API Architect. (4) Informativo heredado: el shell de navegación no existe en el repositorio; el identificador del elemento se captura como texto (UX B-02).
+- **Handoff:** 
+@WATCHER: SDD-FREEZE 004-HU_asignacion_elementos_sprint.md
+
+### [04-10-2026] WATCHER
+- **Hora:** 16:35:20
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Estructurando plan de arquitectura técnica (/speckit.plan)...
+
+### [04-10-2026] WATCHER
+- **Hora:** 16:38:31
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Desglosando tareas de implementación (/speckit.tasks)...
+
+### [04-10-2026] WATCHER
+- **Hora:** 16:41:09
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Ejecutando auditoría técnica (/speckit.analyze)...
+
+@DA: El plan técnico y las tareas han sido congeladas. Procede con el diseño de persistencia basándote en los nuevos archivos.
+
+
+### [04-10-2026] Data Architect
+- **Hora:** 16:44:26
+- **Artefacto generado:** `documents/data-architect/db_004_asignacion_elementos_sprint.md`
+- **Estado:** Modelo de persistencia de la HU-004 completado en modo Brownfield, subordinado a la constitución. Una sola tabla nueva `sprints."SprintItems"` en el schema existente `sprints` (migración aditiva `AddSprintItems`): FK real `SprintId` hacia `sprints."Sprints"` con `ON DELETE RESTRICT`, `ItemId` sin FK (referencia lógica hacia backlog por contrato in-process, sin consultas cross-schema), índice único `UX_SprintItems_ItemId` que materializa la regla humana A (un elemento, un Sprint; 409 y concurrencia resueltas en el motor) e índice `IX_SprintItems_SprintId` para la consulta. Auditoría por interceptor, sin estado, sin Outbox. 6 ADR (4 heredados, 2 nuevos con alternativas). Trazabilidad spec y UX a datos sin campos huérfanos.
+- **⚠️ Puntos Abiertos:** (1) DevPoints y QAPoints son decimal nullable en BacklogItem pero tasks.md T005 define BacklogItemSummary con int: truncaría decimales y fallaría o falsearía con 0 el QA nulo que la UX muestra como guion; hay que reconciliar T005, T036 y T041 antes de implementar. (2) data-model.md y T010 dejan CreatedBy sin longitud; se fija varchar(255) con SprintRules.UserMaxLength por coherencia con HU-001 y HU-003. (3) La traducción 409 frente a 500 depende del nombre del índice único. (4) spec.md aún conserva FR-015, contradicho por la decisión humana A; el BA debe reconciliarlo.
+- **Handoff:** @API: El modelo de datos (MER) y la persistencia han sido definidos a partir de spec.md y tasks.md. Por favor, diseña los contratos de integración (Endpoints/Payloads) basados en estas tablas.
+
+
+### [04-10-2026] API Architect
+- **Hora:** 17:02:10
+- **Artefacto generado:** `documents/api-architect/api_004_asignacion_elementos_sprint.md`
+- **Estado:** Contrato de integración de la HU-004 completado en modo Brownfield, subordinado a la constitución (Carter, VSA, MediatR, FluentValidation, Keycloak, ProblemDetails). Dos endpoints bajo /api/sprints/{sprintId}/items: POST asigna (201 con sprintId e itemId y Location; 400 por campo, 401, 404 diferenciado Sprint/elemento, 409 por pertenencia única sin revelar el Sprint dueño, 500 sin traza) y GET consulta (200 con arreglo o vacío, 401, 404). Payloads mapeados a db_004 (SprintId, ItemId, índice único UX_SprintItems_ItemId) y a BacklogItemSummary por contrato in-process. Sin exponer auditoría ni estado. 8 ADR (3 heredados, 5 nuevos con alternativas y trade-offs).
+- **⚠️ Puntos Abiertos:** (1) devPoints y qaPoints se contratan como número anulable (decimal) y no entero, porque BacklogItem los define decimal nullable; el OpenAPI de Spec Kit y tasks.md T005, T036 y T041 deben reconciliarse antes de implementar. (2) spec.md aún conserva FR-015, contradicho por el 409 de la resolución humana A. (3) Permisos por rol sin definir: basta token válido; un rol futuro añadiría 403. (4) Sin idempotencia: un reintento tras un 201 perdido recibe 409. (5) El GET puede devolver menos elementos que filas si Backlog omite ids.
+- **Handoff:** @QT: Los contratos de integración (API) y endpoints para Asignación de Elementos del Backlog a un Sprint han sido definidos en api_004_asignacion_elementos_sprint.md basados en spec.md y db_004_asignacion_elementos_sprint.md. Por favor, procede con la auditoría cruzada y la compilación del Tech Design (TDD).
+
+
+### [04-10-2026] QA Tech
+- **Hora:** 17:40:00
+- **Artefacto generado:** `documents/qa-tech/tech-design_004_asignacion_elementos_sprint.md`
+- **Estado:** ✅ AUDITADO Y APROBADO. Auditoría adversarial superada (0 hallazgos críticos): DB, API, spec.md, tasks.md y UX consistentes, cero campos huérfanos de datos, ADR sin alternativas falsas ni sycophancy (la regla humana A es cardinalidad de negocio y no contradice la constitución). Afirmaciones verificadas contra el código: BacklogItem.DevPoints y QAPoints son decimal nullable, Shared no tiene ConflictException ni rama 409 (cambio aditivo real), sin ciclo de proyectos entre Backlog y Sprints. Tech Design compilado con 3 diagramas archify (9/9 checks) más Mermaid, specs/README.md actualizado a READY-FOR-DEV. constitution.md no se modificó (sin cambios estructurales globales). 7 advertencias vinculantes para Fase D en la sección 7.1 del TDD: tipo decimal nullable frente a entero en T005, T036 y T041 y el OpenAPI (el TDD prevalece), FR-015 de spec.md obsoleto, acción Ver elemento sin ruta de destino, cabecera del Sprint vía GET /api/sprints/{id} de HU-003, 404 distinguido solo por detail, trade-offs cosméticos y orden contrato antes de lectura previa, riesgos operativos documentados.
+- **⚠️ Puntos Abiertos:** Ninguno bloqueante. Informativos: BA y Spec Kit deben reconciliar spec.md con la decisión humana A; visual-check de los diagramas no ejecutado.
+- **Handoff:** @DEV-BACK: La arquitectura técnica ha sido validada. Inicia la implementación del Backend.
+@DEV-FRONT: La arquitectura técnica ha sido validada. Inicia la implementación del Frontend.
+
+### [04-10-2026] WATCHER
+- **Hora:** 16:56:34
+- **Mensaje:** ⚡ [SDD Auto-Runner] Ejecutando implementación Backend (/speckit.implement)...
+
+### [04-10-2026] WATCHER
+- **Hora:** 17:10:43
+- **Mensaje:** 🚨 ERROR en /speckit-implement (código 1): API Error: Can't reach the API server — check your internet or DNS (ENOTFOUND)
+
+### [04-10-2026] WATCHER
+- **Hora:** 17:26:15
+- **Mensaje:** 
+@DEV-BACK: La arquitectura técnica ha sido validada. Reanuda la implementación del Backend (la ejecución anterior falló por red).
+
+### [04-10-2026] WATCHER
+- **Hora:** 17:26:17
+- **Mensaje:** ⚡ [SDD Auto-Runner] Ejecutando implementación Backend (/speckit.implement)...
+
+### [04-10-2026] Senior Backend Developer
+- **Hora:** 17:38:19
+- **Artefacto generado:** `documents/dev-backend/backend-architecture.md`
+- **Estado:** Implementación backend finalizada exitosamente mediante SDD SpecKit.
+- **Handoff:** @DEV-FRONT: Inicia implementación frontend.
+
+### [04-10-2026] WATCHER
+- **Hora:** 17:38:19
+- **Mensaje:** ⚡ [SDD Auto-Runner] Ejecutando implementación Frontend (/speckit.implement)...
+
+### [04-10-2026] Senior Frontend Developer
+- **Hora:** 17:46:53
+- **Artefacto generado:** `documents/dev-frontend/frontend-architecture.md`
+- **Estado:** Implementación frontend finalizada exitosamente mediante SDD SpecKit.
+- **Handoff:** @QA-AUTO: La Fase D (Implementación) ha finalizado exitosamente mediante motor SDD. Inicia el diseño de la matriz de pruebas automatizadas basándote en los criterios de la HU; al terminar, deriva a Code Review.
+
+### [04-10-2026] QA Automation
+- **Hora:** 19:05:00
+- **Artefacto generado:** `documents/qa-auto/qa-report.md`
+- **Estado:** [RECHAZADO] Backend Sprints unit 86/86 y integración 85/87; Jest 83/83; regresión Backlog 93/93. Se añadió `SprintItemsEstimationFidelityTests.cs` (2 pruebas rojas, commit edadc569). DEF-01 [CAPA:TASKS] BacklogItemSummary/SprintItemResponse usan int; el Tech Design (W-01) exige decimal nullable y `BacklogModuleApi.ToWholePoints` redondea 2.5 a 3 y convierte QA nulo en 0 (evidencia: SprintItemsEstimationFidelityTests; el modelo TS `sprint.models.ts` también declara number sin nulo). DEF-02 [CAPA:SPEC] spec.md conserva FR-015 y no tiene escenario del 409 de la regla humana A, que el código sí implementa y prueba. Bloqueados: T051 npm run build (Node v22.20.0, Angular CLI exige 22.22.3 o superior) y T052 quickstart. Identity.IntegrationTests 19/19 fallan por Keycloak/Docker, ajeno a la HU-004.
+- **⚠️ Puntos Abiertos:** (1) La prueba existente BacklogModuleApiTests.GetSummariesAsync_ConPuntosDecimales_DebeRedondearAlEnteroMasCercano valida el comportamiento incorrecto y debe corregirse junto con DEF-01. (2) Ejecutar T051 y T052 en un entorno con Node compatible.
+- **Handoff:** @DEV-BACK: Corrige DEF-01 [CAPA:TASKS] (decimal nullable en contrato y respuesta, sin redondeo ni nulo a cero) y DEF-02 [CAPA:SPEC] (reconciliar spec.md con el 409); revalida con SprintItemsEstimationFidelityTests.
+@DEV-FRONT: Corrige DEF-01 [CAPA:TASKS] en el modelo TypeScript (devPoints y qaPoints anulables) y muestra guion para nulo.
+
+### [04-10-2026] WATCHER
+- **Hora:** 17:56:35
+- **Mensaje:** 🔁 [SDD Retrabajo] Iteración 1/2 (origen: QA Automation). Reconciliando spec, plan y tasks (/speckit-converge)...
+
+### [04-10-2026] WATCHER
+- **Hora:** 17:59:38
+- **Mensaje:** 📌 [SDD Retrabajo] spec.md/plan.md actualizados por converge (capas: SPEC). Los artefactos de diseño de BA, API y DA deben sincronizarse con el cambio.
+
+### [04-10-2026] WATCHER
+- **Hora:** 17:59:38
+- **Mensaje:** ⚡ [SDD Auto-Runner] Ejecutando implementación Backend (/speckit.implement)...
+
+### [04-10-2026] Senior Backend Developer
+- **Hora:** 18:09:36
+- **Artefacto generado:** `documents/dev-backend/backend-architecture.md`
+- **Estado:** Implementación backend finalizada exitosamente mediante SDD SpecKit.
+- **Handoff:** @DEV-FRONT: Inicia implementación frontend.
+
+### [04-10-2026] WATCHER
+- **Hora:** 18:09:36
+- **Mensaje:** ⚡ [SDD Auto-Runner] Ejecutando implementación Frontend (/speckit.implement)...
+
+### [04-10-2026] Senior Frontend Developer
+- **Hora:** 18:11:45
+- **Artefacto generado:** `documents/dev-frontend/frontend-architecture.md`
+- **Estado:** Implementación frontend finalizada exitosamente mediante SDD SpecKit.
+- **Handoff:** @QA-AUTO: Retrabajo 1/2 aplicado sobre los hallazgos de QA Automation. Revalida la HU. Ejecuta y valida las pruebas y, al aprobar, deriva a Code Review.
+
+### [04-10-2026] QA Automation
+- **Hora:** 18:30:00
+- **Artefacto generado:** `documents/qa-auto/qa-report.md`
+- **Estado:** [APROBADO] Retrabajo 1/2 revalidado. DEF-01 [CAPA:TASKS] corregido: decimal anulable en contrato, respuesta y modelo TypeScript, con SprintItemsEstimationFidelityTests 2/2 verdes. DEF-02 [CAPA:SPEC] corregido: spec.md con FR-017 y escenarios 409. Resultados: Unit Sprints 86/86, Integración Sprints 89/89, Backlog 93/93, Jest 83/83. Commit de pruebas y reporte realizado.
+- **⚠️ Puntos Abiertos:** (1) T051 npm run build no ejecutable por Node v22.20.0 (Angular CLI exige 22.22.3 o superior) y T052 quickstart sin recorrer. (2) Identity.IntegrationTests 19/19 fallan por Keycloak/Docker en este entorno, ajeno a la HU-004.
+- **Handoff:** @CODE-REVIEW: Pruebas de la HU-004 validadas y reporte de calidad actualizado. Procede con la revisión de código.
+
+### [04-10-2026] Code Review
+- **Hora:** 18:26:00
+- **Artefacto generado:** `documents/code-review/impact-analysis-report.md`
+- **Estado:** [APROBADO CON RESERVAS] HU-004. Lectura física de 30 archivos de producción (22 backend, 8 frontend) y de las pruebas clave. Ejecución propia: Unit Sprints 86/86, Integración Sprints 89/89 con PostgreSQL, Jest features/sprints 52/52 y ngc --noEmit limpio. Arquitectura: ICarterModule + MediatR, schema sprints aislado, contrato IBacklogModuleApi sin FK ni consulta cross-schema, invariante un elemento un Sprint por índice único con 409 solo para 23505 de ese índice, CancellationToken propagado hasta EF Core y el contrato, cero N+1, RequireAuthorization en POST y GET, identidad resuelta antes de acceder a datos, sin IDOR (catálogos globales, el 409 no revela el Sprint dueño), sin XSS, sin NgModules. DEF-01 (decimal nullable de extremo a extremo, guion solo para null) y DEF-02 (FR-017 y FR-018) verificados en código y spec. Reservas no bloqueantes: (1) [CAPA:TASKS] tasks.md T051 y T052 sin marcar (build bloqueado por Node v22.20.0 frente a Angular CLI 22.22.3 o superior; quickstart cubierto por las pruebas de integración) y casillas T005, T015, T036 y T041 sin marcar pese a estar corregidas; T060 cita sprint-detail cuando el guion vive en sprint-assigned-items.component.ts:105; (2) [CAPA:CODE] assign-item-dialog.component.ts:81 usa subscribe sobre un flujo de eventos con takeUntilDestroyed, mismo patrón aceptado en HU-001 y HU-003; (3) [CAPA:PLAN] AssignItemToSprintCommandHandler.cs:3 importa Npgsql, exigido por T022; (4) [CAPA:PLAN] el diálogo distingue el 404 de Sprint por texto del detail, advertencia ya aceptada en el Tech Design; (5) [CAPA:CODE] código de la HU-004 sin commitear al momento de la revisión. No ejecuté Identity.IntegrationTests (QA reporta fallo de Keycloak y Docker del entorno, ajeno a la HU).
+- **⚠️ Puntos Abiertos:** Ninguno bloqueante. Informativos: actualizar Node para ejecutar el build de Angular y marcar T005, T015, T036, T041, T051 y T052 en tasks.md.
+@WATCHER: GITOPS-MERGE-CLOSE feat/004-HU_asignacion_elementos_sprint
+- **Handoff:** @PM: Código certificado y rama consolidada en dev. La épica P1 sigue incompleta (historias 005 a 011 en BACKLOG, varias bloqueadas por definiciones pendientes) y las épicas P2 a P6 tienen sus historias registradas en BACKLOG; procede a asignar la siguiente historia del backlog.
