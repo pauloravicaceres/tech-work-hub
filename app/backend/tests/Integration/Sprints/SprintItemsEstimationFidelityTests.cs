@@ -35,8 +35,8 @@ public class SprintItemsEstimationFidelityTests : IDisposable
         var summary = await GetSummaryAsync(id);
 
         // Assert
-        ((decimal?)Convert.ToDecimal(summary.DevPoints)).Should().Be(2.5m);
-        ((decimal?)Convert.ToDecimal(summary.QAPoints)).Should().Be(0.4m);
+        summary.DevPoints.Should().Be(2.5m);
+        summary.QAPoints.Should().Be(0.4m);
     }
 
     [Fact]
@@ -49,6 +49,6 @@ public class SprintItemsEstimationFidelityTests : IDisposable
         var summary = await GetSummaryAsync(id);
 
         // Assert
-        ((object?)summary.QAPoints).Should().BeNull("un ítem técnico sin QA se muestra como guion, no como 0 (UX B-02)");
+        summary.QAPoints.Should().BeNull("un ítem técnico sin QA se muestra como guion, no como 0 (UX B-02)");
     }
 }

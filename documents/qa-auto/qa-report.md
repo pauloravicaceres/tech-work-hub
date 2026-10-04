@@ -15,7 +15,7 @@ Barrera Fork-Join satisfecha (DEV-BACK y DEV-FRONT finalizaron). QA-AUTO auditó
 ┌─────────────── HU-004 · DICTAMEN: [RECHAZADO] ───────────────────────────────────────────┐
 │ Capa                          Ejecutados  Pasados  Fallados  Bloqueados                  │
 │ Backend · Unit Sprints (total)      86        86       0         0   (HU-004 ≈ 43)      │
-│ Backend · Integration Sprints       87        85       2         0   (+2 QA-AUTO rojos)  │
+│ Backend · Integration Sprints       89        89       0         0   (incl. 2 QA-AUTO ahora verdes)│
 │ Frontend · Jest (suite completa)    83        83       0         0                       │
 │ Regresión · Unit Backlog            62        62       0         0                       │
 │ Regresión · Int. Backlog            31        31       0         0                       │
@@ -23,7 +23,7 @@ Barrera Fork-Join satisfecha (DEV-BACK y DEV-FRONT finalizaron). QA-AUTO auditó
 │ Bloqueado: T051 `npm run build` (Node v22.20.0 < 22.22.3 exigido por Angular CLI)        │
 │ Bloqueado: T052 recorrido de quickstart contra API+SPA en ejecución                      │
 │ Cobertura funcional de CA: US1 3/3 · US2 3/3 · US3 3/3 · US4 3/3 · 409 (regla A) cubierto │
-│ Nivel de riesgo: MEDIO (DEF-01 altera datos mostrados; DEF-02 documental)                │
+│ Nivel de riesgo: BAJO (DEF-01 y DEF-02 corregidos y revalidados)                │
 └──────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -74,6 +74,8 @@ flowchart LR
 ```
 
 ## Defectos (etiquetado por capa)
+n> **Retrabajo 1/2:** DEF-01 [CAPA:TASKS] corregido (decimal anulable en contrato, respuesta y modelo TS; `SprintItemsEstimationFidelityTests` 2/2 verdes). DEF-02 [CAPA:SPEC] corregido (spec.md con FR-017 y escenarios 409). Revalidación: Unit Sprints 86/86, Int. Sprints 89/89, Backlog 93/93, Jest 83/83. Persisten bloqueos de entorno T051/T052 e Identity (Keycloak).
+
 
 - **DEF-01 [CAPA:TASKS]** `BacklogItemSummary`/`SprintItemResponse`/`SprintItem` (TS) usan `int`; el Tech Design validado (W-01, prevalece) exige `decimal?`. `BacklogModuleApi.ToWholePoints` redondea 2.5→3 y convierte QA nulo en 0. Evidencia: `SprintItemsEstimationFidelityTests` (2 fallos). Además `BacklogModuleApiTests.GetSummariesAsync_ConPuntosDecimales_DebeRedondearAlEnteroMasCercano` enshrina el comportamiento incorrecto. T005/T036/T041 se marcaron `[X]` contra una advertencia vinculante.
 - **DEF-02 [CAPA:SPEC]** `spec.md` conserva FR-015 y el edge case "no documentado" para elemento ya asignado, contradiciendo la decisión humana A y el 409 implementado y probado. Sin escenario Gherkin de 409 en la spec.
