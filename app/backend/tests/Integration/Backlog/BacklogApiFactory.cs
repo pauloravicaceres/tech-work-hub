@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using System.Text.Encodings.Web;
+using Backlog;
 using Backlog.Contracts;
 using Backlog.Data;
 using Backlog.Domain.BacklogItems;
@@ -9,14 +10,11 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Shared.Data.Interceptors;
 
 namespace Integration.Backlog;
 
@@ -30,8 +28,18 @@ public sealed class FakeApplicationCatalog : IApplicationModuleApi
     public TaskCompletionSource Started { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
     public TaskCompletionSource<bool> SawCancellation { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
+    public List<ApplicationSummary> Catalog { get; } = [];
+    public int Calls { get; private set; }
+
+    public Task<IReadOnlyList<ApplicationSummary>> ListAsync(CancellationToken cancellationToken = default)
+    {
+        Calls++;
+        return Task.FromResult<IReadOnlyList<ApplicationSummary>>(Catalog.ToList());
+    }
+
     public async Task<bool> ExistsAsync(Guid applicationId, CancellationToken cancellationToken = default)
     {
+        Calls++;
         if (BlockUntilCancelled)
         {
             Started.TrySetResult();
@@ -94,35 +102,30 @@ public sealed class TestAuthHandler(
 
 /// <summary>
 /// Hospeda el <c>Program</c> REAL del Bootstrapper (Carter + MediatR + ValidationBehavior + interceptores de Shared +
-/// CustomExceptionHandler + JsonStringEnumConverter). Solo se sustituyen PostgreSQL (SQLite en memoria),
+/// CustomExceptionHandler + JsonStringEnumConverter) sobre PostgreSQL real (Testcontainers) con migraciones aplicadas al arrancar.
+/// Solo se sustituyen
 /// Keycloak (esquema de prueba) y el módulo Application.
 /// </summary>
 public sealed class BacklogApiFactory : WebApplicationFactory<Program>
 {
-    private readonly SqliteConnection _connection = new("DataSource=:memory:");
+    private readonly string _connectionString;
 
     public FakeApplicationCatalog Apps { get; } = new();
     public RecordingCreatedHandler CreatedEvents { get; } = new();
 
-    public BacklogApiFactory()
+    public BacklogApiFactory(PostgresFixture postgres)
     {
-        _connection.Open();
+        _connectionString = postgres.CreateDatabaseAsync().GetAwaiter().GetResult();
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseEnvironment("Testing");
-        builder.UseSetting("Database:MigrateOnStartup", "false");
+        builder.UseSetting($"ConnectionStrings:{BacklogModule.ConnectionStringName}", _connectionString);
+        builder.UseSetting("Database:MigrateOnStartup", "true");
 
         builder.ConfigureTestServices(services =>
         {
-            services.RemoveAll<DbContextOptions<BacklogDbContext>>();
-            services.AddDbContext<BacklogDbContext>((provider, options) => options
-                .UseSqlite(_connection)
-                .AddInterceptors(
-                    provider.GetRequiredService<AuditableEntityInterceptor>(),
-                    provider.GetRequiredService<DispatchDomainEventsInterceptor>()));
-
             services.RemoveAll<IApplicationModuleApi>();
             services.AddSingleton<IApplicationModuleApi>(Apps);
             services.AddSingleton<INotificationHandler<BacklogItemCreatedDomainEvent>>(CreatedEvents);
@@ -137,13 +140,6 @@ public sealed class BacklogApiFactory : WebApplicationFactory<Program>
         });
     }
 
-    protected override IHost CreateHost(IHostBuilder builder)
-    {
-        var host = base.CreateHost(builder);
-        using var scope = host.Services.CreateScope();
-        scope.ServiceProvider.GetRequiredService<BacklogDbContext>().Database.EnsureCreated();
-        return host;
-    }
 
     public HttpClient AnonymousClient() => CreateClient();
 
@@ -162,9 +158,4 @@ public sealed class BacklogApiFactory : WebApplicationFactory<Program>
         return await db.BacklogItems.AsNoTracking().ToListAsync();
     }
 
-    protected override void Dispose(bool disposing)
-    {
-        base.Dispose(disposing);
-        if (disposing) _connection.Dispose();
-    }
 }

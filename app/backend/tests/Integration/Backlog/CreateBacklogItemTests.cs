@@ -11,6 +11,7 @@ namespace Integration.Backlog;
 /// <summary>
 /// HU-001 SC-01..SC-06, CB-04, FR-008..FR-013 — host real (<c>Program</c>) vía WebApplicationFactory.
 /// </summary>
+[Collection(PostgresCollection.Name)]
 public class CreateBacklogItemTests : IDisposable
 {
     private const string Route = "/api/backlog/items";
@@ -19,7 +20,9 @@ public class CreateBacklogItemTests : IDisposable
     private const string TitleField = "Title";
     private const string TypeField = "Type";
 
-    private readonly BacklogApiFactory _api = new();
+    private readonly BacklogApiFactory _api;
+
+    public CreateBacklogItemTests(PostgresFixture postgres) => _api = new BacklogApiFactory(postgres);
 
     public void Dispose() => _api.Dispose();
 

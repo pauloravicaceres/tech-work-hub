@@ -6,14 +6,14 @@
 ## 1. AI QA Review Dashboard
 
 ```
-┌─────────────── HU-001 · DICTAMEN: [APROBADO CON RESERVA] (re-ejecución) ──────────────┐
+┌─────────────── HU-001 · DICTAMEN: [APROBADO] (PostgreSQL/Testcontainers) ────────────────┐
 │ Capa                    Escritos  Ejecutados  Pasados  Fallados  Bloqueados             │
-│ Backend · Unitarias        61         61        61        0         0                  │
-│ Backend · Integración      22         22        22        0         0  (Program real)   │
-│ Frontend · Jest            19         19        19        0         0                  │
+│ Backend · Unitarias        62         62        62        0         0                  │
+│ Backend · Integración      31         31        31        0         0  (Program+PostgreSQL)│
+│ Frontend · Jest            31         31        31        0         0                  │
 │ ─────────────────────────────────────────────────────────────────────────────────────── │
 │ Cobertura funcional de CA (SC-01..SC-06): 6/6 con prueba real · 6/6 en verde            │
-│ Nivel de riesgo: MEDIO  (BD de integración = SQLite, no PostgreSQL; ver reserva)         │
+│ Nivel de riesgo: BAJO  (BD real PostgreSQL 16; Keycloak y catálogo siguen simulados)     │
 └──────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -23,7 +23,7 @@ Segunda re-ejecución (misma fecha): `dotnet test app/backend/TechWorkHub.sln` 6
 
 Tercera re-ejecución (retrabajo 1/2): mismos resultados (61/61, 22/22, Jest 19/19); no hay commits nuevos de producción desde `afda58a`. Docker sigue inactivo.
 
-**Reserva (no bloqueante):** la integración usa el host, MediatR, validación, interceptores y manejador de excepciones REALES, pero la BD es **SQLite en memoria**, el catálogo de aplicaciones (otro módulo) es un doble y la autenticación es un esquema de prueba que sustituye a Keycloak/JWT. **No se migró a Testcontainers PostgreSQL**: el demonio de Docker no está activo (`dockerDesktopLinuxEngine` no disponible). Riesgo residual: comportamiento específico de PostgreSQL (tipos, migraciones, concurrencia).
+**Cuarta ejecución (03-10-2026, Docker 28.4.0 activo, T043):** INT-01..INT-10 y los casos #16..#19 corren sobre `WebApplicationFactory<Program>` con **PostgreSQL 16 (Testcontainers)**: un único contenedor por suite (`PostgresFixture` + `ICollectionFixture`), una base de datos nueva por prueba y las migraciones Code-First aplicadas por el arranque real (`Database:MigrateOnStartup=true`). SQLite se eliminó de la solución de pruebas. Cobertura: #16 `ListApplicationsTests` (catálogo autenticado, 401 sin token); #17 Jest (interceptor, guard, reautenticación); #18 `KeycloakConfigurationTests` y `MigrationsPostgresTests` (schemas/tablas e idempotencia sobre PostgreSQL); #19 `ListApplicationsTests`/`CreateBacklogItemTests` (401 sin claim de identidad sin tocar catálogo ni BD). Resultado: unitarias 62/62, integración 31/31, Jest 31/31. Reserva residual: Keycloak/JWT se sustituye por un esquema de prueba y el catálogo del módulo Application es un doble; no se probó concurrencia.
 
 Ejecución: `dotnet test` en `tests/Unit/Backlog/Backlog.UnitTests.csproj` (net8.0, xUnit 2.9.2, NSubstitute 5.3, FluentAssertions 6.12.2).
 
@@ -144,7 +144,7 @@ flowchart LR
   classDef hot fill:#ffd6d6,stroke:#c00;
 ```
 
-Hotspots: ya no hay defectos abiertos; el riesgo residual es la BD de integración (SQLite en lugar de PostgreSQL).
+Hotspots: sin defectos abiertos; la BD de integración ya es PostgreSQL real. Riesgo residual: Keycloak real (no hay prueba contra un IdP).
 
 ## Hallazgo 9 (Code Review) — stubs reemplazados
 
@@ -156,7 +156,7 @@ Hotspots: ya no hay defectos abiertos; el riesgo residual es la BD de integraci�
 
 ## Dictamen
 
-**[APROBADO CON RESERVA]** — 102/102 pruebas en verde (61 unitarias, 22 de integración, 19 Jest); DEF-01..DEF-08 corregidos y SC-01..SC-06 cubiertos. Reserva: integración sobre SQLite y no sobre PostgreSQL (Docker no disponible), por lo que no se ha comprobado el comportamiento específico de PostgreSQL. Se devuelve el turno a `@CODE-REVIEW`.
+**[APROBADO]** — 124/124 pruebas en verde (62 unitarias, 31 de integración sobre PostgreSQL/Testcontainers, 31 Jest); DEF-01..DEF-08 corregidos, SC-01..SC-06 y los casos #16..#19 cubiertos. Reserva menor: Keycloak/JWT simulado. Se devuelve el turno a `@CODE-REVIEW`.
 
 _Histórico: el dictamen previo fue **[RECHAZADO]** (47/53 en verde, 6 defectos de producción)._
 
