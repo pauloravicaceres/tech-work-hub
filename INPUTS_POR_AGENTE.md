@@ -82,7 +82,7 @@ Entregables: `documents/business-analyst/NNN-HU_nombre.md` y `.../HUs-stakeholde
 | `.specify/memory/constitution.md` | Auditoría en doble vía y ítem de no regresión en el DoD | Condicional (Brownfield) | `CARPETA_CONTEXTO` |
 | `instructions/qa-validation-standards`, `qa-report-template`, `anti-hallucination-policy` | Rúbrica de 5 dimensiones (+1 Brownfield) y formato del dictamen | Obligatoria | `instructions/` |
 
-Entregable: `aprobado_qa_*.md` o `feedback_qa_*.md`. El token de salida (`@UX:`/`@SA:`) es informativo: **la ruta real la decide el Watcher** (`project_type`, `ux_phase` y el campo `Requiere interfaz` de la HU).
+Entregable: `aprobado_qa_*.md` o `feedback_qa_*.md`. El token de salida (`@UX:`/`@SA:`) es informativo: **la ruta real la decide el Watcher** con `ux_routing.py` (`project_type`, `ux_phase` y el campo `Requiere interfaz` de la HU). El QA solo verifica que la HU declare ese campo.
 
 ## 6. Designer UX (`@UX:`)
 
@@ -241,6 +241,6 @@ Son inconsistencias entre los archivos de los agentes. Ninguna se corrigió en e
 |---|---|---|
 | 1 | El SA, el DA, el API Architect y el QT declaran en `CARPETA_SPECS` un texto con codificación corrupta (`â€”`, `raÃ­z`). El SA además cita `requirements.md` en lugar de `checklists/requirements.md`. | `.agent.md` de `solutions-architect`, `data-architect`, `api-architect`, `qa-tech` |
 | 2 | DA, API, QA-AUTO y QA Documental siguen nombrando `hu_*.md`; el estándar actual es `NNN-HU_nombre.md`. | `.agent.md` y `qa-report-template` de `qa-documental` (ejemplos `hu_01_…`) |
-| 3 | El diagrama del QA Documental y su plantilla aún dicen que el token a `@UX:`/`@SA:` depende de que el proyecto sea headless. Hoy lo decide el Watcher (`project_type`, `ux_phase`, `Requiere interfaz`). | `qa-documental` |
+| 3 | La plantilla del QA Documental ya aclara que su token `@UX:`/`@SA:` es informativo, pero sus opciones siguen redactadas por headless/UI. La ruta real la decide el Watcher con `ux_routing.py` (`project_type`, `ux_phase`, `Requiere interfaz`). | `qa-documental` (`qa-report-template`) |
 | 4 | La plantilla `tech-design-template` §8 del QT ordena cerrar la rama y gatillar `@SPEC-KIT:`, pero el agente `qa-tech` lo prohíbe y despacha a `@DEV-*`. | `qa-tech` |
 | 5 | Las reglas de `README.md` de DEV-BACK y DEV-FRONT usan ejemplos de `venv`/`uvicorn`/Nuxt, que no corresponden al stack .NET/Angular del proyecto. | `dev-backend`, `dev-frontend` |

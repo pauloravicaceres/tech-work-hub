@@ -20,7 +20,8 @@
     @if (state(); as current) {
       @if (current.status === 'ready') {
         <p-card>
-          <div class="flex justify-content-end mb-3">
+          <div class="flex justify-content-end gap-2 mb-3">
+            <p-button label="Elementos asignados" icon="pi pi-list" [routerLink]="['/sprints', current.sprint.id, 'elementos']" />
             <p-button label="Volver al listado" icon="pi pi-arrow-left" severity="secondary" [outlined]="true" routerLink="/sprints" />
           </div>
 

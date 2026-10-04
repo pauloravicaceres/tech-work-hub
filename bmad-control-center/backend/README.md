@@ -144,3 +144,7 @@ Una vez levantado, la documentación Swagger interactiva y telemetría estarán 
 ```bash
 uv run python -m py_compile bmad-control-center/backend/main.py bmad-control-center/backend/api/git.py bmad-control-center/backend/services/git_service.py
 ```
+
+### Etapa omitida (`SKIPPED`)
+
+Cuando el Watcher omite el diseño UX deja en el tracker un bloque `WATCHER` con `⏭️ [UX] Diseño UX omitido`. `WorkflowService` lo detecta y devuelve la etapa `UX` con `status: SKIPPED` (no activa); cuenta como etapa avanzada en `completed_stages`. El frontend la dibuja como `[⏭ OMITIDA]` en `WorkflowStepper.vue`. Detalle de la regla en `ARCHITECTURE.md` (sección "Enrutamiento del diseño UX").

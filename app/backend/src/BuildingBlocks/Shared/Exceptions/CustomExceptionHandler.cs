@@ -44,6 +44,12 @@ public class CustomExceptionHandler(ILogger<CustomExceptionHandler> logger) : IE
                 Detail = notFound.Message,
                 Status = StatusCodes.Status404NotFound
             },
+            ConflictException conflict => new ProblemDetails
+            {
+                Title = "Conflict",
+                Detail = conflict.Message,
+                Status = StatusCodes.Status409Conflict
+            },
             _ => new ProblemDetails
             {
                 Title = "An unexpected error occurred.",

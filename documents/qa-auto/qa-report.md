@@ -1,11 +1,93 @@
 # QA Report — Calidad y Trazabilidad Viva
 
-> Última actualización: 04-10-2026 · Iteración: **HU-003 Gestión de Sprint de Dos Semanas (Crear y Consultar)** · Agente: QA-AUTO
-> Áreas no afectadas por esta iteración: _Sin cambios en esta iteración_ (las secciones HU-002 y HU-001 de abajo se conservan sin modificar).
+> Última actualización: 04-10-2026 · Iteración: **HU-004 Asignación de Elementos a un Sprint** · Agente: QA-AUTO
+> Áreas no afectadas por esta iteración: _Sin cambios en esta iteración_ (HU-003, HU-002 y HU-001 se conservan sin modificar).
 
 ---
 
-# ▶ Iteración actual: HU-003 (`specs/003-HU_gestion_sprint_dos_semanas`)
+# ▶ Iteración actual: HU-004 (`specs/004-HU_asignacion_elementos_sprint`)
+
+Barrera Fork-Join satisfecha (DEV-BACK y DEV-FRONT finalizaron). QA-AUTO auditó las suites entregadas (`tests/Unit/Sprints`, `tests/Integration/Sprints`, specs Jest de `features/sprints`) y añadió pruebas adversariales propias. Sin `Skip`/`xit`. No se modificó código de producción.
+
+## 1. AI QA Review Dashboard (HU-004)
+
+```
+┌─────────────── HU-004 · DICTAMEN: [APROBADO] retrabajo 1/2 ───────────────────────────────────────────┐
+│ Capa                          Ejecutados  Pasados  Fallados  Bloqueados                  │
+│ Backend · Unit Sprints (total)      86        86       0         0   (HU-004 ≈ 43)      │
+│ Backend · Integration Sprints       89        89       0         0   (incl. 2 QA-AUTO ahora verdes)│
+│ Frontend · Jest (suite completa)    83        83       0         0                       │
+│ Regresión · Unit Backlog            62        62       0         0                       │
+│ Regresión · Int. Backlog            31        31       0         0                       │
+│ Regresión · Int. Identity           19         0      19         0   (Keycloak/Docker)   │
+│ Bloqueado: T051 `npm run build` (Node v22.20.0 < 22.22.3 exigido por Angular CLI)        │
+│ Bloqueado: T052 recorrido de quickstart contra API+SPA en ejecución                      │
+│ Cobertura funcional de CA: US1 3/3 · US2 3/3 · US3 3/3 · US4 3/3 · 409 (regla A) cubierto │
+│ Nivel de riesgo: BAJO (DEF-01 y DEF-02 corregidos y revalidados)                │
+└──────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+Comandos: `dotnet test TechWorkHub.sln`, `npx jest --ci --runInBand --forceExit --no-coverage`. Identity falla de forma idéntica sin relación con HU-004 (la fixture no arranca Keycloak en este entorno).
+
+## 2. Requirements Traceability (HU-004)
+
+```mermaid
+flowchart LR
+  HU4[HU-004 Asignación a Sprint]
+  HU4 --> US1[US1 Asignar 201] --> TC1[AssignItemToSprintTests + CommandHandlerTests + sprint-api.service.spec]
+  HU4 --> US2[US2 Consultar 200/404] --> TC2[ListSprintItemsTests + QueryHandlerTests + sprint-assigned-items.spec]
+  HU4 --> US3[US3 400/404] --> TC3[ValidatorTests + ValidationTests]
+  HU4 --> US4[US4 401/500] --> TC4[SprintItemsAuthTests + FailureTests]
+  HU4 --> R409[Regla humana A: 409] --> TC5[AssignItemToSprintTests + SprintItemsMigrationTests índice único]
+  US2 --> TC6[SprintItemsEstimationFidelityTests QA-AUTO]
+```
+
+## 3. Failure Impact Diagram (HU-004)
+
+```mermaid
+flowchart LR
+  F1[FAIL GetSummariesAsync_ConPuntosDecimales: 2.5 → 3] --> C1[BacklogModuleApi.ToWholePoints]
+  F2[FAIL GetSummariesAsync_ConQaNulo: null → 0] --> C1
+  C1 --> C2[BacklogItemSummary int / SprintItemResponse int]
+  C2 --> B1[GET /api/sprints/id/items]
+  B1 --> N1[Vista Elementos asignados: puntos falsos, guion de QA técnico se muestra 0]
+```
+
+## 4. State Transition / User Journey (HU-004)
+
+```mermaid
+stateDiagram-v2
+  [*] --> SinAsignar
+  SinAsignar --> Asignado: POST 201
+  SinAsignar --> SinAsignar: 400 / 404 / 401 / 500 sin persistir
+  Asignado --> Asignado: POST repetido 409
+  Asignado --> Consultado: GET 200
+  Consultado --> Consultado: puntos decimales/nulos distorsionados (DEF-01)
+```
+
+## 5. Test Coverage & Hotspots (HU-004)
+
+```mermaid
+flowchart LR
+  A[Sprints.SprintItems: cobertura alta de CA, 85/87] --> H1[HOTSPOT Backlog.BacklogModuleApi: 2 defectos]
+  A --> OK1[Handler, validador, auth, 409, migración: sin fallos]
+```
+
+## Defectos (etiquetado por capa)
+> **Retrabajo 1/2:** DEF-01 [CAPA:TASKS] corregido (decimal anulable en contrato, respuesta y modelo TS; `SprintItemsEstimationFidelityTests` 2/2 verdes). DEF-02 [CAPA:SPEC] corregido (spec.md con FR-017 y escenarios 409). Revalidación: Unit Sprints 86/86, Int. Sprints 89/89, Backlog 93/93, Jest 83/83. Persisten bloqueos de entorno T051/T052 e Identity (Keycloak).
+
+
+- **DEF-01 [CAPA:TASKS]** `BacklogItemSummary`/`SprintItemResponse`/`SprintItem` (TS) usan `int`; el Tech Design validado (W-01, prevalece) exige `decimal?`. `BacklogModuleApi.ToWholePoints` redondea 2.5→3 y convierte QA nulo en 0. Evidencia: `SprintItemsEstimationFidelityTests` (2 fallos). Además `BacklogModuleApiTests.GetSummariesAsync_ConPuntosDecimales_DebeRedondearAlEnteroMasCercano` enshrina el comportamiento incorrecto. T005/T036/T041 se marcaron `[X]` contra una advertencia vinculante.
+- **DEF-02 [CAPA:SPEC]** `spec.md` conserva FR-015 y el edge case "no documentado" para elemento ya asignado, contradiciendo la decisión humana A y el 409 implementado y probado. Sin escenario Gherkin de 409 en la spec.
+
+## Reservas (no bloqueantes)
+
+- R1: `npm run build` (T051) y quickstart (T052) no verificables en este entorno.
+- R2: el GET omite ids ausentes en Backlog (riesgo informado por el API Architect), sin prueba de integración de ese caso end-to-end.
+
+---
+
+# Iteración anterior: HU-003 (`specs/003-HU_gestion_sprint_dos_semanas`)
 
 Barrera Fork-Join satisfecha (DEV-BACK y DEV-FRONT finalizaron). QA-AUTO auditó adversarialmente las suites entregadas (`tests/Unit/Sprints`, `tests/Integration/Sprints`, specs Jest de `features/sprints`): AAA, nomenclatura BDD, sin `Skip`/`xit` ni mocks tautológicos. Las ejecutó con PostgreSQL real (Testcontainers) y `WebApplicationFactory<Program>`. No se modificó código de producción.
 

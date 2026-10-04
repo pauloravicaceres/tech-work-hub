@@ -3,7 +3,7 @@
 ## 1. Información General y Objetivo
 - **Sistema:** TechWorkHub
 - **Versión:** 1.0.0
-- **Fecha de última actualización:** 2026-10-04
+- **Fecha de última actualización:** 2026-10-04 (HU-004)
 - **Equipo:** Frontend / SpecKit
 - **Objetivo:** Plataforma modular basada en Angular 22 Zoneless con Signals para la gestión de proyectos y backlog multitipo.
 
@@ -217,3 +217,90 @@ sequenceDiagram
 - **ADR-003: toast tras la navegación.** *Contexto:* `p-toast` solo recibe mensajes emitidos después de montarse y el listado se monta al navegar. *Decisión:* `MessageService` se provee en la ruta padre `sprints` y el formulario emite el mensaje en el `then` de `router.navigate`. *Consecuencias:* (+) el toast de éxito aparece en el listado sin estado global; (−) depende de que las tres páginas cuelguen de la misma ruta padre.
 - **Verificación:** Jest 57/57 en verde (8 suites); `ngc -p tsconfig.app.json --noEmit` sin errores con `strictTemplates`. `ng build` no se ejecutó (el CLI exige Node ≥ 22.22.3 y el entorno tiene 22.20.0), por lo que T052 queda abierta; T053 (escenarios del quickstart contra API y UI en ejecución) tampoco se ejecutó.
 - **Puntos abiertos:** (1) T048: el frontend no tiene mecanismo i18n (`$localize`/`i18n`); los textos de Sprints son literales en español, igual que `features/backlog`. (2) No hay shell (menú, sidebar, breadcrumb) en la SPA actual, por lo que el diseño UX de esos elementos no se implementó; las páginas se enlazan entre sí con botones. (3) `/sprints` no tiene entrada de navegación global. (4) No existe proxy de desarrollo para `/api`; las llamadas relativas requieren servir frontend y API bajo el mismo origen.
+
+### HU-004 — Asignación de Elementos del Backlog a un Sprint (speckit-implement, 2026-10-04, T002 y T041–T049)
+Se amplió `features/sprints/` con la vista "Elementos asignados" y el diálogo de asignación. Fuera de la feature solo se tocó `app.routes.ts` (ruta nueva) y el botón de `sprint-detail`; no se modificó `features/backlog`, `core/auth` ni `app.config.ts`.
+
+- **Archivos nuevos (`app/frontend/src/app/features/sprints/`):**
+  - `components/sprint-assigned-items/`: `SprintAssignedItemsComponent` (grilla `p-table` de solo lectura, estados cargando/vacío/404/ID inválido/error/401, `p-toast`).
+  - `components/assign-item-dialog/`: `AssignItemDialogComponent` (`p-dialog` modal con un único campo `itemId`; `FormGroup<{ itemId: FormControl<string> }>` tipado).
+  - Cada uno es standalone, `OnPush`, con `.scss` sin reglas de maquetación y su `.spec.ts`.
+- **Modificados:** `models/sprint.models.ts` (`SprintItem`, `AssignItemRequest`, `AssignedItem`, `ProblemDetails.detail`), `services/sprint-api.service.ts` (`assignItem` → `POST /api/sprints/{id}/items`, `listItems` → `GET /api/sprints/{id}/items`), `app.routes.ts` (`sprints/:id/elementos`, declarada antes de `:id`) y `sprint-detail.component.html` (solo el botón `Elementos asignados`; los cuatro datos del Sprint no cambian).
+
+```mermaid
+flowchart TD
+    Guard{{"authGuard"}} --> Sprints["/sprints (MessageService compartido)"]
+    Sprints --> Lista["'' → SprintListComponent"]
+    Sprints --> Nuevo["nuevo → SprintFormComponent"]
+    Sprints --> Elementos[":id/elementos → SprintAssignedItemsComponent (NUEVA, antes de :id)"]
+    Sprints --> Detalle[":id → SprintDetailComponent"]
+    Detalle -- "botón Elementos asignados (NUEVO)" --> Elementos
+    Elementos -- "Volver al detalle del Sprint" --> Detalle
+    Elementos -- "Asignar elemento" --> Dialogo["AssignItemDialogComponent (p-dialog, sin ruta propia)"]
+```
+
+- **Estado:** `SprintAssignedItemsComponent.state` es un `toSignal` sobre un union discriminado `loading | ready | invalidId | notFound | unauthorized | error`; combina `GET sprint` y `GET items` con `forkJoin`. Un `BehaviorSubject<boolean>` dispara la consulta (`true` muestra la carga, `false` refresca sin parpadeo tras asignar): no hay UI optimista, la grilla siempre se renderiza desde el servidor. El diálogo usa Signals (`isSubmitting`, `banner`, `fieldError`, `sprintMissing`), el modelo `visible` y el flujo `Subject + exhaustMap + takeUntilDestroyed` (evita el doble envío).
+
+```mermaid
+sequenceDiagram
+    actor U as Usuario
+    participant G as SprintAssignedItemsComponent
+    participant D as AssignItemDialogComponent
+    participant S as SprintApiService
+    participant API as /api/sprints/{id}/items
+
+    U->>G: Navega a /sprints/:id/elementos
+    G->>S: getById(id) + listItems(id)
+    S->>API: GET sprint y GET items
+    API-->>G: Sprint y SprintItem[] (id, title, type, devPoints, qaPoints)
+    U->>G: Asignar elemento
+    G->>D: visible = true (campo vacío)
+    U->>D: Escribe itemId y pulsa Asignar
+    D->>S: assignItem(sprintId, itemId.trim())
+    S->>API: POST { itemId }
+    alt 201 Created
+        API-->>D: { sprintId, itemId }
+        D-->>G: cierra y emite assigned
+        G-->>U: Toast con Sprint y elemento
+        G->>S: listItems(id) (consulta fresca)
+    else 400 ProblemDetails
+        API-->>D: errors { itemId | sprintId }
+        D-->>U: Mensaje en el campo y banner (valor conservado)
+    else 404
+        API-->>D: detail distingue Sprint de elemento
+        D-->>U: Elemento: reintento posible. Sprint: reintento bloqueado + Volver al listado
+    else 409
+        API-->>D: El elemento ya pertenece a un Sprint
+        D-->>U: Advertencia sin revelar el Sprint (valor conservado)
+    else 401
+        D-->>G: cierra y emite unauthorized
+        G-->>U: Diálogo bloqueante de reautenticación
+    else 500
+        D-->>U: Banner genérico sin detalles internos (valor conservado)
+    end
+```
+
+- **Decisiones (alineadas con el diseño UX 004):**
+  - **ADR-004: el servidor es la fuente de verdad (D-05).** *Contexto:* FR-005..FR-007 son reglas del servidor. *Decisión:* el cliente no valida formato ni existencia; envía el `itemId` recortado, incluso vacío, y muestra el 400 por campo. *Consecuencias:* (+) sin reglas de negocio duplicadas; (−) un campo vacío cuesta una ida al servidor.
+  - **ADR-005: el 404 se clasifica por el `detail`.** *Contexto:* el contrato devuelve el mismo 404 para Sprint y elemento y solo el `detail` los distingue. *Decisión:* si `detail` contiene "sprint" se bloquea el reintento (estado 6); en cualquier otro caso se trata como elemento inexistente (estado 7). *Consecuencias:* (+) mensajes distintos sin cambiar el contrato; (−) depende del texto del mensaje del backend (`SprintItemRules`).
+  - **Estimación no informada (corregido por DEF-01, ver «Retrabajo DEF-01» abajo):** `formatPoints` ya no trata `0` como "sin estimación"; solo `null`/`undefined` se muestran como `—`.
+- **Verificación:** Jest 83/83 en verde (10 suites; 21 pruebas nuevas de HU-004); `ngc -p tsconfig.app.json --noEmit` sin errores con `strictTemplates`. `ng build` no se ejecutó (el CLI exige Node ≥ 22.22.3 y el entorno tiene 22.20.0), por lo que T051 queda abierta; T052 (quickstart contra API y SPA en ejecución) tampoco se ejecutó.
+- **Puntos abiertos:** (1) La acción `Ver elemento` del estado 1 no se implementó: el módulo Backlog no tiene ruta de detalle de elemento (solo `backlog/nuevo`); la grilla no tiene columna de acciones. (2) Igual que en HU-003: sin i18n, sin shell (menú/breadcrumb) y sin proxy de desarrollo para `/api`. (3) La grilla no muestra el estado del elemento ni del Sprint (FR-013, FR-014).
+
+### Retrabajo DEF-01 — Estimaciones anulables (speckit-implement, 2026-10-04, T059 y T060)
+Solo se alteró `features/sprints/`; rutas, estado y llamadas a la API no cambian. El backend (T055–T058) ya devuelve `devPoints`/`qaPoints` como `decimal?` sin convertir `null` a 0 (FR-018).
+
+- **`models/sprint.models.ts`:** `SprintItem.devPoints` y `SprintItem.qaPoints` pasan de `number` a `number | null`.
+- **`SprintAssignedItemsComponent.formatPoints`:** `null`/`undefined` → `—`; cualquier número, incluido `0` y decimales como `2.5`, se muestra tal cual. La plantilla de la grilla (`sprint-assigned-items.component.html`) no cambió porque ya delegaba en `formatPoints`.
+- **Pruebas:** `sprint-assigned-items.component.spec.ts` (nulo → `—`, `0` → `0`, `2.5`) y `sprint-api.service.spec.ts` (respuesta con `qaPoints: null`).
+
+```mermaid
+flowchart LR
+    API["GET /api/sprints/{id}/items<br/>devPoints / qaPoints: decimal?"] --> M["SprintItem<br/>number | null"]
+    M --> F["formatPoints()"]
+    F -- "null / undefined" --> D["—"]
+    F -- "número (incl. 0 y 2.5)" --> N["String(valor)"]
+```
+
+- **Verificación:** Jest `src/app/features/sprints` 52/52 en verde (6 suites); `ngc -p tsconfig.app.json --noEmit` sin errores.
+- **Nota:** T060 nombra `sprint-detail.component.html`, pero las estimaciones se renderizan en `sprint-assigned-items.component.html`; allí se aplicó el cambio.

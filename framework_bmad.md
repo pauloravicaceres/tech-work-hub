@@ -27,7 +27,7 @@ El framework impone políticas *Zero-Trust* sobre el control de versiones, deleg
 En la versión 2.0, la transición entre el análisis de negocio y el diseño arquitectónico ya no es manual.
 1. **Intercepción SDD Gatekeeper:** Cuando QA Documental emite su certificado de aprobación, el watcher intercepta el evento.
 2. **Ejecución Autónoma:** Inicia silenciosamente el ciclo GitHub Spec Kit (`specify -> clarify -> plan -> tasks -> analyze`).
-3. **HITL (Human-in-the-Loop) por Excepción:** El watcher *solo* pausa la ejecución y despierta al Humano si detecta símbolos de ambigüedad (preguntas o dudas en la fase de clarificación) o si la auditoría técnica falla por violación a la constitución. Si no hay fricción, el sistema hace el handoff directamente al Arquitecto de Soluciones (`@SA`) o de UI (`@UX`) leyendo el flag dinámico en `config_bmad.json`.
+3. **HITL (Human-in-the-Loop) por Excepción:** El watcher *solo* pausa la ejecución y despierta al Humano si detecta símbolos de ambigüedad (preguntas o dudas en la fase de clarificación) o si la auditoría técnica falla por violación a la constitución. Si no hay fricción, el sistema hace el handoff directamente al Arquitecto de Soluciones (`@SA`) o de UI (`@UX`) según `ux_routing.py` (`project_type`, `ux_phase` en `config_bmad.json` y el campo `Requiere interfaz` de la HU).
 
 ---
 
@@ -44,7 +44,7 @@ El ciclo de vida del software en BMAD atraviesa 4 grandes fases cronológicas:
 
 ### FASE A (Arquitectura y Diseño Técnico)
 *(Esta fase es pre-alimentada por el Spec Freeze automático del SDD Auto-Runner).*
-*   **`@UX` (Designer UX):** (Solo en proyectos con UI). Calca la funcionalidad de la HU en wireframes de texto (ASCII/Skeleton) y define jerarquías visuales.
+*   **`@UX` (Designer UX):** (Solo si la HU requiere interfaz: lo decide `ux_routing.py` según `project_type`, `ux_phase` y el campo `Requiere interfaz` de la HU; si se omite, el flujo pasa a `@SA`). Calca la funcionalidad de la HU en wireframes de texto (ASCII/Skeleton) y define jerarquías visuales.
 *   **`@SA` (Solutions Architect):** Lee el `constitution.md` y dicta las Technical Guidelines, decidiendo el stack y los ADRs (Architecture Decision Records).
 *   **`@DA` (Data Architect):** Modela las estructuras de persistencia, generando el MER y asegurando el aislamiento (ej. por schema).
 *   **`@API` (API Architect):** Define los contratos REST o GraphQL, mapeando las fronteras del backend.
@@ -173,7 +173,7 @@ flowchart TD
 
     subgraph L2 ["Capa Estratégica (Instrucciones)"]
         INST["*.instructions.md (Ej: cli-headless-execution)"]
-        CONF["config_bmad.json (Flag UI/Headless)"]
+        CONF["config_bmad.json (project_type, ux_phase)"]
     end
 
     subgraph L3 ["Lex Superior (Constitución)"]
@@ -335,3 +335,22 @@ flowchart LR
 
 **Reflejo en `bmad-control-center`.** El *Pipeline de Agentes* muestra el rechazo en vivo: el revisor aparece en rojo (`✗ [RECHAZADO]`), las etapas a corregir en ámbar (`↻ [RETRABAJO i/2]`) y un banner resume el ciclo. El backend lo proyecta desde el tracker (`rework` + `rework_state` por etapa) y lo emite en `WORKFLOW_UPDATED`.
 
+## Enrutamiento del diseño UX (interruptor global y por HU)
+
+El diseño UX es una pieza removible del pipeline. **Quien decide si una HU pasa por UX es el Watcher, no el QA Documental**:
+el token `@UX:`/`@SA:` que escribe el QA en su aprobación es informativo, porque el Gate 1 lo intercepta y el Watcher
+despacha el handoff real al terminar `specify` + `clarify`.
+
+| Orden | Fuente | Efecto |
+|:---:|---|---|
+| 1 | `project_type: headless` en `config_bmad.json` | Se omite UX siempre |
+| 2 | `ux_phase` en `config_bmad.json`: `off` / `on` / `auto` (por defecto) | `off` omite, `on` diseña siempre, `auto` pasa a la HU |
+| 3 | Campo `Requiere interfaz: Sí o No` de la HU técnica (lo declara el BA, lo verifica el QA) | `No` omite, `Sí` diseña |
+| 4 | Sin campo | Se diseña (valor seguro por defecto) |
+
+- **Dónde vive la regla:** `ux_routing.py` (raíz). Solo usa la biblioteca estándar y no depende del Watcher ni de herdr; devuelve `RutaUX(destino, motivo, omitida)`. El Watcher traduce `destino` al token del tracker (`decidir_ruta_ux` / `registrar_traspaso_fase_a` en `watcher_bmad.py`).
+- **Cambio de orquestador:** son datos y contratos y sobreviven: `ux_phase`, el campo de la HU y el bloque del tracker. Hay que reimplementar solo el nodo de enrutamiento, que importa `ux_routing`.
+- **Lectura en caliente:** el config se lee en cada decisión; no hay que reiniciar el Watcher. Tras un `off`, reiniciar `utils/start_agents.py` para volver a levantar el panel de `designer-ux`.
+- **Huella en el tracker:** al omitir, el Watcher escribe un bloque `WATCHER` con `⏭️ [UX] Diseño UX omitido: <motivo>` y un handoff al `@SA:`. Ese texto no puede contener "aprobad…" o re-dispararía el Gate 1.
+- **Dashboard:** `WorkflowService` marca la etapa UX como `SKIPPED` (cuenta como avance) y `WorkflowStepper.vue` la muestra como `[⏭ OMITIDA]`.
+- **Panel:** con `ux_phase=off` o proyecto headless, `start_agents.py` no levanta `designer-ux` (`ux_routing.agentes_omitidos`).

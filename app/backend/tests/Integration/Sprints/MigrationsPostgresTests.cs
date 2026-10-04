@@ -10,7 +10,7 @@ using Xunit;
 
 namespace Integration.Sprints;
 
-/// <summary>FR-015 — la migración Code-First y la restricción CK_Sprints_Window sobre PostgreSQL real (Testcontainers).</summary>
+/// <summary>HU-003 / FR-015 (ventana del Sprint) y HU-004 / FR-017 (unicidad de la asignación por elemento) — la migración Code-First y la restricción CK_Sprints_Window sobre PostgreSQL real (Testcontainers).</summary>
 [Collection(PostgresCollection.Name)]
 public sealed class MigrationsPostgresTests(PostgresFixture postgres)
 {
@@ -59,7 +59,7 @@ public sealed class MigrationsPostgresTests(PostgresFixture postgres)
         var connectionString = await MigratedDatabaseAsync();
 
         // Assert
-        (await SprintsTablesAsync(connectionString)).Should().BeEquivalentTo(["sprints.Sprints", "sprints.__EFMigrationsHistory"]);
+        (await SprintsTablesAsync(connectionString)).Should().BeEquivalentTo(["sprints.Sprints", "sprints.SprintItems", "sprints.__EFMigrationsHistory"]);
     }
 
     [Fact]

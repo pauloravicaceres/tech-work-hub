@@ -1,13 +1,66 @@
 # 🏗️ Reporte de Impacto y Code Review Vivo (`impact-analysis-report.md`)
 
-**HU vigente:** 003-HU_gestion_sprint_dos_semanas · **Rama:** `feat/003-HU_gestion_sprint_dos_semanas`
-**Fecha:** 04-10-2026 · **Dictamen (1.ª iteración HU-003):** ✅ **[APROBADO CON RESERVAS]**
-**HUs anteriores (cerradas):** 002-HU_pruebas_integracion_keycloak_y_catalogo_application ([APROBADO CON RESERVAS]) y 001-HU_registro_elementos_backlog_multitipo (6.ª iteración [APROBADO CON RESERVAS]); sus secciones se conservan abajo como histórico.
+**HU vigente:** 004-HU_asignacion_elementos_sprint · **Rama:** `feat/004-HU_asignacion_elementos_sprint`
+**Fecha:** 04-10-2026 · **Dictamen (1.ª revisión de código HU-004, tras retrabajo SDD 1/2):** ✅ **[APROBADO CON RESERVAS]**
+**HUs anteriores (cerradas):** 003-HU_gestion_sprint_dos_semanas ([APROBADO CON RESERVAS]), 002-HU_pruebas_integracion_keycloak_y_catalogo_application ([APROBADO CON RESERVAS]) y 001-HU_registro_elementos_backlog_multitipo (6.ª iteración [APROBADO CON RESERVAS]); sus secciones se conservan abajo como histórico.
 
-> Renderizado selectivo: solo se documentan los componentes alterados por la HU-003 (módulo nuevo `app/backend/src/Modules/Sprints/`, sus pruebas, `features/sprints` del frontend y los ficheros compartidos permitidos: `Api.csproj`, `Program.cs`, `TechWorkHub.sln`, `app.routes.ts`; además los scripts `apply-migrations.*`). `Modules/Backlog`, `Modules/Application`, `BuildingBlocks/Shared` y `core/auth`: *Sin impacto en este PR/HU*.
+> Renderizado selectivo: solo se documentan los componentes alterados por la HU-004 (`Modules/Sprints/{Contracts,Domain/SprintItems,Features/SprintItems,Data}`, migración `AddSprintItems`, `BacklogModuleApi` + `Backlog.csproj` + `BacklogModule.cs`, `ConflictException` y la rama 409 de `CustomExceptionHandler`, `features/sprints` del frontend con la ruta `sprints/:id/elementos` y el botón de `sprint-detail`). `Modules/Application`, `Sprint`/`SprintRules`/`InitialSprintsSchema`, `BacklogItem`/`BacklogDbContext`, `core/auth` y `features/backlog`: *Sin impacto en este PR/HU* (`git diff --stat` vacío sobre esas rutas).
 ---
 
 ## 1. AI Code Review Dashboard
+
+### 1.00 HU-004 — Asignación de elementos del Backlog a un Sprint (vigente)
+
+```text
+╔══════════════════════════════════════════════════════════════╗
+║  AI CODE REVIEW DASHBOARD — HU 004   [APROBADO CON RESERVAS]║
+╠══════════════════════════════════════════════════════════════╣
+║  Archivos analizados (lectura física) ........... 30         ║
+║  Violaciones arquitectónicas .................... 0          ║
+║  Problemas de seguridad ......................... 0          ║
+║  Fugas de rendimiento (CancellationToken / N+1) . 0 / 0      ║
+║  Hallazgos zero-tolerance (stubs/hardcode) ...... 0          ║
+║  Deuda técnica encontrada ....................... 4          ║
+║  Cobertura de tests faltante (CA) ............... 0 %        ║
+║  Tests tautológicos / stubs ..................... 0 de 175   ║
+╚══════════════════════════════════════════════════════════════╝
+```
+
+**Evidencia propia (no del resumen de QA):** `Sprints.UnitTests` **86/86**; `Sprints.IntegrationTests` **89/89** (PostgreSQL por Testcontainers, 2 m 14 s); Jest `features/sprints` **52/52** (6 suites); `ngc -p tsconfig.app.json --noEmit` con código de salida 0 (plantillas y tipos del frontend compilan). Backlog (93) y Jest completo (83) provienen del informe de QA; `Identity.IntegrationTests` no se ejecutó (QA reporta 19/19 caídas por Keycloak/Docker del entorno, ajeno a la HU). `ng build` sigue **bloqueado** por Node v22.20.0 (la CLI exige ≥ 22.22.3), ver R1.
+
+Archivos leídos completos: 22 de backend (`ConflictException`, `CustomExceptionHandler`, `BacklogModuleApi`, `BacklogModule`, `Backlog.csproj`, `IBacklogModuleApi`, `SprintItem`, `SprintItemRules`, `SprintItemConfiguration`, `SprintsDbContext`, `ISprintsDbContext`, migración `AddSprintItems`, `AssignedItemResponse`, `SprintItemResponse`, comando, handler, endpoint y validador de asignación, consulta, handler y endpoint de listado) y 8 de frontend (`sprint.models.ts`, `sprint-api.service.ts`, `sprint-assigned-items` `.ts`/`.html`, `assign-item-dialog` `.ts`/`.html`, `sprint-detail.component.html`, ruta en `app.routes.ts`). Pruebas: `AssignItemToSprintCommandHandlerTests` (completa), `SprintItemsEstimationFidelityTests` (completa); el resto de las suites se verificó por ejecución propia, por recuento de aserciones (p. ej. `AssignItemToSprintTests` 6 pruebas y 29 aserciones) y por búsqueda de `Skip`, `Assert.True(true)`, `Task.CompletedTask`, `xit`, `fit`, `.skip`: 0 coincidencias.
+
+#### Matriz de auditoría HU-004
+
+| Control | Resultado |
+|---|---|
+| Arquitectura backend (`ICarterModule`, MediatR, sin `[ApiController]`) | ✅ `AssignItemToSprintEndpoint` y `ListSprintItemsEndpoint` son módulos Carter que solo delegan en `ISender`; la lógica vive en los handlers y en `SprintItem.Create`/`SprintItemRules`. Sin `using Microsoft.AspNetCore.Mvc` (el `ProblemDetails` del handler de excepciones es previo), sin AutoMapper. |
+| Aislamiento de schemas | ✅ `SprintItems.ItemId` sin FK ni navegación a `backlog`; la existencia y los datos del elemento se leen por `IBacklogModuleApi` (una sola consulta de lote `ids.Contains`, `AsNoTracking`). Sin `.Include()`. La FK a `sprints."Sprints"` es intra-schema (`ON DELETE RESTRICT`). |
+| Invariante "un elemento, un Sprint" | ✅ Índice único `UX_SprintItems_ItemId` (migración y configuración) como garantía real; el `AnyAsync` previo es solo optimización. El `catch` traduce a 409 únicamente `23505` con ese `ConstraintName`; cualquier otro `DbUpdateException` sigue siendo 500 (pruebas unitarias e integración lo demuestran). |
+| `.RequireAuthorization()` | ✅ En el POST y en el GET. La identidad (`ICurrentUser.UserId`, 401 si falta) se resuelve **antes** de consultar Sprint o contrato (prueba: 0 llamadas al doble). |
+| `CancellationToken` | ✅ Endpoint → `ISender.Send` → handler → `AnyAsync`, `ExistsAsync`, `SaveChangesAsync`, `ToListAsync`, `GetSummariesAsync` y `ToListAsync` del contrato. Prueba unitaria verifica que el token llega al contrato. |
+| N+1 / `SaveChanges` en bucle | ✅ El único `foreach` (`ListSprintItemsQueryHandler`) proyecta en memoria sobre un diccionario; una sola llamada al contrato y un único `SaveChangesAsync` en la asignación. |
+| IDOR / mass assignment | ➖ N/A razonado: no existe propietario por Sprint ni por elemento (catálogos globales por spec); la HU crea una relación, no actualiza ni borra. El 409 no revela a qué Sprint pertenece el elemento (mismo mensaje para el mismo y otro Sprint). `AssignItemRequest` solo admite `itemId`; `sprintId` sale de la ruta. |
+| Fidelidad de estimaciones (DEF-01) | ✅ `decimal?` de extremo a extremo: `BacklogItemSummary`, `SprintItemResponse`, `SprintItem` TS (`number \| null`) y guion `—` solo para `null` (`formatPoints`); un 0 real se muestra `0`. Sin `ToWholePoints`. |
+| Frontend: `standalone`, `OnPush`, Signals | ✅ Dos componentes `standalone` + `OnPush`; el estado de la vista usa `toSignal`, el diálogo usa `signal`/`model`/`input`/`output`; sin `NgModule` ni `zone.js`. Ver R2. |
+| XSS | ✅ Sin `innerHTML` ni `DomSanitizer`; todo con `{{ }}`; `encodeURIComponent` en ambas llamadas HTTP. |
+| Credenciales hardcodeadas / stubs | ✅ Ninguna. Sin `TODO`, `FIXME`, `NotImplementedException`. |
+| Restricción de alcance (T053) | ✅ `git diff --stat` vacío sobre `Sprint`/`SprintRules`/`InitialSprintsSchema`, `Backlog/Domain`, `Backlog/Data`, `Modules/Application`, `core` y `features/backlog`. Cambios fuera de `Sprints` limitados a los permitidos. |
+| Pruebas QA | ✅ Aserciones sobre comportamiento real: fila persistida con `CreatedBy`, mensajes idénticos del 409, conmutación 409/500 por restricción, concurrencia, 0 llamadas al contrato ante identidad ausente, 2.5 y `null` leídos del Backlog real. Sin pruebas vacías. |
+
+#### Hallazgos HU-004 (ninguno bloqueante)
+
+| Ref. | Capa | Estado | Detalle | Responsable |
+|---|---|---|---|---|
+| R1 | [CAPA:TASKS] | 🟠 Abierto | `tasks.md` T051 (`npm run build`) y T052 (quickstart manual) sin `[X]`: el build lo impide la versión de Node del equipo (no el código; `ngc --noEmit` y Jest en verde) y los escenarios del quickstart están cubiertos por las 89 pruebas de integración, sin recorrido manual con la SPA. Además T005, T015, T036 y T041 siguen en `[ ]` aunque T055–T059 ya corrigieron su contenido, y T060 cita `sprint-detail.component.html/.spec.ts` cuando el guion `—` vive en `sprint-assigned-items.component.ts:105` (el código es correcto; solo la trazabilidad de la tarea es inexacta). | humano / @DEV-BACK |
+| R2 | [CAPA:CODE] | 🟡 Menor | `assign-item-dialog.component.ts:81` usa `submit$.pipe(exhaustMap…, takeUntilDestroyed()).subscribe(...)`. Es un flujo de eventos (envío con `exhaustMap` contra doble clic), con limpieza automática y el mismo patrón aceptado en `sprint-form` (HU-003) y `create-backlog-item` (HU-001); el estado visible va en `signal`. Se acepta por precedente; la constitución no distingue flujos de eventos de estado. | @DEV-FRONT |
+| R3 | [CAPA:PLAN] | 🟡 Menor | `AssignItemToSprintCommandHandler.cs:3` importa `Npgsql` para leer `PostgresException`: el módulo de aplicación queda acoplado al proveedor de BD. Lo exige T022 (traducción por `SqlState` y nombre de índice) y es la forma segura de distinguir el 409 del 500; si el proveedor cambiara, habría que aislarlo tras una abstracción. | @DEV-BACK |
+| R4 | [CAPA:PLAN] | 🟡 Menor | `assign-item-dialog.component.ts` distingue el 404 de Sprint del de elemento con `/sprint/i` sobre `problem.detail`: acoplamiento al texto en español del servidor (advertencia vinculante «404 distinguido solo por detail», sección 7.1 del Tech Design, ya aceptada). Un cambio de mensaje en `SprintItemRules` rompería el reconocimiento sin fallo de compilación. | @DEV-FRONT / @API |
+| R5 | [CAPA:CODE] | 🟠 Abierto | La producción de la HU-004 (módulo `Sprints`, `BacklogModuleApi`, `ConflictException`, migración, `features/sprints`) figura sin commitear (`M`/`??` en `git status`). Mismo caso que R4 de HU-003: el watcher la consolida con su commit previo al cambio de rama. | humano / watcher |
+
+**Criterio de capa:** nada obliga a reabrir spec ni plan. Los dos defectos de QA (DEF-01 `[CAPA:TASKS]`, DEF-02 `[CAPA:SPEC]`) están corregidos en código y spec (FR-017 y FR-018) y los revalidé con ejecución propia. R3 y R4 son decisiones de diseño aceptadas, no incumplimientos de la constitución.
+
+### 1.0 HU-003 — histórico
 
 ### 1.0 HU-003 — Gestión de Sprint de dos semanas (crear y consultar)
 
@@ -245,6 +298,37 @@ Evidencia: `documents/qa-auto/qa-report.md` (cuarta ejecución, T043) más lectu
 
 ## 2. Architecture Compliance & Traceability
 
+### 2.00 HU-004 — Flujo real implementado (solo lo alterado, vigente)
+
+```mermaid
+flowchart LR
+    subgraph FE["Frontend (Angular standalone, OnPush)"]
+        RT["app.routes.ts sprints/:id/elementos ✅ authGuard, antes de :id"]
+        DET["SprintDetailComponent (botón Elementos asignados)"]
+        VIEW["SprintAssignedItemsComponent (toSignal, sin UI optimista)"]
+        DLG["AssignItemDialogComponent (exhaustMap + takeUntilDestroyed)"]
+        SVC["SprintApiService.assignItem / listItems"]
+        RT --> VIEW
+        DET --> RT
+        VIEW --> DLG
+        VIEW & DLG --> SVC
+    end
+    SVC -->|"POST /api/sprints/{id}/items { itemId }"| EPA["AssignItemToSprintEndpoint (ICarterModule) ✅ RequireAuthorization"]
+    SVC -->|"GET /api/sprints/{id}/items"| EPL["ListSprintItemsEndpoint (ICarterModule) ✅ RequireAuthorization"]
+    EPA -->|"ISender.Send(cmd, cancellationToken) ✅"| MED["MediatR + ValidationBehavior"]
+    EPL -->|"ISender.Send(query, cancellationToken) ✅"| MED
+    MED --> VAL["AssignItemToSprintValidator → SprintItemRules"]
+    MED --> HA["AssignItemToSprintCommandHandler: identidad → Sprint → contrato → AnyAsync → Add + SaveChangesAsync"]
+    MED --> HL["ListSprintItemsQueryHandler: Sprint → ids → una llamada GetSummariesAsync"]
+    HA --> DOM["SprintItem.Create (SprintItemRules)"]
+    HA & HL -->|"ISprintsDbContext + CancellationToken"| DB[("PostgreSQL schema sprints: SprintItems, UX_SprintItems_ItemId")]
+    HA & HL -->|"IBacklogModuleApi (contrato intra-proceso, sin FK ni consulta cross-schema)"| BAPI["BacklogModuleApi (solo lectura, AsNoTracking)"]
+    BAPI --> BDB[("PostgreSQL schema backlog (lectura)")]
+    HA -. "23505 + UX_SprintItems_ItemId → ConflictException" .-> EXH["CustomExceptionHandler: 409 ProblemDetails"]
+```
+
+**Desviaciones señaladas:** ninguna de arquitectura; no hay salto de capa ni consulta cross-schema (el Sprint solo conoce el Backlog a través de `IBacklogModuleApi`). Notas de acoplamiento: el `subscribe` del diálogo (R2, flujo de eventos aceptado por precedente) y la importación de `Npgsql` en el handler (R3).
+
 ### 2.0 HU-003 — Flujo real implementado (solo lo alterado)
 
 ```mermaid
@@ -338,6 +422,49 @@ flowchart LR
 ---
 
 ## 3. Change Impact Diagram
+
+### 3.00 HU-004 — Impacto de los cambios y cobertura (vigente)
+
+```mermaid
+flowchart TD
+    subgraph CH["Alterado en HU-004"]
+        E1["AssignItemToSprintEndpoint (POST)"]
+        E2["ListSprintItemsEndpoint (GET)"]
+        H1["AssignItemToSprintCommandHandler + Validator"]
+        H2["ListSprintItemsQueryHandler"]
+        D1["SprintItem + SprintItemRules"]
+        P1["SprintsDbContext + SprintItemConfiguration + migración AddSprintItems"]
+        C1["IBacklogModuleApi + BacklogModuleApi + Backlog.csproj/BacklogModule.cs"]
+        X1["ConflictException + rama 409 de CustomExceptionHandler"]
+        U1["SprintAssignedItems / AssignItemDialog / sprint-detail (botón) / app.routes.ts"]
+        U2["SprintApiService + sprint.models.ts"]
+    end
+    E1 --> H1 --> D1
+    H1 --> P1
+    H1 --> C1
+    H1 --> X1
+    E2 --> H2 --> P1
+    H2 --> C1
+    U1 --> U2 --> E1 & E2
+
+    T1["Unit: AssignItemToSprintCommandHandlerTests, AssignItemToSprintValidatorTests, SprintItemDomainTests"]
+    T2["Integración PostgreSQL real: AssignItemToSprintTests (409 y concurrencia), AssignItemToSprintValidationTests, AssignItemToSprintFailureTests, SprintItemsAuthTests"]
+    T3["Unit + Integración: ListSprintItemsQueryHandlerTests, ListSprintItemsTests (100 elementos < 2 s)"]
+    T4["SprintItemsMigrationTests + MigrationsPostgresTests (índice único, FK, schemas intactos)"]
+    T5["BacklogModuleApiTests + SprintItemsEstimationFidelityTests (2.5 y null)"]
+    T6["Jest: assigned-items, assign-item-dialog, service, sprint-detail (52 en features/sprints)"]
+    T1 -.-> H1 & D1
+    T2 -.-> E1 & X1
+    T3 -.-> E2 & H2
+    T4 -.-> P1
+    T5 -.-> C1
+    T6 -.-> U1 & U2
+
+    classDef cov fill:#d8f5d8,stroke:#2a7a2a,color:#103d10;
+    class E1,E2,H1,H2,D1,P1,C1,X1,U1,U2 cov;
+```
+
+Componentes alterados con cobertura: 10 de 10, con ejecución propia en verde (86 + 89 + 52). Sin cobertura automática: el recorrido manual del quickstart con la SPA y el `ng build` (R1, ambos por entorno). Resto de la aplicación: *Sin impacto en este PR/HU*.
 
 ### 3.0 HU-003 — Impacto de los cambios y cobertura
 
@@ -486,6 +613,28 @@ Componentes de #16..#19 sin cobertura: 4 de 4. Resto de la HU (cierre de DEF-01.
 
 ## 4. Dependency / Coupling Graph
 
+### 4.00 HU-004 (vigente)
+
+```mermaid
+flowchart LR
+    SPR["Sprints (módulo)"] -->|"ProjectReference"| SHR["Shared (BuildingBlocks)"]
+    BLG["Backlog (módulo)"] -->|"ProjectReference nuevo (T013): implementa IBacklogModuleApi"| SPR
+    SPR -. "sin referencia a Backlog ✅ (sin ciclo)" .-> BLG
+    SPR -->|"contrato IBacklogModuleApi (definido en Sprints)"| BLG
+    SPR --> PGS[("PostgreSQL schema sprints")]
+    BLG --> PGB[("PostgreSQL schema backlog")]
+    SPR -. "sin FK ni consulta cross-schema ✅" .-> PGB
+    HND["AssignItemToSprintCommandHandler"] -. "importa Npgsql (R3)" .-> NPG["Npgsql.PostgresException"]
+    API["Bootstrapper/Api"] --> SPR & BLG
+    UT["Sprints.UnitTests"] --> SPR
+    IT["Sprints.IntegrationTests"] --> SPR & API
+    FE["features/sprints"] -->|"HTTP /api/sprints/{id}/items"| API
+    FE --> AUTHC["core/auth (solo reauthenticate)"]
+    DLG["assign-item-dialog"] -. "reconoce 404 de Sprint por texto de detail (R4)" .-> HND
+```
+
+**Deuda técnica temprana:** (1) `Backlog` pasa a depender de `Sprints` solo para implementar el contrato (dirección invertida respecto a lo habitual, sin ciclo; mismo precedente que `Application` → `Backlog` en HU-001), de modo que cualquier consumidor futuro del Backlog desde otro módulo obligará a mover los contratos a un proyecto compartido; (2) acoplamiento del handler al proveedor Npgsql (R3); (3) acoplamiento del diálogo al texto del `detail` del 404 (R4); (4) el patrón `subscribe` se repite una tercera vez (R2). Sin ciclos entre módulos.
+
 ### 4.0 HU-003
 
 ```mermaid
@@ -540,6 +689,15 @@ flowchart LR
 ---
 
 ## Veredicto
+
+```text
+[APROBADO CON RESERVAS] - HU-004, 1.ª revisión de código tras retrabajo SDD 1/2 (04-10-2026):
+- Lectura física completada: 30 archivos de producción auditados (22 backend, 8 frontend) más las pruebas clave; ejecución propia Unit 86/86, Integración 89/89 (PostgreSQL), Jest features/sprints 52/52, ngc --noEmit limpio.
+- Lex Superior y VSA: ICarterModule + MediatR, schema sprints aislado, contrato IBacklogModuleApi sin FK ni consulta cross-schema, invariante un elemento un Sprint por índice único, sin salto de capa.
+- SecOps y rendimiento: CancellationToken propagado hasta EF Core y el contrato, cero N+1, sin IDOR (la HU crea una relación sobre catálogos globales; el 409 no revela el Sprint dueño), sin XSS, RequireAuthorization en ambos endpoints.
+- Pruebas QA: no tautológicas; DEF-01 (decimal nullable) y DEF-02 (FR-017/FR-018) verificados en código y spec.
+- Reservas no bloqueantes: R1 (T051 build bloqueado por Node del equipo, T052 sin recorrido manual y casillas T005/T015/T036/T041 sin marcar), R2 (subscribe del diálogo, precedente HU-001/HU-003), R3 (Npgsql en el handler), R4 (404 por texto de detail), R5 (código sin commitear).
+```
 
 ```text
 [APROBADO CON RESERVAS] - HU-003, 1.ª iteración (04-10-2026):

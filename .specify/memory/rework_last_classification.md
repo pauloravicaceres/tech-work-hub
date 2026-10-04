@@ -1,33 +1,35 @@
-# Clasificación de retrabajo (iteración 2, origen: Code Review)
+# Clasificación de retrabajo (iteración 1, origen: QA Automation)
 
-Corregí `plan.md` y `contracts/api.md` y agregué las tareas T038–T043 a `tasks.md`. No toqué código, ni `tracker_bmad.md`, ni emití handoffs. No hay `.specify/extensions.yml`, así que no corrieron hooks.
+Corregí primero los documentos y después añadí las tareas, sin tocar código, `documents/tracker_bmad.md` ni handoffs.
 
-Verifiqué en el código solo la configuración de Keycloak (#18): `appsettings.json` tiene `ssl-required: none` y `verify-token-audience: false`. Los otros tres hallazgos los tomé del informe del revisor sin reconfirmarlos en el código.
+## Documentos corregidos
+- **`spec.md` (DEF-02, capa SPEC):**
+  - FR-015 queda reemplazado.
+  - FR-017 define el 409: el elemento ya asignado, la unicidad por índice y la concurrencia.
+  - FR-018 define las estimaciones decimales con `null`, sin redondeo.
+  - US3 gana los escenarios 4 y 5 (409 y concurrencia).
+  - Se retiraron los casos borde "no documentado" y se ajustaron los Assumptions y la entidad.
+- **Artefactos del plan (DEF-01):**
+  - `contracts/backlog-module-api.md` y `data-model.md` pasan a `decimal?`.
+  - `sprint-items-api.openapi.yaml` pasa a `number` nullable.
+  - El resumen de `plan.md` ya no dice que `spec.md` queda pendiente.
+- **Constitución:** no hay ambigüedad que enmendar. Ningún hallazgo la viola.
+- **No encontré el W-01** al buscarlo en el documento del SA (`documents/solutions-architect/004-HU_asignacion_elementos_sprint.md`), así que no lo verifiqué. Me basé en tu informe y en que `BacklogItem` ya usa `decimal?`.
 
-Los cuatro hallazgos del revisor son huecos de plan, salvo #19, que es un defecto de implementación. `spec.md` no necesitó cambios.
-
-## Cambios en artefactos
-
-- **`plan.md`:** nueva sección "Decisiones Técnicas Complementarias (retrabajo iteración 2/2)". Cubre el endpoint `GET /api/applications`, la autenticación del cliente, la configuración de Keycloak por entorno, el paso de migraciones y el orden de resolución de identidad en el handler.
-- **`contracts/api.md`:** se agregó el contrato de `GET /api/applications` (200 con `{id, name}`, 401 sin token).
-- **`tasks.md`:**
-  - Desmarqué T018, T025 y T032, porque estaban cerradas sin cumplirse (identidad, auditoría y catálogo contra un endpoint inexistente).
-  - Agregué la Fase 7 con T038–T043.
-  - T013, T014, T017 y T019 ya estaban desmarcadas desde la fase anterior.
-
-## Resultado
+## `tasks.md`
+- **Reabiertas por no cumplirse:** T005, T015, T036 y T041.
+- **Nueva Phase 9 (T055–T062):** son las 8 tareas de la tabla.
+- **Sin tarea de corrección:** T051 y T052 siguen abiertas. Las bloquea el entorno (Node v22.20.0 frente a Angular CLI ≥ 22.22.3), no el código. Tampoco abrí tarea para Identity.IntegrationTests, que falla por Keycloak/Docker y es ajeno a la HU-004.
 
 | Hallazgo | Capa | Tarea |
 |---|---|---|
-| #16 `GET /api/applications` inexistente | PLAN | T038 (servidor) |
-| #17 sin interceptor Bearer ni login en el front | PLAN | T039 (interfaz) |
-| #18 Keycloak inseguro por defecto | PLAN | T040 (servidor) |
-| #18 sin paso de migraciones ni prueba en PostgreSQL | PLAN | T041 (servidor) |
-| #19 identidad resuelta tarde, tras consultar el catálogo | CODE | T042 (servidor) |
-| Verificación de #16..#19 | TASKS | T043 (servidor + interfaz, QA) |
+| DEF-01: contrato `BacklogItemSummary` en `int` | TASKS | T055 (servidor) |
+| DEF-01: `ToWholePoints` redondea 2.5 y convierte QA nulo en 0 | TASKS | T056 (servidor) |
+| DEF-01: `SprintItemResponse` en `int` y revalidación de las 2 pruebas rojas | TASKS | T057 (servidor) |
+| DEF-01: sin prueba de contrato con 2.5 y nulo | TASKS | T058 (servidor) |
+| DEF-01: modelo TS sin nulo | TASKS | T059 (interfaz) |
+| DEF-01: sin guion para nulo en la vista | TASKS | T060 (interfaz) |
+| DEF-02: pruebas del 409 sin trazabilidad a FR-017 | SPEC | T061 (servidor) |
+| DEF-02: quickstart y cobertura sin FR-017 y FR-018, y nuevo `/speckit-analyze` | SPEC | T062 (servidor) |
 
-## Notas
-
-- **Constitución:** no encontré ambigüedades que requieran enmendarla con `/speckit-constitution`.
-- **Alcance de la skill:** `speckit-converge` normalmente solo agrega tareas. Edité `plan.md` y `contracts/api.md` porque tu instrucción lo pedía para los hallazgos PLAN.
-- **Siguiente paso:** `/speckit-implement` sobre T038–T042. T043 queda para QA cuando haya Docker.
+**Siguiente paso:** `/speckit-implement` sobre T055–T062.
