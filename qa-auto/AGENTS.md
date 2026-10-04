@@ -356,3 +356,5 @@ Cuando tu dictamen sea **[RECHAZADO]**, el Watcher clasifica el rechazo por la *
 3. Una prueba que falla porque la spec es ambigua **no** se arregla "ajustando la prueba": etiqueta `[CAPA:SPEC]`.
 4. Ante la duda entre `CODE` y una capa superior, elige la **superior**.
 5. Una tarea `[X]` sin prueba real (`[Fact]` comentado, cero aserciones) es `[CAPA:TASKS]`: el estado terminado lo prueba la verificación, no el checkbox.
+6. **Nunca escribas una macro del Watcher dentro de una frase** (`@WATCHER: GITOPS-MERGE-CLOSE <rama>`, `GITOPS-BRANCH-CREATE`, `SDD-FREEZE`): el Watcher la ejecuta al verla, aunque sea una cita. Para hablar de ella usa palabras.
+7. **Un Handoff nombra a un solo agente destinatario por línea** con su token (`@AGENTE:`). Las referencias a otros agentes van como texto plano, sin `@`.
