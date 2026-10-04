@@ -143,3 +143,18 @@ sequenceDiagram
     end
 ```
 - **Verificación:** Jest 31/31 en verde (interceptor, guard, `AuthService`, más las pruebas previas); `ngc -p tsconfig.app.json --noEmit` sin errores. `ng build` no se ejecutó (Node 22.20.0 < 22.22.3 exigido por el CLI). La URL/realm/clientId de Keycloak son valores por defecto de desarrollo (`KEYCLOAK_CONFIG`); el cliente `techworkhub-web` debe existir como cliente público en el realm.
+
+### Revisión de vigencia (speckit-implement, 2026-10-03, feature 002)
+La feature 002 (`specs/002-pruebas-integracion-keycloak-catalogo`) es exclusivamente un proyecto de pruebas de integración de backend (`app/backend/tests/Integration/Identity/`); su `tasks.md` no contiene tareas de frontend. **No se modificó ningún archivo de `app/frontend/`**, por lo que rutas, componentes, flujos de estado y llamadas a la API documentados arriba siguen vigentes.
+
+Relación con el cliente (sin cambios de código): las pruebas validan en el servidor el contrato que consume `BacklogApiService`.
+
+```mermaid
+flowchart LR
+    Svc["BacklogApiService (sin cambios)"] -- "GET /api/applications" --> Apps["Catálogo real (Application)"]
+    Svc -- "POST /api/backlog/items" --> Back["Backlog"]
+    Tests["Identity.IntegrationTests (backend)"] -. "JWT real de Keycloak" .-> Apps
+    Tests -. "JWT real de Keycloak" .-> Back
+```
+
+- **Nota:** el punto abierto (1) de T032–T036 queda cubierto en el servidor: `GET /api/applications` es ejercitado por `ListApplicationsRealTests` contra el catálogo real.

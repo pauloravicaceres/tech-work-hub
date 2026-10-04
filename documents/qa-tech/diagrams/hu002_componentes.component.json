@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": { "title": "HU-002 Componentes de la suite de integración", "output": "hu002_componentes.html", "quality_profile": "showcase", "locale": "en" },
+  "components": [
+    { "id": "runner", "type": "external", "label": "Suite xUnit", "sublabel": "Identity.IntegrationTests", "pos": [40, 220], "size": [150, 60] },
+    { "id": "kcfix", "type": "backend", "label": "KeycloakFixture", "sublabel": "GetTokenAsync", "pos": [300, 60], "size": [150, 60] },
+    { "id": "keycloak", "type": "security", "label": "Keycloak 24", "sublabel": "realms techworkhub", "pos": [560, 60], "size": [150, 60] },
+    { "id": "host", "type": "backend", "label": "Program real", "sublabel": "RealApiFactory", "pos": [560, 220], "size": [150, 60] },
+    { "id": "app", "type": "backend", "label": "Módulo Application", "sublabel": "ApplicationModuleApi", "pos": [820, 140], "size": [160, 60] },
+    { "id": "backlog", "type": "backend", "label": "Módulo Backlog", "sublabel": "CreateBacklogItem", "pos": [820, 300], "size": [160, 60] },
+    { "id": "postgres", "type": "database", "label": "PostgreSQL 16", "sublabel": "schemas application | backlog", "pos": [1080, 220], "size": [170, 60] },
+    { "id": "pgfix", "type": "backend", "label": "PostgresFixture", "sublabel": "BD nueva por prueba", "pos": [1080, 400], "size": [170, 60] }
+  ],
+  "connections": [
+    { "id": "runner-token", "from": "runner", "to": "kcfix", "label": "pide token" },
+    { "id": "kcfix-kc", "from": "kcfix", "to": "keycloak", "label": "password grant", "variant": "security" },
+    { "id": "runner-host", "from": "runner", "to": "host", "label": "HTTP + Bearer", "variant": "emphasis" },
+    { "id": "host-kc", "from": "host", "to": "keycloak", "label": "JWKS / issuer", "variant": "security" },
+    { "id": "host-app", "from": "host", "to": "app", "label": "GET /api/applications" },
+    { "id": "host-backlog", "from": "host", "to": "backlog", "label": "POST items" },
+    { "id": "backlog-app", "from": "backlog", "to": "app", "label": "in-process", "variant": "dashed", "fromSide": "top", "toSide": "bottom" },
+    { "id": "app-pg", "from": "app", "to": "postgres", "label": "EF Core" },
+    { "id": "backlog-pg", "from": "backlog", "to": "postgres", "label": "EF Core" },
+    { "id": "pgfix-pg", "from": "pgfix", "to": "postgres", "label": "CREATE DATABASE", "variant": "dashed" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "Sin dobles", "items": ["Program real con Keycloak real", "Catálogo real, sin RemoveAll"] },
+    { "dot": "emerald", "title": "Aislamiento", "items": ["Una BD nueva por prueba", "Sin JOIN cross-schema"] },
+    { "dot": "rose", "title": "Seguridad", "items": ["verify-token-audience activo", "JWT validado contra el emisor real"] }
+  ]
+}

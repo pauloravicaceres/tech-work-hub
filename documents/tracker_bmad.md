@@ -385,3 +385,178 @@ Awaiting your response to the question above.
 - **⚠️ Puntos Abiertos:** ⚠️ [PROPUESTO]: la historia no figura como épica en el MVP y se trata como extensión de P1; el business analyst debe acotar su alcance y no asumir reglas de negocio no documentadas (roles de Keycloak, contenido de la semilla del catálogo). ❓ No documentado: criterio de aceptación del entorno de pruebas con Keycloak real (realm, usuarios y clientes de prueba).
 @WATCHER: GITOPS-BRANCH-CREATE feat/002-HU_pruebas_integracion_keycloak_y_catalogo_application
 - **Handoff:** @BA: Iniciar el análisis de negocio y redacción de Historias de Usuario para la épica seleccionada: 002-HU_pruebas_integracion_keycloak_y_catalogo_application, que cubre el riesgo residual de HU-001 (pruebas contra Keycloak real y catálogo real del módulo Application, más semilla del catálogo).
+
+
+### [03-10-2026] Business Analyst
+- **Hora:** 20:21:01
+- **Artefacto generado:** `documents/business-analyst/002-HU_pruebas_integracion_keycloak_y_catalogo_application.md`
+- **Estado:** HU técnica (Spec Kit Ready, 6 escenarios Gherkin SC-01..SC-06, 7 casos borde) y HU de stakeholders (`documents/business-analyst/HUs-stakeholders/002-HU_pruebas_integracion_keycloak_y_catalogo_application.md`, 4 CA) generadas con el identificador exacto del Ledger. Auto-validación hu-validator completada: secciones obligatorias, Gherkin con Sad Paths, DoD con ítem Brownfield, pie de origen y handoff en una sola línea. Lectura previa de specs/README.md (HU-001 READY-FOR-DEV, sin dependencias ACTIVE que romper), constitution.md, HU-001, qa-report.md y appsettings.json. No se modifica el comportamiento de HU-001.
+- **⚠️ Puntos Abiertos:** ❓ No documentado: (1) realm, clientes, usuarios y roles de prueba del Keycloak real y su aprovisionamiento; (2) contenido de la semilla del catálogo de aplicaciones; (3) política ante Keycloak no disponible; (4) alcance de la semilla (solo pruebas o también entornos reales); (5) roles con permiso sobre el backlog. ⚠️ [PROPUESTO]: tipo Enhancement, prioridad Media, idempotencia de la semilla, catálogo vacío devuelve lista vacía.
+- **Handoff:** @QA: La Historia de Usuario Técnica Pruebas de Integración contra Keycloak Real y Catálogo Real del Módulo Application está lista en el archivo 002-HU_pruebas_integracion_keycloak_y_catalogo_application.md (y su versión de stakeholders en documents/business-analyst/HUs-stakeholders/002-HU_pruebas_integracion_keycloak_y_catalogo_application.md). Por favor, procede con la auditoría documental contra el Product Brief para asegurar que la historia cumple con los requerimientos originales.
+
+### [03-10-2026] QA Documental
+- **Hora:** 20:22:30
+- **Artefacto generado:** `documents/qa-documental/feedback_qa_002_pruebas_integracion_keycloak_y_catalogo_application.md`
+- **Estado:** Auditoría documental completada con dictamen ❌ RECHAZADO (modo Brownfield: Product Brief y constitution.md). 5 hallazgos: H-01 Bloqueante (la HU no es atómica: mezcla verificación de autenticación, consulta de catálogo, registro de ítem y semilla de datos); H-02 diagrama de secuencia no coincide uno a uno con los CA (omite SC-06 y CB-05); H-03 SC-04 es un escenario compuesto y CB-02 sin escenario; H-04 orden y campos de la respuesta sin fuente ni etiqueta; H-05 actor Product Owner ausente del Product Brief.
+- **⚠️ Puntos Abiertos:** Ninguno. Los ❓ No documentado de la HU (realm y usuarios de prueba, contenido de la semilla, política ante Keycloak caído) son válidos y no motivan rechazo.
+- **Handoff:** @BA: La Historia de Usuario 002-HU_pruebas_integracion_keycloak_y_catalogo_application.md fue rechazada por QA. Subsana los hallazgos H-01 a H-05 detallados en documents/qa-documental/feedback_qa_002_pruebas_integracion_keycloak_y_catalogo_application.md y vuelve a delegar la auditoría al QA.
+
+
+### [03-10-2026] Business Analyst
+- **Hora:** 20:24:42
+- **Artefacto generado:** `documents/business-analyst/002-HU_pruebas_integracion_keycloak_y_catalogo_application.md`
+- **Estado:** Subsanados H-01 a H-05 del feedback de QA Documental en la HU técnica y en la de stakeholders. H-01: la semilla del catálogo (SC-06, CB-05, CB-07) se separó de esta HU, que queda con una sola capacidad (verificación contra Keycloak real y catálogo real); las aplicaciones necesarias son datos de prueba creados por la suite. H-02: el diagrama tiene una rama por escenario (SC-01 a SC-04) y declara que CB-05 no se diagrama. H-03: SC-04 es ahora un Scenario Outline con tabla de ejemplos (sin cabecera, firma alterada, expirado, otro emisor, otra audiencia, para GET y POST), lo que cubre el emisor distinto de CB-02. H-04: orden por nombre y campos id y name citan su fuente en código (ListApplicationsEndpoint.cs y ApplicationModuleApi.cs); lo demás queda como PROPUESTO. H-05: el actor es el del Product Brief (Líder Técnico o Miembro del Equipo de Desarrollo/QA) y es idéntico en ambas versiones; se quitó Product Owner. Se auto-validó de nuevo con hu-validator y se mantuvo lo no observado.
+- **⚠️ Puntos Abiertos:** La semilla del catálogo figura en la fila 002 del Ledger pero ya no está en esta HU: el product-manager debe decidir si registra una fila nueva (sin abrir su HU hasta cerrar 002, por Vertical Slicing) o ajusta la fila 002. ❓ No documentado: realm, clientes, usuarios y roles de prueba de Keycloak; política ante Keycloak no disponible; roles con permiso sobre el backlog.
+- **Handoff:** @QA: La Historia de Usuario Técnica Pruebas de Integración contra Keycloak Real y Catálogo Real del Módulo Application fue corregida según los hallazgos H-01 a H-05 y está lista en el archivo 002-HU_pruebas_integracion_keycloak_y_catalogo_application.md (y su versión de stakeholders en documents/business-analyst/HUs-stakeholders/002-HU_pruebas_integracion_keycloak_y_catalogo_application.md). Por favor, procede con la nueva auditoría documental contra el Product Brief.
+
+### [03-10-2026] QA Documental
+- **Hora:** 20:25:03
+- **Artefacto generado:** `documents/qa-documental/aprobado_qa_002_pruebas_integracion_keycloak_y_catalogo_application.md`
+- **Estado:** Re-auditoría completada con dictamen ✅ APROBADO (modo Brownfield, 6 dimensiones al 100%). Hallazgos H-01 a H-05 verificados como subsanados: semilla separada (HU atómica), diagrama con una rama por escenario, SC-04 como Scenario Outline, orden y campos con fuente en código, actor alineado al Product Brief. Se aplica bypass de UX porque la HU no tiene interfaz gráfica.
+- **⚠️ Puntos Abiertos:** Ninguno bloqueante. Pendiente para el product-manager: la semilla del catálogo figura en la fila 002 del Ledger pero salió de esta HU. ❓ No documentado: realm y usuarios de prueba de Keycloak, política ante Keycloak no disponible, roles con permiso sobre el backlog.
+- **Handoff:** @SA: La Historia de Usuario 002-HU_pruebas_integracion_keycloak_y_catalogo_application.md ha sido aprobada por QA. Al no tener esta historia interfaz gráfica, el diseño UX se omite. Por favor, formula tus preguntas para definir el stack tecnológico y la gobernanza.
+
+### [03-10-2026] WATCHER
+- **Hora:** 20:25:32
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Ejecutando análisis funcional (/speckit.specify)...
+
+### [03-10-2026] WATCHER
+- **Hora:** 20:27:13
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Verificando ambigüedades (/speckit.clarify)...
+
+### [03-10-2026] WATCHER
+- **Hora:** 20:27:38
+- **Mensaje:** ⚠️ [HITL] Ambigüedad detectada por Spec Kit.
+- **Handoff:** @HUMANO: El motor de análisis funcional encontró ambigüedades o vacíos en la Historia de Usuario. Por favor, revisa la matriz y responde la pregunta a continuación para que la IA pueda cerrar el análisis.
+
+**Question:** Si el servidor de identidad (Keycloak) no está disponible cuando arranca la suite de integración, ¿qué debe hacer la suite? (CB-05)
+
+**Why it matters:** Define si una caída de Keycloak rompe el pipeline de pruebas o pasa desapercibida, y con ello si la evidencia de HU-001 es confiable.
+
+**Recommended:** Option A. Fallar de forma explícita evita que la suite se omita en silencio y deje el riesgo residual sin cerrar.
+
+| Option | Description |
+|--------|-------------|
+| A | Fallar explícitamente con un mensaje claro (la suite no se considera aprobada) |
+| B | Omitir (skip) las pruebas con una advertencia visible |
+| C | Omitir en local, pero fallar en CI |
+| Short | Provide a different short answer (<=5 words) |
+
+You can reply with the option letter (e.g., "A"), accept the recommendation by saying "yes" or "recommended", or provide your own short answer.
+
+
+### [03-10-2026] HUMANO
+- **Hora:** 20:31:31
+- **Estado:** APPROVE
+- **Feedback:** A
+
+
+### [03-10-2026] WATCHER
+- **Hora:** 20:31:32
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Inyectando respuesta humana a Spec Kit: A
+
+### [03-10-2026] WATCHER
+- **Hora:** 20:32:06
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Resolución aplicada exitosamente.
+- **Handoff:** @UX: La ambigüedad ha sido resuelta por el Humano y la especificación SDD ha concluido con éxito. Procede con tu diseño.
+
+### [03-10-2026] Designer UX
+- **Hora:** 20:33:16
+- **Artefacto generado:** `documents/designer-ux/ux_002_pruebas_integracion_keycloak_y_catalogo_application.md`
+- **Estado:** Entregable UX completado con mapeo 1:1 de los escenarios SC-01..SC-04 (US1..US3) de spec.md y la HU: la historia es una suite de integración sin interfaz gráfica, por lo que no se dibujan wireframes (política anti-alucinación) y se documenta el dictamen de no aplicabilidad visual, coherente con el bypass de QA Documental. Auditoría de alcance: 1 épica diseñada (P1) de 6 en el backlog; el MVP continúa.
+- **⚠️ Puntos Abiertos:** Ninguno.
+- **Handoff:** @SA: Diseño visual de la HU 002-HU_pruebas_integracion_keycloak_y_catalogo_application completado (sin interfaz gráfica, cero wireframes). Procede con el tech-design.
+
+### [03-10-2026] Solutions Architect
+- **Hora:** 20:36:07
+- **Artefacto generado:** `documents/solutions-architect/002-HU_pruebas_integracion_keycloak_y_catalogo_application.md`
+- **Estado:** Gobernanza técnica formalizada en modo Brownfield, subordinada a la constitución. Ecosistema completo, así que no se formuló cuestionario. ADR-001 a ADR-003 heredados (Keycloak, PostgreSQL con schemas aislados, Testcontainers). ADR-004 (Keycloak efímero con realm importado y Audience mapper) y ADR-005 (proyecto de pruebas separado y fallo explícito si Keycloak no está disponible, según la decisión humana de CB-05) son nuevos y tienen alternativas y trade-offs. La HU solo toca `app/backend/tests/`; `app/backend/src/` queda en solo lectura (FR-013).
+- **⚠️ Puntos Abiertos:** Para resolver en `plan.md`: nombres de realm, clientes y usuario de prueba; tratamiento de `ssl-required` frente al Keycloak HTTP de Testcontainers sin relajar audiencia ni emisor; acceso del proyecto de pruebas a `ApplicationDbContext`; sin verificación de roles.
+- **Handoff:** 
+@WATCHER: SDD-FREEZE 002-HU_pruebas_integracion_keycloak_y_catalogo_application.md
+
+### [03-10-2026] WATCHER
+- **Hora:** 20:36:28
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Estructurando plan de arquitectura técnica (/speckit.plan)...
+
+### [03-10-2026] WATCHER
+- **Hora:** 20:39:43
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Desglosando tareas de implementación (/speckit.tasks)...
+
+### [03-10-2026] WATCHER
+- **Hora:** 20:41:55
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Ejecutando auditoría técnica (/speckit.analyze)...
+
+@DA: El plan técnico y las tareas han sido congeladas. Procede con el diseño de persistencia basándote en los nuevos archivos.
+
+
+### [03-10-2026] Data Architect
+- **Hora:** 20:45:20
+- **Artefacto generado:** `documents/data-architect/db_002_pruebas_integracion_keycloak_y_catalogo_application.md`
+- **Estado:** Modelo de persistencia en modo Brownfield, subordinado a la constitución. La historia no añade tablas, columnas, índices ni migraciones (FR-013); se fijó el modelo físico vigente (`application."Applications"` y `backlog."BacklogItems"`), verificado contra las migraciones reales, y se trazó cada FR/SC a un dato (cero campos huérfanos; UX sin interfaz). ADR-01 y ADR-02 heredados; ADR-03 (base nueva por prueba), ADR-04 (sin semilla permanente) y ADR-05 (estado de identidad solo en Keycloak) nuevos, con alternativas y trade-offs.
+- **⚠️ Puntos Abiertos:** Deriva documental en db_001: declara Type y Priority como INT y promete CHECK (>= 0) en los puntos, pero la migración real usa varchar(50) y no define ningún CHECK; la fuente de verdad es la migración. No afecta a esta historia. Esta historia no define endpoints nuevos.
+- **Handoff:** @API: El modelo de datos (MER) y la persistencia han sido definidos a partir de spec.md y tasks.md. Por favor, diseña los contratos de integración (Endpoints/Payloads) basados en estas tablas.
+
+### [03-10-2026] API Architect
+- **Hora:** 20:47:09
+- **Artefacto generado:** `documents/api-architect/api_002_pruebas_integracion_keycloak_y_catalogo_application.md`
+- **Estado:** Contrato en modo Brownfield, subordinado a la constitución. La historia no define endpoints nuevos (FR-013): se formalizaron los contratos existentes `GET /api/applications` y `POST /api/backlog/items` verificados contra sus Endpoint.cs, con payloads mapeados columna a columna a db_002 y la matriz de rechazo 401 (5 credenciales x 2 rutas). ADR-01 y ADR-02 heredados; ADR-03 (401 uniforme sin cuerpo de negocio) nuevo con alternativas y trade-offs. Persistencia del archivo verificada por lectura.
+- **⚠️ Puntos Abiertos:** (1) Deriva: api_001 ilustra priority como entero y specs/001 contracts/api.md como texto; este contrato usa texto. (2) test-contract.md fija Keycloak:ssl-required=none mientras tasks.md (T008/T009) lo condiciona al spike; se contrata como excepción acotada. (3) Sin verificación de roles (no documentados).
+- **Handoff:** @QT: Los contratos de integración (API) y endpoints para Pruebas de Integración contra Keycloak Real y Catálogo Real del Módulo Application han sido definidos en api_002_pruebas_integracion_keycloak_y_catalogo_application.md basados en spec.md y db_002_pruebas_integracion_keycloak_y_catalogo_application.md. Por favor, procede con la auditoría cruzada y la compilación del Tech Design (TDD).
+
+### [03-10-2026] QA Tech
+- **Hora:** 20:53:07
+- **Artefacto generado:** `documents/qa-tech/tech-design_002_pruebas_integracion_keycloak_y_catalogo_application.md`
+- **Estado:** ✅ **[APROBADO]** HU-002 en modo Brownfield. Auditoría cruzada verificada contra el código (`ListApplicationsEndpoint.cs`, `CreateBacklogItemEndpoint.cs`, `ApplicationModuleApi.cs`, `Program.cs`, `BacklogModule.cs`, `appsettings*.json`): sin discrepancias DB vs API vs spec/tasks, sin campos huérfanos (UX sin interfaz), ADRs con alternativas y trade-offs reales, sin Sycophancy Breach. 0 hallazgos críticos, 5 advertencias vinculantes en la sección 7.1 del TDD. Diagramas archify generados en `documents/qa-tech/diagrams/` (3 diagramas, showcase 9/9 checks) más bloques mermaid; sin `visual-check` de navegador. `specs/README.md` pasó a READY-FOR-DEV. Constitución no modificada (HU de verificación, sin cambios estructurales). No se emite GITOPS-MERGE-CLOSE: la rama aloja el código de Fase D.
+- **⚠️ Puntos Abiertos:** (D-01) `RealApiFactory` debe usar `UseEnvironment("Testing")`: por defecto el host carga `appsettings.Development.json` con `verify-token-audience=false`. (D-02) La credencial expirada puede seguir aceptándose durante el `ClockSkew` por defecto de 5 min de .NET (no confirmado para Keycloak.AuthServices 2.5.2); validar en el spike T008 y esperar `exp` más el skew sin tocar `src/**` ni usar `ConfigureTestServices`. (D-03) `ssl-required=none` condicionado al spike T008 y registrado en el PR (T030); `test-contract.md` §2 debe alinearse con `tasks.md`. (D-04) Deriva documental db_001/api_001. (D-05) Conteo de casos: 19, no ~16.
+- **Handoff:** @DEV-BACK: La arquitectura técnica ha sido validada. Inicia la implementación del Backend.
+### [03-10-2026] WATCHER
+- **Hora:** 20:53:39
+- **Mensaje:** ⚡ [SDD Auto-Runner] Ejecutando implementación Backend (/speckit.implement)...
+
+### [03-10-2026] Senior Backend Developer
+- **Hora:** 21:22:27
+- **Artefacto generado:** `documents/dev-backend/backend-architecture.md`
+- **Estado:** Implementación backend finalizada exitosamente mediante SDD SpecKit.
+- **Handoff:** @DEV-FRONT: Inicia implementación frontend.
+
+### [03-10-2026] WATCHER
+- **Hora:** 21:22:27
+- **Mensaje:** ⚡ [SDD Auto-Runner] Ejecutando implementación Frontend (/speckit.implement)...
+
+### [03-10-2026] Senior Frontend Developer
+- **Hora:** 21:23:04
+- **Artefacto generado:** `documents/dev-frontend/frontend-architecture.md`
+- **Estado:** Implementación frontend finalizada exitosamente mediante SDD SpecKit.
+- **Handoff:** @QA-AUTO: La Fase D (Implementación) ha finalizado exitosamente mediante motor SDD. Inicia el diseño de la matriz de pruebas automatizadas basándote en los criterios de la HU; al terminar, deriva a Code Review.
+
+
+### [03-10-2026] QA Automation
+- **Hora:** 23:53:05
+- **Artefacto generado:** `documents/qa-auto/qa-report.md`
+- **Estado:** ✅ [APROBADO CON RESERVAS MENORES] HU-002. Auditoría adversarial de la suite `app/backend/tests/Integration/Identity` (19 casos) ejecutada contra Keycloak 24.0 y PostgreSQL 16 reales con Testcontainers. Resultados: Identity 19/19 en dos ejecuciones consecutivas; solución completa 62 unitarias + 31 integración Backlog + 19 Identity, sin fallos. Cobertura de CA: US1 3/3, US2 3/3, US3 6/6 (10 combinaciones 401 en verde). Prueba anti-tautología propia: sin el audience mapper fallan 5 de 6 casos de US1/US2 (el sexto solo verifica el tipo del catálogo); realm restaurado byte a byte. Producción intacta (sin diferencias en `app/backend/src`) y sin contenedores residuales. Commit local e5a034f7. Matriz de trazabilidad HU a CA a TC documentada en el reporte.
+- **⚠️ Puntos Abiertos:** (R-1) T028 sin cerrar: no se probó el fallo explícito con el daemon de Docker detenido; solo el mensaje de timeout que nombra Keycloak. (R-2) El criterio "sin efectos" se verifica por conteos antes y después, no por instrumentación de lecturas al catálogo. (R-3) T030 pendiente: citar en el PR la excepción `ssl-required=none` del spike T008. (R-4) Los archivos de `app/backend/tests/Integration/Identity` y los realms figuran sin commitear en el árbol de trabajo; los commitea quien los generó.
+- **Handoff:** @CODE-REVIEW: Matriz de pruebas de HU-002 validada (112/112 en verde, 0 defectos abiertos, reservas R-1 a R-4 no bloqueantes en qa-report.md). Procede con la revisión de código.
+
+### [03-10-2026] Code Review
+- **Hora:** 23:58:39
+- **Artefacto generado:** `documents/code-review/impact-analysis-report.md`
+- **Estado:** [APROBADO CON RESERVAS] HU-002. Lectura física de 18 archivos (csproj, 4 fixtures, 3 helpers, 5 clases de prueba, 2 realms, diff de la solución) y ejecución propia de Identity: 19/19 con Keycloak 24.0 y PostgreSQL 16 reales. Producción intacta (sin diferencias en app/backend/src fuera de bin/obj). Sin simulados, audiencia y emisor de producción sin tocar, pruebas no tautológicas. Reservas: (1) [CAPA:CODE] helpers de soporte sin CancellationToken en CatalogSeeder.cs:23, RealApiFactory.cs:63 y :71, PostgresFixture.cs:37-40; la constitución no dice si aplica a código de prueba y en HU-001 se aceptó el mismo patrón, por lo que se pide enmienda con /speckit-constitution; (2) [CAPA:CODE] CatalogSeeder.cs:16-21 usa .Add dentro de foreach, sin ida y vuelta a BD, corregible con AddRange; (3) [CAPA:TASKS] T028 y T030 sin marcar en tasks.md:119 y :122; (4) credencial de prueba repetida en fixture y realms, solo de contenedor efímero; (5) [CAPA:CODE] la suite Identity y los realms siguen sin commitear y bin/obj versionados ensucian el árbol.
+- **⚠️ Puntos Abiertos:** No se emite el cierre de rama: la suite no está commiteada y una fusión no la llevaría, T028 y T030 siguen abiertas, y las reservas 1 y 2 requieren decisión humana. Preguntas abajo.
+- **Handoff:** @HUMANO: Dictamen APROBADO CON RESERVAS para HU-002; decide las preguntas numeradas debajo y, con el árbol limpio, indícame que proceda al cierre de la rama.
+
+1. ¿Aceptas las reservas 1 y 2 (helpers de prueba sin CancellationToken y .Add en foreach) como no bloqueantes, o prefieres devolverlas al agente de QA automatizado antes de cerrar?
+2. ¿Quién commitea app/backend/tests/Integration/Identity, los realms y TechWorkHub.sln, y qué haces con los bin/obj versionados que ensucian el árbol?
+3. ¿T028 (fallo sin Docker) se prueba ahora o se difiere como T017 de HU-001, y quién cita la excepción ssl-required=none en el PR (T030)?
+4. ¿Enmendamos la constitución para fijar si CancellationToken aplica a código de prueba?
+
+### [04-10-2026] HUMANO
+- **Hora:** 00:03:41
+- **Estado:** APPROVE
+- **Feedback:** 1. Acepto las reservas 1 y 2 como NO bloqueantes: no las devuelvas a QA ni abras otra iteración. Regístralas como deuda técnica en el informe (helpers de prueba sin CancellationToken y .Add dentro de foreach en CatalogSeeder, con su AddRange propuesto) para atenderlas cuando se toque esa suite.
+2. Commitea tú, como en HU-001 y en commits separados con mensaje claro: (a) la suite Identity, los realms y TechWorkHub.sln; (b) un commit "chore" aparte que saque bin/ y obj/ del índice (git rm --cached, sin borrarlos del disco) y añada bin/ y obj/ al .gitignore. Los cambios que no sean de HU-002 (framework, watcher, instrucciones de agentes) van en otro commit "chore" distinto. Verifica con git status que el árbol queda limpio antes del cierre.
+3. T028 (fallo sin Docker) se difiere como ejecución manual, igual que T017 de HU-001: déjala abierta y anotada como diferida. T030: cita tú la excepción ssl-required=none en el impact-analysis-report.md y en el mensaje del commit de cierre, y márcala [X] cuando esté citada.
+4. Sí, enmendemos la constitución con /speckit-constitution, con el cambio mínimo: CancellationToken es obligatorio en código de producción; en código de prueba y helpers de soporte se recomienda y no bloquea la revisión. Hazlo en su propio commit "chore" y no cambies nada más de la constitución.
+Con el árbol limpio y esos commits hechos, procede al cierre de la rama y despierta al PM si quedan HUs en el backlog.
+- **Handoff:** @CODE-REVIEW: El humano APROBÓ tu consulta de cierre. Respuesta: 1. Acepto las reservas 1 y 2 como NO bloqueantes: no las devuelvas a QA ni abras otra iteración. Regístralas como deuda técnica en el informe (helpers de prueba sin CancellationToken y .Add dentro de foreach en CatalogSeeder, con su AddRange propuesto) para atenderlas cuando se toque esa suite. 2. Commitea tú, como en HU-001 y en commits separados con mensaje claro: (a) la suite Identity, los realms y TechWorkHub.sln; (b) un commit "chore" aparte que saque bin/ y obj/ del índice (git rm --cached, sin borrarlos del disco) y añada bin/ y obj/ al .gitignore. Los cambios que no sean de HU-002 (framework, watcher, instrucciones de agentes) van en otro commit "chore" distinto. Verifica con git status que el árbol queda limpio antes del cierre. 3. T028 (fallo sin Docker) se difiere como ejecución manual, igual que T017 de HU-001: déjala abierta y anotada como diferida. T030: cita tú la excepción ssl-required=none en el impact-analysis-report.md y en el mensaje del commit de cierre, y márcala [X] cuando esté citada. 4. Sí, enmendemos la constitución con /speckit-constitution, con el cambio mínimo: CancellationToken es obligatorio en código de producción; en código de prueba y helpers de soporte se recomienda y no bloquea la revisión. Hazlo en su propio commit "chore" y no cambies nada más de la constitución. Con el árbol limpio y esos commits hechos, procede al cierre de la rama y despierta al PM si quedan HUs en el backlog. Procede según su decisión; si autorizó cerrar la rama, emite el cierre como línea independiente.
+

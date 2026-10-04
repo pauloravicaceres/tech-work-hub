@@ -1,9 +1,9 @@
 # 🏗️ ARQUITECTURA BACKEND VIVA
 
 - **Sistema:** TechWorkHub (Modulith .NET 8, PostgreSQL)
-- **Última actualización:** 2026-10-03 (retrabajo servidor, convergencia iteración 2/2: hallazgos #16, #18, #19)
-- **HU vigente:** 001 – Registro de Elementos en Backlog Multitipo
-- **Fuente de verdad:** `specs/001-registro-backlog-multitipo/` (`plan.md`, `data-model.md`, `contracts/api.md`) y `documents/qa-tech/tech-design_001_registro_elementos_backlog_multitipo.md`
+- **Última actualización:** 2026-10-03 (HU-002: pruebas de integración contra Keycloak real y catálogo real; sin cambios en `src/**`)
+- **HU vigente:** 002 – Pruebas de Integración contra Keycloak Real y Catálogo Real del módulo Application (sobre la funcionalidad de 001 – Registro de Elementos en Backlog Multitipo)
+- **Fuente de verdad:** `specs/002-pruebas-integracion-keycloak-catalogo/` (`plan.md`, `research.md`, `contracts/test-contract.md`), `specs/001-registro-backlog-multitipo/` y `documents/qa-tech/tech-design_002_pruebas_integracion_keycloak_y_catalogo_application.md`
 
 > Renderizado selectivo: solo se documenta lo alterado en esta iteración (host, `Shared`, módulos `Backlog`/`Application`, persistencia, pipeline, errores). Lo no tocado queda como "sin cambios".
 
@@ -241,6 +241,58 @@ flowchart LR
 ### 8.4 Verificación
 
 `dotnet test TechWorkHub.sln`: 62 unitarias y 29 de integración correctas. Nuevas: `ListApplicationsTests` (200 con token, 401 sin token y sin consultar el catálogo, 401 sin `sub` sin consultar el catálogo), `KeycloakConfigurationTests` (la base falla si queda insegura) y `MigrationsPostgresTests` (migraciones sobre PostgreSQL 16 real con Testcontainers, incluida idempotencia).
+
+## 10. HU-002 — Pruebas de integración con Keycloak y catálogo reales (renderizado selectivo)
+
+Alterado: solo se añade el proyecto de pruebas `app/backend/tests/Integration/Identity` (`Identity.IntegrationTests`, registrado en `TechWorkHub.sln`) y `app/backend/README.md`. **Sin cambios** en `app/backend/src/**` (producción), en el esquema de datos ni en los contratos HTTP de HU-001.
+
+```mermaid
+flowchart LR
+    subgraph Suite[Identity.IntegrationTests]
+        T[Pruebas xUnit: colección Identity] --> F[RealApiFactory: Program real]
+        T --> KF[KeycloakFixture]
+        T --> PF[PostgresFixture]
+        T --> CS[CatalogSeeder]
+        T --> TT[TokenTamperer]
+    end
+    KF -->|Testcontainers + import de Realm/*.json| KC[(Keycloak 24: realms techworkhub y techworkhub-other)]
+    PF -->|Testcontainers, BD nueva por prueba| PG[(PostgreSQL 16)]
+    T -->|password grant| KC
+    F -->|JWT real, auth-server-url del contenedor| KC
+    F -->|migraciones al arrancar| PG
+    CS -->|ApplicationDbContext del host| PG
+```
+
+```mermaid
+sequenceDiagram
+    participant T as Prueba
+    participant K as Keycloak real
+    participant A as Program real (Api)
+    participant C as ApplicationModuleApi real
+    participant P as PostgreSQL real
+    T->>P: CatalogSeeder crea aplicaciones (schema application)
+    T->>K: password grant (cliente techworkhub-tests, audience techworkhub-api)
+    K-->>T: access token
+    T->>A: GET /api/applications o POST /api/backlog/items (Bearer)
+    A->>K: metadata/claves (auth-server-url del contenedor)
+    A->>C: ListAsync / ExistsAsync
+    C->>P: consulta schema application
+    A-->>T: 200/201 (token válido) o 401 (ausente, firma alterada, expirada, otro emisor, otra audiencia)
+    T->>P: verifica filas (sin efectos en 401; CreatedBy == sub en 201)
+```
+
+| Pieza | Responsabilidad |
+|---|---|
+| `Fixtures/KeycloakFixture` | Keycloak real por suite, `BaseAddress` única, `GetTokenAsync(TokenVariant)`, primer token con reintento acotado, fallo explícito que nombra "Keycloak" |
+| `Fixtures/PostgresFixture` | PostgreSQL por suite, BD nueva por prueba; fallo explícito que nombra "PostgreSQL/Docker" |
+| `Fixtures/RealApiFactory` | Hospeda el `Program` real; solo inyecta cadena de conexión, `MigrateOnStartup`, `Keycloak:auth-server-url` y `Keycloak:ssl-required=none`; sin sustituir servicios |
+| `Realm/*.json` | Realms `techworkhub` (clientes `techworkhub-tests`, `-noaud`, `-shortlived`) y `techworkhub-other`; usuario `qa.user` |
+| `Support/CatalogSeeder`, `TokenTamperer`, `ItemPayload` | Siembra del catálogo real, alteración de firma, payload válido de HU-001 |
+
+- **Resultado del spike T008 (excepción acotada, para revisión de QA-Tech / T030):** con `Keycloak:ssl-required=external` el host lanza "The MetadataAddress or Authority must use HTTPS" ante el Keycloak HTTP del contenedor. La única relajación es `ssl-required=none` en la fábrica de la suite; `verify-token-audience=true`, `realm=techworkhub` y `resource=techworkhub-api` se mantienen y los protege `ProductionConfigGuardTests`. El entorno de la fábrica es `Testing` para no cargar `appsettings.Development.json` (que desactiva la audiencia).
+- **Cobertura:** 19 casos = US1 (3) + US2 (3) + US3 (10: 5 credenciales × 2 rutas) + guardias (2) + idempotencia (1).
+- **Verificación (2026-10-03):** `dotnet test TechWorkHub.sln` → 62 unitarias, 31 de integración de Backlog y 19 de Identity, todas correctas. `git diff main -- app/backend/src` sin cambios de código fuente (solo artefactos `bin/obj` ya rastreados). Anti-tautología: sin el *audience mapper* en `techworkhub-tests`, las pruebas de camino feliz devuelven 401; el realm se restauró.
+- Primera ejecución: descarga de imágenes; usar `IDENTITY_TESTS_STARTUP_TIMEOUT_SECONDS=400`.
 
 ## 9. Puntos abiertos
 
