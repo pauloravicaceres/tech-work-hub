@@ -7,6 +7,7 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using NSubstitute;
 using Shared.Exceptions;
+using Shared.Identity;
 using Xunit;
 
 namespace Unit.Backlog;
@@ -17,12 +18,14 @@ public class CreateBacklogItemCommandHandlerTests
     private readonly IBacklogDbContext _db = Substitute.For<IBacklogDbContext>();
     private readonly DbSet<BacklogItem> _items = Substitute.For<DbSet<BacklogItem>>();
     private readonly IApplicationModuleApi _apps = Substitute.For<IApplicationModuleApi>();
+    private readonly ICurrentUser _user = Substitute.For<ICurrentUser>();
     private readonly CreateBacklogItemCommandHandler _sut;
 
     public CreateBacklogItemCommandHandlerTests()
     {
         _db.BacklogItems.Returns(_items);
-        _sut = new(_db, _apps);
+        _user.UserId.Returns("user-1");
+        _sut = new(_db, _apps, _user);
     }
 
     private static CreateBacklogItemCommand Cmd(string type, decimal? qa, Guid? app = null) =>
@@ -200,5 +203,21 @@ public class CreateBacklogItemCommandHandlerTests
 
         // Assert
         await act.Should().ThrowAsync<InvalidOperationException>().WithMessage("db down");
+    }
+
+    [Fact]
+    public async Task Handle_SinClaimDeIdentidad_DebeLanzarUnauthorizedSinConsultarCatalogoNiPersistir()
+    {
+        // Arrange (#19 / FR-009: la identidad se valida antes de cualquier acceso a datos)
+        _user.UserId.Returns((string?)null);
+        var cmd = Cmd("UserStory", 1m, Guid.NewGuid());
+
+        // Act
+        var act = () => _sut.Handle(cmd, CancellationToken.None);
+
+        // Assert
+        await act.Should().ThrowAsync<UnauthorizedAccessException>();
+        await _apps.DidNotReceiveWithAnyArgs().ExistsAsync(default, default);
+        AssertNothingPersisted();
     }
 }
