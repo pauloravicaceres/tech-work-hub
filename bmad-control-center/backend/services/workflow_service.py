@@ -157,10 +157,35 @@ class WorkflowService:
                 "target_token": target_token,
                 "handoff_directive": handoff_directive,
                 "handoff_targets": handoff_targets,
+                # Rama que abre un nuevo ciclo (HU/épica): la macro solo vale como línea propia, no citada en prosa
+                "branch_create": (re.search(
+                    r'^\s*(?:[-*]\s+)*(?:\*\*Handoff:\*\*\s*)?@WATCHER:\s*GITOPS-BRANCH-CREATE\s+([^\s`\'"]+)',
+                    chunk, re.MULTILINE) or [None, None])[1],
                 "timestamp": iso_timestamp,
             })
 
         return blocks
+
+    @staticmethod
+    def _current_cycle_blocks(blocks: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """
+        Bloques del ciclo actual (la HU/épica en curso). Cada macro GITOPS-BRANCH-CREATE abre un ciclo nuevo:
+        sin esto el tracker se leía como una sola historia y, al empezar la HU siguiente, las 15 etapas de la
+        anterior seguían en verde. El ciclo arranca en el último bloque del PM anterior o igual a la macro
+        (el PM asigna la épica, ya sea en su propio bloque o en el HUMANO que la aprueba).
+        """
+        macro_idx = None
+        for i, b in enumerate(blocks):
+            if b.get("branch_create"):
+                macro_idx = i
+        if macro_idx is None:
+            return blocks
+        start = macro_idx
+        for j in range(macro_idx, -1, -1):
+            if ROLE_TO_KEY.get(blocks[j]["author_role"]) == "PM":
+                start = j
+                break
+        return blocks[start:]
 
     @staticmethod
     def _detect_rework(blocks: List[Dict[str, Any]], completed_stage_map: Dict[str, Dict[str, Any]]) -> Optional[Dict[str, Any]]:
@@ -239,8 +264,9 @@ class WorkflowService:
                 detail=f"Error de E/S al intentar acceder y proyectar el estado de '{self.tracker_path}': {str(e)}"
             )
 
-        blocks = self._parse_blocks(content)
-        
+        all_blocks = self._parse_blocks(content)
+        blocks = self._current_cycle_blocks(all_blocks)
+
         # Track completed stages and active stage
         completed_stage_map: Dict[str, Dict[str, Any]] = {}
         last_canonical_key = None
@@ -381,7 +407,7 @@ class WorkflowService:
         # Prepare history if requested
         history_list = []
         if include_history:
-            for b in blocks:
+            for b in all_blocks:
                 history_list.append({
                     "block_index": b["block_index"],
                     "author_role": b["author_role"],

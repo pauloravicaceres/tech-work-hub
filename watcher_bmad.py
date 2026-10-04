@@ -98,15 +98,45 @@ NO_TOCAR_TRACKER = (
     "decide el siguiente agente. Un bloque propio despacharía a QA antes de tiempo."
 )
 
-def instruccion_doc_viva(ruta_doc, alcance=None):
+CODE_DIRS_POR_DEFECTO = {"backend": "app/backend", "frontend": "app/frontend"}
+
+def ruta_readme_codigo(capa):
+    """
+    Ruta (relativa a la raíz) del README del código de una capa. La carpeta puede sobrescribirse en
+    config_bmad.json con {"code_dirs": {"backend": "...", "frontend": "..."}}; por defecto app/<capa>.
+    """
+    carpeta = CODE_DIRS_POR_DEFECTO[capa]
+    try:
+        cfg = json.loads((DIRECTORIO_RAIZ / "config_bmad.json").read_text(encoding="utf-8"))
+        carpeta = cfg.get("code_dirs", {}).get(capa, carpeta)
+    except (OSError, ValueError):
+        pass
+    return carpeta.replace("\\", "/").strip("/") + "/README.md"
+
+def instruccion_readme(ruta_readme):
+    """Mandato de documentar el código de la capa: crear el README si falta, actualizarlo si ya existe."""
+    return (
+        f"README DEL CÓDIGO: además del documento de arquitectura, crea o actualiza '{ruta_readme}' (créalo con su "
+        "carpeta si no existe). Debe cubrir: propósito de la capa, requisitos previos, configuración (variables de "
+        "entorno / appsettings), cómo arrancar, cómo ejecutar las pruebas, estructura de carpetas y, si aplica, "
+        "endpoints o rutas principales con un enlace al documento de arquitectura. Si el README ya existe, "
+        "actualiza SOLO las secciones que tus cambios alteraron y conserva el resto: no lo reescribas ni borres "
+        "contenido vigente. NO inventes comandos: verifica cada uno en los archivos del proyecto "
+        "(package.json, .csproj, scripts) antes de escribirlo."
+    )
+
+def instruccion_doc_viva(ruta_doc, alcance=None, ruta_readme=None):
     """Argumento de /speckit-implement: delimita el alcance y obliga a generar la documentación viva."""
     prefijo = (ALCANCES_IMPLEMENTACION.get(alcance, "") + " ") if alcance else ""
-    return prefijo + NO_TOCAR_TRACKER + " " + (
+    texto = prefijo + NO_TOCAR_TRACKER + " " + (
         f"OBLIGATORIO al finalizar todas las tareas: crea o edita el archivo '{ruta_doc}' "
         "(créalo si no existe, incluida su carpeta) documentando con diagramas Mermaid solo lo que "
         "alteraste. Aunque no hayas cambiado código, debes crear o tocar ese archivo indicando que la "
         "arquitectura actual está vigente. Sin este archivo la ejecución se considera fallida."
     )
+    if ruta_readme:
+        texto += " " + instruccion_readme(ruta_readme)
+    return texto
 
 # ==========================================
 # RETRABAJO SDD (RECHAZOS DE CODE-REVIEW / QA-AUTO)
@@ -708,6 +738,7 @@ def ejecutar_sdd_fase_implementacion(retrabajo=None):
 \n\n# TASK-FINAL: Generación de Documentación Viva
 Lee obligatoriamente la plantilla maestra en dev-backend/templates/backend-architecture-template.md (si existe) o básate en tus reglas. Luego, crea o edita obligatoriamente el archivo 'documents/dev-backend/backend-architecture.md'. APLICA RENDERIZADO SELECTIVO: No regeneres la arquitectura base; únicamente documenta y genera los diagramas Mermaid para las rutas, esquemas o componentes que alteraste en las tareas anteriores. Este paso es un requisito crítico arquitectónico para finalizar. AÚN SI NO HICISTE CAMBIOS EN EL CÓDIGO, DEBES CREAR O TOCAR EL ARCHIVO indicando que la arquitectura actual está vigente.
 """
+                tarea_fantasma_back += "\n" + instruccion_readme(ruta_readme_codigo("backend")) + "\n"
                 active_directive_path.write_text(alma_backend + tarea_fantasma_back, encoding="utf-8")
             
             ts_inicio_back = time.time()
@@ -719,7 +750,8 @@ Lee obligatoriamente la plantilla maestra en dev-backend/templates/backend-archi
                 doc_back_path.parent.mkdir(parents=True, exist_ok=True)
                 res_back = ejecutar_speckit(
                     "implement",
-                    instruccion_doc_viva("documents/dev-backend/backend-architecture.md", alcance="backend") + arg_retrabajo("backend"),
+                    instruccion_doc_viva("documents/dev-backend/backend-architecture.md", alcance="backend",
+                                         ruta_readme=ruta_readme_codigo("backend")) + arg_retrabajo("backend"),
                     directiva=active_directive_path,
                 )
                 if res_back.returncode != 0:
@@ -730,6 +762,15 @@ Lee obligatoriamente la plantilla maestra en dev-backend/templates/backend-archi
                 if not doc_back_path.exists() or doc_back_path.stat().st_mtime < (ts_inicio_back - 2):
                     salida = (res_back.stdout or "").strip()[-300:].replace("\n", " ")
                     msg_err = f"@WATCHER: 🚨 ERROR: SpecKit omitió la documentación viva de Backend en 'documents/dev-backend/backend-architecture.md'. Salida de Claude: {salida}"
+                    print(f"❌ {msg_err}")
+                    write_watcher_log(msg_err)
+                    return False
+
+                # POST-CHECK: README del código. Debe existir; si ya existía solo se exige que se mantenga
+                # (se actualiza únicamente cuando los cambios lo ameritan, por eso no se exige modificarlo siempre).
+                readme_back = DIRECTORIO_RAIZ / ruta_readme_codigo("backend")
+                if not readme_back.exists() or readme_back.stat().st_size == 0:
+                    msg_err = f"@WATCHER: 🚨 ERROR: SpecKit omitió el README del código de Backend en '{ruta_readme_codigo('backend')}'."
                     print(f"❌ {msg_err}")
                     write_watcher_log(msg_err)
                     return False
@@ -765,6 +806,7 @@ Lee obligatoriamente la plantilla maestra en dev-backend/templates/backend-archi
 \n\n# TASK-FINAL: Generación de Documentación Viva
 Lee obligatoriamente la plantilla maestra en dev-frontend/templates/frontend-architecture-template.md (si existe) o básate en tus reglas. Luego, crea o edita obligatoriamente el archivo 'documents/dev-frontend/frontend-architecture.md'. APLICA RENDERIZADO SELECTIVO: No regeneres la arquitectura base; únicamente documenta y genera los diagramas Mermaid para las rutas, esquemas o componentes que alteraste en las tareas anteriores. Este paso es un requisito crítico arquitectónico para finalizar. AÚN SI NO HICISTE CAMBIOS EN EL CÓDIGO, DEBES CREAR O TOCAR EL ARCHIVO indicando que la arquitectura actual está vigente.
 """
+                tarea_fantasma_front += "\n" + instruccion_readme(ruta_readme_codigo("frontend")) + "\n"
                 active_directive_path.write_text(alma_frontend + tarea_fantasma_front, encoding="utf-8")
             
             ts_inicio_front = time.time()
@@ -776,7 +818,8 @@ Lee obligatoriamente la plantilla maestra en dev-frontend/templates/frontend-arc
                 doc_front_path.parent.mkdir(parents=True, exist_ok=True)
                 res_front = ejecutar_speckit(
                     "implement",
-                    instruccion_doc_viva("documents/dev-frontend/frontend-architecture.md", alcance="frontend") + arg_retrabajo("frontend"),
+                    instruccion_doc_viva("documents/dev-frontend/frontend-architecture.md", alcance="frontend",
+                                         ruta_readme=ruta_readme_codigo("frontend")) + arg_retrabajo("frontend"),
                     directiva=active_directive_path,
                 )
                 if res_front.returncode != 0:
@@ -787,6 +830,13 @@ Lee obligatoriamente la plantilla maestra en dev-frontend/templates/frontend-arc
                 if not doc_front_path.exists() or doc_front_path.stat().st_mtime < (ts_inicio_front - 2):
                     salida = (res_front.stdout or "").strip()[-300:].replace("\n", " ")
                     msg_err = f"@WATCHER: 🚨 ERROR: SpecKit omitió la documentación viva de Frontend en 'documents/dev-frontend/frontend-architecture.md'. Salida de Claude: {salida}"
+                    print(f"❌ {msg_err}")
+                    write_watcher_log(msg_err)
+                    return False
+
+                readme_front = DIRECTORIO_RAIZ / ruta_readme_codigo("frontend")
+                if not readme_front.exists() or readme_front.stat().st_size == 0:
+                    msg_err = f"@WATCHER: 🚨 ERROR: SpecKit omitió el README del código de Frontend en '{ruta_readme_codigo('frontend')}'."
                     print(f"❌ {msg_err}")
                     write_watcher_log(msg_err)
                     return False

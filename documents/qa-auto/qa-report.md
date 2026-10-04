@@ -1,7 +1,131 @@
 # QA Report — Calidad y Trazabilidad Viva
 
-> Última actualización: 03-10-2026 · Iteración: **HU-001 Registro de Elementos en Backlog Multitipo** · Agente: QA-AUTO
-> Áreas no afectadas por esta iteración: _Sin cambios en esta iteración_.
+> Última actualización: 03-10-2026 · Iteración: **HU-002 Pruebas de Integración contra Keycloak Real y Catálogo Real** · Agente: QA-AUTO
+> Áreas no afectadas por esta iteración: _Sin cambios en esta iteración_ (las secciones HU-001 de abajo se conservan sin modificar).
+
+---
+
+# ▶ Iteración actual: HU-002 (`specs/002-pruebas-integracion-keycloak-catalogo`)
+
+La HU entrega una suite (`app/backend/tests/Integration/Identity`, 19 casos). QA-AUTO la auditó de forma adversarial, la ejecutó contra Keycloak 24.0 y PostgreSQL 16 reales (Testcontainers, un contenedor por suite, BD nueva por prueba) y verificó que puede fallar. No se escribió ni modificó código de producción (`git diff main -- app/backend/src` sin cambios fuente).
+
+## 1. AI QA Review Dashboard (HU-002)
+
+```
+┌─────────────── HU-002 · DICTAMEN: [APROBADO CON RESERVAS MENORES] ───────────────────────┐
+│ Capa                        Escritos  Ejecutados  Pasados  Fallados  Bloqueados          │
+│ Backend · Identity (real)      19         19         19        0         0               │
+│ Regresión · Unit Backlog       62         62         62        0         0               │
+│ Regresión · Int. Backlog       31         31         31        0         0               │
+│ ─────────────────────────────────────────────────────────────────────────────────────── │
+│ Total solución backend        112        112        112        0         0               │
+│ Cobertura funcional de CA: US1 3/3 · US2 3/3 · US3 6/6 · 100% con prueba real y en verde │
+│ Ejecuciones consecutivas de Identity: 2 (19/19 ambas) · sin contenedores residuales      │
+│ Nivel de riesgo: BAJO (Keycloak e identidad reales; T028 parcial, ver reservas)          │
+└──────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+Comandos: `dotnet test app/backend/tests/Integration/Identity/Identity.IntegrationTests.csproj` (19/19, 2,2 min con descarga de imágenes) y `dotnet test app/backend/TechWorkHub.sln` (62 + 31 + 19, 23 s la suite Identity con imágenes en caché).
+
+## 2. Requirements Traceability (HU-002)
+
+```mermaid
+flowchart LR
+  HU2[HU-002 Integración Keycloak + catálogo real]
+  HU2 --> US1[US1 Listado con identidad real]
+  HU2 --> US2[US2 Registro con aplicación real]
+  HU2 --> US3[US3 Rechazo de credenciales inválidas]
+  HU2 --> INV[Invariantes FR-003/012/013/014]
+
+  US1 --> A1[SC1.1 200 ordenado y exacto]
+  US1 --> A2[SC1.2 catálogo real]
+  US2 --> B1[SC2.1 201 estado Backlog]
+  US2 --> B2[SC2.2 CreatedBy = sub]
+  US2 --> B3[SC2.3 appId inexistente 400]
+  US3 --> C1[SC3.1-3.5 5 credenciales x 2 rutas]
+  US3 --> C2[SC3.6 sin efectos]
+
+  A1 --> T1[TC ListarAplicaciones_ConCredencialValida ✅]
+  A1 --> T2[TC ListarAplicaciones_SinAplicacionesCreadas ✅]
+  A2 --> T3[TC Catalogo_EnHostReal_EsImplementacionReal ✅]
+  B1 --> T4[TC RegistrarItem_...Devuelve201 ✅]
+  B2 --> T5[TC RegistrarItem_...PersisteCreatedByIgualAlSub ✅]
+  B3 --> T6[TC RegistrarItem_ConApplicationIdInexistente ✅]
+  C1 --> T7[TC Ruta_ConCredencialInvalida x10 ✅]
+  C2 --> T7
+  INV --> T8[TC ConfiguracionEfectiva_MantieneAudiencia ✅]
+  INV --> T9[TC Suite_NoUsaSimulados ✅]
+  INV --> T10[TC EscenarioDeRegistro_EnDosFabricas ✅]
+```
+
+| CA / FR | Casos de prueba | Estado |
+|---|---|---|
+| US1.1 / FR-005 / SC-001 | `ListApplicationsRealTests.ListarAplicaciones_ConCredencialValida_Devuelve200ConAplicacionesOrdenadas`; Sad: `…SinAplicacionesCreadas_Devuelve200ConListaVacia` | ✅ |
+| US1.2 / FR-002 | `…Catalogo_EnHostReal_EsImplementacionRealDelModuloApplication` | ✅ |
+| US2.1 / FR-006 | `CreateBacklogItemRealTests.RegistrarItem_ConCredencialRealYAplicacionExistente_Devuelve201` (Location + id) | ✅ |
+| US2.2 / FR-007 / SC-004 | `…PersisteCreatedByIgualAlSub` (único ítem, `Status=Backlog`, `sub` leído del JWT real) | ✅ |
+| US2.3 / FR-008 | `…ConApplicationIdInexistente_Devuelve400SinPersistir` (ProblemDetails con `ApplicationId`, 0 ítems) | ✅ |
+| US3.1-3.5 / FR-009 / SC-003 | `InvalidCredentialsTests.Ruta_ConCredencialInvalida_Devuelve401SinEfectos` × 10 (Ausente, FirmaAlterada, Expirada, OtroEmisor, OtraAudiencia × GET/POST) | ✅ 10/10 |
+| US3.6 / FR-010 / FR-011 | Mismo Theory: conteo de `application."Applications"` y de ítems sin cambios | ✅ (ver reserva R-2) |
+| FR-003 | `ProductionConfigGuardTests.ConfiguracionEfectiva_MantieneAudienciaYEmisorDeProduccion` | ✅ |
+| FR-012 / SC-002 | `…Suite_NoUsaSimuladosDeAutenticacionNiCatalogo` | ✅ |
+| FR-013 | `git diff main -- app/backend/src` sin cambios fuente | ✅ |
+| FR-014 / SC-005 | `IdempotencyTests…EnDosFabricas` + 2 ejecuciones consecutivas 19/19 | ✅ |
+
+## 3. Failure Impact Diagram (HU-002)
+
+**0 fallos críticos detectados.** No hay defectos abiertos `[CAPA:*]`.
+
+## 4. State Transition / User Journey (HU-002)
+
+```mermaid
+flowchart TD
+  K[Keycloak 24 real: password grant] --> TK[JWT real]
+  TK --> AUTH{Validación JWT producción: firma, emisor, vigencia, audiencia}
+  AUTH -->|inválido: ausente, firma, expirado, otro emisor, otra audiencia| R401[401 sin tocar catálogo ni BD ✅ 10/10]
+  AUTH -->|válido| RT{Ruta}
+  RT -->|GET /api/applications| L200[200 ordenado, catálogo real ✅]
+  RT -->|POST /api/backlog/items| APP{applicationId existe en catálogo real}
+  APP -->|no| R400[400 + 0 ítems ✅]
+  APP -->|sí| R201[201 Backlog, CreatedBy = sub ✅]
+```
+
+Sin ruptura de flujo detectada.
+
+## 5. Test Coverage & Hotspots (HU-002)
+
+```mermaid
+flowchart LR
+  subgraph Cobertura HU-002
+    A[Autenticación JWT real · 10 casos 401 + 5 felices · alta]
+    C[Catálogo real Application · 3 casos · alta]
+    P[Persistencia PostgreSQL migrada · 3 casos · alta]
+    G[Guardias de configuración y simulados · 2 · alta]
+    I[Idempotencia · 1 + 2 ejecuciones · alta]
+  end
+```
+
+Hotspots de defectos: ninguno. Riesgo residual: roles no verificados (no documentados); rechazo 401 verificado por efecto (sin trazas), no por instrumentación.
+
+## Pruebas adversariales propias (QA-AUTO)
+
+| Prueba | Resultado |
+|---|---|
+| **Mutación de realm (T029 reproducida):** quitar el *audience mapper* de `techworkhub-tests` | 5 de 6 casos de US1/US2 fallan; el sexto (`Catalogo_EnHostReal…`) no depende de identidad y pasa. Realm restaurado y comparado byte a byte. |
+| `src/**` solo lectura (FR-013) | `git diff --stat main -- app/backend/src` (excluyendo `bin/obj`) sin diferencias |
+| Residuos Docker tras 2 ejecuciones | Solo el reaper `ryuk` de Testcontainers |
+| Credencial expirada vs `ClockSkew` (D-02 de QA-Tech) | El caso `Expirada` devuelve 401 en ambas rutas tras esperar `exp`: no se observa aceptación por el skew en este host |
+
+## Reservas (no bloqueantes)
+
+- **R-1 (T028 abierta):** no se probó el fallo explícito con el daemon de Docker detenido; QA-AUTO no detuvo el Docker del usuario. Verificado solo el mensaje de timeout que nombra "Keycloak".
+- **R-2:** el criterio "sin efectos" (US3.6/FR-010) se comprueba por conteos antes/después, no por instrumentación del acceso al catálogo. Es suficiente para FR-011 (sin mutación) pero no demuestra la ausencia de lecturas.
+- **R-3 (T030 abierta):** falta citar en el PR la excepción `ssl-required=none` confirmada por el spike T008. Es una tarea de proceso, no de código.
+- **R-4:** los archivos de `app/backend/tests/Integration/Identity/**` y el realm figuran sin commitear (`??`) en el árbol de trabajo; los commitea quien los generó (DEV-BACK).
+
+---
+
+# Histórico: HU-001
 
 ## 1. AI QA Review Dashboard
 
