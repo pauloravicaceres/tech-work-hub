@@ -28,6 +28,7 @@ import {
   ProblemDetails,
   RegisteredApplication,
 } from '../../models/backlog-item.models';
+import { AuthService } from '../../../../core/auth/auth.service';
 import { BacklogApiService } from '../../services/backlog-api.service';
 
 interface BacklogItemForm {
@@ -84,6 +85,7 @@ export class CreateBacklogItemComponent {
   private readonly fb = inject(NonNullableFormBuilder);
   private readonly api = inject(BacklogApiService);
   private readonly messageService = inject(MessageService);
+  private readonly auth = inject(AuthService);
   private readonly submit$ = new Subject<CreateBacklogItemRequest>();
 
   readonly form = this.fb.group<BacklogItemForm>({
@@ -181,8 +183,7 @@ export class CreateBacklogItemComponent {
   }
 
   reauthenticate(): void {
-    // Redirige al login de Keycloak
-    window.location.href = '/auth/login';
+    void this.auth.reauthenticate();
   }
 
   private handleResult(result: SubmitResult): void {
