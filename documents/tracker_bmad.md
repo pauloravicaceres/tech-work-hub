@@ -378,3 +378,11 @@ Awaiting your response to the question above.
 @WATCHER: GITOPS-MERGE-CLOSE feat/001-HU_registro_elementos_backlog_multitipo
 - **Handoff:** @PM: Código certificado y rama consolidada en dev. Procede a asignar la siguiente historia del backlog (002-HU_pruebas_integracion_keycloak_y_catalogo_application).
 
+
+@HUMANO: ⚠️ ALERTA GITOPS: Conflicto de fusión detectado al intentar cerrar la rama feat/001-HU_registro_elementos_backlog_multitipo.
+El Watcher ha abortado el merge por seguridad y se ha detenido.
+PASOS DE RECUPERACIÓN PARA EL HUMANO:
+1. Abre tu terminal y ejecuta manualmente el merge o rebase hacia dev o main.
+2. Resuelve los conflictos en tu editor y haz el commit final.
+3. Vuelve a encender el Watcher (python watcher_bmad.py).
+Nota: NO necesitas borrar ni agregar ninguna línea en este tracker. El sistema asumirá el cierre exitoso y continuará su operación normal.
