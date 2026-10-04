@@ -113,6 +113,15 @@ app/frontend/
 - **Frontend (DEF-07/08)**: componente standalone con `@if`/`@for`, `Signals`/`toSignal`/`takeUntilDestroyed` en lugar de `subscribe()` manual, lista de aplicaciones cargada desde la API del módulo Application (valores `Guid`), `qaPoints: null` por defecto, lectura de `errors` del `ProblemDetails`, handler del botón Cancelar, estilos `.scss` y configuración `package.json`/`angular.json`/`jest.config`.
 - **Pruebas**: integración con `WebApplicationFactory<Program>` y Testcontainers (INT-01..INT-10) sobre el host real; Jest para el componente.
 
+## Decisiones Técnicas Complementarias (retrabajo iteración 2/2)
+
+- **Catálogo de aplicaciones (#16)**: el host expone `GET /api/applications` (Carter, `.RequireAuthorization()`, recibe `CancellationToken`) que devuelve `[{ "id": Guid, "name": string }]` leyendo vía `IApplicationModuleApi` (sin consulta cross-schema). Se documenta en `contracts/api.md`. El frontend consume solo este endpoint.
+- **Autenticación del cliente (#17, FR-001, FR-009)**: el frontend obtiene el token de Keycloak (Authorization Code + PKCE), registra un `HttpInterceptorFn` que añade `Authorization: Bearer` a las llamadas a `/api/**`, un guard de ruta que redirige al login y la reautenticación ante HTTP 401. El componente no se renderiza sin sesión.
+- **Configuración Keycloak por entorno (#18)**: `appsettings.json` base queda seguro (`ssl-required: external`, `verify-token-audience: true`, audiencia configurada). Solo `appsettings.Development.json` puede relajar `ssl-required`; los valores sensibles se inyectan por variables de entorno.
+- **Migraciones (#18)**: la migración Code-First se aplica en el despliegue (bundle de migraciones o `dotnet ef database update` en el pipeline, nunca `Migrate()` implícito en producción) y se prueba contra PostgreSQL con Testcontainers.
+- **Orden del handler (#19, FR-009)**: la identidad (`sub`) se resuelve y valida al inicio del handler, antes de consultar el catálogo de aplicaciones o cualquier acceso a datos; sin claim se responde 401 sin tocar la base de datos. El interceptor de auditoría solo lee la identidad ya resuelta.
+- **Pruebas**: INT-01..INT-10 más casos para #16..#19 (catálogo autenticado, 401 sin acceso a datos, configuración Keycloak no insegura fuera de Development, migración sobre PostgreSQL).
+
 ## Seguimiento de Complejidad
 
 > No existen violaciones a la constitución, por lo tanto, no se requieren alternativas rechazadas documentadas.

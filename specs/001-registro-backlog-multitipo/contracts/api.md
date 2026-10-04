@@ -81,3 +81,22 @@ Petición realizada sin token JWT, con un token inválido / expirado, o con un t
 #### 500 Internal Server Error
 
 Error inesperado durante la persistencia o la emisión del evento de dominio. Se responde `ProblemDetails` sin detalles internos.
+
+## Endpoint: Listar Aplicaciones
+
+**Ruta:** `GET /api/applications`
+**Seguridad:** Requiere Token Bearer (JWT) validado contra Keycloak; sin token, HTTP 401.
+
+#### 200 OK
+
+Catálogo de aplicaciones para el selector de `applicationId`, leído a través de `IApplicationModuleApi`.
+
+```json
+[
+  { "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6", "name": "Portal Clientes" }
+]
+```
+
+#### 401 Unauthorized
+
+Sin token, con token inválido/expirado o sin claim `sub`.

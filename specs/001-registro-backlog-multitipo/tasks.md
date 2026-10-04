@@ -87,8 +87,8 @@ description: "Lista de tareas para la implementación de la funcionalidad de Reg
 
 **Propósito**: Mejoras finales, validaciones de extremos y aseguramiento de la calidad.
 
-- [ ] T017 [P] Ejecutar todos los escenarios de prueba descritos en `quickstart.md` localmente mediante cURL o postman.
-- [X] T018 Confirmar la inyección correcta de `CreatedAt` y `CreatedBy` a través de interceptores (`AuditableEntityInterceptor`).
+- [ ] T017 [P] Ejecutar todos los escenarios de prueba descritos en `quickstart.md` localmente mediante cURL o postman. _Diferida como ejecución manual por decisión humana (03-10-2026)._
+- [X] T018 Confirmar la inyección correcta de `CreatedAt` y `CreatedBy` a través de interceptores (`AuditableEntityInterceptor`). _Evidencia: `qa-report.md`, INT-07 sobre PostgreSQL (cuarta ejecución)._
 - [X] T019 Validar rechazo de peticiones vacías (HTTP 400) o campos excesivamente largos según FR-004.
 
 ---
@@ -132,7 +132,7 @@ description: "Lista de tareas para la implementación de la funcionalidad de Reg
 
 - [X] T023 [fix:CODE:DEF-01] Registrar `ValidationBehavior<,>` de `Shared` y los validadores del ensamblado en `BacklogModule.cs`, para que `CreateBacklogItemValidator` se ejecute antes del handler (T013) [servidor]
 - [X] T024 [fix:CODE:DEF-03] Mapear `ValidationException` y la `NotFoundException` de `applicationId` a HTTP 400 `ProblemDetails` con `errors` mediante `CustomExceptionHandler` en `Program.cs` (FR-007, FR-013) [servidor]
-- [X] T025 [fix:CODE:DEF-04] Sustituir el `AuditableEntityInterceptor` vacío por el de `Shared`, registrado en el `DbContext`, que asigne `CreatedAt` y `CreatedBy` desde el claim; sin claim, HTTP 401 (FR-009, T018) [servidor]
+- [X] T025 [fix:CODE:DEF-04] Sustituir el `AuditableEntityInterceptor` vacío por el de `Shared`, registrado en el `DbContext`, que asigne `CreatedAt` y `CreatedBy` desde el claim; sin claim, HTTP 401 (FR-009, T018) [servidor] _Evidencia: `qa-report.md`, DEF-04 corregido, INT-07 y caso #19 (401 sin claim)._
 - [X] T026 [fix:CODE:DEF-05] Registrar `DispatchDomainEventsInterceptor` de `Shared` para publicar `BacklogItemCreatedDomainEvent` antes del commit (FR-010) [servidor]
 - [X] T027 [fix:CODE:1] Recibir `CancellationToken` en la lambda de `CreateBacklogItemEndpoint.cs` y pasarlo a `mediator.Send` (T014) [servidor]
 - [X] T028 [fix:CODE:DEF-07] Registrar `JsonStringEnumConverter` global para que `priority` y `type` se acepten como texto (FR-011) [servidor]
@@ -142,7 +142,7 @@ description: "Lista de tareas para la implementación de la funcionalidad de Reg
 
 ### Capa CODE — interfaz
 
-- [X] T032 [fix:CODE:DEF-07] Cargar la lista de aplicaciones desde la API del módulo Application con `Guid` reales, sin el valor `app-id-101` [interfaz]
+- [X] T032 [fix:CODE:DEF-07] Cargar la lista de aplicaciones desde la API del módulo Application con `Guid` reales, sin el valor `app-id-101` [interfaz] _Evidencia: `qa-report.md`, DEF-07 corregido, Jest 31/31._
 - [X] T033 [fix:CODE:DEF-08] Crear `create-backlog-item.component.scss` y la configuración `package.json`, `angular.json` y `jest.config` para que el build y Jest funcionen [interfaz]
 - [X] T034 [fix:CODE:12] Enviar `qaPoints: null` por defecto para UserStory/Bug en lugar de `0` [interfaz]
 - [X] T035 [fix:CODE:14] Leer `errors` del `ProblemDetails` en lugar de `err.error?.message?.includes('aplicación')` y mostrar el error por campo [interfaz]
@@ -151,3 +151,14 @@ description: "Lista de tareas para la implementación de la funcionalidad de Reg
 ### Capa TASKS y verificación
 
 - [ ] T037 [fix:TASKS:15] Tras T022–T036, ejecutar INT-01..INT-10 con `WebApplicationFactory<Program>` y Testcontainers (sustituir `FakeBacklogDb`), añadir pruebas del endpoint con token cancelado y del interceptor, ejecutar la suite Jest (14 pruebas y `.spec.ts` del componente), actualizar `documents/qa-auto/qa-report.md` y volver a marcar `[X]` T013, T014, T017, T018 y T019 solo con evidencia [servidor + interfaz, QA]
+
+## Fase 7: Convergencia (Retrabajo iteración 2/2)
+
+**Origen**: rechazo de Code Review (`documents/code-review/impact-analysis-report.md`, hallazgos #16..#19). `plan.md` y `contracts/api.md` ya se corrigieron; estas tareas llevan el código a ese estado. T018, T025 y T032 se desmarcaron por estar cerradas sin cumplirse. Responsable entre corchetes: **servidor** o **interfaz**.
+
+- [X] T038 [fix:PLAN:16] Crear el endpoint Carter `GET /api/applications` con `.RequireAuthorization()` y `CancellationToken`, que devuelva `{id, name}` vía `IApplicationModuleApi` según `contracts/api.md`; cubrirlo con prueba de integración (200 con token, 401 sin token) [servidor]
+- [X] T039 [fix:PLAN:17] Implementar la autenticación del cliente: login Keycloak (Code + PKCE), `HttpInterceptorFn` que añade el Bearer a `/api/**`, guard de ruta y reautenticación ante 401; añadir pruebas Jest del interceptor y del guard (FR-001, FR-009) [interfaz]
+- [X] T040 [fix:PLAN:18] Asegurar `appsettings.json` base (`ssl-required: external`, `verify-token-audience: true`), relajar solo en `appsettings.Development.json`, inyectar secretos por entorno y añadir una prueba que falle si la base queda insegura [servidor]
+- [X] T041 [fix:PLAN:18] Añadir el paso de migraciones al despliegue (bundle o `dotnet ef database update`) y validar la migración Code-First contra PostgreSQL con Testcontainers [servidor]
+- [X] T042 [fix:CODE:19] Resolver y validar la identidad (`sub`) al inicio de `CreateBacklogItemCommandHandler`, antes de consultar `IApplicationModuleApi`; sin claim, HTTP 401 sin acceso a datos; añadir prueba que verifique que no se consulta el catálogo (FR-009) [servidor]
+- [X] T043 [fix:TASKS:16-19] Tras T038–T042, ejecutar INT-01..INT-10 y los casos #16..#19 contra PostgreSQL (Testcontainers) y la suite Jest, actualizar `documents/qa-auto/qa-report.md` y marcar `[X]` T018, T025 y T032 solo con evidencia [servidor + interfaz, QA] _Evidencia: `qa-report.md` cuarta ejecución (62/62, 31/31, Jest 31/31), reverificada por Code Review._
