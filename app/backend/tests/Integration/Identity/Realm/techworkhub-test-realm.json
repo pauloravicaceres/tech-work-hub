@@ -1,0 +1,12 @@
+{
+  "realm": "techworkhub",
+  "enabled": true,
+  "sslRequired": "none",
+  "clients": [
+    {"clientId":"techworkhub-api","enabled":true,"bearerOnly":true,"protocol":"openid-connect"},
+    {"clientId":"techworkhub-tests","enabled":true,"publicClient":true,"directAccessGrantsEnabled":true,"standardFlowEnabled":false,"protocol":"openid-connect","protocolMappers":[{"name":"techworkhub-api-audience","protocol":"openid-connect","protocolMapper":"oidc-audience-mapper","consentRequired":false,"config":{"included.client.audience":"techworkhub-api","id.token.claim":"false","access.token.claim":"true"}}]},
+    {"clientId":"techworkhub-tests-noaud","enabled":true,"publicClient":true,"directAccessGrantsEnabled":true,"standardFlowEnabled":false,"protocol":"openid-connect"},
+    {"clientId":"techworkhub-tests-shortlived","enabled":true,"publicClient":true,"directAccessGrantsEnabled":true,"standardFlowEnabled":false,"protocol":"openid-connect","attributes":{"access.token.lifespan":"1"},"protocolMappers":[{"name":"techworkhub-api-audience","protocol":"openid-connect","protocolMapper":"oidc-audience-mapper","consentRequired":false,"config":{"included.client.audience":"techworkhub-api","id.token.claim":"false","access.token.claim":"true"}}]}
+  ],
+  "users": [{"username":"qa.user","enabled":true,"emailVerified":true,"firstName":"QA","lastName":"User","email":"qa.user@techworkhub.test","requiredActions":[],"credentials":[{"type":"password","value":"Qa-Pass-123!","temporary":false}]}]
+}
