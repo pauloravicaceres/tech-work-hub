@@ -582,3 +582,12 @@ Con el árbol limpio y esos commits hechos, procede al cierre de la rama y despi
 3. **015-HU_ficha_general_aplicacion** — Épica [P3]. Información general, responsables, equipo y tecnologías de cada aplicación, sobre el catálogo base ya sembrado por HU-002. No depende de ❓; es prerrequisito de 016 a 019 y de incidentes (022). Implica abrir P3 sin haber completado P1 ni P2.
 
 Bloqueadas por ❓ y por tanto no elegibles ahora: 004 (catálogo de estados), 007 y 008 (definiciones de Retrasada y En riesgo), 012 (modelo de capacidad), 017 y 018 (almacenamiento, visibilidad y adjuntos), 022 a 024 (flujo de estados de incidentes, tamaño y formatos de adjuntos), 027 (conversión de compromisos en actividades), 031 (Retrasada y En riesgo).
+
+
+### [04-10-2026] Product Manager
+- **Hora:** 02:15:16
+- **Artefacto generado:** `specs/README.md`
+- **Estado:** Decisión humana aplicada: se abre primero 003-HU_gestion_sprint_dos_semanas (ledger renumerado: la asignación al Sprint pasa a 004, miembros y roles a 012 y ficha de aplicación a 016). Rama feat/003-HU_gestion_sprint_dos_semanas creada para esta historia; no se abre ninguna otra.
+- **⚠️ Puntos Abiertos:** Reglas de apertura, cierre y estados de un Sprint (bloquean el ciclo de vida; el BA debe dejarlo pendiente, sin inventarlo). Pregunta abierta 9 del Product Brief: si una tarjeta puede pertenecer a más de un Sprint (sin asumir respuesta).
+@WATCHER: GITOPS-BRANCH-CREATE feat/003-HU_gestion_sprint_dos_semanas
+- **Handoff:** @BA: Redactar la historia 003-HU_gestion_sprint_dos_semanas en documents/business-analyst/003-HU_gestion_sprint_dos_semanas.md; el alcance es crear y consultar Sprints de 2 semanas, con identificación y fechas de inicio y fin acotadas estrictamente a una ventana de 2 semanas; el ciclo de vida (estados, apertura y cierre) está bloqueado por el punto abierto de negocio "reglas de apertura, cierre y estados de un Sprint", así que NO lo inventes y déjalo marcado como pendiente; además ten en cuenta la pregunta abierta 9 del Product Brief (si una tarjeta puede pertenecer a más de un Sprint) sin asumir una respuesta, y recuerda que la historia 004 (asignación de elementos al Sprint) depende de esta.
