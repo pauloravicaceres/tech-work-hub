@@ -12,7 +12,7 @@ Barrera Fork-Join satisfecha (DEV-BACK y DEV-FRONT finalizaron). QA-AUTO auditó
 ## 1. AI QA Review Dashboard (HU-004)
 
 ```
-┌─────────────── HU-004 · DICTAMEN: [RECHAZADO] ───────────────────────────────────────────┐
+┌─────────────── HU-004 · DICTAMEN: [APROBADO] retrabajo 1/2 ───────────────────────────────────────────┐
 │ Capa                          Ejecutados  Pasados  Fallados  Bloqueados                  │
 │ Backend · Unit Sprints (total)      86        86       0         0   (HU-004 ≈ 43)      │
 │ Backend · Integration Sprints       89        89       0         0   (incl. 2 QA-AUTO ahora verdes)│
@@ -74,7 +74,7 @@ flowchart LR
 ```
 
 ## Defectos (etiquetado por capa)
-n> **Retrabajo 1/2:** DEF-01 [CAPA:TASKS] corregido (decimal anulable en contrato, respuesta y modelo TS; `SprintItemsEstimationFidelityTests` 2/2 verdes). DEF-02 [CAPA:SPEC] corregido (spec.md con FR-017 y escenarios 409). Revalidación: Unit Sprints 86/86, Int. Sprints 89/89, Backlog 93/93, Jest 83/83. Persisten bloqueos de entorno T051/T052 e Identity (Keycloak).
+> **Retrabajo 1/2:** DEF-01 [CAPA:TASKS] corregido (decimal anulable en contrato, respuesta y modelo TS; `SprintItemsEstimationFidelityTests` 2/2 verdes). DEF-02 [CAPA:SPEC] corregido (spec.md con FR-017 y escenarios 409). Revalidación: Unit Sprints 86/86, Int. Sprints 89/89, Backlog 93/93, Jest 83/83. Persisten bloqueos de entorno T051/T052 e Identity (Keycloak).
 
 
 - **DEF-01 [CAPA:TASKS]** `BacklogItemSummary`/`SprintItemResponse`/`SprintItem` (TS) usan `int`; el Tech Design validado (W-01, prevalece) exige `decimal?`. `BacklogModuleApi.ToWholePoints` redondea 2.5→3 y convierte QA nulo en 0. Evidencia: `SprintItemsEstimationFidelityTests` (2 fallos). Además `BacklogModuleApiTests.GetSummariesAsync_ConPuntosDecimales_DebeRedondearAlEnteroMasCercano` enshrina el comportamiento incorrecto. T005/T036/T041 se marcaron `[X]` contra una advertencia vinculante.
