@@ -36,14 +36,14 @@ MODEL_IDS = {
 TABS_CONFIG = {
     "Negocio y Producto": [
         # Fila 1
-        {"name": "business-storyteller", "model": "Sonnet 5", "effort": "medium"},
-        {"name": "product-manager",     "model": "Sonnet 5", "effort": "medium", "target": "business-storyteller", "direction": "right"},
+        {"name": "business-storyteller", "model": "Sonnet 5", "effort": "low"},
+        {"name": "product-manager",     "model": "Sonnet 5", "effort": "low", "target": "business-storyteller", "direction": "right"},
         {"name": "business-analyst",    "model": "Sonnet 5", "effort": "medium", "target": "product-manager", "direction": "right"},
 
         # Fila 2
-        {"name": "product-analyst",     "model": "Sonnet 5", "effort": "medium", "target": "business-storyteller", "direction": "down"},
-        {"name": "qa-documental",       "model": "Sonnet 5", "effort": "medium", "target": "product-manager", "direction": "down"},
-        {"name": "designer-ux",         "model": "Sonnet 5", "effort": "medium", "target": "business-analyst", "direction": "down"},
+        {"name": "product-analyst",     "model": "Sonnet 5", "effort": "low", "target": "business-storyteller", "direction": "down"},
+        {"name": "qa-documental",       "model": "Sonnet 5", "effort": "low", "target": "product-manager", "direction": "down"},
+        {"name": "designer-ux",         "model": "Sonnet 5", "effort": "low", "target": "business-analyst", "direction": "down"},
     ],
     "Arquitectura e Ingeniería": [
         {"name": "solutions-architect", "model": "Sonnet 5", "effort": "medium"},
@@ -54,9 +54,9 @@ TABS_CONFIG = {
     "Desarrollo y Despliegue": [
         # Fase D automatizada: @DEV-BACK y @DEV-FRONT son asimilados por SpecKit.
         # Solo mantenemos a los auditores e infraestructura.
-        {"name": "qa-auto",      "model": "Sonnet 5", "effort": "medium"},
-        {"name": "code-review",  "model": "Sonnet 5", "effort": "medium", "target": "qa-auto", "direction": "right"},
-        {"name": "devops",       "model": "Sonnet 5", "effort": "medium", "target": "code-review", "direction": "right"},
+        {"name": "qa-auto",      "model": "Sonnet 5", "effort": "low"},
+        {"name": "code-review",  "model": "Sonnet 5", "effort": "low", "target": "qa-auto", "direction": "right"},
+        {"name": "devops",       "model": "Sonnet 5", "effort": "low", "target": "code-review", "direction": "right"},
     ]
 }
 

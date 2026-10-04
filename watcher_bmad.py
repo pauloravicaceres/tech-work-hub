@@ -88,6 +88,11 @@ ALCANCES_IMPLEMENTACION = {
     ),
 }
 
+def sin_tokens(texto):
+    """Quita las '@' de las menciones a agentes. Un Handoff del Watcher debe llevar un único token de despacho
+    (el del siguiente agente); cualquier otra referencia va como texto plano para que nada la despache."""
+    return re.sub(r"@(?=[A-Za-z])", "", texto or "").replace("  ", " ").strip()
+
 NO_TOCAR_TRACKER = (
     "NO escribas en documents/tracker_bmad.md ni emitas handoffs (@AGENTE:): el Watcher registra tu bloque y "
     "decide el siguiente agente. Un bloque propio despacharía a QA antes de tiempo."
@@ -468,6 +473,40 @@ def vigilar_agentes_inactivos(ahora=None, forzar=False):
             continue
         est.update(despachado=ahora, vio_trabajando=False, idle_desde=None)
 
+def limpiar_sesiones_agentes():
+    """
+    Al cerrar una HU, vacía la conversación de cada agente de la flota con /clear.
+    Una sesión larga reenvía todo su historial en cada turno; empezar la HU siguiente con contexto limpio
+    abarata cada paso. /clear conserva el rol (AGENTS.md se recarga solo). Solo toca agentes libres.
+    """
+    try:
+        res = subprocess.run(["herdr", "agent", "list"], capture_output=True, text=True, encoding="utf-8",
+                             errors="replace", check=True)
+        agentes = json.loads(res.stdout).get("result", {}).get("agents", [])
+    except (subprocess.CalledProcessError, OSError, ValueError) as e:
+        print(f"⚠️ [Sesiones] No se pudo listar los agentes para limpiarlos: {e}")
+        return
+
+    limpiados, omitidos = [], []
+    for ag in agentes:
+        nombre = ag.get("name")
+        if nombre not in ROLES_TRACKER_POR_AGENTE:
+            continue
+        if ag.get("agent_status") not in ("idle", "done"):
+            omitidos.append(nombre)  # trabajando: no se interrumpe
+            continue
+        try:
+            subprocess.run(["herdr", "pane", "run", ag["pane_id"], "/clear"], capture_output=True, text=True,
+                           encoding="utf-8", errors="replace", check=True)
+            limpiados.append(nombre)
+        except (subprocess.CalledProcessError, OSError, KeyError):
+            omitidos.append(nombre)
+
+    seguimiento_agentes.clear()
+    print(f"🧹 [Sesiones] Contexto limpiado en {len(limpiados)} agente(s)"
+          + (f"; omitidos (ocupados o con error): {', '.join(omitidos)}" if omitidos else "") + ".")
+    # Sin escribir en el tracker: tras la fusión el árbol queda en la rama base y no debe ensuciarse.
+
 def obtener_info_agente(nombre_agente):
     try:
         resultado = subprocess.run("herdr agent list", shell=True, capture_output=True, text=True, encoding="utf-8", errors="replace")
@@ -641,12 +680,12 @@ def ejecutar_sdd_fase_implementacion(retrabajo=None):
             involucra_frontend = involucra_frontend and bool(segmentos.get("frontend"))
             texto_qa = (
                 f"Retrabajo {retrabajo['iteracion']}/{retrabajo['max']} aplicado sobre los hallazgos de {retrabajo['autor']}. "
-                f"{segmentos.get('qa') or 'Revalida la HU.'} Ejecuta y valida las pruebas y, al aprobar, deriva a @CODE-REVIEW."
+                f"{sin_tokens(segmentos.get('qa')) or 'Revalida la HU.'} Ejecuta y valida las pruebas y, al aprobar, deriva a Code Review."
             )
         else:
             texto_qa = (
                 "La Fase D (Implementación) ha finalizado exitosamente mediante motor SDD. Inicia el diseño de la "
-                "matriz de pruebas automatizadas basándote en los criterios de la HU; al terminar, deriva a @CODE-REVIEW."
+                "matriz de pruebas automatizadas basándote en los criterios de la HU; al terminar, deriva a Code Review."
             )
 
         def arg_retrabajo(capa):
@@ -1063,6 +1102,7 @@ def gitops_merge_close(branch_name):
         subprocess.run(["git", "branch", "-d", branch_name], check=True, cwd=DIRECTORIO_RAIZ)
         print(f"✅ [GITOPS] Fusión exitosa. Rama {branch_name} eliminada.")
         resetear_retrabajo(branch_name)
+        limpiar_sesiones_agentes()
     except subprocess.CalledProcessError:
         print("🛑 [GITOPS] Conflicto de fusión detectado. Abortando merge...")
         subprocess.run(["git", "merge", "--abort"], cwd=DIRECTORIO_RAIZ, stderr=subprocess.DEVNULL)
@@ -1073,6 +1113,18 @@ def gitops_merge_close(branch_name):
         print(f"⏸️ [HITL] Se requiere intervención humana. Pausando el orquestador.")
         sys.exit(1)
 
+def macro_gitops(linea, accion):
+    """
+    Rama de una macro GitOps (`BRANCH-CREATE` / `MERGE-CLOSE`) solo si la línea ES la orden.
+
+    La macro debe abrir la línea (tras viñetas y el prefijo `- **Handoff:**`). Una mención dentro de prosa
+    (p. ej. "confirmar si se emite `@WATCHER: GITOPS-MERGE-CLOSE x`") no la ejecuta: antes cualquier cita
+    en un dictamen cerraba y fusionaba la rama real.
+    """
+    limpia = re.sub(r"^\s*(?:[-*]\s+)*(?:\*\*Handoff:\*\*\s*)?", "", linea)
+    m = re.match(rf"@WATCHER:\s*GITOPS-{accion}\s+([^\s`'\"]+)", limpia.strip())
+    return m.group(1) if m else None
+
 def hydration_gitops():
     if not os.path.exists(TRACKER_PATH):
         return None
@@ -1081,14 +1133,12 @@ def hydration_gitops():
     
     orphaned_branch = None
     for linea in lineas:
-        if "@WATCHER: GITOPS-BRANCH-CREATE" in linea:
-            match = re.search(r"@WATCHER:\s*GITOPS-BRANCH-CREATE\s+([^\s]+)", linea)
-            if match:
-                orphaned_branch = match.group(1)
-        elif "@WATCHER: GITOPS-MERGE-CLOSE" in linea:
-            match = re.search(r"@WATCHER:\s*GITOPS-MERGE-CLOSE\s+([^\s]+)", linea)
-            if match and match.group(1) == orphaned_branch:
-                orphaned_branch = None
+        rama_crear = macro_gitops(linea, "BRANCH-CREATE")
+        rama_cerrar = macro_gitops(linea, "MERGE-CLOSE")
+        if rama_crear:
+            orphaned_branch = rama_crear
+        elif rama_cerrar and rama_cerrar == orphaned_branch:
+            orphaned_branch = None
     return orphaned_branch
 
 def validar_constitucion_gitops():
@@ -1136,6 +1186,7 @@ def iniciar_watcher():
             print(f"✅ [GITOPS] Estado sincronizado. Continuando en la rama {orphaned}")
 
     num_lineas_leidas = 0
+    avisos_espera = {}
     cola_tareas = []
     hash_tareas_historicas = set()
     
@@ -1171,14 +1222,12 @@ def iniciar_watcher():
                         for idx, linea in enumerate(nuevas_lineas):
                             
                             # GITOPS Live Interception
-                            if "@WATCHER: GITOPS-BRANCH-CREATE" in linea:
-                                match = re.search(r"@WATCHER:\s*GITOPS-BRANCH-CREATE\s+([^\s]+)", linea)
-                                if match:
-                                    gitops_branch_create(match.group(1))
-                            elif "@WATCHER: GITOPS-MERGE-CLOSE" in linea:
-                                match = re.search(r"@WATCHER:\s*GITOPS-MERGE-CLOSE\s+([^\s]+)", linea)
-                                if match:
-                                    gitops_merge_close(match.group(1))
+                            rama_crear = macro_gitops(linea, "BRANCH-CREATE")
+                            rama_cerrar = macro_gitops(linea, "MERGE-CLOSE")
+                            if rama_crear:
+                                gitops_branch_create(rama_crear)
+                            elif rama_cerrar:
+                                gitops_merge_close(rama_cerrar)
 
                             actualizar_contexto_bloque(linea)
                             nuevas_tareas = extraer_instrucciones(linea)
@@ -1214,7 +1263,10 @@ def iniciar_watcher():
                     continue
                     
                 if estado not in ["idle", "done"]:
-                    print(f"⏳ [Watcher] '{agente}' está {estado}. Esperando turno...")
+                    ahora_espera = time.time()
+                    if ahora_espera - avisos_espera.get(agente, 0) >= 60:  # un aviso por minuto, no uno cada 2 s
+                        avisos_espera[agente] = ahora_espera
+                        print(f"⏳ [Watcher] '{agente}' está {estado}. Esperando turno ({len(cola_tareas)} tarea(s) en cola)...")
                     tareas_no_procesadas.append(tarea)
                     continue 
 
