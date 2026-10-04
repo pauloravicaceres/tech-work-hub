@@ -59,6 +59,15 @@ Debes configurarla dependiendo de la naturaleza de tu software:
 - `"project_type": "ui"` *(Por defecto)*: Transita por el diseñador UX (`@UX:`). Usado para Web, Apps Móviles, Dashboards.
 - `"project_type": "headless"`: Salta el diseño visual y pasa directo al Arquitecto de Soluciones (`@SA:`). Usado para APIs puras, ETLs, CRONs y Workers.
 
+Además existe el interruptor `"ux_phase"` (se lee en cada decisión: puedes cambiarlo en caliente, sin reiniciar el Watcher):
+- `"ux_phase": "auto"` *(Por defecto)*: cada HU decide con el campo `Requiere interfaz: Sí | No` que declara el Business Analyst. Si falta, se diseña.
+- `"ux_phase": "on"`: todas las HU pasan por el diseñador UX.
+- `"ux_phase": "off"`: ninguna HU pasa por UX (el traspaso va directo al `@SA:` y `start_agents.py` no levanta el panel de `designer-ux`).
+
+La regla de decisión vive en `ux_routing.py` (raíz), un módulo de biblioteca estándar sin dependencias del Watcher ni de herdr: `decidir_ruta_ux(raiz, ruta_hu)` devuelve `RutaUX(destino, motivo, omitida)`. Cualquier otro orquestador (p. ej. un grafo de LangChain) puede importarlo; el Watcher solo traduce `destino` al token del tracker.
+
+Prioridad: `project_type: headless` > `ux_phase` > campo de la HU. Cuando se omite, el Watcher deja un bloque `⏭️ [UX] Diseño UX omitido` en el tracker y el dashboard muestra la etapa como `[⏭ OMITIDA]`. Si reactivas UX tras un `off`, reinicia `start_agents.py` para levantar su panel.
+
 ### Paso 5: (Opcional) Proyectos Preexistentes (Brownfield)
 Si tu proyecto no es nuevo y debe conectarse a bases de datos heredadas o sistemas legacy, debes documentar esas restricciones.
 1. Crea o edita el archivo: `.specify/memory/constitution.md`

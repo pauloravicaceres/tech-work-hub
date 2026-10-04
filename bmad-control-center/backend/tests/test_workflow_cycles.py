@@ -152,3 +152,67 @@ def test_la_macro_de_cierre_citada_en_prosa_no_cuenta_como_cierre(tmp_path):
     resp, _ = _stages(tmp_path, CICLO_1_COMPLETO + prosa)
 
     assert resp.active_agent_role and "HUMANO" in resp.active_agent_role
+
+
+# ---------------------------------------------------------------------------
+# Avisos del Watcher (vigilante / errores): anotaciones, no pasos en curso
+# ---------------------------------------------------------------------------
+HASTA_API = CICLO_1_COMPLETO.split("### [03-10-2026] QA Tech")[0]
+
+AVISO_VIGILANTE = """
+### [04-10-2026] WATCHER
+- **Hora:** 02:47:20
+- **Mensaje:** ⚠️ [Vigilante] El agente 'qa-tech' terminó su turno 3 veces sin registrar su bloque en el tracker.
+"""
+
+ERROR_DEL_WATCHER = """
+### [04-10-2026] WATCHER
+- **Hora:** 02:47:20
+- **Mensaje:** 🚨 ERROR [SDD Negocio]: Spec Kit no respetó la carpeta fijada 'specs/003-HU_x'.
+"""
+
+
+def test_un_aviso_del_vigilante_no_ilumina_la_caja_del_watcher_y_marca_estancada_la_etapa_real(tmp_path):
+    resp, st = _stages(tmp_path, HASTA_API + AVISO_VIGILANTE)
+
+    assert resp.active_stage == "QT"
+    assert st["QT"].status == "IN_PROGRESS" and st["QT"].alert_state == "STALLED"
+    assert "Vigilante" in st["QT"].alert_reason
+    assert st["W-QA"].status != "IN_PROGRESS", "el aviso no es Spec Kit trabajando"
+    assert resp.alert and resp.alert["type"] == "STALLED"
+
+
+def test_un_error_del_watcher_tampoco_cuenta_como_paso_en_curso(tmp_path):
+    resp, st = _stages(tmp_path, HASTA_API + ERROR_DEL_WATCHER)
+
+    assert resp.active_stage == "QT"
+    assert st["QT"].alert_state == "STALLED"
+    assert not any(s.status == "IN_PROGRESS" and s.stage_key.startswith("W-") for s in resp.stages)
+
+
+def test_un_mensaje_informativo_del_watcher_sigue_siendo_un_paso_en_curso(tmp_path):
+    informativo = """
+### [04-10-2026] WATCHER
+- **Hora:** 02:30:45
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Estructurando plan de arquitectura técnica (/speckit.plan)...
+"""
+    texto = CICLO_1_COMPLETO.split("### [03-10-2026] Data Architect")[0] + informativo
+    resp, st = _stages(tmp_path, texto)
+
+    assert resp.alert is None
+    assert st["W-SA"].status == "IN_PROGRESS", "el Spec Kit real sí debe iluminar su caja"
+    assert all(s.alert_state is None for s in resp.stages)
+
+
+def test_la_alerta_desaparece_cuando_el_agente_vuelve_a_registrar(tmp_path):
+    qt = """
+### [04-10-2026] QA Tech
+- **Hora:** 09:30:00
+- **Estado:** AUDITADO Y APROBADO.
+- **Handoff:** @DEV-BACK: arquitectura validada
+"""
+    resp, st = _stages(tmp_path, HASTA_API + AVISO_VIGILANTE + qt)
+
+    assert resp.alert is None
+    assert all(s.alert_state is None for s in resp.stages)
+    assert st["QT"].status == "COMPLETED"

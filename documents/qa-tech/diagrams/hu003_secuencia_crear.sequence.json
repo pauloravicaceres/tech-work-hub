@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": { "title": "HU-003 Secuencia de creación de un Sprint", "output": "hu003_secuencia_crear.html", "viewBox": [1080, 600], "column_fit": "spread", "quality_profile": "showcase", "locale": "en" },
+  "participants": [
+    { "id": "spa", "type": "frontend", "label": "SPA", "sublabel": "sprint-form" },
+    { "id": "api", "type": "backend", "label": "API Sprints", "sublabel": "CreateSprint" },
+    { "id": "kc", "type": "security", "label": "Keycloak", "sublabel": "JWKS" },
+    { "id": "db", "type": "database", "label": "PostgreSQL", "sublabel": "sprints.Sprints" }
+  ],
+  "messages": [
+    { "id": "post", "from": "spa", "to": "api", "y": 160, "label": "POST /api/sprints", "variant": "emphasis" },
+    { "id": "jwks", "from": "api", "to": "kc", "y": 192, "label": "valida JWT", "variant": "security" },
+    { "id": "keys", "from": "kc", "to": "api", "y": 224, "label": "claves", "variant": "return" },
+    { "id": "ins", "from": "api", "to": "db", "y": 300, "label": "INSERT tras validar, CreatedBy=sub", "variant": "emphasis" },
+    { "id": "ck", "from": "db", "to": "api", "y": 332, "label": "CHECK ventana = 13", "variant": "return" },
+    { "id": "created", "from": "api", "to": "spa", "y": 380, "label": "201 Created + Location", "variant": "return" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "Camino feliz", "items": ["201 con id y cuatro campos", "Auditoría por interceptor"] },
+    { "dot": "rose", "title": "Rechazo", "items": ["401 sin token", "400 por campo, sin INSERT"] },
+    { "dot": "orange", "title": "Defensa en 3 capas", "items": ["Validador, dominio y CHECK", "Violación del CHECK da 500"] }
+  ]
+}

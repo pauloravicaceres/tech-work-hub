@@ -1,0 +1,75 @@
+<p-toast position="top-right" />
+
+<div class="flex justify-content-between align-items-center mb-3">
+  <div>
+    <h2 class="m-0">SPRINTS</h2>
+    <p class="m-0">Ciclos de trabajo de 2 semanas registrados.</p>
+  </div>
+  <p-button label="Nuevo Sprint" icon="pi pi-plus" routerLink="/sprints/nuevo" />
+</div>
+
+@switch (state().status) {
+  @case ('loading') {
+    <p-message severity="info">Cargando Sprints...</p-message>
+  }
+  @case ('error') {
+    <p-message severity="error">No fue posible consultar los Sprints. Intente nuevamente.</p-message>
+    <div class="flex justify-content-end mt-3">
+      <p-button label="Reintentar" icon="pi pi-refresh" severity="secondary" [outlined]="true" (onClick)="reload()" />
+    </div>
+  }
+  @case ('ready') {
+    @if (state(); as current) {
+      @if (current.status === 'ready') {
+        <p-table [value]="current.sprints" dataKey="id">
+          <ng-template #header>
+            <tr>
+              <th>IDENTIFICADOR</th>
+              <th>IDENTIFICACIÓN</th>
+              <th>FECHA DE INICIO</th>
+              <th>FECHA DE FIN</th>
+              <th>ACCIONES</th>
+            </tr>
+          </ng-template>
+          <ng-template #body let-sprint>
+            <tr>
+              <td>{{ sprint.id }}</td>
+              <td>{{ sprint.identification }}</td>
+              <td>{{ sprint.startDate | date: 'dd/MM/yyyy' }}</td>
+              <td>{{ sprint.endDate | date: 'dd/MM/yyyy' }}</td>
+              <td>
+                <p-button
+                  icon="pi pi-eye"
+                  [rounded]="true"
+                  [text]="true"
+                  pTooltip="Ver detalle"
+                  ariaLabel="Ver detalle"
+                  [routerLink]="['/sprints', sprint.id]"
+                />
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template #emptymessage>
+            <tr>
+              <td colspan="5">No hay Sprints registrados. Cree el primero con "Nuevo Sprint".</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      }
+    }
+  }
+}
+
+<p-dialog
+  header="SESIÓN EXPIRADA O INVÁLIDA"
+  [modal]="true"
+  [visible]="state().status === 'unauthorized'"
+  [closable]="false"
+  [closeOnEscape]="false"
+  [dismissableMask]="false"
+>
+  <p>Su sesión no es válida o ha expirado.</p>
+  <ng-template #footer>
+    <p-button label="Iniciar sesión" icon="pi pi-arrow-right" (onClick)="reauthenticate()" />
+  </ng-template>
+</p-dialog>

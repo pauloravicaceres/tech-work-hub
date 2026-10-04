@@ -13,7 +13,7 @@ mkdir -p "$out"
 dotnet tool restore >/dev/null 2>&1 || true
 command -v dotnet-ef >/dev/null 2>&1 || dotnet tool install --global dotnet-ef --version 8.0.11
 
-for module in Application Backlog; do
+for module in Application Backlog Sprints; do
   project="$root/src/Modules/$module/$module.csproj"
   bundle="$out/efbundle-${module,,}"
   dotnet ef migrations bundle --project "$project" --startup-project "$project" --self-contained -r linux-x64 --force --output "$bundle"

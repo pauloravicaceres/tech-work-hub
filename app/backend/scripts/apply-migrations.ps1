@@ -15,7 +15,7 @@ if (-not (Get-Command dotnet-ef -ErrorAction SilentlyContinue)) {
     dotnet tool install --global dotnet-ef --version 8.0.11
 }
 
-foreach ($module in 'Application', 'Backlog') {
+foreach ($module in 'Application', 'Backlog', 'Sprints') {
     $project = Join-Path $root "src/Modules/$module/$module.csproj"
     $bundle = Join-Path $out "efbundle-$($module.ToLower())"
     dotnet ef migrations bundle --project $project --startup-project $project --self-contained --force --output $bundle

@@ -1,9 +1,9 @@
 # 🏗️ ARQUITECTURA BACKEND VIVA
 
 - **Sistema:** TechWorkHub (Modulith .NET 8, PostgreSQL)
-- **Última actualización:** 2026-10-03 (HU-002: pruebas de integración contra Keycloak real y catálogo real; sin cambios en `src/**`)
-- **HU vigente:** 002 – Pruebas de Integración contra Keycloak Real y Catálogo Real del módulo Application (sobre la funcionalidad de 001 – Registro de Elementos en Backlog Multitipo)
-- **Fuente de verdad:** `specs/002-pruebas-integracion-keycloak-catalogo/` (`plan.md`, `research.md`, `contracts/test-contract.md`), `specs/001-registro-backlog-multitipo/` y `documents/qa-tech/tech-design_002_pruebas_integracion_keycloak_y_catalogo_application.md`
+- **Última actualización:** 2026-10-04 (HU-003: nuevo módulo `Sprints`; ver sección 11)
+- **HU vigente:** 003 – Gestión de Sprint de Dos Semanas (Crear y Consultar), sobre 001 – Registro de Elementos en Backlog Multitipo y 002 – Pruebas de Integración contra Keycloak Real
+- **Fuente de verdad:** `specs/003-HU_gestion_sprint_dos_semanas/` (`plan.md`, `data-model.md`, `contracts/sprints-api.openapi.yaml`, `tasks.md`), `documents/qa-tech/tech-design_003_gestion_sprint_dos_semanas.md`, `specs/002-pruebas-integracion-keycloak-catalogo/` y `specs/001-registro-backlog-multitipo/`
 
 > Renderizado selectivo: solo se documenta lo alterado en esta iteración (host, `Shared`, módulos `Backlog`/`Application`, persistencia, pipeline, errores). Lo no tocado queda como "sin cambios".
 
@@ -294,7 +294,130 @@ sequenceDiagram
 - **Verificación (2026-10-03):** `dotnet test TechWorkHub.sln` → 62 unitarias, 31 de integración de Backlog y 19 de Identity, todas correctas. `git diff main -- app/backend/src` sin cambios de código fuente (solo artefactos `bin/obj` ya rastreados). Anti-tautología: sin el *audience mapper* en `techworkhub-tests`, las pruebas de camino feliz devuelven 401; el realm se restauró.
 - Primera ejecución: descarga de imágenes; usar `IDENTITY_TESTS_STARTUP_TIMEOUT_SECONDS=400`.
 
+## 11. HU-003 — Módulo `Sprints`: crear y consultar Sprints de 2 semanas (renderizado selectivo)
+
+Alterado: nuevo módulo `Modules/Sprints` (schema `sprints`, `SprintsDbContext` propio), tres endpoints en Vertical Slice, migración `InitialSprintsSchema`, registro en `Api.csproj`/`Program.cs`/`TechWorkHub.sln` y en los scripts `apply-migrations`. **Sin cambios** en `Shared`, `Backlog` ni `Application`. El frontend (T005, T038–T048, T052) queda fuera de esta ejecución (alcance solo backend).
+
+### 11.1 Contenedores y estructura
+
+```mermaid
+flowchart TB
+    subgraph Host[Bootstrapper/Api]
+        P[Program.cs: AddSprintsModule + MigrateSprintsModuleAsync]
+    end
+    subgraph SM[Modules/Sprints]
+        EP[Endpoints Carter: Create / List / GetById] --> H[Handlers MediatR + CreateSprintValidator]
+        H --> D[Sprint aggregate + SprintRules]
+        H --> DB[SprintsDbContext schema sprints]
+    end
+    subgraph SH[BuildingBlocks/Shared]
+        VB[ValidationBehavior]
+        AI[AuditableEntityInterceptor]
+        EH[CustomExceptionHandler]
+    end
+    P --> SM
+    SM --> SH
+    DB --> PG[(PostgreSQL: sprints.Sprints)]
+```
+
+```text
+app/backend/src/Modules/Sprints/
+├── Sprints.csproj
+├── SprintsModule.cs                          AddSprintsModule + MigrateSprintsModuleAsync (NUEVO)
+├── Domain/Sprints/                           Sprint (Aggregate<Guid>, IAuditableEntity), SprintRules
+├── Data/                                     ISprintsDbContext, SprintsDbContext, SprintsDbContextFactory,
+│   │                                         Configurations/SprintConfiguration, Migrations/InitialSprintsSchema
+└── Features/Sprints/
+    ├── SprintResponse.cs                     Id, Identification, StartDate, EndDate (compartido)
+    ├── CreateSprint/                         Command · Validator · Handler · Endpoint
+    ├── ListSprints/                          Query · Handler · Endpoint
+    └── GetSprintById/                        Query · Handler · Endpoint
+tests/Unit/Sprints/                           43 pruebas (dominio, validador, handlers)
+tests/Integration/Sprints/                    46 pruebas sobre el Program real y PostgreSQL real (Testcontainers)
+```
+
+### 11.2 Modelo de datos
+
+```mermaid
+erDiagram
+    SPRINTS {
+        uuid Id PK
+        varchar100 Identification "Texto libre, sin unicidad"
+        date StartDate
+        date EndDate "CK_Sprints_Window: EndDate - StartDate = 13"
+        timestamptz CreatedAt "Interceptor"
+        varchar255 CreatedBy "Interceptor (claim sub)"
+        timestamptz LastModified "Nullable"
+        varchar255 LastModifiedBy "Nullable"
+    }
+```
+
+Tabla `sprints."Sprints"` sin FK ni navegación hacia `backlog`/`application`, sin estado y sin índice único. La regla de ventana (14 días calendario inclusivos, `fin = inicio + 13`) tiene fuente única `SprintRules.WindowDays` y se aplica en tres capas: validador (400 por campo), `Sprint.Create` (`BadRequestException`) y la restricción `CK_Sprints_Window`.
+
+### 11.3 Contrato HTTP
+
+| Método y ruta | Éxito | Errores |
+|---|---|---|
+| `POST /api/sprints` `{identification, startDate, endDate}` | 201 + `Location: /api/sprints/{id}` y `{id, identification, startDate, endDate}` | 400 (`errors` por campo camelCase), 401, 500 |
+| `GET /api/sprints` | 200, arreglo ordenado por `startDate` y `id` | 401 |
+| `GET /api/sprints/{id:guid}` | 200 `SprintResponse` | 401, 404 (un id que no es GUID no coincide con la ruta) |
+
+Los tres exigen `.RequireAuthorization()` y propagan el `CancellationToken` hasta EF Core.
+
+### 11.4 Secuencia: crear Sprint
+
+```mermaid
+sequenceDiagram
+    actor U as Cliente
+    participant A as Auth (Keycloak JWT)
+    participant E as CreateSprintEndpoint
+    participant V as ValidationBehavior + CreateSprintValidator
+    participant H as CreateSprintCommandHandler
+    participant D as Sprint.Create
+    participant DB as SprintsDbContext
+    participant X as CustomExceptionHandler
+    U->>A: POST /api/sprints (Bearer)
+    A-->>U: 401 sin token o inválido
+    A->>E: (command, CancellationToken)
+    E->>V: Send(command, ct)
+    V-->>X: ValidationException (identification / startDate / endDate)
+    V->>H: command válido
+    H->>H: ICurrentUser.UserId (sin claim → 401, sin acceso a datos)
+    H->>D: Create(identification, start, end)
+    D-->>X: BadRequestException si la ventana no es de 14 días
+    H->>DB: Add + SaveChangesAsync(ct)
+    DB->>DB: AuditableEntityInterceptor (CreatedAt / CreatedBy)
+    DB->>DB: CK_Sprints_Window (última defensa)
+    DB-->>H: commit
+    H-->>E: SprintResponse
+    E-->>U: 201 Created + Location
+    X-->>U: 400 / 401 / 500 sin trazas internas
+```
+
+### 11.5 Errores específicos
+
+| Origen | HTTP | Campo en `errors` |
+|---|---|---|
+| Identificación vacía o > 100 caracteres | 400 | `identification` |
+| Fecha ausente o con formato distinto de `yyyy-MM-dd` | 400 | `startDate` / `endDate` |
+| Fin ≤ inicio, o ventana ≠ 14 días | 400 | `endDate` |
+| Sprint inexistente | 404 | — |
+| Fallo de persistencia | 500 | `ProblemDetails` genérico |
+
+### 11.6 Decisiones de esta iteración
+
+- **ADR-10 — claves de error en camelCase:** el `CustomExceptionHandler` de `Shared` usa el nombre de propiedad tal cual (PascalCase en Backlog). El contrato OpenAPI de HU-003 exige camelCase, así que el validador usa `OverridePropertyName` y `BadRequestException` recibe constantes camelCase de `SprintRules`, sin modificar `Shared`. Consecuencia: Sprints y Backlog difieren en el casing de `errors`; unificarlo requiere tocar `Shared` y es decisión del equipo.
+- **ADR-11 — sin Mapster en este módulo:** `tasks.md` (T001/T021) mencionaba Mapster, pero ningún módulo del repositorio lo referencia y `SprintResponse` es un record de cuatro campos. Se proyecta con el constructor del record (`Select(s => new SprintResponse(...))`), sin mapeadores ni librerías nuevas.
+- **ADR-12 — scripts de despliegue:** `apply-migrations.sh|.ps1` solo migraban `Application` y `Backlog`; se añadió `Sprints` para que el schema se cree fuera de Development. Es un cambio fuera de la lista de ficheros permitidos de `tasks.md`, necesario para que el despliegue no omita el módulo.
+- **ADR-13 — pruebas de lectura con proveedor en memoria:** los handlers de listado y detalle se prueban unitariamente sobre el `SprintsDbContext` real con `Microsoft.EntityFrameworkCore.InMemory` (solo en el proyecto de pruebas); la verificación contra PostgreSQL real la hacen las pruebas de integración.
+
+### 11.7 Verificación
+
+`dotnet test app/backend/TechWorkHub.sln` (2026-10-04): `Sprints.UnitTests` 43, `Sprints.IntegrationTests` 46, `Backlog.UnitTests` 62, `Backlog.IntegrationTests` 31 e `Identity.IntegrationTests` 19, todas correctas. Se instaló `dotnet-ef` 8.0.11 (global) para generar la migración; los scripts de bundle siguen sin ejecutarse.
+
 ## 9. Puntos abiertos
+
+- HU-003: el frontend (páginas `sprint-form`, `sprint-list`, `sprint-detail`, rutas e i18n) y T052/T053 (escenario de UI del quickstart) no se ejecutaron en esta pasada, por alcance solo backend. El supuesto de ventana de 14 días inclusivos sigue pendiente de confirmación de negocio (punto abierto 3 de la HU).
 
 - El resto de pruebas de integración sigue con SQLite en memoria; T037/T043 (INT-01..INT-10 sobre PostgreSQL) quedan para QA.
 - Los scripts `apply-migrations` no se ejecutaron: `dotnet-ef` no está instalado en este entorno, así que la generación del bundle no está verificada (sí lo está la migración sobre PostgreSQL).

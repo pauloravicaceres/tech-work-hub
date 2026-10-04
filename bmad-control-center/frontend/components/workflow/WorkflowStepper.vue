@@ -53,6 +53,12 @@
                       <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-orange-600"></span>
                     </span>
                   </template>
+                  <template v-else-if="stage.status === 'SKIPPED'">
+                    <span class="text-gray-400">⏭</span>
+                  </template>
+                  <template v-else-if="stage.alert_state === 'STALLED'">
+                    <span class="text-orange-600">⚠</span>
+                  </template>
                   <template v-else-if="stage.rework_state === 'REJECTED'">
                     <span class="text-red-600">✗</span>
                   </template>
@@ -87,6 +93,19 @@
                     class="text-[10px] text-orange-600 font-semibold tracking-wide"
                   >
                     [● POR APROBAR]
+                  </span>
+                  <span
+                    v-else-if="stage.status === 'SKIPPED'"
+                    class="text-[10px] text-gray-500 font-semibold tracking-wide"
+                  >
+                    [⏭ OMITIDA]
+                  </span>
+                  <span
+                    v-else-if="stage.alert_state === 'STALLED'"
+                    class="text-[10px] text-orange-600 font-semibold tracking-wide"
+                    :title="stage.alert_reason || ''"
+                  >
+                    [⚠ ESTANCADA]
                   </span>
                   <span
                     v-else-if="stage.rework_state === 'REJECTED'"
@@ -238,6 +257,14 @@ const getStageClass = (stage: WorkflowStageStep) => {
     return baseClasses + ' bg-orange-50 text-orange-900 shadow-sm ' + (isSelected ? 'border-orange-600 ring-2 ring-orange-500 scale-[1.02]' : 'border-orange-500 ring-1 ring-orange-200');
   }
   
+  if (stage.status === 'SKIPPED') {
+    return baseClasses + ' bg-gray-50 text-gray-400 opacity-70 cursor-default border-gray-300 border-dashed';
+  }
+
+  if (stage.alert_state === 'STALLED') {
+    return baseClasses + ' bg-orange-50 text-orange-900 cursor-pointer ' + (isSelected ? 'border-orange-600 ring-2 ring-orange-500 scale-[1.02]' : 'border-orange-500 border-dashed ring-1 ring-orange-200');
+  }
+
   if (stage.rework_state === 'REJECTED') {
     return baseClasses + ' bg-red-50 text-red-900 cursor-pointer ' + (isSelected ? 'border-red-600 ring-2 ring-red-500 scale-[1.02]' : 'border-red-400 hover:bg-red-100');
   }

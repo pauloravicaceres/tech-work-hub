@@ -63,6 +63,13 @@ TABS_CONFIG = {
 # ==========================================
 # 2. FUNCIONES DE APOYO Y HERDR CLI
 # ==========================================
+def agentes_omitidos():
+    """Agentes que no deben levantarse según config_bmad.json (designer-ux con ux_phase=off o proyecto headless)."""
+    if str(WORKSPACE_DIR) not in sys.path:
+        sys.path.insert(0, str(WORKSPACE_DIR))
+    import ux_routing
+    return ux_routing.agentes_omitidos(WORKSPACE_DIR)
+
 def obtener_contexto_actual():
     """Obtiene dinámicamente el ID del panel y tab donde se ejecuta este script."""
     try:
@@ -210,7 +217,11 @@ def inicializar_flota():
 
     primer_tab_id = None
 
+    omitidos = agentes_omitidos()
+    if omitidos:
+        print(f"⏭️ Agentes omitidos por config_bmad.json: {', '.join(sorted(omitidos))}")
     for tab_label, agentes in TABS_CONFIG.items():
+        agentes = [a for a in agentes if a['name'] not in omitidos]
         total_agentes = len(agentes)
         print(f"\n📂 Creando Pestaña: [{tab_label}] ({total_agentes} agentes)...")
 

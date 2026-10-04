@@ -1,6 +1,6 @@
 export type StageKey = 'PM' | 'BA' | 'QA' | 'W-QA' | 'UX' | 'SA' | 'W-SA' | 'DA' | 'API' | 'QT' | 'W-IMP' | 'DEV-BACK' | 'DEV-FRONT' | 'QA-AUTO' | 'CR'
 
-export type StageStatus = 'COMPLETED' | 'IN_PROGRESS' | 'PENDING'
+export type StageStatus = 'COMPLETED' | 'IN_PROGRESS' | 'PENDING' | 'SKIPPED'
 
 export type WorkflowOverallStatus = 'IN_PROGRESS' | 'COMPLETED' | 'IDLE' | 'PAUSED_HITL'
 
@@ -20,6 +20,9 @@ export interface WorkflowStageStep {
   rework_iteration?: number | null
   rework_max?: number | null
   rework_reason?: string | null
+  /** Etapa estancada: el último evento del tracker es un aviso del vigilante o un error del Watcher */
+  alert_state?: 'STALLED' | null
+  alert_reason?: string | null
 }
 
 export interface WorkflowRework {
@@ -44,4 +47,5 @@ export interface WorkflowStatusResponse {
   sync_channel: 'WEBSOCKET_LIVE' | 'POLLING_FALLBACK'
   stages: WorkflowStageStep[]
   rework?: WorkflowRework | null
+  alert?: { type: 'STALLED'; message: string; since_block_index: number } | null
 }

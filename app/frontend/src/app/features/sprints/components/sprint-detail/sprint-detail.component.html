@@ -1,0 +1,63 @@
+<h2 class="mt-0">DETALLE DEL SPRINT</h2>
+
+@switch (state().status) {
+  @case ('loading') {
+    <p-message severity="info">Cargando Sprint...</p-message>
+  }
+  @case ('notFound') {
+    <p-message severity="warn">El Sprint solicitado no existe. Verifique el identificador o regrese al listado.</p-message>
+    <div class="flex justify-content-end mt-3">
+      <p-button label="Volver al listado" icon="pi pi-arrow-left" routerLink="/sprints" />
+    </div>
+  }
+  @case ('error') {
+    <p-message severity="error">No fue posible consultar el Sprint. Intente nuevamente.</p-message>
+    <div class="flex justify-content-end mt-3">
+      <p-button label="Volver al listado" icon="pi pi-arrow-left" routerLink="/sprints" />
+    </div>
+  }
+  @case ('ready') {
+    @if (state(); as current) {
+      @if (current.status === 'ready') {
+        <p-card>
+          <div class="flex justify-content-end mb-3">
+            <p-button label="Volver al listado" icon="pi pi-arrow-left" severity="secondary" [outlined]="true" routerLink="/sprints" />
+          </div>
+
+          <div class="grid">
+            <div class="col-12 mb-3">
+              <label class="block font-bold">IDENTIFICADOR</label>
+              <span>{{ current.sprint.id }}</span>
+            </div>
+            <div class="col-12 mb-3">
+              <label class="block font-bold">IDENTIFICACIÓN</label>
+              <span>{{ current.sprint.identification }}</span>
+            </div>
+            <div class="col-12 md:col-6 mb-3">
+              <label class="block font-bold">FECHA DE INICIO</label>
+              <span>{{ current.sprint.startDate | date: 'dd/MM/yyyy' }}</span>
+            </div>
+            <div class="col-12 md:col-6 mb-3">
+              <label class="block font-bold">FECHA DE FIN</label>
+              <span>{{ current.sprint.endDate | date: 'dd/MM/yyyy' }}</span>
+            </div>
+          </div>
+        </p-card>
+      }
+    }
+  }
+}
+
+<p-dialog
+  header="SESIÓN EXPIRADA O INVÁLIDA"
+  [modal]="true"
+  [visible]="state().status === 'unauthorized'"
+  [closable]="false"
+  [closeOnEscape]="false"
+  [dismissableMask]="false"
+>
+  <p>Su sesión no es válida o ha expirado.</p>
+  <ng-template #footer>
+    <p-button label="Iniciar sesión" icon="pi pi-arrow-right" (onClick)="reauthenticate()" />
+  </ng-template>
+</p-dialog>

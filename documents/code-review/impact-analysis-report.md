@@ -1,14 +1,61 @@
 # 🏗️ Reporte de Impacto y Code Review Vivo (`impact-analysis-report.md`)
 
-**HU vigente:** 002-HU_pruebas_integracion_keycloak_y_catalogo_application · **Rama:** `feat/002-HU_pruebas_integracion_keycloak_y_catalogo_application`
-**Fecha:** 03-10-2026 · **Dictamen (1.ª iteración HU-002):** ✅ **[APROBADO CON RESERVAS]**
-**HU anterior (cerrada):** 001-HU_registro_elementos_backlog_multitipo, 6.ª iteración [APROBADO CON RESERVAS]; sus secciones se conservan abajo como histórico.
+**HU vigente:** 003-HU_gestion_sprint_dos_semanas · **Rama:** `feat/003-HU_gestion_sprint_dos_semanas`
+**Fecha:** 04-10-2026 · **Dictamen (1.ª iteración HU-003):** ✅ **[APROBADO CON RESERVAS]**
+**HUs anteriores (cerradas):** 002-HU_pruebas_integracion_keycloak_y_catalogo_application ([APROBADO CON RESERVAS]) y 001-HU_registro_elementos_backlog_multitipo (6.ª iteración [APROBADO CON RESERVAS]); sus secciones se conservan abajo como histórico.
 
-> Renderizado selectivo: solo se documentan los componentes alterados por la HU 002 (`app/backend/tests/Integration/Identity/` y `TechWorkHub.sln`). Producción (`app/backend/src`) y frontend: *Sin impacto en este PR/HU* (verificado: `git diff main -- app/backend/src` sin cambios fuera de `bin/` y `obj/`).
-
+> Renderizado selectivo: solo se documentan los componentes alterados por la HU-003 (módulo nuevo `app/backend/src/Modules/Sprints/`, sus pruebas, `features/sprints` del frontend y los ficheros compartidos permitidos: `Api.csproj`, `Program.cs`, `TechWorkHub.sln`, `app.routes.ts`; además los scripts `apply-migrations.*`). `Modules/Backlog`, `Modules/Application`, `BuildingBlocks/Shared` y `core/auth`: *Sin impacto en este PR/HU*.
 ---
 
 ## 1. AI Code Review Dashboard
+
+### 1.0 HU-003 — Gestión de Sprint de dos semanas (crear y consultar)
+
+```text
+╔══════════════════════════════════════════════════════════════╗
+║  AI CODE REVIEW DASHBOARD — HU 003   [APROBADO CON RESERVAS]║
+╠══════════════════════════════════════════════════════════════╣
+║  Archivos analizados (lectura física) ........... 40         ║
+║  Violaciones arquitectónicas .................... 0          ║
+║  Problemas de seguridad ......................... 0          ║
+║  Fugas de rendimiento (CancellationToken / N+1) . 0 / 0      ║
+║  Hallazgos zero-tolerance (stubs/hardcode) ...... 0          ║
+║  Deuda técnica encontrada ....................... 4          ║
+║  Cobertura de tests faltante (CA) ............... 0 %        ║
+║  Tests tautológicos / stubs ..................... 0 de 115   ║
+╚══════════════════════════════════════════════════════════════╝
+```
+
+**Evidencia propia (no del resumen de QA):** `Sprints.UnitTests` **43/43**; `Sprints.IntegrationTests` **46/46** (PostgreSQL por Testcontainers, 1 m 5 s); Jest `features/sprints` **26/26**; `tsc -p tsconfig.app.json --noEmit` sin errores. Total 115/115, 0 omitidas. `ng build` **no pudo ejecutarse**: la CLI exige Node ≥ 22.22.3 y el equipo tiene v22.20.0 (ver R1).
+
+Archivos leídos: backend de producción (21 `.cs` de `Modules/Sprints` más la migración `InitialSprintsSchema`), `Program.cs`, `Api.csproj`, `TechWorkHub.sln`, `apply-migrations.ps1/.sh`; frontend (tres componentes `.ts`/`.html`, `sprint-api.service.ts`, modelos, `app.routes.ts`); pruebas (`CreateSprintCommandHandlerTests` y `CreateSprintTests` leídas completas; el resto inspeccionado con búsqueda de `Skip`, `Assert.True(true)`, `xit`, `fit`: 0 coincidencias en código fuente).
+
+#### Matriz de auditoría HU-003
+
+| Control | Resultado |
+|---|---|
+| Arquitectura backend (`ICarterModule`, MediatR, sin `[ApiController]`) | ✅ Tres endpoints Carter (`POST`, `GET` lista, `GET {id}`) delegan en handlers de MediatR; la regla vive en `SprintRules` + `Sprint.Create` + `CK_Sprints_Window` (ADR-005). Sin `using Microsoft.AspNetCore.Mvc`, sin AutoMapper. |
+| Aislamiento de schemas | ✅ `HasDefaultSchema("sprints")`; sin `.Include()`, sin FK ni navegación a `backlog`/`application`. |
+| `.RequireAuthorization()` | ✅ En los tres endpoints; `CreatedBy` sale de `ICurrentUser.UserId`, resuelto **antes** de tocar datos (FR-010); el `createdBy` del cuerpo se ignora (prueba de integración). |
+| `CancellationToken` | ✅ Endpoint → `ISender.Send` → handler → `SaveChangesAsync` / `FirstOrDefaultAsync` / `ToListAsync`. |
+| N+1 / `SaveChanges` en bucle | ✅ Ningún `foreach`/`for` en `src/Modules/Sprints`. Un único `SaveChangesAsync`. |
+| IDOR / mass assignment | ➖ N/A: la HU solo crea y consulta; sin actualización ni borrado, y el catálogo de Sprints es global por spec (FR-013/014). `SprintResponse` no expone auditoría. |
+| Frontend: `standalone`, `OnPush`, Signals | ✅ Tres componentes `standalone`; estado de lista y detalle con `toSignal`; sin `NgModule` ni `zone.js`. Ver R3 (`subscribe` en el formulario). |
+| XSS | ✅ Sin `innerHTML` ni `DomSanitizer`; todo se interpola con `{{ }}`; `encodeURIComponent` en `getById`. |
+| Credenciales hardcodeadas / stubs | ✅ Ninguna. Sin `TODO`, `FIXME` ni `NotImplementedException`. |
+| Restricción de alcance (T054) | ✅ Cambios fuera del módulo limitados a los ficheros permitidos y a los scripts de migraciones (necesarios para desplegar el schema). |
+| Pruebas QA | ✅ Aserciones sobre comportamiento real (persistencia, `CreatedBy` del claim, `CancellationToken` recibido, 400 por campo, `CK_Sprints_Window` en BD real). |
+
+#### Hallazgos (todos no bloqueantes)
+
+| Ref. | Capa | Estado | Detalle | Responsable |
+|---|---|---|---|---|
+| R1 | [CAPA:TASKS] | 🟠 Abierto | `tasks.md` T052 (`npm test && npm run build`) y T053 (escenarios 1–11 de `quickstart.md` contra API y UI en ejecución) siguen sin `[X]`. Evidencia propia de T052: Jest y `tsc` en verde; `ng build` bloqueado por la versión de Node del equipo (entorno, no código). T053 queda cubierta de forma automatizada por las 46 pruebas de integración, sin ejecución manual con la UI. | humano |
+| R2 | [CAPA:CODE] | 🟡 Menor | La suite de integración `Identity` (HU-002) falla por contención de contenedores si corre en paralelo con el resto de la solución (reserva de QA); aislada pasa. Recomendado correr integración en serie. | @QA-AUTO |
+| R3 | [CAPA:CODE] | 🟡 Menor | `sprint-form.component.ts:95` usa `subject.pipe(exhaustMap…, takeUntilDestroyed()).subscribe(...)`. Es un flujo de eventos (envío con `exhaustMap` contra doble clic), con limpieza automática y el mismo patrón aceptado en HU-001 (`create-backlog-item.component.ts:156`); el estado visible va en `signal`. Se acepta por precedente; la constitución no distingue flujos de eventos de estado. | @DEV-FRONT |
+| R4 | [CAPA:CODE] | 🟠 Abierto | Todo el módulo `Sprints`, sus pruebas y `features/sprints` figuran como no versionados (`??`) en `git status`; los ficheros compartidos están modificados sin commit. La fusión de la rama no los llevaría si no se commitean antes. Mismo caso que R5 de HU-002. | humano / watcher |
+
+**Criterio de capa:** nada obliga a reabrir spec ni plan; los puntos de negocio sin definir (duplicados, solapamiento, fecha pasada, roles) son decisiones explícitas de la spec (ADR-006, FR-013/014), no defectos.
 
 ### 1.A HU-002 — Pruebas de integración con Keycloak y catálogo reales
 
@@ -198,6 +245,30 @@ Evidencia: `documents/qa-auto/qa-report.md` (cuarta ejecución, T043) más lectu
 
 ## 2. Architecture Compliance & Traceability
 
+### 2.0 HU-003 — Flujo real implementado (solo lo alterado)
+
+```mermaid
+flowchart LR
+    subgraph FE["Frontend (Angular standalone, OnPush)"]
+        RT["app.routes.ts /sprints ✅ authGuard + MessageService"]
+        LST["SprintListComponent (toSignal)"]
+        FRM["SprintFormComponent (exhaustMap + takeUntilDestroyed)"]
+        DET["SprintDetailComponent (toSignal)"]
+        SVC["SprintApiService"]
+        RT --> LST & FRM & DET
+        LST & FRM & DET --> SVC
+    end
+    SVC -->|"POST/GET /api/sprints, GET /api/sprints/{id}"| EP["CreateSprint / ListSprints / GetSprintById Endpoints (ICarterModule) ✅ RequireAuthorization"]
+    EP -->|"ISender.Send(cmd, cancellationToken) ✅"| MED["MediatR + ValidationBehavior"]
+    MED --> VAL["CreateSprintValidator → SprintRules"]
+    MED --> HD["Handlers (CreateSprint, ListSprints, GetSprintById)"]
+    HD --> DOM["Sprint.Create → SprintRules (ADR-005)"]
+    HD -->|"ISprintsDbContext + CancellationToken"| DB[("PostgreSQL schema sprints, CK_Sprints_Window")]
+    HD -. "ICurrentUser.UserId antes de datos" .-> AUTH["Shared.Identity"]
+```
+
+**Desviaciones señaladas:** ninguna de arquitectura; no hay salto de capa. Notas: el `subscribe` del formulario (R3, flujo de eventos aceptado por precedente) y la regla de la ventana de 2 semanas centralizada en `SprintRules` y repetida en la restricción de BD como defensa en profundidad (intencional, ADR-005).
+
 ### 2.A HU-002 — Flujo real implementado (solo lo alterado)
 
 ```mermaid
@@ -267,6 +338,50 @@ flowchart LR
 ---
 
 ## 3. Change Impact Diagram
+
+### 3.0 HU-003 — Impacto de los cambios y cobertura
+
+```mermaid
+flowchart TD
+    subgraph CH["Alterado en HU-003"]
+        E1["CreateSprintEndpoint"]
+        E2["ListSprintsEndpoint"]
+        E3["GetSprintByIdEndpoint"]
+        H1["CreateSprintCommandHandler"]
+        H2["ListSprintsQueryHandler"]
+        H3["GetSprintByIdQueryHandler"]
+        V1["CreateSprintValidator"]
+        D1["Sprint + SprintRules"]
+        P1["SprintsDbContext + SprintConfiguration + migración InitialSprintsSchema"]
+        U1["SprintList / SprintForm / SprintDetail components"]
+        U2["SprintApiService"]
+        SH["Program.cs, Api.csproj, .sln, app.routes.ts, apply-migrations.*"]
+    end
+    E1 --> H1
+    E2 --> H2
+    E3 --> H3
+    H1 --> V1 & D1
+    H1 & H2 & H3 --> P1
+    U1 --> U2 --> E1 & E2 & E3
+
+    T1["Unit: CreateSprintCommandHandlerTests, CreateSprintValidatorTests, SprintDomainTests"]
+    T2["Integración PostgreSQL real: CreateSprintTests, CreateSprintValidationTests, ListSprintsTests, GetSprintByIdTests"]
+    T3["MigrationsPostgresTests (CK_Sprints_Window)"]
+    T4["Unit: ListSprintsQueryHandlerTests, GetSprintByIdQueryHandlerTests"]
+    T5["Jest: list, form, detail, service (26)"]
+    T1 -.-> H1 & V1 & D1
+    T2 -.-> E1 & E2 & E3
+    T3 -.-> P1
+    T4 -.-> H2 & H3
+    T5 -.-> U1 & U2
+
+    classDef cov fill:#d8f5d8,stroke:#2a7a2a,color:#103d10;
+    classDef warn fill:#ffe9c2,stroke:#b36b00,color:#5a3600;
+    class E1,E2,E3,H1,H2,H3,V1,D1,P1,U1,U2 cov;
+    class SH warn;
+```
+
+Componentes alterados con cobertura: 11 de 11; los ficheros compartidos (en ámbar) se cubren de forma indirecta con la integración sobre el `Program` real. Sin prueba de regla: los puntos de negocio sin definir en la HU. Resto de la aplicación: *Sin impacto en este PR/HU*.
 
 ### 3.A HU-002 — Impacto de los cambios y cobertura
 
@@ -371,6 +486,26 @@ Componentes de #16..#19 sin cobertura: 4 de 4. Resto de la HU (cierre de DEF-01.
 
 ## 4. Dependency / Coupling Graph
 
+### 4.0 HU-003
+
+```mermaid
+flowchart LR
+    SPR["Sprints (módulo)"] -->|"ProjectReference"| SHR["Shared (BuildingBlocks)"]
+    API["Bootstrapper/Api"] -->|"ProjectReference + AddSprintsModule"| SPR
+    API --> BLG["Backlog"]
+    API --> APP["Application"]
+    SPR -. "sin referencia ✅" .-> BLG
+    SPR -. "sin referencia ✅" .-> APP
+    SPR --> PG[("PostgreSQL schema sprints")]
+    UT["Sprints.UnitTests"] --> SPR
+    IT["Sprints.IntegrationTests"] --> SPR
+    IT --> API
+    FE["features/sprints"] -->|"HTTP /api/sprints"| API
+    FE --> AUTHC["core/auth (solo AuthService.reauthenticate)"]
+```
+
+**Deuda técnica temprana:** (1) `PostgresFixture` y `SprintsApiFactory` duplican los de Backlog en lugar de compartirse; (2) el patrón `subscribe` del formulario se repite respecto a HU-001; (3) sin paginación ni pruebas de carga más allá de 100 registros (decisión explícita ADR-006); (4) `CreatedBy` es `varchar(255)` (T011 decía `varchar`), coherente con Backlog. Sin ciclos entre módulos.
+
 ### 4.A HU-002
 
 ```mermaid
@@ -405,6 +540,15 @@ flowchart LR
 ---
 
 ## Veredicto
+
+```text
+[APROBADO CON RESERVAS] - HU-003, 1.ª iteración (04-10-2026):
+- Lectura física completada: 40 archivos auditados; ejecución propia Unit 43/43, Integración 46/46 (PostgreSQL), Jest 26/26, tsc limpio.
+- Lex Superior y VSA: ICarterModule + MediatR, schema sprints aislado, regla de ventana única (ADR-005), sin salto de capa.
+- SecOps y rendimiento: CancellationToken propagado, cero N+1, sin IDOR (solo crear y consultar), sin XSS, RequireAuthorization en los tres endpoints.
+- Pruebas QA: no tautológicas; cobertura lógica validada.
+- Reservas no bloqueantes: R1 (T052 build bloqueado por Node del equipo y T053 sin ejecución manual), R2 (Identity en paralelo), R3 (subscribe del formulario, precedente HU-001), R4 (código sin commitear).
+```
 
 ```text
 [APROBADO CON RESERVAS] - HU-002, 1.ª iteración (03-10-2026):

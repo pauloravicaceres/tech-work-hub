@@ -8,6 +8,8 @@ import re
 import shutil
 from pathlib import Path
 
+import ux_routing
+
 # Configuración de codificación UTF-8 para stdout/stderr en Windows
 if sys.platform.startswith('win'):
     try:
@@ -455,6 +457,19 @@ def texto_recordatorio(agente):
         "decisión humana, regístralo igualmente con Handoff hacia HUMANO."
     )
 
+# Texto de la consola de Claude Code cuando se agota (o se restablece) el límite de uso de la cuenta.
+PATRON_LIMITE_USO = r"usage limit|session limit|limit reached|you've hit your"
+PATRON_REANUDAR = r"press enter to continue|has reset"
+
+def leer_panel(pane_id, lineas=40):
+    """Texto reciente de la consola de un agente (vacío si herdr no responde)."""
+    try:
+        res = subprocess.run(["herdr", "pane", "read", pane_id, "--source", "recent", "--lines", str(lineas)],
+                             capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=10)
+        return res.stdout or ""
+    except (OSError, subprocess.SubprocessError):
+        return ""
+
 def vigilar_agentes_inactivos(ahora=None, forzar=False):
     """Revisa los agentes con tarea despachada; recuerda o escala si terminaron sin registrar en el tracker."""
     global _ultimo_chequeo_vigilante
@@ -484,6 +499,25 @@ def vigilar_agentes_inactivos(ahora=None, forzar=False):
         terminado = est["vio_trabajando"] or ahora - est["despachado"] >= GRACIA_SIN_TRABAJO_S
         if not terminado or ahora - est["idle_desde"] < IDLE_MINIMO_S:
             continue
+
+        # Límite de uso de la cuenta: el agente no puede trabajar y los recordatorios solo gastarían turnos.
+        # Se anota el motivo real una vez por cambio de estado y se deja de insistir hasta que se restablezca.
+        texto_panel = leer_panel(pane_id)
+        if re.search(PATRON_LIMITE_USO, texto_panel, re.IGNORECASE):
+            tipo = "reanudar" if re.search(PATRON_REANUDAR, texto_panel, re.IGNORECASE) else "limite"
+            if est.get("aviso_limite") != tipo:
+                est["aviso_limite"] = tipo
+                if tipo == "limite":
+                    motivo = (f"El agente '{agente}' alcanzó el límite de uso de la cuenta de Claude: el flujo queda en pausa hasta que "
+                              "se restablezca. No se envían recordatorios mientras tanto.")
+                else:
+                    motivo = (f"El límite de uso de la cuenta ya se restableció, pero '{agente}' espera que pulses Enter en su panel "
+                              f"({pane_id}) para continuar. No se envían recordatorios.")
+                write_watcher_log(f"⚠️ [Vigilante] {motivo}")
+                print(f"⏸️ [Vigilante] {motivo}")
+            continue
+        est["aviso_limite"] = None
+
 
         if est["recordatorios"] >= MAX_RECORDATORIOS:
             write_watcher_log(
@@ -556,34 +590,48 @@ def obtener_info_agente(nombre_agente):
         print(f"⚠️ [Watcher] Error al consultar agentes: {e}")
         return None, None
 
-def determinar_handoff_fase_a(tracker_path: str, config_path: str = "config_bmad.json") -> str:
-    """
-    Determina si el proyecto es UI o Headless y retorna el handoff correcto.
-    """
-    try:
-        config_full_path = DIRECTORIO_RAIZ / config_path
-        if config_full_path.exists():
-            with open(config_full_path, encoding="utf-8") as f:
-                config = json.load(f)
-            project_type = config.get("project_type", "").lower()
-            if project_type == "headless":
-                return "@SA:"
-            if project_type == "ui":
-                return "@UX:"
-    except Exception:
-        pass
+def hu_desde_feature_json():
+    """Ruta de la HU del BA fijada en .specify/feature.json (o None). Lógica en ux_routing.py."""
+    return ux_routing.hu_desde_feature_json(DIRECTORIO_RAIZ)
 
-    try:
-        if os.path.exists(tracker_path):
-            with open(tracker_path, encoding="utf-8") as f:
-                ultimas_lineas = f.readlines()[-50:]
-            contenido = " ".join(ultimas_lineas).lower()
-            if "headless" in contenido:
-                return "@SA:"
-    except Exception:
-        pass
+def hu_requiere_interfaz(ruta_hu):
+    """True/False según el campo 'Requiere interfaz' de la HU; None si no está declarado. Lógica en ux_routing.py."""
+    return ux_routing.hu_requiere_interfaz(ruta_hu, DIRECTORIO_RAIZ)
 
-    return "@UX:"
+def decidir_ruta_ux(ruta_hu=None, config_path="config_bmad.json"):
+    """
+    Decide si la HU pasa por el diseño UX. Devuelve (token, motivo, omitida).
+    La regla vive en ux_routing.py (independiente del orquestador); aquí solo se traduce el destino al token del tracker.
+    """
+    ruta = ux_routing.decidir_ruta_ux(DIRECTORIO_RAIZ, ruta_hu, config_path)
+    return ("@SA:" if ruta.destino == "SA" else "@UX:"), ruta.motivo, ruta.omitida
+
+def determinar_handoff_fase_a(tracker_path: str = None, config_path: str = "config_bmad.json", ruta_hu=None) -> str:
+    """Token del siguiente agente tras la fase de negocio (@UX: o @SA:). Se conserva por compatibilidad."""
+    return decidir_ruta_ux(ruta_hu, config_path)[0]
+
+def registrar_traspaso_fase_a(ruta_hu=None, resuelta_por_humano=False):
+    """
+    Escribe en el tracker el traspaso tras specify/clarify. Si el diseño UX se omite, lo deja como un bloque propio
+    ('⏭️ [UX] Diseño UX omitido') para que el dashboard marque la etapa como omitida y no como pendiente.
+    Ojo: el texto no puede contener 'aprobad…' ni citar una HU aprobada, o la compuerta de negocio se re-dispararía.
+    """
+    from datetime import datetime
+    token, motivo, omitida = decidir_ruta_ux(ruta_hu)
+    ahora = datetime.now()
+    cabecera = f"\n### [{ahora.strftime('%d-%m-%Y')}] WATCHER\n- **Hora:** {ahora.strftime('%H:%M:%S')}\n"
+    if omitida:
+        texto = (f"{token} La especificación inicial SDD ha concluido con éxito y el diseño UX se omite ({motivo}). "
+                 "Procede con el tech-design y la arquitectura.")
+        escrito = cabecera + f"- **Mensaje:** ⏭️ [UX] Diseño UX omitido: {motivo}.\n- **Handoff:** {texto}\n"
+    elif resuelta_por_humano:
+        texto = f"{token} La ambigüedad ha sido resuelta por el Humano y la especificación SDD ha concluido con éxito. Procede con tu diseño."
+        escrito = cabecera + f"- **Mensaje:** ⚙️ [SDD Auto-Runner] Resolución aplicada exitosamente.\n- **Handoff:** {texto}\n"
+    else:
+        escrito = f"\n{token} La especificación inicial SDD ha concluido con éxito. Procede con tu diseño.\n"
+    with open(TRACKER_PATH, "a", encoding="utf-8") as f:
+        f.write(escrito)
+    return token, omitida
 
 def carpeta_spec_para_hu(ruta_hu):
     """
@@ -663,12 +711,8 @@ def ejecutar_sdd_fase_negocio(ruta_hu: str):
                 
             return False
 
-        # 3. Handoff Dinámico (UX o SA)
-        handoff = determinar_handoff_fase_a(TRACKER_PATH)
-        msg = f"{handoff} La especificación inicial SDD ha concluido con éxito. Procede con tu diseño."
-        
-        with open(TRACKER_PATH, "a", encoding="utf-8") as f:
-            f.write(f"\n{msg}\n")
+        # 3. Handoff Dinámico (UX o SA): lo decide ux_phase y el campo 'Requiere interfaz' de la HU
+        handoff, _omitida = registrar_traspaso_fase_a(ruta_hu)
         print(f"✅ [SDD Negocio] Handoff despachado: {handoff}")
         return True
 
@@ -1004,17 +1048,9 @@ def extraer_instrucciones(linea):
         write_watcher_log(f"⚙️ [SDD Auto-Runner] Inyectando respuesta humana a Spec Kit: {respuesta_inferida}")
         res = ejecutar_speckit("clarify", respuesta_inferida)
         
-        # Continuar con el handoff dinámico a UX o SA
-        handoff = determinar_handoff_fase_a(TRACKER_PATH)
-        
-        from datetime import datetime
-        dt_str = datetime.now().strftime("%d-%m-%Y")
-        hr_str = datetime.now().strftime("%H:%M:%S")
-        msg = f"{handoff} La ambigüedad ha sido resuelta por el Humano y la especificación SDD ha concluido con éxito. Procede con tu diseño."
-        
-        with open(TRACKER_PATH, "a", encoding="utf-8") as f:
-            f.write(f"\n### [{dt_str}] WATCHER\n- **Hora:** {hr_str}\n- **Mensaje:** ⚙️ [SDD Auto-Runner] Resolución aplicada exitosamente.\n- **Handoff:** {msg}\n")
-        
+        # Continuar con el handoff dinámico a UX o SA (lo decide ux_phase y el campo 'Requiere interfaz' de la HU)
+        handoff, _omitida = registrar_traspaso_fase_a(None, resuelta_por_humano=True)
+
         print(f"✅ [SDD Negocio] Handoff despachado: {handoff}")
         return []
 

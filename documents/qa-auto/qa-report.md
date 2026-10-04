@@ -1,11 +1,115 @@
 # QA Report — Calidad y Trazabilidad Viva
 
-> Última actualización: 03-10-2026 · Iteración: **HU-002 Pruebas de Integración contra Keycloak Real y Catálogo Real** · Agente: QA-AUTO
-> Áreas no afectadas por esta iteración: _Sin cambios en esta iteración_ (las secciones HU-001 de abajo se conservan sin modificar).
+> Última actualización: 04-10-2026 · Iteración: **HU-003 Gestión de Sprint de Dos Semanas (Crear y Consultar)** · Agente: QA-AUTO
+> Áreas no afectadas por esta iteración: _Sin cambios en esta iteración_ (las secciones HU-002 y HU-001 de abajo se conservan sin modificar).
 
 ---
 
-# ▶ Iteración actual: HU-002 (`specs/002-pruebas-integracion-keycloak-catalogo`)
+# ▶ Iteración actual: HU-003 (`specs/003-HU_gestion_sprint_dos_semanas`)
+
+Barrera Fork-Join satisfecha (DEV-BACK y DEV-FRONT finalizaron). QA-AUTO auditó adversarialmente las suites entregadas (`tests/Unit/Sprints`, `tests/Integration/Sprints`, specs Jest de `features/sprints`): AAA, nomenclatura BDD, sin `Skip`/`xit` ni mocks tautológicos. Las ejecutó con PostgreSQL real (Testcontainers) y `WebApplicationFactory<Program>`. No se modificó código de producción.
+
+## 1. AI QA Review Dashboard (HU-003)
+
+```
+┌─────────────── HU-003 · DICTAMEN: [APROBADO] ────────────────────────────────────────────┐
+│ Capa                          Escritos  Ejecutados  Pasados  Fallados  Bloqueados        │
+│ Backend · Unit Sprints            43         43        43        0         0             │
+│ Backend · Integration Sprints     46         46        46        0         0             │
+│ Frontend · Jest features/sprints  26         26        26        0         0             │
+│ Total HU-003                     115        115       115        0         0             │
+│ Regresión · Unit Backlog          62         62        62        0         0             │
+│ Regresión · Int. Backlog          31         31        31        0         0             │
+│ Regresión · Int. Identity         19         19        19        0         0  (aislada)  │
+│ Cobertura funcional de CA: US1 3/3 · US2 3/3 · US3 3/3 · US4 3/3 · FR-001..016           │
+│ Nivel de riesgo: BAJO (ver reserva R1 sobre ejecución paralela de la solución)           │
+└──────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+Comandos: `dotnet test tests/Unit/Sprints/Sprints.UnitTests.csproj` (43/43), `dotnet test tests/Integration/Sprints/Sprints.IntegrationTests.csproj` (46/46, 39 s), `npx jest --ci --runInBand --forceExit --no-coverage src/app/features/sprints` (26/26).
+
+## 2. Requirements Traceability (HU-003)
+
+```mermaid
+flowchart LR
+  HU3[HU-003 Sprint de 2 semanas]
+  HU3 --> US1[US1 Crear con ventana válida]
+  HU3 --> US2[US2 Rechazo de datos inválidos]
+  HU3 --> US3[US3 Listado]
+  HU3 --> US4[US4 Detalle]
+
+  US1 --> A1[SC1.1 201 + 4 datos + CreatedBy=sub]
+  US1 --> A2[SC1.2 backlog intacto]
+  US1 --> A3[SC1.3 401 sin persistir]
+  US2 --> B1[SC2.1 ventana 7/13/15/21 → 400]
+  US2 --> B2[SC2.2 fin <= inicio → 400]
+  US2 --> B3[SC2.3 campos ausentes o malformados → 400]
+  US3 --> C1[SC3.1 200 exacto]
+  US3 --> C2[SC3.2 sin mutación]
+  US3 --> C3[SC3.3 401]
+  US4 --> D1[SC4.1 200 detalle]
+  US4 --> D2[SC4.2 404]
+  US4 --> D3[SC4.3 401]
+
+  A1 --> T1[CreateSprint_ConVentanaValida_DebeResponder201 ✅]
+  A1 --> T2[CreateSprint_ConDatosValidos_DebePersistirConAuditoria ✅]
+  A2 --> T2
+  A3 --> T3[CreateSprint_SinTokenOConTokenInvalido_DebeResponder401 ✅]
+  B1 --> T4[ConVentanaDistintaDe14Dias: endpoint + validador + dominio + CHECK BD ✅]
+  B2 --> T5[CreateSprint_ConFinIgualOAnteriorAlInicio_400 ✅]
+  B3 --> T6[ConFechaAusenteOMalformada / ConCuerpoVacio ✅]
+  C1 --> T7[ListSprints_ConSprintsSembrados_Exactamente ✅]
+  C2 --> T8[ListSprints_AlConsultar_NoDebeModificarLosDatos ✅]
+  C3 --> T9[ListSprints_SinCredenciales_401 ✅]
+  D1 --> T10[GetSprintById_ConIdExistente_200 ✅]
+  D2 --> T11[GetSprintById_ConIdInexistente_404 ✅]
+  D3 --> T12[GetSprintById_SinCredenciales_401 ✅]
+  HU3 --> T13[FR-011 CreateSprint_ConFalloDePersistencia_500 ✅]
+  HU3 --> T14[Frontend: form, list, detail, api service · 26 specs ✅]
+```
+
+## 3. Failure Impact Diagram (HU-003)
+
+0 fallos críticos detectados. Ningún defecto atribuible a HU-003.
+
+## 4. State Transition / User Journey (HU-003)
+
+```mermaid
+stateDiagram-v2
+  [*] --> Formulario
+  Formulario --> Validando: enviar
+  Validando --> Formulario: 400 mensaje por campo, valores conservados
+  Validando --> SesionExpirada: 401
+  Validando --> ErrorGenerico: 500 reintentar sin trazas
+  Validando --> Listado: 201 toast de éxito
+  Listado --> Detalle: seleccionar sprint
+  Detalle --> NoExiste: 404
+```
+
+Todas las transiciones tienen prueba en verde (specs Jest del formulario, listado y detalle).
+
+## 5. Test Coverage & Hotspots (HU-003)
+
+```mermaid
+flowchart LR
+  M1[Sprints Domain y Validator · reglas FR-003/004/005 · alta]
+  M2[Sprints Handlers y Endpoints · 200/201/400/401/404/500 · alta]
+  M3[Persistencia · CHECK ventana + migración idempotente · alta]
+  M4[Frontend sprints · 4 specs · alta]
+  M5[Sin definir en HU: duplicados, solapamiento, fecha pasada · riesgo informativo]
+```
+
+Pruebas adversariales destacadas: ventana 7/13/15/21 en tres capas, `CreatedBy` en el cuerpo ignorado a favor del claim, token sin claim de identidad → 401, 100 vs 101 caracteres, handler con comando que evade el validador, fallo de `SaveChanges` → 500 sin Sprint parcial, claves PascalCase en 400 del frontend.
+
+## Reservas (no bloqueantes)
+
+- **R1:** En `dotnet test TechWorkHub.sln` en paralelo, la suite HU-002 `Integration.Identity` falló al inicializar fixtures (fallos de ~1 ms), pero aislada pasa 19/19. Los contenedores Keycloak/PostgreSQL de varios proyectos compiten por recursos: problema de entorno, no de HU-003. Recomendado ejecutar las suites de integración en serie en CI.
+- **R2:** Los puntos de negocio sin definir (duplicados, solapamiento, fecha pasada, roles) solo quedan fijados como comportamiento actual (`CreateSprint_ConIdentificacionRepetida_DebeCrearAmbosSprints`).
+- **R3:** Sin E2E de navegador (fuera del alcance de la HU).
+
+---
+
+# Iteración anterior: HU-002 (`specs/002-pruebas-integracion-keycloak-catalogo`)
 
 La HU entrega una suite (`app/backend/tests/Integration/Identity`, 19 casos). QA-AUTO la auditó de forma adversarial, la ejecutó contra Keycloak 24.0 y PostgreSQL 16 reales (Testcontainers, un contenedor por suite, BD nueva por prueba) y verificó que puede fallar. No se escribió ni modificó código de producción (`git diff main -- app/backend/src` sin cambios fuente).
 
