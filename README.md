@@ -73,7 +73,7 @@ Sin embargo, si necesitas realizar micro-ajustes rápidos, refactorizaciones men
 * **Estrategia Dual-Output de Requisitos (Business Analyst):** Generación simultánea de Historias Técnicas (Gherkin puro para Spec Kit) y Funcionales (Narrativas amigables para Stakeholders).
 * **Fase D (Ingeniería) como Cartucho Intercambiable:** Arquitectura desacoplada con segregación entre Constructores (`DEV-BACK`, `DEV-FRONT`) y Auditores (`QA-AUTO`, `CODE-REVIEW`). Todos dotados con `execute_command` para operar físicamente la máquina del host.
 * **Retrabajo SDD (Ciclo de Convergencia):** Un rechazo de `CODE-REVIEW` o `QA-AUTO` no se parchea en el código: se clasifica por capa (spec → plan → tasks → código) y se corrige con `/speckit-analyze` → `/speckit-converge` → `/speckit-implement`, con tope de 2 iteraciones y escalado a `@HUMANO:`.
-* **Lógica de Bypass Inteligente:** El `config_bmad.json` decide rutas. En `project_type: ui` pasa al diseñador `@UX:`. En `project_type: headless`, salta directamente al `@SA:` ahorrando tiempo.
+* **Lógica de Bypass Inteligente:** El `config_bmad.json` decide rutas. En `project_type: ui` pasa al diseñador `@UX:`. En `project_type: headless`, salta directamente al `@SA:` ahorrando tiempo. Además, `ux_phase` (`auto`/`on`/`off`) y el campo `Requiere interfaz: Sí|No` de cada HU permiten omitir el diseño UX global o por historia (ver `SETUP.md`).
 * **El Tracker como Único Bus de Datos:** Eliminación de alucinaciones inter-agente. Se comunican exclusivamente anexando texto (*read -> concat -> write*) en `documents/tracker_bmad.md`.
 
 ---

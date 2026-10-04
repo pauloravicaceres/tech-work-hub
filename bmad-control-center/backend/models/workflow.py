@@ -8,7 +8,7 @@ class WorkflowStageStep(BaseModel):
     stage_name: str
     agent_role: str
     order_index: int
-    status: str  # COMPLETED, IN_PROGRESS, PENDING
+    status: str  # COMPLETED, IN_PROGRESS, PENDING, SKIPPED
     is_active: bool = False
     started_at: Optional[str] = None
     completed_at: Optional[str] = None
@@ -19,6 +19,9 @@ class WorkflowStageStep(BaseModel):
     rework_iteration: Optional[int] = None
     rework_max: Optional[int] = None
     rework_reason: Optional[str] = None
+    # Etapa estancada: el último evento del tracker es un aviso del vigilante o un error del Watcher
+    alert_state: Optional[str] = None
+    alert_reason: Optional[str] = None
 
 
 class WorkflowStatusResponse(BaseModel):
@@ -39,8 +42,8 @@ class WorkflowStatusResponse(BaseModel):
     history: List[Dict[str, Any]] = Field(default_factory=list)
     # Retrabajo activo tras un rechazo de Code Review / QA Automation (None si no hay)
     rework: Optional[Dict[str, Any]] = None
-    # Retrabajo activo tras un rechazo de Code Review / QA Automation (None si no hay)
-    rework: Optional[Dict[str, Any]] = None
+    # Alerta global (STALLED) cuando el flujo se detuvo y el Watcher lo dejó anotado
+    alert: Optional[Dict[str, Any]] = None
 
 
 # Alias for WorkflowStatusResponse

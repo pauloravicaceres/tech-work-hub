@@ -125,6 +125,7 @@ class ConnectionManager:
             "completed_stages": workflow_data.get("completed_stages"),
             "stages": workflow_data.get("stages") or [],
             "rework": workflow_data.get("rework"),
+            "alert": workflow_data.get("alert"),
             # Dual output compatibility
             "current_stage": stage,
             "status": workflow_data.get("overall_status"),

@@ -1,0 +1,74 @@
+<p-card header="CREAR SPRINT" [style]="{ width: '100%' }">
+  <p>Indique la identificación y las fechas del ciclo de trabajo de 2 semanas.</p>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+    @if (bannerMessage(); as banner) {
+      <p-message severity="error" styleClass="mb-3">{{ banner }}</p-message>
+    }
+
+    <div class="p-fluid grid">
+      <div class="col-12 mb-3">
+        <label for="identification">IDENTIFICACIÓN (*)</label>
+        <input
+          pInputText
+          id="identification"
+          formControlName="identification"
+          placeholder="Ej: Sprint 2026-01"
+          [attr.maxlength]="identificationMaxLength"
+          autofocus
+        />
+        @if (fieldErrors().identification; as serverMessage) {
+          <small class="p-error block">{{ serverMessage }}</small>
+        } @else if (form.controls.identification.invalid && form.controls.identification.touched) {
+          <small class="p-error block">La identificación es obligatoria y no puede exceder los 100 caracteres.</small>
+        }
+      </div>
+
+      <div class="col-12 md:col-6 mb-3">
+        <label for="startDate">FECHA DE INICIO (*)</label>
+        <p-datepicker inputId="startDate" formControlName="startDate" dateFormat="dd/mm/yy" [showIcon]="true" />
+        @if (fieldErrors().startDate; as serverMessage) {
+          <small class="p-error block">{{ serverMessage }}</small>
+        } @else if (form.controls.startDate.invalid && form.controls.startDate.touched) {
+          <small class="p-error block">La fecha de inicio es obligatoria.</small>
+        }
+      </div>
+
+      <div class="col-12 md:col-6 mb-3">
+        <label for="endDate">FECHA DE FIN (*)</label>
+        <p-datepicker inputId="endDate" formControlName="endDate" dateFormat="dd/mm/yy" [showIcon]="true" />
+        <small class="block">Ventana de 2 semanas: 14 días calendario, extremos incluidos.</small>
+        @if (fieldErrors().endDate; as serverMessage) {
+          <small class="p-error block">{{ serverMessage }}</small>
+        } @else if (form.controls.endDate.invalid && form.controls.endDate.touched) {
+          <small class="p-error block">La fecha de fin es obligatoria.</small>
+        }
+      </div>
+    </div>
+
+    <div class="flex justify-content-end gap-2 mt-3">
+      <p-button label="Cancelar" icon="pi pi-times" severity="secondary" [outlined]="true" type="button" (onClick)="onCancel()" />
+      <p-button
+        [label]="serverError() ? 'Reintentar Envío' : 'Crear Sprint'"
+        [icon]="serverError() ? 'pi pi-refresh' : 'pi pi-check'"
+        type="submit"
+        [disabled]="isSubmitting()"
+        [loading]="isSubmitting()"
+      />
+    </div>
+  </form>
+</p-card>
+
+<p-dialog
+  header="SESIÓN EXPIRADA O INVÁLIDA"
+  [modal]="true"
+  [(visible)]="sessionExpired"
+  [closable]="false"
+  [closeOnEscape]="false"
+  [dismissableMask]="false"
+>
+  <p>Su sesión no es válida o ha expirado.</p>
+  <ng-template #footer>
+    <p-button label="Iniciar sesión" icon="pi pi-arrow-right" (onClick)="reauthenticate()" />
+  </ng-template>
+</p-dialog>

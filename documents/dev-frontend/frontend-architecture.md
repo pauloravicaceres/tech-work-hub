@@ -3,7 +3,7 @@
 ## 1. Información General y Objetivo
 - **Sistema:** TechWorkHub
 - **Versión:** 1.0.0
-- **Fecha de última actualización:** 2026-10-03
+- **Fecha de última actualización:** 2026-10-04
 - **Equipo:** Frontend / SpecKit
 - **Objetivo:** Plataforma modular basada en Angular 22 Zoneless con Signals para la gestión de proyectos y backlog multitipo.
 
@@ -158,3 +158,62 @@ flowchart LR
 ```
 
 - **Nota:** el punto abierto (1) de T032–T036 queda cubierto en el servidor: `GET /api/applications` es ejercitado por `ListApplicationsRealTests` contra el catálogo real.
+
+### HU-003 — Gestión de Sprint de Dos Semanas (speckit-implement, 2026-10-04, T005 y T038–T048)
+Se añadió la feature `features/sprints/` (crear, listar y consultar Sprints). No se modificó `features/backlog`, `core/auth` ni `app.config.ts`; el único archivo existente alterado es `app.routes.ts`.
+
+- **Archivos nuevos (`app/frontend/src/app/features/sprints/`):**
+  - `models/sprint.models.ts`: `Sprint`, `CreateSprintRequest` y `ProblemDetails` (fechas como `yyyy-MM-dd`, igual que `SprintResponse` del contrato OpenAPI).
+  - `models/sprint-date.ts`: `toIsoDate(Date)`, formatea con partes locales (evita corrimientos por UTC).
+  - `services/sprint-api.service.ts`: `SprintApiService` (`create` → `POST /api/sprints`, `list` → `GET /api/sprints`, `getById` → `GET /api/sprints/{id}`).
+  - `components/sprint-form/`: `SprintFormComponent` (formulario reactivo tipado, `p-datepicker` ×2, banner y errores por campo, diálogo 401).
+  - `components/sprint-list/`: `SprintListComponent` (`p-table` con estados cargando/vacío/error/401, `p-toast`).
+  - `components/sprint-detail/`: `SprintDetailComponent` (`p-card` de solo lectura, estados 404/error/401).
+  - Cada componente es standalone con `ChangeDetectionStrategy.OnPush`, su `.scss` sin reglas de maquetación y su `.spec.ts`.
+- **Modificado:** `app.routes.ts` — ruta padre `sprints` con `authGuard` y `providers: [MessageService]`, e hijas lazy `''` (listado), `nuevo` (formulario) y `:id` (detalle). `nuevo` va antes que `:id`.
+
+```mermaid
+flowchart TD
+    Inicio["/"] --> Backlog["/backlog/nuevo"]
+    Guard{{"authGuard"}} --> Sprints["/sprints (MessageService compartido)"]
+    Sprints --> Lista["'' → SprintListComponent"]
+    Sprints --> Nuevo["nuevo → SprintFormComponent"]
+    Sprints --> Detalle[":id → SprintDetailComponent"]
+    Nuevo -- "201: navigate + toast" --> Lista
+    Lista -- "Ver detalle" --> Detalle
+    Lista -- "Nuevo Sprint" --> Nuevo
+```
+
+- **Estado:** el listado y el detalle exponen un único `state` (`toSignal` sobre un union discriminado `loading | ready | notFound | unauthorized | error`), sin `subscribe()` manual. El formulario usa Signals (`isSubmitting`, `sessionExpired`, `serverError`, `submitAttempted`, `fieldErrors`) y `computed` para el banner; el único `subscribe` es el flujo `Subject + exhaustMap` con `takeUntilDestroyed`, que evita el doble envío.
+- **Regla de negocio:** la ventana de 14 días no se valida en el cliente (la fuente de verdad es el servidor, decisión D-05 del UX); el cliente solo exige identificación (≤ 100) y ambas fechas.
+
+```mermaid
+sequenceDiagram
+    actor U as Usuario
+    participant F as SprintFormComponent
+    participant S as SprintApiService
+    participant API as POST /api/sprints
+    participant L as SprintListComponent
+
+    U->>F: Completa identificación y fechas, pulsa Crear Sprint
+    F->>F: Valida presencia (sin enviar si falta algo)
+    F->>S: create({identification, startDate, endDate} en yyyy-MM-dd)
+    S->>API: HTTP POST
+    alt 201 Created
+        API-->>F: Sprint {id, identification, startDate, endDate}
+        F->>L: router.navigate(['/sprints'])
+        F-->>U: Toast de éxito (emitido tras la navegación)
+        L->>API: GET /api/sprints (consulta fresca)
+    else 400 ProblemDetails
+        API-->>F: errors { identification | startDate | endDate }
+        F-->>U: Mensaje en línea por campo y banner (valores conservados)
+    else 401
+        F-->>U: Diálogo bloqueante, reautenticación con Keycloak
+    else 500
+        F-->>U: Banner genérico sin detalles internos, botón Reintentar Envío
+    end
+```
+
+- **ADR-003: toast tras la navegación.** *Contexto:* `p-toast` solo recibe mensajes emitidos después de montarse y el listado se monta al navegar. *Decisión:* `MessageService` se provee en la ruta padre `sprints` y el formulario emite el mensaje en el `then` de `router.navigate`. *Consecuencias:* (+) el toast de éxito aparece en el listado sin estado global; (−) depende de que las tres páginas cuelguen de la misma ruta padre.
+- **Verificación:** Jest 57/57 en verde (8 suites); `ngc -p tsconfig.app.json --noEmit` sin errores con `strictTemplates`. `ng build` no se ejecutó (el CLI exige Node ≥ 22.22.3 y el entorno tiene 22.20.0), por lo que T052 queda abierta; T053 (escenarios del quickstart contra API y UI en ejecución) tampoco se ejecutó.
+- **Puntos abiertos:** (1) T048: el frontend no tiene mecanismo i18n (`$localize`/`i18n`); los textos de Sprints son literales en español, igual que `features/backlog`. (2) No hay shell (menú, sidebar, breadcrumb) en la SPA actual, por lo que el diseño UX de esos elementos no se implementó; las páginas se enlazan entre sí con botones. (3) `/sprints` no tiene entrada de navegación global. (4) No existe proxy de desarrollo para `/api`; las llamadas relativas requieren servir frontend y API bajo el mismo origen.

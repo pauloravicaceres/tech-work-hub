@@ -4,6 +4,7 @@ using Backlog;
 using Carter;
 using Keycloak.AuthServices.Authentication;
 using Shared;
+using Sprints;
 
 const string MigrateOnStartupKey = "Database:MigrateOnStartup";
 
@@ -13,6 +14,7 @@ builder.Services.AddSharedInfrastructure();
 builder.Services.AddCarter();
 builder.Services.AddBacklogModule(builder.Configuration);
 builder.Services.AddApplicationModule(builder.Configuration);
+builder.Services.AddSprintsModule(builder.Configuration);
 
 // priority y type viajan como texto ("High"), no como entero (FR-011).
 builder.Services.ConfigureHttpJsonOptions(options =>
@@ -32,6 +34,7 @@ if (app.Configuration.GetValue<bool>(MigrateOnStartupKey))
 {
     await app.Services.MigrateApplicationModuleAsync();
     await app.Services.MigrateBacklogModuleAsync();
+    await app.Services.MigrateSprintsModuleAsync();
 }
 
 app.Run();

@@ -165,6 +165,8 @@ class WorkflowService:
                 "merge_close": (re.search(
                     r'^\s*(?:[-*]\s+)*(?:\*\*Handoff:\*\*\s*)?@WATCHER:\s*GITOPS-MERGE-CLOSE\s+([^\s`\'"]+)',
                     chunk, re.MULTILINE) or [None, None])[1],
+                # Avisos del Watcher (vigilante o error de una fase): anotaciones, NO un paso en curso
+                "is_annotation": author_role == "WATCHER" and bool(re.search(r"\[Vigilante\]|🚨|\bERROR\b", status_desc)),
                 "timestamp": iso_timestamp,
             })
 
@@ -269,7 +271,16 @@ class WorkflowService:
             )
 
         all_blocks = self._parse_blocks(content)
-        blocks = self._current_cycle_blocks(all_blocks)
+        # Un aviso del vigilante o un error del Watcher al final NO es "Spec Kit trabajando": deja la etapa real
+        # (la del último handoff) marcada como estancada en lugar de iluminar una caja del Watcher.
+        alerta: Optional[Dict[str, Any]] = None
+        if all_blocks and all_blocks[-1].get("is_annotation"):
+            alerta = {
+                "type": "STALLED",
+                "message": all_blocks[-1]["status_description"],
+                "since_block_index": all_blocks[-1]["block_index"],
+            }
+        blocks = [b for b in self._current_cycle_blocks(all_blocks) if not b.get("is_annotation")]
 
         # Track completed stages and active stage
         completed_stage_map: Dict[str, Dict[str, Any]] = {}
@@ -344,7 +355,12 @@ class WorkflowService:
 
         # Build 15 canonical steps
         stage_steps: List[WorkflowStageStep] = []
-        completed_count = len(completed_stage_map)
+        # El Watcher deja un bloque '⏭️ [UX] Diseño UX omitido' cuando el diseño no aplica: la etapa se muestra OMITIDA, no pendiente
+        skipped_keys = {'UX'} if any(
+            b['author_role'] == 'WATCHER' and 'Diseño UX omitido' in b['status_description'] for b in blocks
+        ) else set()
+        skipped_keys -= set(completed_stage_map)
+        completed_count = len(completed_stage_map) + len(skipped_keys)
         if completed_count >= len(CANONICAL_STAGES) and not rework:
             overall_status = "COMPLETED"
         elif rework and overall_status == "COMPLETED":
@@ -366,6 +382,15 @@ class WorkflowService:
                     completed_at=None,
                     origin_block_index=b["block_index"] if b else None,
                     generated_artifact_path=b["generated_artifact"] if b else None,
+                )
+            elif s_key in skipped_keys:
+                step = WorkflowStageStep(
+                    stage_key=s_key,
+                    stage_name=stage['name'],
+                    agent_role=stage['role'],
+                    order_index=stage['order'],
+                    status='SKIPPED',
+                    is_active=False,
                 )
             elif s_key in completed_stage_map:
                 b = completed_stage_map[s_key]
@@ -410,6 +435,9 @@ class WorkflowService:
                     step.rework_iteration = rework["iteration"]
                     step.rework_max = rework["max_iterations"]
                     step.rework_reason = rework["reason"]
+            if alerta and s_key in parallel_active_keys and step.status != "COMPLETED":
+                step.alert_state = "STALLED"
+                step.alert_reason = alerta["message"][:240]
             stage_steps.append(step)
 
         # Prepare history if requested
@@ -439,4 +467,5 @@ class WorkflowService:
             status=overall_status,
             history=history_list,
             rework=rework,
+            alert=alerta,
         )
