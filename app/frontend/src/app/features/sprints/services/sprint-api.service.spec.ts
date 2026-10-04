@@ -3,7 +3,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { SprintApiService } from './sprint-api.service';
-import { Sprint } from '../models/sprint.models';
+import { AssignedItem, Sprint, SprintItem } from '../models/sprint.models';
 
 const SPRINT: Sprint = {
   id: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
@@ -71,5 +71,41 @@ describe('SprintApiService', () => {
     // Assert
     expect(req.request.method).toBe('GET');
     expect(result).toEqual(SPRINT);
+  });
+
+  // HU-004 — asignación y consulta de elementos de un Sprint.
+  it('assignItem_DebeHacerPostAItemsDelSprintConElItemIdEnElCuerpo', () => {
+    // Arrange
+    const itemId = '7c9e6679-7425-40de-944b-e07fc1f90ae7';
+    const response: AssignedItem = { sprintId: SPRINT.id, itemId };
+    let result: AssignedItem | undefined;
+
+    // Act
+    service.assignItem(SPRINT.id, itemId).subscribe((assigned) => (result = assigned));
+    const req = http.expectOne(`/api/sprints/${SPRINT.id}/items`);
+    req.flush(response, { status: 201, statusText: 'Created' });
+
+    // Assert
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({ itemId });
+    expect(result).toEqual(response);
+  });
+
+  it('listItems_DebeHacerGetAItemsDelSprint', () => {
+    // Arrange
+    const items: SprintItem[] = [
+      { id: '7c9e6679-7425-40de-944b-e07fc1f90ae7', title: 'Registro de aplicaciones', type: 'UserStory', devPoints: 8, qaPoints: 5 },
+      { id: '1b4e28ba-2fa1-11d2-883f-0016d3cca427', title: 'Spike de rendimiento', type: 'Spike', devPoints: 2.5, qaPoints: null },
+    ];
+    let result: SprintItem[] | undefined;
+
+    // Act
+    service.listItems(SPRINT.id).subscribe((list) => (result = list));
+    const req = http.expectOne(`/api/sprints/${SPRINT.id}/items`);
+    req.flush(items);
+
+    // Assert
+    expect(req.request.method).toBe('GET');
+    expect(result).toEqual(items);
   });
 });

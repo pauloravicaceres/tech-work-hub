@@ -35,8 +35,8 @@ description: "Lista de tareas para HU-004: Asignación de Elementos del Backlog 
 
 **Purpose**: Estructura de carpetas; el módulo y los proyectos de prueba ya existen (HU-003)
 
-- [ ] T001 [P] Crear las carpetas `app/backend/src/Modules/Sprints/Contracts/`, `app/backend/src/Modules/Sprints/Domain/SprintItems/` y `app/backend/src/Modules/Sprints/Features/SprintItems/{AssignItemToSprint,ListSprintItems}/`
-- [ ] T002 [P] Crear las carpetas del frontend `app/frontend/src/app/features/sprints/components/sprint-assigned-items/` y `app/frontend/src/app/features/sprints/components/assign-item-dialog/`
+- [X] T001 [P] Crear las carpetas `app/backend/src/Modules/Sprints/Contracts/`, `app/backend/src/Modules/Sprints/Domain/SprintItems/` y `app/backend/src/Modules/Sprints/Features/SprintItems/{AssignItemToSprint,ListSprintItems}/`
+- [X] T002 [P] Crear las carpetas del frontend `app/frontend/src/app/features/sprints/components/sprint-assigned-items/` y `app/frontend/src/app/features/sprints/components/assign-item-dialog/`
 
 ---
 
@@ -46,21 +46,21 @@ description: "Lista de tareas para HU-004: Asignación de Elementos del Backlog 
 
 **⚠️ CRITICAL**: Ninguna historia puede comenzar hasta completar esta fase
 
-- [ ] T003 [P] Crear `app/backend/src/BuildingBlocks/Shared/Exceptions/ConflictException.cs` siguiendo el estilo de `NotFoundException.cs`/`BadRequestException.cs` (cambio estrictamente aditivo, ADR-005)
-- [ ] T004 Añadir en `app/backend/src/BuildingBlocks/Shared/Exceptions/CustomExceptionHandler.cs` la rama `ConflictException` → ProblemDetails con `Status = 409` y `Title = "Conflict"`, sin alterar las ramas 400/404/500 existentes. Depende de T003
+- [X] T003 [P] Crear `app/backend/src/BuildingBlocks/Shared/Exceptions/ConflictException.cs` siguiendo el estilo de `NotFoundException.cs`/`BadRequestException.cs` (cambio estrictamente aditivo, ADR-005)
+- [X] T004 Añadir en `app/backend/src/BuildingBlocks/Shared/Exceptions/CustomExceptionHandler.cs` la rama `ConflictException` → ProblemDetails con `Status = 409` y `Title = "Conflict"`, sin alterar las ramas 400/404/500 existentes. Depende de T003
 - [ ] T005 [P] Crear `app/backend/src/Modules/Sprints/Contracts/IBacklogModuleApi.cs` con `Task<bool> ExistsAsync(Guid itemId, CancellationToken cancellationToken)`, `Task<IReadOnlyList<BacklogItemSummary>> GetSummariesAsync(IReadOnlyCollection<Guid> itemIds, CancellationToken cancellationToken)` y `record BacklogItemSummary(Guid Id, string Title, string Type, int DevPoints, int QAPoints)` (`Type` como `string`; sin estado ni descripción)
-- [ ] T006 [P] Crear `app/backend/src/Modules/Sprints/Domain/SprintItems/SprintItemRules.cs`: constantes de campo `SprintIdField = "sprintId"` y `ItemIdField = "itemId"`, `ItemIdUniqueIndexName = "UX_SprintItems_ItemId"` e `SprintIdIndexName = "IX_SprintItems_SprintId"`; mensajes en español (Sprint no encontrado, elemento no encontrado, conflicto "el elemento ya está asignado a un Sprint" sin revelar a cuál, identificador obligatorio, formato inválido)
-- [ ] T007 [P] Escribir pruebas (deben fallar) en `app/backend/tests/Unit/Sprints/SprintItemDomainTests.cs`: `SprintItem.Create` genera `Id` distinto de `Guid.Empty`, conserva `SprintId` e `ItemId`, y lanza `BadRequestException` si cualquiera es `Guid.Empty`
-- [ ] T008 Crear `app/backend/src/Modules/Sprints/Domain/SprintItems/SprintItem.cs`: `SprintItem : Aggregate<Guid>, IAuditableEntity` con `SprintId`, `ItemId`, `CreatedAt`, `CreatedBy`, `LastModified`, `LastModifiedBy`; fábrica `SprintItem.Create(Guid sprintId, Guid itemId)` que usa `SprintItemRules`; sin estado, sin orden y sin eventos de dominio (ADR-006). Depende de T006
-- [ ] T009 Añadir `DbSet<SprintItem> SprintItems` en `app/backend/src/Modules/Sprints/Data/ISprintsDbContext.cs` y `app/backend/src/Modules/Sprints/Data/SprintsDbContext.cs` (schema `sprints`). Depende de T008
-- [ ] T010 Crear `app/backend/src/Modules/Sprints/Data/Configurations/SprintItemConfiguration.cs`: tabla `SprintItems`, PK `Id` `uuid`, `SprintId` `uuid NOT NULL` con FK a `sprints."Sprints"("Id")` `ON DELETE RESTRICT`, `ItemId` `uuid NOT NULL` SIN FK, `CreatedAt` `timestamptz NOT NULL`, `CreatedBy` `varchar NOT NULL`, `LastModified` `timestamptz` NULL, `LastModifiedBy` `varchar` NULL; índice ÚNICO `UX_SprintItems_ItemId` sobre `ItemId` (nombre desde `SprintItemRules.ItemIdUniqueIndexName`) e índice no único `IX_SprintItems_SprintId`. Depende de T009
-- [ ] T011 Generar la migración `AddSprintItems` en `app/backend/src/Modules/Sprints/Data/Migrations/` (`dotnet ef migrations add AddSprintItems`), verificando que solo crea `sprints."SprintItems"` (sin tocar `Sprints`, `backlog` ni `application`). Depende de T010
-- [ ] T012 [P] Implementar `app/backend/src/Modules/Backlog/BacklogModuleApi.cs` (`IBacklogModuleApi`): `ExistsAsync` con `AnyAsync` y `GetSummariesAsync` con una sola consulta `WHERE Id = ANY(...)` sobre `IBacklogDbContext` (solo lectura, `AsNoTracking`, omite ids inexistentes, `Type` como `ToString()`, `CancellationToken` propagado, sin fallback ante error). Depende de T005
-- [ ] T013 Añadir `ProjectReference` a `Sprints.csproj` en `app/backend/src/Modules/Backlog/Backlog.csproj` y registrar `services.AddScoped<IBacklogModuleApi, BacklogModuleApi>()` en `app/backend/src/Modules/Backlog/BacklogModule.cs`; verificar con `dotnet build app/backend/TechWorkHub.sln` que no hay referencia circular. Depende de T005, T012
-- [ ] T014 [P] Escribir `app/backend/tests/Integration/Sprints/SprintItemsMigrationTests.cs`: la migración crea `sprints."SprintItems"`; un `INSERT` SQL con `ItemId` repetido (incluso con otro `SprintId`) viola `UX_SprintItems_ItemId` (SQLSTATE 23505); un `SprintId` inexistente viola la FK; los schemas `backlog` y `application` no cambian. Depende de T011
+- [X] T006 [P] Crear `app/backend/src/Modules/Sprints/Domain/SprintItems/SprintItemRules.cs`: constantes de campo `SprintIdField = "sprintId"` y `ItemIdField = "itemId"`, `ItemIdUniqueIndexName = "UX_SprintItems_ItemId"` e `SprintIdIndexName = "IX_SprintItems_SprintId"`; mensajes en español (Sprint no encontrado, elemento no encontrado, conflicto "el elemento ya está asignado a un Sprint" sin revelar a cuál, identificador obligatorio, formato inválido)
+- [X] T007 [P] Escribir pruebas (deben fallar) en `app/backend/tests/Unit/Sprints/SprintItemDomainTests.cs`: `SprintItem.Create` genera `Id` distinto de `Guid.Empty`, conserva `SprintId` e `ItemId`, y lanza `BadRequestException` si cualquiera es `Guid.Empty`
+- [X] T008 Crear `app/backend/src/Modules/Sprints/Domain/SprintItems/SprintItem.cs`: `SprintItem : Aggregate<Guid>, IAuditableEntity` con `SprintId`, `ItemId`, `CreatedAt`, `CreatedBy`, `LastModified`, `LastModifiedBy`; fábrica `SprintItem.Create(Guid sprintId, Guid itemId)` que usa `SprintItemRules`; sin estado, sin orden y sin eventos de dominio (ADR-006). Depende de T006
+- [X] T009 Añadir `DbSet<SprintItem> SprintItems` en `app/backend/src/Modules/Sprints/Data/ISprintsDbContext.cs` y `app/backend/src/Modules/Sprints/Data/SprintsDbContext.cs` (schema `sprints`). Depende de T008
+- [X] T010 Crear `app/backend/src/Modules/Sprints/Data/Configurations/SprintItemConfiguration.cs`: tabla `SprintItems`, PK `Id` `uuid`, `SprintId` `uuid NOT NULL` con FK a `sprints."Sprints"("Id")` `ON DELETE RESTRICT`, `ItemId` `uuid NOT NULL` SIN FK, `CreatedAt` `timestamptz NOT NULL`, `CreatedBy` `varchar NOT NULL`, `LastModified` `timestamptz` NULL, `LastModifiedBy` `varchar` NULL; índice ÚNICO `UX_SprintItems_ItemId` sobre `ItemId` (nombre desde `SprintItemRules.ItemIdUniqueIndexName`) e índice no único `IX_SprintItems_SprintId`. Depende de T009
+- [X] T011 Generar la migración `AddSprintItems` en `app/backend/src/Modules/Sprints/Data/Migrations/` (`dotnet ef migrations add AddSprintItems`), verificando que solo crea `sprints."SprintItems"` (sin tocar `Sprints`, `backlog` ni `application`). Depende de T010
+- [X] T012 [P] Implementar `app/backend/src/Modules/Backlog/BacklogModuleApi.cs` (`IBacklogModuleApi`): `ExistsAsync` con `AnyAsync` y `GetSummariesAsync` con una sola consulta `WHERE Id = ANY(...)` sobre `IBacklogDbContext` (solo lectura, `AsNoTracking`, omite ids inexistentes, `Type` como `ToString()`, `CancellationToken` propagado, sin fallback ante error). Depende de T005
+- [X] T013 Añadir `ProjectReference` a `Sprints.csproj` en `app/backend/src/Modules/Backlog/Backlog.csproj` y registrar `services.AddScoped<IBacklogModuleApi, BacklogModuleApi>()` en `app/backend/src/Modules/Backlog/BacklogModule.cs`; verificar con `dotnet build app/backend/TechWorkHub.sln` que no hay referencia circular. Depende de T005, T012
+- [X] T014 [P] Escribir `app/backend/tests/Integration/Sprints/SprintItemsMigrationTests.cs`: la migración crea `sprints."SprintItems"`; un `INSERT` SQL con `ItemId` repetido (incluso con otro `SprintId`) viola `UX_SprintItems_ItemId` (SQLSTATE 23505); un `SprintId` inexistente viola la FK; los schemas `backlog` y `application` no cambian. Depende de T011
 - [ ] T015 [P] Escribir pruebas de integración del contrato real en `app/backend/tests/Integration/Sprints/BacklogModuleApiTests.cs`: `ExistsAsync` verdadero/falso; `GetSummariesAsync` devuelve solo ids existentes con `Title`, `Type` (texto), `DevPoints`, `QAPoints` en una sola consulta. Depende de T013, T017
-- [ ] T016 [P] Crear el doble escrito a mano `app/backend/tests/Unit/Sprints/FakeBacklogModuleApi.cs` (elementos configurables, contador de llamadas, opción de lanzar excepción) y, si hace falta, ajustar `app/backend/tests/Unit/Sprints/SprintsInMemoryDb.cs` para `SprintItems`. Depende de T005
-- [ ] T017 Ajustar `app/backend/tests/Integration/Sprints/SprintsApiFactory.cs` para registrar el `BacklogModuleApi` real y migrar también el schema `backlog` en el contenedor Testcontainers, de modo que las pruebas de integración puedan sembrar elementos de Backlog. Depende de T013
+- [X] T016 [P] Crear el doble escrito a mano `app/backend/tests/Unit/Sprints/FakeBacklogModuleApi.cs` (elementos configurables, contador de llamadas, opción de lanzar excepción) y, si hace falta, ajustar `app/backend/tests/Unit/Sprints/SprintsInMemoryDb.cs` para `SprintItems`. Depende de T005
+- [X] T017 Ajustar `app/backend/tests/Integration/Sprints/SprintsApiFactory.cs` para registrar el `BacklogModuleApi` real y migrar también el schema `backlog` en el contenedor Testcontainers, de modo que las pruebas de integración puedan sembrar elementos de Backlog. Depende de T013
 
 **Checkpoint**: Fundación lista - las historias pueden comenzar
 
@@ -74,16 +74,16 @@ description: "Lista de tareas para HU-004: Asignación de Elementos del Backlog 
 
 ### Tests for User Story 1 (escribir primero; deben FALLAR)
 
-- [ ] T018 [P] [US1] Pruebas unitarias en `app/backend/tests/Unit/Sprints/AssignItemToSprintCommandHandlerTests.cs` (doble manual T016, EF in-memory): éxito devuelve `{ sprintId, itemId }` y persiste una fila con `CreatedBy`; `AnyAsync` previo detecta duplicado → `ConflictException`; un `DbUpdateException` cuyo `InnerException` es `PostgresException` con `SqlState = "23505"` y `ConstraintName = "UX_SprintItems_ItemId"` → `ConflictException`; otro `DbUpdateException` (otra restricción) se propaga sin traducir
-- [ ] T019 [P] [US1] Pruebas de integración en `app/backend/tests/Integration/Sprints/AssignItemToSprintTests.cs`: escenario 1 (201, cuerpo, `Location` hacia el GET, fila con `CreatedAt`/`CreatedBy` = `sub`), escenario 2 (el elemento de `backlog` conserva título, tipo, estimaciones y estado; el Sprint no cambia), escenario 3 (dos elementos distintos en el mismo Sprint), reasignación al mismo Sprint y a otro Sprint → 409 con el mismo mensaje y una sola fila, y concurrencia (N solicitudes simultáneas del mismo elemento a dos Sprints → exactamente un 201, el resto 409, una sola fila)
+- [X] T018 [P] [US1] Pruebas unitarias en `app/backend/tests/Unit/Sprints/AssignItemToSprintCommandHandlerTests.cs` (doble manual T016, EF in-memory): éxito devuelve `{ sprintId, itemId }` y persiste una fila con `CreatedBy`; `AnyAsync` previo detecta duplicado → `ConflictException`; un `DbUpdateException` cuyo `InnerException` es `PostgresException` con `SqlState = "23505"` y `ConstraintName = "UX_SprintItems_ItemId"` → `ConflictException`; otro `DbUpdateException` (otra restricción) se propaga sin traducir
+- [X] T019 [P] [US1] Pruebas de integración en `app/backend/tests/Integration/Sprints/AssignItemToSprintTests.cs`: escenario 1 (201, cuerpo, `Location` hacia el GET, fila con `CreatedAt`/`CreatedBy` = `sub`), escenario 2 (el elemento de `backlog` conserva título, tipo, estimaciones y estado; el Sprint no cambia), escenario 3 (dos elementos distintos en el mismo Sprint), reasignación al mismo Sprint y a otro Sprint → 409 con el mismo mensaje y una sola fila, y concurrencia (N solicitudes simultáneas del mismo elemento a dos Sprints → exactamente un 201, el resto 409, una sola fila)
 
 ### Implementation for User Story 1
 
-- [ ] T020 [P] [US1] Crear `app/backend/src/Modules/Sprints/Features/SprintItems/AssignedItemResponse.cs`: `record AssignedItemResponse(Guid SprintId, Guid ItemId)`
-- [ ] T021 [P] [US1] Crear `app/backend/src/Modules/Sprints/Features/SprintItems/AssignItemToSprint/AssignItemToSprintCommand.cs`: `record AssignItemToSprintCommand(string? SprintId, string? ItemId) : IRequest<AssignedItemResponse>` (identificadores como texto, ADR-007)
-- [ ] T022 [US1] Crear `app/backend/src/Modules/Sprints/Features/SprintItems/AssignItemToSprint/AssignItemToSprintCommandHandler.cs` con este orden fijo: `ICurrentUser.UserId` (401 si falta) → parsear ids → `AnyAsync` del Sprint (`NotFoundException` "Sprint") → `IBacklogModuleApi.ExistsAsync` (`NotFoundException` "elemento", sin invocar el contrato si el Sprint no existe) → `AnyAsync` previo por `ItemId` (`ConflictException`, solo optimización) → `SprintItem.Create` + `Add` + un único `SaveChangesAsync(cancellationToken)`; capturar `DbUpdateException` con `PostgresException` `SqlState = "23505"` **y** `ConstraintName = SprintItemRules.ItemIdUniqueIndexName` → `ConflictException`; cualquier otro error se propaga (500). Depende de T004, T008, T009, T013, T021
-- [ ] T023 [US1] Crear `app/backend/src/Modules/Sprints/Features/SprintItems/AssignItemToSprint/AssignItemToSprintEndpoint.cs` (Carter `ICarterModule`): `POST /api/sprints/{sprintId}/items` con `sprintId` como `string` en la ruta, cuerpo `{ itemId }`, `.RequireAuthorization()`, respuesta `Results.Created($"/api/sprints/{sprintId}/items", response)` (201 PROPUESTO), `CancellationToken` propagado. Depende de T022
-- [ ] T024 [US1] Verificar que `app/backend/src/Modules/Sprints/SprintsModule.cs` descubre handler y validador (MediatR y `AddValidatorsFromAssembly` ya son por ensamblado; solo ajustar si hace falta) y ejecutar `dotnet test` de T018 y T019 hasta verde. Depende de T023
+- [X] T020 [P] [US1] Crear `app/backend/src/Modules/Sprints/Features/SprintItems/AssignedItemResponse.cs`: `record AssignedItemResponse(Guid SprintId, Guid ItemId)`
+- [X] T021 [P] [US1] Crear `app/backend/src/Modules/Sprints/Features/SprintItems/AssignItemToSprint/AssignItemToSprintCommand.cs`: `record AssignItemToSprintCommand(string? SprintId, string? ItemId) : IRequest<AssignedItemResponse>` (identificadores como texto, ADR-007)
+- [X] T022 [US1] Crear `app/backend/src/Modules/Sprints/Features/SprintItems/AssignItemToSprint/AssignItemToSprintCommandHandler.cs` con este orden fijo: `ICurrentUser.UserId` (401 si falta) → parsear ids → `AnyAsync` del Sprint (`NotFoundException` "Sprint") → `IBacklogModuleApi.ExistsAsync` (`NotFoundException` "elemento", sin invocar el contrato si el Sprint no existe) → `AnyAsync` previo por `ItemId` (`ConflictException`, solo optimización) → `SprintItem.Create` + `Add` + un único `SaveChangesAsync(cancellationToken)`; capturar `DbUpdateException` con `PostgresException` `SqlState = "23505"` **y** `ConstraintName = SprintItemRules.ItemIdUniqueIndexName` → `ConflictException`; cualquier otro error se propaga (500). Depende de T004, T008, T009, T013, T021
+- [X] T023 [US1] Crear `app/backend/src/Modules/Sprints/Features/SprintItems/AssignItemToSprint/AssignItemToSprintEndpoint.cs` (Carter `ICarterModule`): `POST /api/sprints/{sprintId}/items` con `sprintId` como `string` en la ruta, cuerpo `{ itemId }`, `.RequireAuthorization()`, respuesta `Results.Created($"/api/sprints/{sprintId}/items", response)` (201 PROPUESTO), `CancellationToken` propagado. Depende de T022
+- [X] T024 [US1] Verificar que `app/backend/src/Modules/Sprints/SprintsModule.cs` descubre handler y validador (MediatR y `AddValidatorsFromAssembly` ya son por ensamblado; solo ajustar si hace falta) y ejecutar `dotnet test` de T018 y T019 hasta verde. Depende de T023
 
 **Checkpoint**: US1 funcional y comprobable de forma independiente (MVP)
 
@@ -97,14 +97,14 @@ description: "Lista de tareas para HU-004: Asignación de Elementos del Backlog 
 
 ### Tests for User Story 3 (escribir primero; deben FALLAR)
 
-- [ ] T025 [P] [US3] Pruebas unitarias en `app/backend/tests/Unit/Sprints/AssignItemToSprintValidatorTests.cs`: `sprintId` e `itemId` nulos, vacíos, no-GUID y `Guid.Empty` generan error bajo la clave `sprintId` o `itemId`; ids válidos pasan
-- [ ] T026 [US3] Ampliar `app/backend/tests/Unit/Sprints/AssignItemToSprintCommandHandlerTests.cs` (mismo archivo que T018): Sprint inexistente → `NotFoundException` y el doble del contrato registra 0 llamadas; elemento inexistente → `NotFoundException` con mensaje de elemento; ambos inexistentes → mensaje de Sprint; sin escrituras en los tres casos. Depende de T018
-- [ ] T027 [P] [US3] Pruebas de integración en `app/backend/tests/Integration/Sprints/AssignItemToSprintValidationTests.cs`: 400 `application/problem+json` con `errors.sprintId` / `errors.itemId` para los 4 casos (ausente, malformado, `Guid.Empty`, cuerpo sin `itemId`), 404 Sprint, 404 elemento (el `detail` distingue el recurso) y tabla vacía en todos
+- [X] T025 [P] [US3] Pruebas unitarias en `app/backend/tests/Unit/Sprints/AssignItemToSprintValidatorTests.cs`: `sprintId` e `itemId` nulos, vacíos, no-GUID y `Guid.Empty` generan error bajo la clave `sprintId` o `itemId`; ids válidos pasan
+- [X] T026 [US3] Ampliar `app/backend/tests/Unit/Sprints/AssignItemToSprintCommandHandlerTests.cs` (mismo archivo que T018): Sprint inexistente → `NotFoundException` y el doble del contrato registra 0 llamadas; elemento inexistente → `NotFoundException` con mensaje de elemento; ambos inexistentes → mensaje de Sprint; sin escrituras en los tres casos. Depende de T018
+- [X] T027 [P] [US3] Pruebas de integración en `app/backend/tests/Integration/Sprints/AssignItemToSprintValidationTests.cs`: 400 `application/problem+json` con `errors.sprintId` / `errors.itemId` para los 4 casos (ausente, malformado, `Guid.Empty`, cuerpo sin `itemId`), 404 Sprint, 404 elemento (el `detail` distingue el recurso) y tabla vacía en todos
 
 ### Implementation for User Story 3
 
-- [ ] T028 [US3] Crear `app/backend/src/Modules/Sprints/Features/SprintItems/AssignItemToSprint/AssignItemToSprintValidator.cs`: `AbstractValidator<AssignItemToSprintCommand>` con `NotEmpty` + `Guid.TryParse` + distinto de `Guid.Empty` para cada campo, usando `OverridePropertyName` y los mensajes de `SprintItemRules` para que las claves de error sean `sprintId` e `itemId`. Depende de T021
-- [ ] T029 [US3] Confirmar que `ValidationBehavior<,>` produce 400 con `errors` por campo a través de `CustomExceptionHandler` y que el handler (T022) lanza los 404 con los mensajes de `SprintItemRules`; ejecutar T025, T026 y T027 hasta verde. Depende de T022, T028
+- [X] T028 [US3] Crear `app/backend/src/Modules/Sprints/Features/SprintItems/AssignItemToSprint/AssignItemToSprintValidator.cs`: `AbstractValidator<AssignItemToSprintCommand>` con `NotEmpty` + `Guid.TryParse` + distinto de `Guid.Empty` para cada campo, usando `OverridePropertyName` y los mensajes de `SprintItemRules` para que las claves de error sean `sprintId` e `itemId`. Depende de T021
+- [X] T029 [US3] Confirmar que `ValidationBehavior<,>` produce 400 con `errors` por campo a través de `CustomExceptionHandler` y que el handler (T022) lanza los 404 con los mensajes de `SprintItemRules`; ejecutar T025, T026 y T027 hasta verde. Depende de T022, T028
 
 **Checkpoint**: US1 y US3 funcionan de forma independiente
 
@@ -118,13 +118,13 @@ description: "Lista de tareas para HU-004: Asignación de Elementos del Backlog 
 
 ### Tests for User Story 4 (escribir primero; deben FALLAR)
 
-- [ ] T030 [P] [US4] Pruebas de integración en `app/backend/tests/Integration/Sprints/SprintItemsAuthTests.cs`: POST y GET sin token y con token inválido/expirado → 401 sin lectura ni escritura (sin filas); regresión: 400, 401, 404 y 500 de HU-001/002/003 conservan su formato tras añadir el 409
-- [ ] T031 [P] [US4] Pruebas de integración en `app/backend/tests/Integration/Sprints/AssignItemToSprintFailureTests.cs`: forzar un fallo de persistencia (contexto o contrato que lanza) → 500 `application/problem+json` sin traza ni `StackTrace` en el cuerpo y sin fila en `sprints."SprintItems"`; un `DbUpdateException` de otra restricción distinta de `UX_SprintItems_ItemId` termina en 500, no en 409
-- [ ] T032 [US4] Ampliar `app/backend/tests/Unit/Sprints/AssignItemToSprintCommandHandlerTests.cs` (tras T026): `ICurrentUser.UserId` ausente → falla de identidad antes de consultar Sprint o contrato. Depende de T026
+- [X] T030 [P] [US4] Pruebas de integración en `app/backend/tests/Integration/Sprints/SprintItemsAuthTests.cs`: POST y GET sin token y con token inválido/expirado → 401 sin lectura ni escritura (sin filas); regresión: 400, 401, 404 y 500 de HU-001/002/003 conservan su formato tras añadir el 409
+- [X] T031 [P] [US4] Pruebas de integración en `app/backend/tests/Integration/Sprints/AssignItemToSprintFailureTests.cs`: forzar un fallo de persistencia (contexto o contrato que lanza) → 500 `application/problem+json` sin traza ni `StackTrace` en el cuerpo y sin fila en `sprints."SprintItems"`; un `DbUpdateException` de otra restricción distinta de `UX_SprintItems_ItemId` termina en 500, no en 409
+- [X] T032 [US4] Ampliar `app/backend/tests/Unit/Sprints/AssignItemToSprintCommandHandlerTests.cs` (tras T026): `ICurrentUser.UserId` ausente → falla de identidad antes de consultar Sprint o contrato. Depende de T026
 
 ### Implementation for User Story 4
 
-- [ ] T033 [US4] Verificar que ambos endpoints llevan `.RequireAuthorization()` (T023 y T039) y que el handler resuelve la identidad antes de acceder a datos; corregir si T030–T032 fallan y ejecutarlas hasta verde. Depende de T023, T039
+- [X] T033 [US4] Verificar que ambos endpoints llevan `.RequireAuthorization()` (T023 y T039) y que el handler resuelve la identidad antes de acceder a datos; corregir si T030–T032 fallan y ejecutarlas hasta verde. Depende de T023, T039
 
 **Checkpoint**: US1, US3 y US4 completas
 
@@ -138,16 +138,16 @@ description: "Lista de tareas para HU-004: Asignación de Elementos del Backlog 
 
 ### Tests for User Story 2 (escribir primero; deben FALLAR)
 
-- [ ] T034 [P] [US2] Pruebas unitarias en `app/backend/tests/Unit/Sprints/ListSprintItemsQueryHandlerTests.cs` (doble manual T016): devuelve exactamente los elementos asignados mapeados desde `BacklogItemSummary`; orden por `CreatedAt` y luego `Id`; Sprint sin elementos → lista vacía sin invocar `GetSummariesAsync`; Sprint inexistente → `NotFoundException`; el contrato se invoca una sola vez (sin N+1); un id que el contrato no devuelve se omite sin inventar título
-- [ ] T035 [P] [US2] Pruebas de integración en `app/backend/tests/Integration/Sprints/ListSprintItemsTests.cs`: escenarios 2, 3 y 4 del quickstart (200 con exactamente los elementos y campos esperados, sin `status` ni auditoría; 200 `[]`; 404 Sprint inexistente; `sprintId` no GUID → 404), datos del backlog intactos tras la consulta, y rendimiento SC-006 (100 elementos asignados, consulta < 2 s)
+- [X] T034 [P] [US2] Pruebas unitarias en `app/backend/tests/Unit/Sprints/ListSprintItemsQueryHandlerTests.cs` (doble manual T016): devuelve exactamente los elementos asignados mapeados desde `BacklogItemSummary`; orden por `CreatedAt` y luego `Id`; Sprint sin elementos → lista vacía sin invocar `GetSummariesAsync`; Sprint inexistente → `NotFoundException`; el contrato se invoca una sola vez (sin N+1); un id que el contrato no devuelve se omite sin inventar título
+- [X] T035 [P] [US2] Pruebas de integración en `app/backend/tests/Integration/Sprints/ListSprintItemsTests.cs`: escenarios 2, 3 y 4 del quickstart (200 con exactamente los elementos y campos esperados, sin `status` ni auditoría; 200 `[]`; 404 Sprint inexistente; `sprintId` no GUID → 404), datos del backlog intactos tras la consulta, y rendimiento SC-006 (100 elementos asignados, consulta < 2 s)
 
 ### Implementation for User Story 2
 
 - [ ] T036 [P] [US2] Crear `app/backend/src/Modules/Sprints/Features/SprintItems/SprintItemResponse.cs`: `record SprintItemResponse(Guid Id, string Title, string Type, int DevPoints, int QAPoints)` (sin estado ni auditoría)
-- [ ] T037 [P] [US2] Crear `app/backend/src/Modules/Sprints/Features/SprintItems/ListSprintItems/ListSprintItemsQuery.cs`: `record ListSprintItemsQuery(Guid SprintId) : IRequest<IReadOnlyList<SprintItemResponse>>`
-- [ ] T038 [US2] Crear `app/backend/src/Modules/Sprints/Features/SprintItems/ListSprintItems/ListSprintItemsQueryHandler.cs`: `AnyAsync` del Sprint (`NotFoundException`) → `SprintItems.AsNoTracking()` filtrado por `SprintId` ordenado por `CreatedAt` y luego `Id` → una sola llamada `GetSummariesAsync` con los `ItemId` → proyección a `SprintItemResponse` preservando el orden; omitir con `LogWarning` los ids no devueltos; `CancellationToken` propagado. Depende de T009, T013, T036, T037
-- [ ] T039 [US2] Crear `app/backend/src/Modules/Sprints/Features/SprintItems/ListSprintItems/ListSprintItemsEndpoint.cs` (Carter): `GET /api/sprints/{sprintId:guid}/items`, `.RequireAuthorization()`, 200 con la lista. Depende de T038
-- [ ] T040 [US2] Ejecutar T034 y T035 hasta verde. Depende de T039
+- [X] T037 [P] [US2] Crear `app/backend/src/Modules/Sprints/Features/SprintItems/ListSprintItems/ListSprintItemsQuery.cs`: `record ListSprintItemsQuery(Guid SprintId) : IRequest<IReadOnlyList<SprintItemResponse>>`
+- [X] T038 [US2] Crear `app/backend/src/Modules/Sprints/Features/SprintItems/ListSprintItems/ListSprintItemsQueryHandler.cs`: `AnyAsync` del Sprint (`NotFoundException`) → `SprintItems.AsNoTracking()` filtrado por `SprintId` ordenado por `CreatedAt` y luego `Id` → una sola llamada `GetSummariesAsync` con los `ItemId` → proyección a `SprintItemResponse` preservando el orden; omitir con `LogWarning` los ids no devueltos; `CancellationToken` propagado. Depende de T009, T013, T036, T037
+- [X] T039 [US2] Crear `app/backend/src/Modules/Sprints/Features/SprintItems/ListSprintItems/ListSprintItemsEndpoint.cs` (Carter): `GET /api/sprints/{sprintId:guid}/items`, `.RequireAuthorization()`, 200 con la lista. Depende de T038
+- [X] T040 [US2] Ejecutar T034 y T035 hasta verde. Depende de T039
 
 **Checkpoint**: Backend completo (las cuatro historias)
 
@@ -158,14 +158,14 @@ description: "Lista de tareas para HU-004: Asignación de Elementos del Backlog 
 **Purpose**: Vista de elementos asignados y diálogo de asignación, según `documents/designer-ux/ux_004_asignacion_elementos_sprint.md` y R-10
 
 - [ ] T041 [P] [US1] Ampliar `app/frontend/src/app/features/sprints/models/sprint.models.ts` con `SprintItem` (`id`, `title`, `type`, `devPoints`, `qaPoints`) y `AssignedItem` (`sprintId`, `itemId`)
-- [ ] T042 [US1] Escribir pruebas (deben fallar) en `app/frontend/src/app/features/sprints/services/sprint-api.service.spec.ts` para `assignItem(sprintId, itemId)` (`POST /api/sprints/{id}/items` con `{ itemId }`) y `listItems(sprintId)` (`GET`). Depende de T041
-- [ ] T043 [US1] Añadir `assignItem` y `listItems` en `app/frontend/src/app/features/sprints/services/sprint-api.service.ts`. Depende de T042
-- [ ] T044 [P] [US2] Escribir pruebas (deben fallar) en `app/frontend/src/app/features/sprints/components/sprint-assigned-items/sprint-assigned-items.component.spec.ts`: grilla con título, tipo, puntos Dev y QA; estado de carga; estado vacío; 404 de Sprint; error genérico con reintento; apertura del diálogo; nueva consulta al servidor tras el éxito (sin UI optimista); sin acciones de quitar, mover ni reasignar
-- [ ] T045 [US2] Crear `app/frontend/src/app/features/sprints/components/sprint-assigned-items/sprint-assigned-items.component.{ts,html,scss}`: standalone, `OnPush`, Signals, PrimeNG tema neutral, textos con i18n. Depende de T043, T044
-- [ ] T046 [P] [US1] Escribir pruebas (deben fallar) en `app/frontend/src/app/features/sprints/components/assign-item-dialog/assign-item-dialog.component.spec.ts`: el botón se deshabilita con `isSubmitting()`; 201 cierra el diálogo y emite el evento; 404 elemento, 409, 400 y 500 conservan el valor y muestran el error; 404 de Sprint bloquea el reintento; sin validación de negocio duplicada en cliente
-- [ ] T047 [US1] Crear `app/frontend/src/app/features/sprints/components/assign-item-dialog/assign-item-dialog.component.{ts,html,scss}` (standalone, `OnPush`, Signals, i18n). Depende de T043, T046
-- [ ] T048 [US2] Registrar la ruta `sprints/:id/elementos` en `app/frontend/src/app/app.routes.ts`, dentro del bloque `sprints` (hereda `authGuard`) y declarada ANTES de `sprints/:id`. Depende de T045
-- [ ] T049 [US2] Añadir solo el botón `Elementos asignados` en `app/frontend/src/app/features/sprints/components/sprint-detail/sprint-detail.component.html` (y `.ts` si hace falta el `routerLink`) y ampliar `sprint-detail.component.spec.ts`; los cuatro datos del Sprint no cambian. Depende de T048
+- [X] T042 [US1] Escribir pruebas (deben fallar) en `app/frontend/src/app/features/sprints/services/sprint-api.service.spec.ts` para `assignItem(sprintId, itemId)` (`POST /api/sprints/{id}/items` con `{ itemId }`) y `listItems(sprintId)` (`GET`). Depende de T041
+- [X] T043 [US1] Añadir `assignItem` y `listItems` en `app/frontend/src/app/features/sprints/services/sprint-api.service.ts`. Depende de T042
+- [X] T044 [P] [US2] Escribir pruebas (deben fallar) en `app/frontend/src/app/features/sprints/components/sprint-assigned-items/sprint-assigned-items.component.spec.ts`: grilla con título, tipo, puntos Dev y QA; estado de carga; estado vacío; 404 de Sprint; error genérico con reintento; apertura del diálogo; nueva consulta al servidor tras el éxito (sin UI optimista); sin acciones de quitar, mover ni reasignar
+- [X] T045 [US2] Crear `app/frontend/src/app/features/sprints/components/sprint-assigned-items/sprint-assigned-items.component.{ts,html,scss}`: standalone, `OnPush`, Signals, PrimeNG tema neutral, textos con i18n. Depende de T043, T044
+- [X] T046 [P] [US1] Escribir pruebas (deben fallar) en `app/frontend/src/app/features/sprints/components/assign-item-dialog/assign-item-dialog.component.spec.ts`: el botón se deshabilita con `isSubmitting()`; 201 cierra el diálogo y emite el evento; 404 elemento, 409, 400 y 500 conservan el valor y muestran el error; 404 de Sprint bloquea el reintento; sin validación de negocio duplicada en cliente
+- [X] T047 [US1] Crear `app/frontend/src/app/features/sprints/components/assign-item-dialog/assign-item-dialog.component.{ts,html,scss}` (standalone, `OnPush`, Signals, i18n). Depende de T043, T046
+- [X] T048 [US2] Registrar la ruta `sprints/:id/elementos` en `app/frontend/src/app/app.routes.ts`, dentro del bloque `sprints` (hereda `authGuard`) y declarada ANTES de `sprints/:id`. Depende de T045
+- [X] T049 [US2] Añadir solo el botón `Elementos asignados` en `app/frontend/src/app/features/sprints/components/sprint-detail/sprint-detail.component.html` (y `.ts` si hace falta el `routerLink`) y ampliar `sprint-detail.component.spec.ts`; los cuatro datos del Sprint no cambian. Depende de T048
 
 ---
 
@@ -173,11 +173,11 @@ description: "Lista de tareas para HU-004: Asignación de Elementos del Backlog 
 
 **Purpose**: Verificación final y consistencia
 
-- [ ] T050 [P] Ejecutar `dotnet test app/backend/TechWorkHub.sln` y confirmar que las suites de HU-001, HU-002 y HU-003 pasan sin modificaciones
+- [X] T050 [P] Ejecutar `dotnet test app/backend/TechWorkHub.sln` y confirmar que las suites de HU-001, HU-002 y HU-003 pasan sin modificaciones
 - [ ] T051 [P] Ejecutar `npm test` y `npm run build` en `app/frontend`
 - [ ] T052 Recorrer `specs/004-HU_asignacion_elementos_sprint/quickstart.md` (escenarios 1–10 y validación del frontend) contra la API y la SPA en ejecución
-- [ ] T053 [P] Confirmar con `git diff --stat` que no se modificaron `Sprint`, `SprintRules`, `InitialSprintsSchema`, `BacklogItem`, `BacklogDbContext`, `Modules/Application`, `core/auth` ni `features/backlog` (FR-013, FR-014)
-- [ ] T054 Revisar que ningún `catch` ni mensaje de error exponga trazas, el Sprint dueño del elemento en el 409, ni secretos (FR-012)
+- [X] T053 [P] Confirmar con `git diff --stat` que no se modificaron `Sprint`, `SprintRules`, `InitialSprintsSchema`, `BacklogItem`, `BacklogDbContext`, `Modules/Application`, `core/auth` ni `features/backlog` (FR-013, FR-014)
+- [X] T054 Revisar que ningún `catch` ni mensaje de error exponga trazas, el Sprint dueño del elemento en el 409, ni secretos (FR-012)
 
 ---
 
@@ -245,3 +245,18 @@ Task: "AssignItemToSprintCommand en app/backend/src/Modules/Sprints/Features/Spr
 - Verificar que las pruebas fallan antes de implementar
 - Hacer commit tras cada tarea o grupo lógico
 - Evitar: tareas vagas, conflictos en el mismo archivo y dependencias entre historias que rompan su independencia
+
+---
+
+## Phase 9: Convergence (retrabajo iteración 1/2 — DEF-01 y DEF-02 del QA Automation)
+
+**Propósito**: cerrar los defectos del informe `documents/qa-auto/qa-report.md`. Reabiertas por no cumplirse: T005, T015, T036 y T041 (tipo `int` en lugar de `decimal?`). T051 y T052 siguen abiertas (bloqueo de entorno: Node v22.20.0 frente a Angular CLI ≥ 22.22.3; no es defecto de código). `spec.md`, `plan.md`, `data-model.md` y los contratos ya fueron reconciliados (FR-017, FR-018, retiro de FR-015, `decimal?`).
+
+- [X] T055 [fix:TASKS:DEF-01] [servidor] Cambiar `BacklogItemSummary` en `app/backend/src/Modules/Sprints/Contracts/IBacklogModuleApi.cs` a `decimal? DevPoints, decimal? QAPoints` per FR-018 (partial)
+- [X] T056 [fix:TASKS:DEF-01] [servidor] Eliminar `ToWholePoints` de `app/backend/src/Modules/Backlog/BacklogModuleApi.cs` y proyectar `DevPoints`/`QAPoints` como `decimal?` sin redondeo ni conversión de `null` a 0 per FR-018, W-01 (contradicts)
+- [X] T057 [fix:TASKS:DEF-01] [servidor] Cambiar `SprintItemResponse` a `decimal? DevPoints, decimal? QAPoints`, ajustar el mapeo del handler de consulta y las pruebas que asumen `int`, y revalidar `SprintItemsEstimationFidelityTests` (2 pruebas rojas), la suite Sprints y la regresión Backlog per FR-008, FR-018 (partial)
+- [X] T058 [fix:TASKS:DEF-01] [servidor] Ampliar `app/backend/tests/Integration/Sprints/BacklogModuleApiTests.cs` con un elemento de estimación 2.5 y otro con QA nulo, verificando que `GetSummariesAsync` devuelve 2.5 y `null` per FR-018 (partial)
+- [X] T059 [fix:TASKS:DEF-01] [interfaz] Declarar `devPoints: number | null` y `qaPoints: number | null` en `SprintItem` de `app/frontend/src/app/features/sprints/models/sprint.models.ts` y ajustar `sprint-api.service.ts` y sus specs per FR-018 (partial)
+- [X] T060 [fix:TASKS:DEF-01] [interfaz] Mostrar un guion (`—`) para `devPoints`/`qaPoints` nulos en `sprint-detail.component.html` y cubrirlo en `sprint-detail.component.spec.ts` (Jest) per FR-018 (partial)
+- [X] T061 [fix:SPEC:DEF-02] [servidor] Alinear las referencias de trazabilidad de las pruebas del 409 y la concurrencia (`AssignItemToSprint*Tests`, `MigrationsPostgresTests`) con FR-017 y los escenarios 4 y 5 de US3, retirando citas a FR-015 o a "no documentado" per FR-017 (partial)
+- [X] T062 [fix:SPEC:DEF-02] [servidor] Actualizar `quickstart.md` y la matriz de cobertura para mapear el 409 a FR-017 y la fidelidad de estimaciones a FR-018, y volver a ejecutar `/speckit-analyze` para confirmar 0 contradicciones per FR-015 reemplazado (partial)

@@ -25,9 +25,10 @@ La migración `AddSprintItems` se aplica en el arranque y solo crea `sprints."Sp
 | 5 | POST y GET sin token o con token inválido | 401, sin lectura ni escritura |
 | 6 | POST con Sprint inexistente / elemento inexistente | 404 (el `detail` distingue Sprint de elemento); tabla vacía |
 | 7 | POST con `sprintId` o `itemId` ausente, malformado o `Guid.Empty` (4 casos) | 400 con `errors.sprintId` o `errors.itemId`; tabla vacía |
-| 8 | Reasignar el mismo elemento al mismo Sprint y a otro Sprint | 409 con el mismo mensaje; una sola fila |
-| 9 | Disparar N solicitudes simultáneas del mismo elemento a dos Sprints | Exactamente un 201 y el resto 409; una sola fila |
+| 8 | Reasignar el mismo elemento al mismo Sprint y a otro Sprint (US3, escenario 4; FR-017) | 409 con el mismo mensaje; una sola fila |
+| 9 | Disparar N solicitudes simultáneas del mismo elemento a dos Sprints (US3, escenario 5; FR-017) | Exactamente un 201 y el resto 409; una sola fila |
 | 10 | Forzar fallo de persistencia | 500 ProblemDetails sin traza; sin fila |
+| 11 | Asignar un elemento con `DevPoints` 2.5 y `QAPoints` nulo y consultar `GET /api/sprints/{sprintId}/items` (FR-018) | `devPoints: 2.5` y `qaPoints: null`; sin redondeo ni `null` convertido a 0 |
 
 ## Pruebas automatizadas
 ```text

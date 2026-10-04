@@ -12,8 +12,10 @@ Interfaz de solo lectura definida en `app/backend/src/Modules/Sprints/Contracts/
 ## Tipo de transferencia
 
 ```text
-BacklogItemSummary(Guid Id, string Title, string Type, int DevPoints, int QAPoints)
+BacklogItemSummary(Guid Id, string Title, string Type, decimal? DevPoints, decimal? QAPoints)
 ```
+
+- `DevPoints` y `QAPoints` conservan el tipo de `BacklogItem` (`decimal?`): sin redondeo y sin convertir `null` a 0 (FR-018, W-01 del Tech Design).
 
 - `Type` es el nombre del enum de `Backlog` como `string`, para que `Sprints` no referencie tipos de `Backlog`.
 - No incluye descripción, criterios de aceptación ni estado (la consulta no los necesita; FR-008, FR-014).

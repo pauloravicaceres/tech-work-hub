@@ -134,9 +134,13 @@ components:
           type: string
           description: Nombre del tipo de elemento (serializado como cadena)
         devPoints:
-          type: integer
+          type: number
+          nullable: true
+          description: Sin redondeo; null si el elemento no tiene estimación (FR-018)
         qaPoints:
-          type: integer
+          type: number
+          nullable: true
+          description: Sin redondeo; null si el elemento no tiene estimación (FR-018)
     Problem:
       type: object
       properties:

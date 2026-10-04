@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Behaviors;
 using Shared.Data.Interceptors;
+using Sprints.Contracts;
 
 namespace Backlog;
 
@@ -32,6 +33,7 @@ public static class BacklogModule
                 provider.GetRequiredService<AuditableEntityInterceptor>(),
                 provider.GetRequiredService<DispatchDomainEventsInterceptor>()));
         services.AddScoped<IBacklogDbContext>(provider => provider.GetRequiredService<BacklogDbContext>());
+        services.AddScoped<IBacklogModuleApi, BacklogModuleApi>();
 
         return services;
     }

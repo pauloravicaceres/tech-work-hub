@@ -2,7 +2,8 @@ import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
-import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
+import { By } from '@angular/platform-browser';
+import { ActivatedRoute, Router, RouterLink, UrlTree, convertToParamMap, provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 import { SprintDetailComponent } from './sprint-detail.component';
 
@@ -56,6 +57,25 @@ describe('SprintDetailComponent', () => {
     expect(text).toContain('05/10/2026');
     expect(text).toContain('18/10/2026');
     expect(text).not.toMatch(/Editar|Eliminar|Cancelar/);
+  });
+
+  it('render_ConSprintExistente_DebeOfrecerElBotonElementosAsignadosHaciaSuRuta', () => {
+    // Arrange
+    const fixture = create();
+    http.expectOne(`/api/sprints/${SPRINT.id}`).flush(SPRINT);
+
+    // Act
+    fixture.detectChanges();
+    const root = fixture.nativeElement as HTMLElement;
+    const router = TestBed.inject(Router);
+    const targets = fixture.debugElement
+      .queryAll(By.directive(RouterLink))
+      .filter((el) => (el.nativeElement as HTMLElement).textContent?.includes('Elementos asignados'))
+      .map((el) => router.serializeUrl(el.injector.get(RouterLink).urlTree as UrlTree));
+
+    // Assert
+    expect(targets).toEqual([`/sprints/${SPRINT.id}/elementos`]);
+    expect(root.textContent).toContain('Sprint 2026-01');
   });
 
   it('render_Con404_DebeMostrarSprintNoExisteYNingunDato', () => {

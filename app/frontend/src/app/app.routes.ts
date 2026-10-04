@@ -29,6 +29,14 @@ export const routes: Routes = [
           import('./features/sprints/components/sprint-form/sprint-form.component').then((m) => m.SprintFormComponent),
       },
       {
+        // Debe declararse antes de `:id`.
+        path: ':id/elementos',
+        loadComponent: () =>
+          import('./features/sprints/components/sprint-assigned-items/sprint-assigned-items.component').then(
+            (m) => m.SprintAssignedItemsComponent,
+          ),
+      },
+      {
         path: ':id',
         loadComponent: () =>
           import('./features/sprints/components/sprint-detail/sprint-detail.component').then(

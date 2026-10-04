@@ -56,6 +56,9 @@ Como Líder Técnico, quiero que el sistema rechace asignaciones a Sprints o ele
 2. **Given** un Sprint registrado y un identificador de elemento sin elemento asociado, **When** se solicita la asignación, **Then** responde HTTP 404 Not Found indicando que el elemento no existe y no se persiste ninguna asignación.
 3. **Given** un identificador de Sprint o de elemento ausente o con formato inválido, **When** se solicita la asignación, **Then** responde HTTP 400 Bad Request con el detalle de los campos inválidos y no se persiste ninguna asignación.
 
+4. **Given** un elemento ya asignado a un Sprint (el mismo u otro), **When** se solicita asignarlo de nuevo, **Then** responde HTTP 409 Conflict sin revelar a qué Sprint pertenece, no se persiste ninguna asignación nueva y la original permanece intacta (FR-017).
+5. **Given** dos solicitudes simultáneas para asignar el mismo elemento sin asignar a Sprints distintos, **When** se procesan, **Then** exactamente una responde éxito y la otra HTTP 409 (FR-017).
+
 ---
 
 ### User Story 4 - Protección de acceso y resiliencia ante fallos (Priority: P1)
@@ -80,7 +83,8 @@ Como Líder Técnico, quiero que solo usuarios con credenciales válidas puedan 
 - ¿Qué pasa si falta un identificador o tiene formato inválido? HTTP 400 con la lista de campos inválidos (FR-007).
 - ¿Qué pasa si no hay credenciales válidas? HTTP 401 (FR-010).
 - ¿Qué pasa si falla la persistencia al asignar? HTTP 500 sin trazas internas y sin asignación parcial (FR-012).
-- Sin comportamiento definido, por estar ❓ No documentado en la HU y fuera de alcance: elemento ya asignado al mismo Sprint, elemento ya asignado a otro Sprint, asignación simultánea del mismo elemento a dos Sprints, restricciones por estado o fecha del Sprint, elegibilidad del elemento por tipo o estado, y límites de elementos o puntos por Sprint. No se inventan escenarios para ellos (ver Assumptions).
+- ¿Qué pasa si el elemento ya está asignado al mismo Sprint, a otro Sprint, o se asigna simultáneamente a dos Sprints? HTTP 409 sin persistir; exactamente una asignación simultánea se confirma (FR-017).
+- Sin comportamiento definido, por estar ❓ No documentado en la HU y fuera de alcance: restricciones por estado o fecha del Sprint, elegibilidad del elemento por tipo o estado, y límites de elementos o puntos por Sprint. No se inventan escenarios para ellos (ver Assumptions).
 
 ## Requirements *(mandatory)*
 
@@ -100,12 +104,14 @@ Como Líder Técnico, quiero que solo usuarios con credenciales válidas puedan 
 - **FR-012**: Ante un fallo de persistencia al asignar, el sistema DEBE responder HTTP 500 sin exponer trazas internas y sin dejar ninguna asignación parcial.
 - **FR-013**: La asignación NO DEBE alterar los datos del elemento (título, tipo, estimaciones por rol, estado) ni los del Sprint (identificación, fechas), ni modificar el comportamiento de las HU-001 y HU-003.
 - **FR-014**: La asignación NO DEBE definir ni cambiar el estado del elemento ni del Sprint.
-- **FR-015**: El sistema NO DEBE asumir ni imponer si un elemento pertenece a uno o a varios Sprints; solo se especifica la primera asignación de un elemento sin Sprint.
+- **FR-015** *(reemplazado por FR-017; resolución humana A, tracker 04-10-2026 10:32)*: un elemento pertenece a un solo Sprint. Ya no se deja indefinida la pertenencia a uno o varios Sprints.
+- **FR-017**: El sistema DEBE rechazar con HTTP 409 Conflict toda asignación de un elemento que ya esté asignado a un Sprint (el mismo u otro), sin persistir nada y sin revelar a qué Sprint pertenece. La unicidad se garantiza de forma declarativa (índice único por elemento), de modo que ante solicitudes simultáneas del mismo elemento exactamente una se confirma y las demás responden 409. El orden de evaluación es 400, 401, 404 (Sprint), 404 (elemento), 409.
+- **FR-018**: La consulta de elementos asignados DEBE devolver las estimaciones por rol con la misma fidelidad que el elemento del backlog: valores decimales, con `null` cuando el elemento no tiene estimación para el rol; sin redondeo ni conversión de `null` a 0.
 - **FR-016**: La funcionalidad DEBE respetar las restricciones de `.specify/memory/constitution.md` (aislamiento por schema por módulo, sin consultas cross-schema, endpoints protegidos con `.RequireAuthorization()`, manejo centralizado de excepciones).
 
 ### Key Entities *(include if feature involves data)*
 
-- **Asignación Sprint–Elemento**: Relación entre un Sprint y un elemento del backlog. Atributos: identificador del Sprint, identificador del elemento, `CreatedAt`, `CreatedBy`. No define estado ni cardinalidad definitiva elemento–Sprint.
+- **Asignación Sprint–Elemento**: Relación entre un Sprint y un elemento del backlog. Atributos: identificador del Sprint, identificador del elemento, `CreatedAt`, `CreatedBy`. No define estado; cada elemento tiene como máximo una asignación (FR-017).
 - **Sprint** (preexistente, HU-003): Ciclo de trabajo de 2 semanas; no se modifica.
 - **Elemento del backlog** (preexistente, HU-001): Título, tipo, estimaciones por rol y estado; no se modifica.
 
@@ -125,7 +131,7 @@ Como Líder Técnico, quiero que solo usuarios con credenciales válidas puedan 
 
 - El Líder Técnico es el actor previsto; los permisos exactos por rol no están documentados, por lo que basta un token válido con identidad (patrón de HU-001 y HU-003) (punto abierto 6 de la HU).
 - Cada solicitud asigna un único elemento a un único Sprint; asignación en lote, desasignación y movimiento entre Sprints quedan fuera de alcance (punto abierto 5).
-- La pertenencia de un elemento a uno o varios Sprints (pregunta abierta 9 del Product Brief) no se asume; solo se cubre la primera asignación. Asignación repetida al mismo Sprint, asignación a otro Sprint y concurrencia no tienen comportamiento definido (puntos abiertos 1 y 8).
+- Un elemento pertenece a un solo Sprint (resolución humana A a la pregunta abierta 9 y a los puntos abiertos 1 y 8): la asignación repetida o concurrente responde 409 (FR-017).
 - La asignación no cambia el estado del elemento (depende de la HU-005) ni se restringe por estado o fecha del Sprint (depende del ciclo de vida de la HU-003) (puntos abiertos 2 y 3).
 - No se validan elegibilidad del elemento ni límites de carga o capacidad del Sprint (punto abierto 4; HU-012/013).
 - El formato de la consulta (campos adicionales, orden, filtros, paginación) no está definido; se devuelve todo lo asignado con los campos indicados (punto abierto 7).

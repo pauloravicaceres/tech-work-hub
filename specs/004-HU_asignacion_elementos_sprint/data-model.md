@@ -30,7 +30,7 @@ Sin columnas de estado ni de orden.
 - **BacklogItem** (HU-001, `backlog`): sin columnas nuevas; se lee solo vía contrato.
 
 ## Proyección de lectura (no persistida)
-`BacklogItemSummary(Guid Id, string Title, string Type, int DevPoints, int QAPoints)` — definida en `Sprints.Contracts`; ver [contracts/backlog-module-api.md](./contracts/backlog-module-api.md). Los datos del elemento no se duplican ni se proyectan localmente (ADR-003).
+`BacklogItemSummary(Guid Id, string Title, string Type, decimal? DevPoints, decimal? QAPoints)` (sin redondeo ni `null` a 0; FR-018) — definida en `Sprints.Contracts`; ver [contracts/backlog-module-api.md](./contracts/backlog-module-api.md). Los datos del elemento no se duplican ni se proyectan localmente (ADR-003).
 
 ## Relaciones y cardinalidad
 - `Sprint 1 — N SprintItem` (FK real, `RESTRICT`).

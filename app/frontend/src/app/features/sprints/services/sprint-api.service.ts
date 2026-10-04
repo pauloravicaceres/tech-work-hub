@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CreateSprintRequest, Sprint } from '../models/sprint.models';
+import { AssignItemRequest, AssignedItem, CreateSprintRequest, Sprint, SprintItem } from '../models/sprint.models';
 
 @Injectable({ providedIn: 'root' })
 export class SprintApiService {
@@ -17,5 +17,14 @@ export class SprintApiService {
 
   getById(id: string): Observable<Sprint> {
     return this.http.get<Sprint>(`/api/sprints/${encodeURIComponent(id)}`);
+  }
+
+  assignItem(sprintId: string, itemId: string): Observable<AssignedItem> {
+    const request: AssignItemRequest = { itemId };
+    return this.http.post<AssignedItem>(`/api/sprints/${encodeURIComponent(sprintId)}/items`, request);
+  }
+
+  listItems(sprintId: string): Observable<SprintItem[]> {
+    return this.http.get<SprintItem[]>(`/api/sprints/${encodeURIComponent(sprintId)}/items`);
   }
 }

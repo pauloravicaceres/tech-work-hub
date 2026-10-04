@@ -16,7 +16,7 @@ app/backend/
 │   └── Modules/
 │       ├── Backlog/                 Features/BacklogItems/CreateBacklogItem, Domain, Data (schema backlog)
 │       ├── Application/             Catálogo de aplicaciones (schema application), GET /api/applications
-│       └── Sprints/                 HU-003: Features/Sprints/{CreateSprint,ListSprints,GetSprintById}, Domain, Data (schema sprints)
+│       └── Sprints/                 HU-003: Features/Sprints/{CreateSprint,ListSprints,GetSprintById}; HU-004: Features/SprintItems/{AssignItemToSprint,ListSprintItems}, Contracts/IBacklogModuleApi, Domain, Data (schema sprints)
 └── tests/
     ├── Unit/
     │   ├── Backlog/                 Pruebas unitarias
@@ -36,8 +36,10 @@ app/backend/
 | `POST /api/sprints` | Sprints | Crea un Sprint; la ventana debe ser de 14 días calendario inclusivos (`endDate = startDate + 13`) (HU-003) |
 | `GET /api/sprints` | Sprints | Lista los Sprints ordenados por `startDate` |
 | `GET /api/sprints/{id}` | Sprints | Detalle de un Sprint (404 si no existe) |
+| `POST /api/sprints/{sprintId}/items` | Sprints | Asigna un elemento del Backlog a un Sprint; 409 si ya está asignado a cualquier Sprint (HU-004) |
+| `GET /api/sprints/{sprintId}/items` | Sprints | Lista los elementos asignados: `id, title, type, devPoints, qaPoints`; las estimaciones son decimales o `null`, sin redondeo (HU-004, FR-018) |
 
-Todos exigen JWT. Contrato de Sprints: `specs/003-HU_gestion_sprint_dos_semanas/contracts/sprints-api.openapi.yaml`.
+Todos exigen JWT. Contrato de Sprints: `specs/003-HU_gestion_sprint_dos_semanas/contracts/sprints-api.openapi.yaml`; asignación de elementos: `specs/004-HU_asignacion_elementos_sprint/contracts/sprint-items-api.openapi.yaml`. Detalle de HU-004: sección 12 de `documents/dev-backend/backend-architecture.md`.
 
 `tests/Integration/Identity` no usa simulados: importa los realms de `Realm/*.json` en un Keycloak de Testcontainers, pide tokens reales (password grant) y hospeda el `Program` real. La única relajación de configuración es `Keycloak:ssl-required=none` (el Keycloak del contenedor es HTTP); `verify-token-audience`, `realm` y `resource` quedan como en producción y una prueba de guardia lo comprueba.
 
@@ -65,7 +67,7 @@ dotnet test app/backend/tests/Unit/Sprints/Sprints.UnitTests.csproj
 dotnet test app/backend/tests/Integration/Sprints/Sprints.IntegrationTests.csproj
 ```
 
-Migraciones: cada módulo tiene su propia migración Code-First (`Sprints`: `src/Modules/Sprints/Data/Migrations/InitialSprintsSchema`). Se generan con `dotnet ef migrations add <Nombre> --project src/Modules/<Modulo>/<Modulo>.csproj --startup-project src/Modules/<Modulo>/<Modulo>.csproj --output-dir Data/Migrations` (requiere `dotnet tool install --global dotnet-ef --version 8.0.11`). En despliegue las aplica `scripts/apply-migrations.sh|.ps1` para `Application`, `Backlog` y `Sprints`.
+Migraciones: cada módulo tiene su propia migración Code-First (`Sprints`: `src/Modules/Sprints/Data/Migrations/` → `InitialSprintsSchema` y `AddSprintItems`). Se generan con `dotnet ef migrations add <Nombre> --project src/Modules/<Modulo>/<Modulo>.csproj --startup-project src/Modules/<Modulo>/<Modulo>.csproj --output-dir Data/Migrations` (requiere `dotnet tool install --global dotnet-ef --version 8.0.11`). En despliegue las aplica `scripts/apply-migrations.sh|.ps1` para `Application`, `Backlog` y `Sprints`.
 
 Ejecutar la API en desarrollo (usa `appsettings.Development.json`, PostgreSQL en `localhost:5432` y Keycloak en `localhost:8080`):
 

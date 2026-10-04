@@ -48,7 +48,7 @@
 | `Handoff` | Transición entre dos agentes donde el emisor documenta la ruta del archivo generado para que el receptor lo consuma vía MCP. |
 | `Backpressure` | Mecanismo del Watcher para retener tareas encoladas hasta que el agente destinatario se encuentre en estado `idle`. |
 | `HITL (Human-in-the-Loop)` | Pausa controlada del flujo donde la continuación hacia el siguiente rol depende de una acción humana (ej. `utils/approve_step.py`). |
-| `Bypass Headless` | Enrutamiento condicional donde proyectos sin interfaz gráfica omiten la fase de UX y avanzan directamente de QA a Arquitectura. |
+| `Bypass Headless` | Enrutamiento condicional donde proyectos sin interfaz gráfica omiten la fase de UX y avanzan directamente de QA a Arquitectura. Se activa con `project_type: headless`, con `ux_phase: off` o, HU por HU, con `Requiere interfaz: No` (ver `SETUP.md`). |
 | `Modo Dual (Greenfield / Brownfield)` | Capacidad nativa donde la presencia del archivo `.specify/memory/constitution.md` actúa como interruptor: si existe, todos los agentes subordinan sus entregables al sistema legado; si no, operan como proyecto nuevo sin restricciones. |
 | `Cartucho Intercambiable (Pluggable Phase D)` | Principio arquitectónico donde los agentes de construcción y testing operan como interfaces abstractas. El stack (.NET, Java, Python, Go) se cambia modificando únicamente `constitution.md` y las instrucciones locales, manteniendo intacto el orquestador Python. |
 
@@ -100,7 +100,7 @@ Dirígete a la terminal del agente **Business Storyteller** (o envía un prompt 
   - El BA delega la revisión al QA Documental (`@QA:`).
 
 - **🛑 Intercepción SDD Gatekeeper (Pausa Lógica de Spec Kit):**
-  Cuando `@QA:` emite su certificado de aprobación (`aprobado_qa_*.md`), el orquestador **`watcher_bmad.py` intercepta el avance automático hacia UX o Arquitectura y detiene el flujo**. La consola del Watcher mostrará un banner indicando que es el momento del ciclo interactivo de Spec Kit:
+  Cuando `@QA:` emite su certificado de aprobación (`aprobado_qa_*.md`), el orquestador **`watcher_bmad.py` intercepta el avance automático hacia UX o Arquitectura y detiene el flujo** (el Watcher decide después si va a UX o a Arquitectura con `ux_routing.py`; el token que escribe el QA es solo informativo). La consola del Watcher mostrará un banner indicando que es el momento del ciclo interactivo de Spec Kit:
   1. Ejecutar en terminal:
      ```bash
      /speckit.specify documents/business-analyst/hu_[ID]_[nombre].md
@@ -266,3 +266,22 @@ flowchart LR
 
 **Reflejo en `bmad-control-center`.** El *Pipeline de Agentes* muestra el rechazo en vivo: el revisor aparece en rojo (`✗ [RECHAZADO]`), las etapas a corregir en ámbar (`↻ [RETRABAJO i/2]`) y un banner resume el ciclo. El backend lo proyecta desde el tracker (`rework` + `rework_state` por etapa) y lo emite en `WORKFLOW_UPDATED`.
 
+## Enrutamiento del diseño UX (interruptor global y por HU)
+
+El diseño UX es una pieza removible del pipeline. **Quien decide si una HU pasa por UX es el Watcher, no el QA Documental**:
+el token `@UX:`/`@SA:` que escribe el QA en su aprobación es informativo, porque el Gate 1 lo intercepta y el Watcher
+despacha el handoff real al terminar `specify` + `clarify`.
+
+| Orden | Fuente | Efecto |
+|:---:|---|---|
+| 1 | `project_type: headless` en `config_bmad.json` | Se omite UX siempre |
+| 2 | `ux_phase` en `config_bmad.json`: `off` / `on` / `auto` (por defecto) | `off` omite, `on` diseña siempre, `auto` pasa a la HU |
+| 3 | Campo `Requiere interfaz: Sí o No` de la HU técnica (lo declara el BA, lo verifica el QA) | `No` omite, `Sí` diseña |
+| 4 | Sin campo | Se diseña (valor seguro por defecto) |
+
+- **Dónde vive la regla:** `ux_routing.py` (raíz). Solo usa la biblioteca estándar y no depende del Watcher ni de herdr; devuelve `RutaUX(destino, motivo, omitida)`. El Watcher traduce `destino` al token del tracker (`decidir_ruta_ux` / `registrar_traspaso_fase_a` en `watcher_bmad.py`).
+- **Cambio de orquestador:** son datos y contratos y sobreviven: `ux_phase`, el campo de la HU y el bloque del tracker. Hay que reimplementar solo el nodo de enrutamiento, que importa `ux_routing`.
+- **Lectura en caliente:** el config se lee en cada decisión; no hay que reiniciar el Watcher. Tras un `off`, reiniciar `utils/start_agents.py` para volver a levantar el panel de `designer-ux`.
+- **Huella en el tracker:** al omitir, el Watcher escribe un bloque `WATCHER` con `⏭️ [UX] Diseño UX omitido: <motivo>` y un handoff al `@SA:`. Ese texto no puede contener "aprobad…" o re-dispararía el Gate 1.
+- **Dashboard:** `WorkflowService` marca la etapa UX como `SKIPPED` (cuenta como avance) y `WorkflowStepper.vue` la muestra como `[⏭ OMITIDA]`.
+- **Panel:** con `ux_phase=off` o proyecto headless, `start_agents.py` no levanta `designer-ux` (`ux_routing.agentes_omitidos`).

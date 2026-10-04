@@ -1,5 +1,6 @@
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using Sprints.Domain.SprintItems;
 using Sprints.Domain.Sprints;
 
 namespace Sprints.Data;
@@ -9,6 +10,8 @@ public class SprintsDbContext(DbContextOptions<SprintsDbContext> options) : DbCo
     public const string SchemaName = "sprints";
 
     public DbSet<Sprint> Sprints => Set<Sprint>();
+
+    public DbSet<SprintItem> SprintItems => Set<SprintItem>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

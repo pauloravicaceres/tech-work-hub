@@ -1,8 +1,8 @@
 # 🏗️ ARQUITECTURA BACKEND VIVA
 
 - **Sistema:** TechWorkHub (Modulith .NET 8, PostgreSQL)
-- **Última actualización:** 2026-10-04 (HU-003: nuevo módulo `Sprints`; ver sección 11)
-- **HU vigente:** 003 – Gestión de Sprint de Dos Semanas (Crear y Consultar), sobre 001 – Registro de Elementos en Backlog Multitipo y 002 – Pruebas de Integración contra Keycloak Real
+- **Última actualización:** 2026-10-04 (HU-004: asignación de elementos del Backlog a un Sprint; ver sección 12)
+- **HU vigente:** 004 – Asignación de Elementos del Backlog a un Sprint, sobre 003 – Gestión de Sprint de Dos Semanas (Crear y Consultar), sobre 001 – Registro de Elementos en Backlog Multitipo y 002 – Pruebas de Integración contra Keycloak Real
 - **Fuente de verdad:** `specs/003-HU_gestion_sprint_dos_semanas/` (`plan.md`, `data-model.md`, `contracts/sprints-api.openapi.yaml`, `tasks.md`), `documents/qa-tech/tech-design_003_gestion_sprint_dos_semanas.md`, `specs/002-pruebas-integracion-keycloak-catalogo/` y `specs/001-registro-backlog-multitipo/`
 
 > Renderizado selectivo: solo se documenta lo alterado en esta iteración (host, `Shared`, módulos `Backlog`/`Application`, persistencia, pipeline, errores). Lo no tocado queda como "sin cambios".
@@ -415,7 +415,117 @@ sequenceDiagram
 
 `dotnet test app/backend/TechWorkHub.sln` (2026-10-04): `Sprints.UnitTests` 43, `Sprints.IntegrationTests` 46, `Backlog.UnitTests` 62, `Backlog.IntegrationTests` 31 e `Identity.IntegrationTests` 19, todas correctas. Se instaló `dotnet-ef` 8.0.11 (global) para generar la migración; los scripts de bundle siguen sin ejecutarse.
 
+## 12. HU-004 — Asignación de elementos del Backlog a un Sprint (renderizado selectivo)
+
+Fuente: `specs/004-HU_asignacion_elementos_sprint/` (`plan.md`, `data-model.md`, `contracts/`, `tasks.md`). Alcance de esta pasada: solo backend; las tareas de frontend (T002, T041–T049, T051) no se ejecutaron.
+
+**Reconciliación vinculante:** un elemento pertenece a **un solo Sprint**. Repetir la asignación (mismo u otro Sprint) responde **409 Conflict** por el índice único `UX_SprintItems_ItemId`; FR-015 de `spec.md` queda sin efecto.
+
+### 12.1 Componentes nuevos o alterados
+
+```mermaid
+flowchart LR
+    subgraph SP[Modules/Sprints]
+        EP1[AssignItemToSprintEndpoint POST] --> H1[AssignItemToSprintCommandHandler + Validator]
+        EP2[ListSprintItemsEndpoint GET] --> H2[ListSprintItemsQueryHandler]
+        H1 --> SI[SprintItem aggregate]
+        H1 --> DB[(sprints.SprintItems)]
+        H2 --> DB
+        C[Contracts/IBacklogModuleApi]
+    end
+    subgraph BL[Modules/Backlog]
+        API[BacklogModuleApi solo lectura] --> BDB[(backlog.BacklogItems)]
+    end
+    H1 -->|ExistsAsync| C
+    H2 -->|GetSummariesAsync una sola llamada| C
+    API -.implementa.-> C
+    SH[Shared: ConflictException + rama 409 en CustomExceptionHandler]
+    H1 --> SH
+```
+
+| Elemento | Ubicación | Nota |
+|---|---|---|
+| `ConflictException` + rama 409 | `BuildingBlocks/Shared/Exceptions/` | Aditivo; 400/404/500 sin cambios |
+| `IBacklogModuleApi`, `BacklogItemSummary` | `Sprints/Contracts/` | `Type` viaja como `string`; sin FKs ni consultas cross-schema |
+| `BacklogModuleApi` | `Backlog/BacklogModuleApi.cs` | `AsNoTracking`, una consulta por lote; `Backlog.csproj` referencia `Sprints.csproj`; registrado en `BacklogModule.cs` |
+| `SprintItem`, `SprintItemRules` | `Sprints/Domain/SprintItems/` | `Aggregate<Guid>, IAuditableEntity`; sin estado ni eventos |
+| `SprintItemConfiguration` + migración `AddSprintItems` | `Sprints/Data/` | Fluent API; solo crea `sprints."SprintItems"` |
+| `AssignItemToSprint` / `ListSprintItems` | `Sprints/Features/SprintItems/` | Co-localizados (VSA): comando/consulta, validador, handler, endpoint Carter |
+
+### 12.2 Modelo de datos
+
+```mermaid
+erDiagram
+    SPRINTS ||--o{ SPRINT_ITEMS : contiene
+    SPRINT_ITEMS {
+        uuid Id PK
+        uuid SprintId FK "ON DELETE RESTRICT, IX_SprintItems_SprintId"
+        uuid ItemId "UNIQUE UX_SprintItems_ItemId, SIN FK hacia backlog"
+        timestamptz CreatedAt
+        varchar CreatedBy
+        timestamptz LastModified
+        varchar LastModifiedBy
+    }
+```
+
+### 12.3 API
+
+| Método y ruta | Respuestas |
+|---|---|
+| `POST /api/sprints/{sprintId}/items` cuerpo `{ itemId }` | 201 `{ sprintId, itemId }` + `Location`; 400 por campo (`sprintId`/`itemId`); 401; 404 Sprint o elemento (gana el del Sprint); 409 ya asignado (sin revelar a qué Sprint); 500 |
+| `GET /api/sprints/{sprintId}/items` | 200 `[{ id, title, type, devPoints, qaPoints }]` con `devPoints`/`qaPoints` decimales o `null` (vacío si no hay), orden `CreatedAt` luego `Id`; 401; 404 (también si `sprintId` no es GUID) |
+
+### 12.4 Secuencia de asignación
+
+```mermaid
+sequenceDiagram
+    actor U as Cliente
+    participant E as Endpoint
+    participant H as Handler
+    participant B as IBacklogModuleApi
+    participant DB as sprints.SprintItems
+    U->>E: POST /api/sprints/{sprintId}/items
+    E->>H: AssignItemToSprintCommand (ValidationBehavior → 400)
+    H->>H: ICurrentUser.UserId (401 si falta)
+    H->>DB: AnyAsync Sprint (404)
+    H->>B: ExistsAsync(itemId) (404)
+    H->>DB: AnyAsync por ItemId (409, solo optimización)
+    H->>DB: Add + SaveChangesAsync(ct)
+    DB-->>H: 23505 UX_SprintItems_ItemId (concurrencia) → ConflictException
+    H-->>U: 201 Created
+```
+
+Otro `DbUpdateException` (distinta restricción) no se traduce y termina en 500 sin traza.
+
+### 12.5 Verificación (2026-10-04)
+
+`dotnet test app/backend/TechWorkHub.sln`: `Sprints.UnitTests` 86, `Sprints.IntegrationTests` 85, `Backlog.UnitTests` 62, `Backlog.IntegrationTests` 31, `Identity.IntegrationTests` 19, todas correctas. Incluye 409 bajo concurrencia, 401 sin lectura/escritura, 500 sin traza ni fila parcial y 100 elementos listados en < 2 s. Único ajuste a una prueba previa: `MigrationsPostgresTests` ahora espera también `sprints.SprintItems`. `git status` confirma que no se tocaron `Sprint`, `SprintRules`, `InitialSprintsSchema`, `BacklogItem`, `BacklogDbContext` ni `Modules/Application`.
+
+### 12.6 Retrabajo iteración 1/2 — DEF-01 (fidelidad de estimaciones) y DEF-02 (trazabilidad del 409)
+
+Alcance: solo backend (T055–T058, T061, T062). Las tareas de interfaz T059 y T060 quedan pendientes para el agente frontend.
+
+**DEF-01 (FR-018).** `DevPoints`/`QAPoints` viajan como `decimal?` de extremo a extremo, sin redondeo ni conversión de `null` a 0. Se eliminó `ToWholePoints` de `BacklogModuleApi`. No hay cambio de esquema ni migración (las columnas ya son `numeric(18,2)` nullable).
+
+```mermaid
+flowchart LR
+    DB[(backlog.BacklogItems<br/>numeric 18,2 NULL)] -->|decimal?| API[BacklogModuleApi]
+    API -->|BacklogItemSummary decimal?| H[ListSprintItemsQueryHandler]
+    H -->|SprintItemResponse decimal?| R[GET /api/sprints/id/items<br/>devPoints 2.5 / qaPoints null]
+```
+
+| Contrato | Antes | Ahora |
+|---|---|---|
+| `BacklogItemSummary.DevPoints` / `QAPoints` | `int` (redondeado, `null` → 0) | `decimal?` |
+| `SprintItemResponse.DevPoints` / `QAPoints` | `int` | `decimal?` |
+
+**DEF-02.** `spec.md` ya declaraba FR-015 reemplazado por FR-017 (409) y FR-018. Se alinearon la trazabilidad de las pruebas (`AssignItemToSprintTests`, `MigrationsPostgresTests`) y `quickstart.md` (escenarios 8 y 9 → FR-017, nuevo escenario 11 → FR-018).
+
+**Verificación:** `SprintItemsEstimationFidelityTests` 2/2 en verde. Nuevas pruebas: `BacklogModuleApiTests` (2.5 sin redondear y QA nulo) y `ListSprintItemsTests` (JSON con `devPoints` 2.5 y `qaPoints` null). `Sprints.UnitTests` 86, `Sprints.IntegrationTests` 89, `Backlog.UnitTests` 62, `Backlog.IntegrationTests` 31, todas correctas.
+
 ## 9. Puntos abiertos
+
+- HU-004: frontend (T002, T041–T049, T051) y recorrido manual del quickstart (T052) no se ejecutaron en esta pasada, por alcance solo backend.
 
 - HU-003: el frontend (páginas `sprint-form`, `sprint-list`, `sprint-detail`, rutas e i18n) y T052/T053 (escenario de UI del quickstart) no se ejecutaron en esta pasada, por alcance solo backend. El supuesto de ventana de 14 días inclusivos sigue pendiente de confirmación de negocio (punto abierto 3 de la HU).
 

@@ -899,3 +899,46 @@ You can reply with the option letter (e.g., "A"), accept the recommendation by s
 - **⚠️ Puntos Abiertos:** (1) La prueba existente BacklogModuleApiTests.GetSummariesAsync_ConPuntosDecimales_DebeRedondearAlEnteroMasCercano valida el comportamiento incorrecto y debe corregirse junto con DEF-01. (2) Ejecutar T051 y T052 en un entorno con Node compatible.
 - **Handoff:** @DEV-BACK: Corrige DEF-01 [CAPA:TASKS] (decimal nullable en contrato y respuesta, sin redondeo ni nulo a cero) y DEF-02 [CAPA:SPEC] (reconciliar spec.md con el 409); revalida con SprintItemsEstimationFidelityTests.
 @DEV-FRONT: Corrige DEF-01 [CAPA:TASKS] en el modelo TypeScript (devPoints y qaPoints anulables) y muestra guion para nulo.
+
+### [04-10-2026] WATCHER
+- **Hora:** 17:56:35
+- **Mensaje:** 🔁 [SDD Retrabajo] Iteración 1/2 (origen: QA Automation). Reconciliando spec, plan y tasks (/speckit-converge)...
+
+### [04-10-2026] WATCHER
+- **Hora:** 17:59:38
+- **Mensaje:** 📌 [SDD Retrabajo] spec.md/plan.md actualizados por converge (capas: SPEC). Los artefactos de diseño de BA, API y DA deben sincronizarse con el cambio.
+
+### [04-10-2026] WATCHER
+- **Hora:** 17:59:38
+- **Mensaje:** ⚡ [SDD Auto-Runner] Ejecutando implementación Backend (/speckit.implement)...
+
+### [04-10-2026] Senior Backend Developer
+- **Hora:** 18:09:36
+- **Artefacto generado:** `documents/dev-backend/backend-architecture.md`
+- **Estado:** Implementación backend finalizada exitosamente mediante SDD SpecKit.
+- **Handoff:** @DEV-FRONT: Inicia implementación frontend.
+
+### [04-10-2026] WATCHER
+- **Hora:** 18:09:36
+- **Mensaje:** ⚡ [SDD Auto-Runner] Ejecutando implementación Frontend (/speckit.implement)...
+
+### [04-10-2026] Senior Frontend Developer
+- **Hora:** 18:11:45
+- **Artefacto generado:** `documents/dev-frontend/frontend-architecture.md`
+- **Estado:** Implementación frontend finalizada exitosamente mediante SDD SpecKit.
+- **Handoff:** @QA-AUTO: Retrabajo 1/2 aplicado sobre los hallazgos de QA Automation. Revalida la HU. Ejecuta y valida las pruebas y, al aprobar, deriva a Code Review.
+
+### [04-10-2026] QA Automation
+- **Hora:** 18:30:00
+- **Artefacto generado:** `documents/qa-auto/qa-report.md`
+- **Estado:** [APROBADO] Retrabajo 1/2 revalidado. DEF-01 [CAPA:TASKS] corregido: decimal anulable en contrato, respuesta y modelo TypeScript, con SprintItemsEstimationFidelityTests 2/2 verdes. DEF-02 [CAPA:SPEC] corregido: spec.md con FR-017 y escenarios 409. Resultados: Unit Sprints 86/86, Integración Sprints 89/89, Backlog 93/93, Jest 83/83. Commit de pruebas y reporte realizado.
+- **⚠️ Puntos Abiertos:** (1) T051 npm run build no ejecutable por Node v22.20.0 (Angular CLI exige 22.22.3 o superior) y T052 quickstart sin recorrer. (2) Identity.IntegrationTests 19/19 fallan por Keycloak/Docker en este entorno, ajeno a la HU-004.
+- **Handoff:** @CODE-REVIEW: Pruebas de la HU-004 validadas y reporte de calidad actualizado. Procede con la revisión de código.
+
+### [04-10-2026] Code Review
+- **Hora:** 18:26:00
+- **Artefacto generado:** `documents/code-review/impact-analysis-report.md`
+- **Estado:** [APROBADO CON RESERVAS] HU-004. Lectura física de 30 archivos de producción (22 backend, 8 frontend) y de las pruebas clave. Ejecución propia: Unit Sprints 86/86, Integración Sprints 89/89 con PostgreSQL, Jest features/sprints 52/52 y ngc --noEmit limpio. Arquitectura: ICarterModule + MediatR, schema sprints aislado, contrato IBacklogModuleApi sin FK ni consulta cross-schema, invariante un elemento un Sprint por índice único con 409 solo para 23505 de ese índice, CancellationToken propagado hasta EF Core y el contrato, cero N+1, RequireAuthorization en POST y GET, identidad resuelta antes de acceder a datos, sin IDOR (catálogos globales, el 409 no revela el Sprint dueño), sin XSS, sin NgModules. DEF-01 (decimal nullable de extremo a extremo, guion solo para null) y DEF-02 (FR-017 y FR-018) verificados en código y spec. Reservas no bloqueantes: (1) [CAPA:TASKS] tasks.md T051 y T052 sin marcar (build bloqueado por Node v22.20.0 frente a Angular CLI 22.22.3 o superior; quickstart cubierto por las pruebas de integración) y casillas T005, T015, T036 y T041 sin marcar pese a estar corregidas; T060 cita sprint-detail cuando el guion vive en sprint-assigned-items.component.ts:105; (2) [CAPA:CODE] assign-item-dialog.component.ts:81 usa subscribe sobre un flujo de eventos con takeUntilDestroyed, mismo patrón aceptado en HU-001 y HU-003; (3) [CAPA:PLAN] AssignItemToSprintCommandHandler.cs:3 importa Npgsql, exigido por T022; (4) [CAPA:PLAN] el diálogo distingue el 404 de Sprint por texto del detail, advertencia ya aceptada en el Tech Design; (5) [CAPA:CODE] código de la HU-004 sin commitear al momento de la revisión. No ejecuté Identity.IntegrationTests (QA reporta fallo de Keycloak y Docker del entorno, ajeno a la HU).
+- **⚠️ Puntos Abiertos:** Ninguno bloqueante. Informativos: actualizar Node para ejecutar el build de Angular y marcar T005, T015, T036, T041, T051 y T052 en tasks.md.
+@WATCHER: GITOPS-MERGE-CLOSE feat/004-HU_asignacion_elementos_sprint
+- **Handoff:** @PM: Código certificado y rama consolidada en dev. La épica P1 sigue incompleta (historias 005 a 011 en BACKLOG, varias bloqueadas por definiciones pendientes) y las épicas P2 a P6 tienen sus historias registradas en BACKLOG; procede a asignar la siguiente historia del backlog.

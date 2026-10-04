@@ -23,6 +23,45 @@ namespace Sprints.Data.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Sprints.Domain.SprintItems.SprintItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<Guid>("ItemId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<Guid>("SprintId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ItemId")
+                        .IsUnique()
+                        .HasDatabaseName("UX_SprintItems_ItemId");
+
+                    b.HasIndex("SprintId")
+                        .HasDatabaseName("IX_SprintItems_SprintId");
+
+                    b.ToTable("SprintItems", "sprints");
+                });
+
             modelBuilder.Entity("Sprints.Domain.Sprints.Sprint", b =>
                 {
                     b.Property<Guid>("Id")
@@ -61,6 +100,15 @@ namespace Sprints.Data.Migrations
                         {
                             t.HasCheckConstraint("CK_Sprints_Window", "(\"EndDate\" - \"StartDate\") = 13");
                         });
+                });
+
+            modelBuilder.Entity("Sprints.Domain.SprintItems.SprintItem", b =>
+                {
+                    b.HasOne("Sprints.Domain.Sprints.Sprint", null)
+                        .WithMany()
+                        .HasForeignKey("SprintId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
