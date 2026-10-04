@@ -104,6 +104,8 @@ Evidencia: `documents/qa-auto/qa-report.md` (cuarta ejecución, T043) más lectu
 
 **Dictamen 6.ª iteración:** ✅ **[APROBADO CON RESERVAS]**. Sin cierre de rama hasta decisión humana.
 
+**Cierre (decisión humana, 03-10-2026):** reservas aceptadas. Commits de HU-001: 2cdddce, 9ece1e1, d33e442, d547d45; chores de framework: ac94a7d, f1ef452, 0da364f, bfdca01, 3ada20e. Tareas T018, T025, T032 y T043 en `[X]` con evidencia de `qa-report.md`. T017 diferida (manual). T037 queda **abierta**: `qa-report.md` no menciona de forma explícita la prueba con token cancelado y T037 exige re-marcar T017. Riesgo residual (Keycloak y catálogo reales) trasladado a la historia 002 del ledger.
+
 **Confirmación (19:42):** la re-ejecución de QA (62/62, 31/31 PostgreSQL, Jest 31/31) coincide con la ejecución propia; no hay archivos modificados desde la auditoría, así que el dictamen no cambia. El 27/31 inicial de QA fue un fallo de conexión con Docker, no de producción.
 
 ### Hallazgos menores (corregir en la misma iteración)
