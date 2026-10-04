@@ -883,6 +883,9 @@ def is_tracker_paused_for_human() -> bool:
             return False
         last_block = blocks[-1]
         header_line = last_block.split("\n")[0]
+        # Un bloque con la macro de cierre de rama es un cierre de HU, no una consulta pendiente al humano
+        if any(macro_gitops(l, "MERGE-CLOSE") for l in last_block.splitlines()):
+            return False
         if "HUMANO" not in header_line and "@HUMANO:" in last_block:
             return True
     except Exception:

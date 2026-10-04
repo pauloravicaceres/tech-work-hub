@@ -91,3 +91,14 @@ def test_el_comportamiento_de_las_fases_tempranas_no_cambia(cliente):
 
     handoff = [l for l in _ultimo_bloque(ruta).splitlines() if l.startswith("- **Handoff:**")]
     assert handoff and handoff[0].startswith("- **Handoff:** @PM:")
+
+
+def test_el_estado_de_la_compuerta_ignora_un_cierre_de_rama_y_respeta_una_consulta_real(cliente):
+    client, servicio, ruta = cliente
+    servicio.append_decision(
+        "### [04-10-2026] Code Review\n- **Hora:** 00:05:00\n@WATCHER: GITOPS-MERGE-CLOSE feat/x\n"
+        "- **Handoff:** @HUMANO: aviso de cierre")
+    assert client.get("/api/v1/gates/status").json()["status"] == "APPROVED"
+
+    servicio.append_decision("### [04-10-2026] Code Review\n- **Hora:** 00:10:00\n- **Handoff:** @HUMANO: ¿Cierro?")
+    assert client.get("/api/v1/gates/status").json()["status"] == "PENDING_DECISION"

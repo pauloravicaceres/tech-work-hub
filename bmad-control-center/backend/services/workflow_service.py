@@ -161,6 +161,10 @@ class WorkflowService:
                 "branch_create": (re.search(
                     r'^\s*(?:[-*]\s+)*(?:\*\*Handoff:\*\*\s*)?@WATCHER:\s*GITOPS-BRANCH-CREATE\s+([^\s`\'"]+)',
                     chunk, re.MULTILINE) or [None, None])[1],
+                # Cierre de rama emitido por el revisor: la HU quedó certificada y fusionada
+                "merge_close": (re.search(
+                    r'^\s*(?:[-*]\s+)*(?:\*\*Handoff:\*\*\s*)?@WATCHER:\s*GITOPS-MERGE-CLOSE\s+([^\s`\'"]+)',
+                    chunk, re.MULTILINE) or [None, None])[1],
                 "timestamp": iso_timestamp,
             })
 
@@ -293,7 +297,11 @@ class WorkflowService:
             target = last_block.get("target_token")
 
             # Check if all completed
-            if last_block["author_role"] in ("SecOps", "Code Review") and target in ["WATCHER", "PM"]:
+            # Un bloque del revisor que lleva la macro de cierre de rama es el final de la HU aunque su Handoff
+            # apunte a HUMANO (aviso informativo): no debe quedar como "POR APROBAR".
+            if last_block["author_role"] in ("SecOps", "Code Review") and (
+                target in ["WATCHER", "PM"] or last_block.get("merge_close")
+            ):
                 overall_status = "COMPLETED"
                 active_stage_key = "COMPLETED"
                 active_agent_role = None

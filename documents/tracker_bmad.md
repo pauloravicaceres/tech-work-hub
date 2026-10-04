@@ -568,3 +568,17 @@ Con el árbol limpio y esos commits hechos, procede al cierre de la rama y despi
 - **⚠️ Puntos Abiertos:** T028 diferida (manual). Deuda técnica de CatalogSeeder y helpers. Revisión de QA-Tech de ssl-required=none en el PR. node_modules versionado en app/frontend (fuera del alcance de esta historia).
 - **Handoff:** @HUMANO: HU-002 certificada y rama consolidada; el backlog del ledger no tiene más historias, así que no se despierta al product-manager.
 @WATCHER: GITOPS-MERGE-CLOSE feat/002-HU_pruebas_integracion_keycloak_y_catalogo_application
+
+
+### [04-10-2026] Product Manager
+- **Hora:** 00:58:27
+- **Artefacto generado:** `specs/README.md`
+- **Estado:** Ledger actualizado tras el cierre de HU-002: HU-001 y HU-002 promovidas a ACTIVE; descompuestas las seis épicas en 31 historias candidatas (003 a 033) registradas en BACKLOG con la marca ⚠️ [PROPUESTO]. Campo "Historias candidatas" añadido a cada épica de `documents/product-manager/mvp_tech_work_hub.md` sin tocar el resto del plan. No se abre rama ni se emite ninguna macro hasta tu respuesta.
+- **⚠️ Puntos Abiertos:** Selección de la siguiente historia pendiente de decisión humana (ver opciones). Las historias con ❓ quedan registradas pero no elegibles hasta resolver el punto de negocio.
+- **Handoff:** @HUMANO: Elige la siguiente historia entre las opciones numeradas debajo; mi recomendación es la opción 1 (003-HU_asignacion_elementos_sprint).
+
+1. **003-HU_asignacion_elementos_sprint** — Épica [P1] (la misma en curso). Asigna elementos del backlog a un Sprint de 2 semanas. Depende solo de HU-001 (ya ACTIVE); no depende de datos de otras épicas ni de ningún ❓. Es la continuación natural del núcleo transaccional y desbloquea 005 y dashboard_estado_sprint (030). Recomendada.
+2. **011-HU_miembros_equipo_y_roles_tecnicos** — Épica [P2]. Adelanta la porción mínima de datos maestros (personas y roles) de la que depende P1 para responsables y estimaciones. No depende de épicas previas ni de ❓. Desbloquea registro de actividades (020), incidentes (022), reuniones (026) y capacidades (012). Implica adelantar P2 antes de completar P1.
+3. **015-HU_ficha_general_aplicacion** — Épica [P3]. Información general, responsables, equipo y tecnologías de cada aplicación, sobre el catálogo base ya sembrado por HU-002. No depende de ❓; es prerrequisito de 016 a 019 y de incidentes (022). Implica abrir P3 sin haber completado P1 ni P2.
+
+Bloqueadas por ❓ y por tanto no elegibles ahora: 004 (catálogo de estados), 007 y 008 (definiciones de Retrasada y En riesgo), 012 (modelo de capacidad), 017 y 018 (almacenamiento, visibilidad y adjuntos), 022 a 024 (flujo de estados de incidentes, tamaño y formatos de adjuntos), 027 (conversión de compromisos en actividades), 031 (Retrasada y En riesgo).

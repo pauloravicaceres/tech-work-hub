@@ -112,3 +112,43 @@ def test_una_mencion_de_la_macro_en_prosa_no_reinicia_el_pipeline(tmp_path):
     resp, st = _stages(tmp_path, CICLO_1_COMPLETO + prosa)
 
     assert st["QA-AUTO"].status == "COMPLETED", "una cita en prosa no debe abrir un ciclo nuevo"
+
+
+CIERRE_CON_AVISO_A_HUMANO = """
+### [04-10-2026] Code Review
+- **Hora:** 00:05:00
+- **Estado:** APROBADO. HU certificada y rama consolidada.
+@WATCHER: GITOPS-MERGE-CLOSE feat/001-HU_a
+- **Handoff:** @HUMANO: HU certificada; aviso informativo de cierre.
+"""
+
+CONSULTA_REAL_AL_HUMANO = """
+### [04-10-2026] Code Review
+- **Hora:** 00:05:00
+- **Estado:** APROBADO CON RESERVAS.
+- **Handoff:** @HUMANO: Decide cómo cerrar.
+  1. ¿Autorizas el cierre?
+"""
+
+
+def test_un_cierre_de_rama_con_aviso_a_humano_no_queda_por_aprobar(tmp_path):
+    resp, st = _stages(tmp_path, CICLO_1_COMPLETO + CIERRE_CON_AVISO_A_HUMANO)
+
+    assert resp.overall_status == "COMPLETED"
+    assert st["CR"].status == "COMPLETED"
+    assert not resp.active_agent_role or "HUMANO" not in resp.active_agent_role
+
+
+def test_una_consulta_real_al_humano_sigue_marcando_por_aprobar(tmp_path):
+    resp, st = _stages(tmp_path, CICLO_1_COMPLETO + CONSULTA_REAL_AL_HUMANO)
+
+    assert resp.active_stage == "CR"
+    assert resp.active_agent_role and "HUMANO" in resp.active_agent_role
+
+
+def test_la_macro_de_cierre_citada_en_prosa_no_cuenta_como_cierre(tmp_path):
+    prosa = CONSULTA_REAL_AL_HUMANO.replace(
+        "APROBADO CON RESERVAS.", "Confirmar si se emite `@WATCHER: GITOPS-MERGE-CLOSE feat/001-HU_a` luego.")
+    resp, _ = _stages(tmp_path, CICLO_1_COMPLETO + prosa)
+
+    assert resp.active_agent_role and "HUMANO" in resp.active_agent_role

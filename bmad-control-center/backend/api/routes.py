@@ -35,7 +35,10 @@ async def get_gate_status():
     blocks = content.split("###")
     if len(blocks) > 1:
         last_block = blocks[-1]
-        if "@HUMANO:" in last_block and "HUMANO" not in last_block.split("\n")[0]:
+        # Un bloque que incluye la macro de cierre de rama es un cierre, no una consulta al humano
+        cierre = re.search(r"^\s*(?:[-*]\s+)*(?:\*\*Handoff:\*\*\s*)?@WATCHER:\s*GITOPS-MERGE-CLOSE\s+\S+",
+                           last_block, re.MULTILINE)
+        if "@HUMANO:" in last_block and "HUMANO" not in last_block.split("\n")[0] and not cierre:
             status = "PENDING_DECISION"
         else:
             status = "APPROVED"

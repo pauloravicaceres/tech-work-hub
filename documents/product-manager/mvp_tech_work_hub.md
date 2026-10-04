@@ -40,6 +40,7 @@ Permite administrar ciclos de trabajo acotados a 2 semanas y gobernar un backlog
 
 Incluye:
 
+- Configuración y seguimiento de ciclos (Sprints) de 2 semanas.
 - Asignación de elementos al Sprint.
 - Estimaciones diferenciadas e independientes por rol técnico (Desarrollo y QA).
 - Seguimiento del flujo de estados.
@@ -49,6 +50,18 @@ Incluye:
 - Identificación de tarjetas en riesgo.
 - Relaciones con personas, actividades, reuniones, incidentes y aplicaciones.
 - Historial de eventos relevantes de las tarjetas.
+
+**Historias candidatas**
+
+- `003-HU_gestion_sprint_dos_semanas` ⚠️ [PROPUESTO]: Crear y gestionar Sprints de 2 semanas: configuración del ciclo (identificación y fechas de inicio y fin acotadas estrictamente a una ventana de 2 semanas) y consulta y seguimiento del Sprint. Sin dependencia de otras épicas. La creación y consulta no tienen bloqueos; el ciclo de vida (estados, apertura y cierre) queda bloqueado por ❓ reglas de apertura, cierre y estados de un Sprint. Sin dependencias de otras historias; la 004 depende de ella.
+- `004-HU_asignacion_elementos_sprint` ⚠️ [PROPUESTO]: Asignación de elementos del backlog a un Sprint de 2 semanas. Depende de 003 (el Sprint debe existir); sin otros puntos abiertos.
+- `005-HU_flujo_estados_backlog` ⚠️ [PROPUESTO]: Seguimiento del flujo de estados de las tarjetas. Bloqueada por ❓ catálogo de estados y reglas de transición.
+- `006-HU_fechas_compromiso_vs_reales` ⚠️ [PROPUESTO]: Fechas de compromiso versus fechas reales de las tarjetas. Depende de 004 y del flujo de estados (005).
+- `007-HU_bloqueos_backlog` ⚠️ [PROPUESTO]: Detección y registro de bloqueos de tarjetas. Depende de 005.
+- `008-HU_retrasos_backlog` ⚠️ [PROPUESTO]: Identificación de tarjetas retrasadas. Bloqueada por ❓ definición formal de "Retrasada"; depende de 006.
+- `009-HU_tarjetas_en_riesgo` ⚠️ [PROPUESTO]: Identificación de tarjetas en riesgo. Bloqueada por ❓ definición formal de "En riesgo"; depende de 006.
+- `010-HU_relaciones_backlog_con_entidades` ⚠️ [PROPUESTO]: Relaciones de las tarjetas con personas, actividades, reuniones, incidentes y aplicaciones. Depende de datos de P2, P3, P4 y P5.
+- `011-HU_historial_eventos_tarjetas` ⚠️ [PROPUESTO]: Historial de eventos relevantes de las tarjetas (capacidad transversal Timeline). Depende de 005; implementación técnica a definir en Architecture.
 
 **Justificación de Prioridad**
 
@@ -77,6 +90,13 @@ Gestiona las entidades maestras relacionadas con las personas que participan en 
 - Relación entre personas, roles y elementos de trabajo.
 
 Debe permitir soportar las estimaciones diferenciadas por rol requeridas por el Backlog Multitipo y los Sprints.
+
+**Historias candidatas**
+
+- `012-HU_miembros_equipo_y_roles_tecnicos` ⚠️ [PROPUESTO]: Gestión de miembros del equipo y roles técnicos como datos maestros. Sin dependencia de puntos abiertos.
+- `013-HU_capacidades_y_asignaciones` ⚠️ [PROPUESTO]: Capacidades y asignaciones de las personas. Bloqueada por ❓ modelo de cálculo de capacidad individual y por rol; depende de 012.
+- `014-HU_actividades_y_carga_por_persona` ⚠️ [PROPUESTO]: Actividades y carga de trabajo por persona. Depende de 012 y de actividades de P4.
+- `015-HU_relacion_personas_roles_elementos` ⚠️ [PROPUESTO]: Relación entre personas, roles y elementos de trabajo. Depende de 012 y de P1.
 
 **Justificación de Prioridad**
 
@@ -115,6 +135,14 @@ Cada aplicación podrá mantener, según corresponda:
 - Actividades relacionadas.
 - Tarjetas relacionadas.
 - Reuniones relacionadas.
+
+**Historias candidatas**
+
+- `016-HU_ficha_general_aplicacion` ⚠️ [PROPUESTO]: Información general, responsables, equipo relacionado y tecnologías de cada aplicación. Sin dependencia de puntos abiertos; el catálogo base ya existe por HU-002.
+- `017-HU_ambientes_componentes_integraciones` ⚠️ [PROPUESTO]: Ambientes, componentes e integraciones de la aplicación. Depende de 016.
+- `018-HU_referencias_repositorios_y_documentacion` ⚠️ [PROPUESTO]: Referencias a repositorios y documentación de la aplicación. Bloqueada por ❓ almacenamiento físico vs. referencias externas y ❓ visibilidad/edición; depende de 016.
+- `019-HU_diagramas_arquitectura_aplicacion` ⚠️ [PROPUESTO]: Diagramas de arquitectura de la aplicación. Bloqueada por ❓ formatos/tamaño de adjuntos y ❓ visibilidad/edición; depende de 016.
+- `020-HU_contexto_relacionado_aplicacion` ⚠️ [PROPUESTO]: Vista de incidentes, actividades, tarjetas y reuniones relacionadas con la aplicación. Depende de 016 y de datos de P1, P4 y P5.
 
 **Justificación de Prioridad**
 
@@ -170,6 +198,15 @@ Permiten registrar:
 - Historial del incidente.
 
 Los incidentes mantienen un circuito diferenciado del Backlog planificado para evitar distorsionar la lectura del Sprint.
+
+**Historias candidatas**
+
+- `021-HU_registro_actividades_operativas` ⚠️ [PROPUESTO]: Registro de actividades operativas con responsable, fechas, estado, duración y prioridad. Depende de 012 para responsables.
+- `022-HU_relaciones_actividades_operativas` ⚠️ [PROPUESTO]: Relaciones de actividades con aplicaciones, tarjetas, incidentes y reuniones. Depende de 021 y de datos de P1, P3 y P5.
+- `023-HU_registro_incidentes` ⚠️ [PROPUESTO]: Registro de incidentes: reportante, aplicación afectada, fecha y hora, categorización, severidad, estado y responsable. Bloqueada por ❓ flujo de estados de incidentes; depende de 016 y 012.
+- `024-HU_atencion_y_resolucion_incidentes` ⚠️ [PROPUESTO]: Inicio y fin de atención, tiempos de atención y resolución, diagnóstico y solución. Depende de 023; afectada por ❓ flujo de estados de incidentes.
+- `025-HU_evidencias_adjuntos_incidentes` ⚠️ [PROPUESTO]: Evidencias y adjuntos de incidentes. Bloqueada por ❓ tamaño máximo y formatos permitidos; depende de 023.
+- `026-HU_relaciones_e_historial_incidente` ⚠️ [PROPUESTO]: Relaciones del incidente con tarjetas, actividades, reuniones y documentación, e historial del incidente. Depende de 023 y de datos de P1, P3 y P5.
 
 **Justificación de Prioridad**
 
@@ -232,6 +269,13 @@ Ejemplos:
 
 La implementación técnica del Timeline deberá definirse durante Architecture.
 
+**Historias candidatas**
+
+- `027-HU_registro_reuniones` ⚠️ [PROPUESTO]: Registro de reuniones: fecha y hora, participantes, motivo, acta o minuta y adjuntos. Adjuntos bloqueados por ❓ tamaño y formatos; depende de 012.
+- `028-HU_acuerdos_y_compromisos` ⚠️ [PROPUESTO]: Acuerdos y compromisos con responsable, fecha compromiso y estado. Bloqueada por ❓ criterio para convertir compromisos en actividades; depende de 027.
+- `029-HU_relaciones_reuniones` ⚠️ [PROPUESTO]: Relación de reuniones con elementos del backlog, actividades, incidentes, aplicaciones y Sprints. Depende de 027 y de datos de P1, P3 y P4.
+- `030-HU_timeline_transversal` ⚠️ [PROPUESTO]: Timeline cronológico transversal sobre incidentes, aplicaciones y demás elementos (extiende 011). Depende de 011; implementación técnica a definir en Architecture.
+
 **Justificación de Prioridad**
 
 Permite conservar decisiones y compromisos que de otro modo podrían quedar dispersos en correos, chats, notas o reuniones.
@@ -264,6 +308,13 @@ Debe consolidar, según corresponda:
 - Tiempo invertido en incidentes.
 - Compromisos pendientes.
 - Alertas relevantes.
+
+**Historias candidatas**
+
+- `031-HU_dashboard_estado_sprint` ⚠️ [PROPUESTO]: Estado del Sprint activo, distribución de tarjetas por estado y puntos planificados y completados por rol. Depende de 004 y 005.
+- `032-HU_dashboard_alertas_retrasos_bloqueos_riesgo` ⚠️ [PROPUESTO]: Tarjetas retrasadas, bloqueadas y en riesgo, y alertas relevantes. Bloqueada por ❓ definiciones de "Retrasada" y "En riesgo"; depende de 007, 008 y 009.
+- `033-HU_dashboard_trabajo_no_planificado` ⚠️ [PROPUESTO]: Trabajo planificado versus no planificado, actividades pendientes y en progreso, incidentes abiertos y atendidos y tiempo invertido en incidentes. Depende de P4.
+- `034-HU_dashboard_compromisos_pendientes` ⚠️ [PROPUESTO]: Compromisos pendientes de reuniones. Depende de 028.
 
 **Justificación de Prioridad**
 
@@ -379,6 +430,7 @@ Estas dependencias deberán validarse durante BA y Architecture.
 - ❓ Nivel de visibilidad y edición de documentación y diagramas.
 - ❓ Almacenamiento físico de documentación versus referencias a repositorios externos.
 - ❓ Integración futura con Azure DevOps, Jira u otras herramientas.
+- ❓ Reglas de apertura, cierre y estados de un Sprint (el Product Brief solo fija su duración de 2 semanas).
 
 ---
 
@@ -514,13 +566,3 @@ Al finalizar un Sprint, el Líder Técnico debe poder consultar TechWorkHub y re
 - ¿Cuándo ocurrió?
 - ¿Quién realizó el cambio?
 - ¿Qué decisión o evento provocó el cambio?
-
----
-
-## 10. ORDEN DE DELEGACIÓN PARA EL BA Y GITOPS
-
-*(Instrucción que se inyecta en tracker_bmad.md)*
-
-@WATCHER: GITOPS-BRANCH-CREATE feat/001-HU_registro_elementos_backlog_multitipo
-
-El Business Analyst (@BA:) debe iniciar el análisis de negocio y redacción formal de la especificación para la Historia de Usuario `001-HU_registro_elementos_backlog_multitipo` correspondiente a la Épica [P1], creando físicamente el archivo `documents/business-analyst/001-HU_registro_elementos_backlog_multitipo.md` bajo la plantilla canónica de HU y respetando estrictamente el identificador universal asignado.
