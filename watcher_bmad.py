@@ -52,7 +52,7 @@ def sincronizar_skills_speckit():
         if skill_dir.is_dir():
             shutil.copytree(skill_dir, destino / skill_dir.name, dirs_exist_ok=True)
 
-def ejecutar_speckit(skill, argumentos="", directiva=None):
+def ejecutar_speckit(skill, argumentos="", directiva=None, entorno=None):
     """
     Ejecuta una skill de Spec Kit con Claude Code en modo headless.
     - directiva: archivo con el "alma" del agente; se añade al system prompt (Claude no lee
@@ -68,7 +68,8 @@ def ejecutar_speckit(skill, argumentos="", directiva=None):
     try:
         res = subprocess.run(
             cmd, cwd=DIRECTORIO_RAIZ, capture_output=True, text=True,
-            encoding="utf-8", errors="replace"
+            encoding="utf-8", errors="replace",
+            env={**os.environ, **entorno} if entorno else None,
         )
     except FileNotFoundError:
         res = subprocess.CompletedProcess([], 127, "", "No se encontró el ejecutable 'claude' en el PATH.")
@@ -584,6 +585,34 @@ def determinar_handoff_fase_a(tracker_path: str, config_path: str = "config_bmad
 
     return "@UX:"
 
+def carpeta_spec_para_hu(ruta_hu):
+    """
+    Carpeta de Spec Kit para una HU: specs/<identificador universal>, derivada del nombre del archivo del BA
+    (documents/business-analyst/012-HU_nombre.md -> specs/012-HU_nombre). Así la carpeta lleva el mismo número y
+    nombre que el ledger y la rama, en lugar del "NNN-nombre-corto" que Spec Kit inventaría por su cuenta.
+    Devuelve None si el nombre no lleva el correlativo (formato heredado sin número).
+    """
+    stem = Path(str(ruta_hu).replace("\\", "/")).stem
+    return f"specs/{stem}" if re.match(r"^\d{3}-HU_[\w-]+$", stem, re.IGNORECASE) else None
+
+def verificar_carpeta_spec(carpeta_esperada):
+    """Comprueba que Spec Kit usó la carpeta fijada: .specify/feature.json la apunta y contiene spec.md."""
+    try:
+        feature = json.loads((DIRECTORIO_RAIZ / ".specify" / "feature.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return False, "no se pudo leer .specify/feature.json"
+    real = str(feature.get("feature_directory", "")).replace("\\", "/").strip("/")
+    if Path(real).is_absolute():
+        try:
+            real = Path(real).relative_to(DIRECTORIO_RAIZ).as_posix()
+        except ValueError:
+            pass
+    if real != carpeta_esperada:
+        return False, f".specify/feature.json apunta a '{real or '(vacío)'}'"
+    if not (DIRECTORIO_RAIZ / carpeta_esperada / "spec.md").exists():
+        return False, "la carpeta no contiene spec.md"
+    return True, ""
+
 def ejecutar_sdd_fase_negocio(ruta_hu: str):
     """
     Hito 1 del SDD Auto-Runner: Fase de Negocio (Post-QA).
@@ -592,8 +621,24 @@ def ejecutar_sdd_fase_negocio(ruta_hu: str):
     try:
         # 1. Specify
         write_watcher_log("⚙️ [SDD Auto-Runner] Ejecutando análisis funcional (/speckit.specify)...")
-        if ejecutar_speckit("specify", ruta_hu).returncode != 0:
+        carpeta = carpeta_spec_para_hu(ruta_hu)
+        if carpeta:
+            argumentos = (f"{ruta_hu} SPECIFY_FEATURE_DIRECTORY={carpeta} (usa EXACTAMENTE esa carpeta: no generes otro "
+                          "nombre ni otro número; esta indicación no forma parte de la descripción de la funcionalidad)")
+            entorno = {"SPECIFY_FEATURE_DIRECTORY": carpeta}
+        else:
+            print(f"⚠️ [SDD Negocio] '{ruta_hu}' no lleva el correlativo NNN-HU_: Spec Kit elegirá la carpeta por su cuenta.")
+            argumentos, entorno = ruta_hu, None
+        if ejecutar_speckit("specify", argumentos, entorno=entorno).returncode != 0:
             return False
+        if carpeta:
+            ok, detalle = verificar_carpeta_spec(carpeta)
+            if not ok:
+                msg = (f"🚨 ERROR [SDD Negocio]: Spec Kit no respetó la carpeta fijada '{carpeta}' ({detalle}). "
+                       "Se detiene la fase: revisa specs/ y .specify/feature.json y reintenta.")
+                print(f"❌ {msg}")
+                write_watcher_log(msg)
+                return False
 
         # 2. Clarify (HITL por Excepción)
         write_watcher_log("⚙️ [SDD Auto-Runner] Verificando ambigüedades (/speckit.clarify)...")
