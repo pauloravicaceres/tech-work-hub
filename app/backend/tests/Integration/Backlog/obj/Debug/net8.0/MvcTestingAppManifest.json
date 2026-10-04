@@ -1,0 +1,6 @@
+{
+  "Api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "D:\\Paulo\\Proyectos\\tech-work-hub\\app\\backend\\src\\Bootstrapper\\Api",
+  "Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "D:\\Paulo\\Proyectos\\tech-work-hub\\app\\backend\\src\\Modules\\Application",
+  "Backlog, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "D:\\Paulo\\Proyectos\\tech-work-hub\\app\\backend\\src\\Modules\\Backlog",
+  "Shared, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "D:\\Paulo\\Proyectos\\tech-work-hub\\app\\backend\\src\\BuildingBlocks\\Shared"
+}
