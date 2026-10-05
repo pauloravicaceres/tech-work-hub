@@ -1081,3 +1081,192 @@ You can reply with the option letter (e.g., "A"), accept the recommendation by s
 - **⚠️ Puntos Abiertos:** Ninguno bloqueante para 015. Siguen abiertos los ❓ del plan (estados, retrasada, en riesgo, capacidad, incidentes, adjuntos, documentación, Sprint).
 @WATCHER: GITOPS-BRANCH-CREATE feat/015-HU_relacion_personas_roles_elementos
 - **Handoff:** @BA: Iniciar el análisis de negocio y redacción de la Historia de Usuario seleccionada.
+
+
+### [04-10-2026] Business Analyst
+- **Hora:** 20:18:00
+- **Artefacto generado:** `documents/business-analyst/015-HU_relacion_personas_roles_elementos.md`
+- **Estado:** HU 015 redactada en Dual-Output (técnica y stakeholders en `documents/business-analyst/HUs-stakeholders/015-HU_relacion_personas_roles_elementos.md`), modo Brownfield. Alcance único: asignar miembros (HU-012) como responsables de elementos del backlog (HU-001) y consultar la relación en ambos sentidos. 10 escenarios Gherkin (5 Happy y 5 Sad: miembro inexistente, elemento inexistente, identificadores inválidos, 401, fallo de persistencia), matriz CB-01 a CB-11, diagrama de secuencia y de flujo, DoD con no-regresión y respeto al aislamiento por schema. Validación hu-validator completada; archivos UTF-8 sin BOM.
+- **⚠️ Puntos Abiertos:** Sin definir en la fuente: duplicados y máximo de responsables, rol elegible por asignación, quitar o reemplazar responsable, coherencia con estimaciones Dev y QA y con estado o Sprint, permisos por perfil, formato de las consultas. Solape de alcance con la HU 010 (parte de personas) que el Product Manager debe confirmar. Operaciones, códigos HTTP y consultas propuestas marcados como PROPUESTO.
+- **Handoff:** @QA: La Historia de Usuario Técnica Relación entre Personas, Roles y Elementos de Trabajo está lista en el archivo 015-HU_relacion_personas_roles_elementos.md (y su versión de stakeholders en documents/business-analyst/HUs-stakeholders/015-HU_relacion_personas_roles_elementos.md). Por favor, procede con la auditoría documental contra el Product Brief para asegurar que la historia cumple con los requerimientos originales.
+
+### [04-10-2026] QA Documental
+- **Hora:** 20:30:00
+- **Artefacto generado:** `documents/qa-documental/aprobado_qa_015_relacion_personas_roles_elementos.md`
+- **Estado:** [APROBADO] HU-015 auditada en modo Brownfield (versión técnica y de stakeholders) contra el Product Brief y la Constitución. 6 dimensiones conformes: 5 Happy Paths y 5 Sad Paths, supuestos marcados como PROPUESTO y puntos abiertos como No documentado, sin invasión de alcance, sin contradicción con la Constitución y con no-regresión en el DoD. Requiere interfaz: Sí, coherente con el proyecto fullstack.
+- **⚠️ Puntos Abiertos:** Ninguno bloqueante. Informativo: no se define la respuesta cuando miembro y elemento no existen a la vez (CA-05 de stakeholders frente a SC-06 y SC-07), y el formato de los identificadores queda para Architecture.
+- **Handoff:** @UX: La Historia de Usuario 015-HU_relacion_personas_roles_elementos.md ha sido aprobada por QA. Por favor, procede a diseñar los wireframes y estados visuales.
+
+### [04-10-2026] WATCHER
+- **Hora:** 20:18:43
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Ejecutando análisis funcional (/speckit.specify)...
+
+### [04-10-2026] WATCHER
+- **Hora:** 20:19:40
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Verificando ambigüedades (/speckit.clarify)...
+
+### [04-10-2026] WATCHER
+- **Hora:** 20:19:59
+- **Mensaje:** ⚠️ [HITL] Ambigüedad detectada por Spec Kit.
+- **Handoff:** @HUMANO: El motor de análisis funcional encontró ambigüedades o vacíos en la Historia de Usuario. Por favor, revisa la matriz y responde la pregunta a continuación para que la IA pueda cerrar el análisis.
+
+**Question:** Si se asigna dos veces al mismo miembro como responsable del mismo elemento, ¿qué debe hacer el sistema? (FR-015)
+
+**Why it matters:** Define si la relación tiene una restricción de unicidad (miembro, elemento), qué código HTTP se devuelve y qué prueba de aceptación se escribe. Hoy el comportamiento no está definido y podrían quedar relaciones duplicadas.
+
+**Recommended:** Option B. Es idempotente, evita duplicados sin romper reintentos del cliente, y conserva la relación original con su `CreatedAt` y `CreatedBy`.
+
+| Option | Description |
+|--------|-------------|
+| A | Rechazar con HTTP 409 Conflict y no persistir nada |
+| B | Idempotente: responder éxito con la relación existente, sin crear otra ni alterar su auditoría |
+| C | Permitir el duplicado y crear otra relación |
+| Short | Dar otra respuesta corta (<=5 palabras) |
+
+You can reply with the option letter (e.g., "A"), accept the recommendation by saying "yes" or "recommended", or provide your own short answer.
+
+
+### [04-10-2026] HUMANO
+- **Hora:** 20:22:59
+- **Estado:** APPROVE
+- **Feedback:** B
+
+
+### [04-10-2026] WATCHER
+- **Hora:** 20:23:01
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Inyectando respuesta humana a Spec Kit: B
+
+### [04-10-2026] WATCHER
+- **Hora:** 20:23:23
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Resolución aplicada exitosamente.
+- **Handoff:** @UX: La ambigüedad ha sido resuelta por el Humano y la especificación SDD ha concluido con éxito. Procede con tu diseño.
+
+
+### [04-10-2026] Designer UX
+- **Hora:** 20:25:19
+- **Artefacto generado:** `documents/designer-ux/ux_015_relacion_personas_roles_elementos.md`
+- **Estado:** Diseño visual completado con 12 estados ASCII (mapeo 1 a 1 de SC-01 a SC-10 más el caso idempotente resuelto por el Humano); happy y sad paths cubiertos, brownfield Angular 22 + PrimeNG como pestaña Responsables embebida en Equipos y Roles; archivo verificado tras la escritura.
+- **⚠️ Puntos Abiertos:** spec.md no refleja la resolución humana de asignación duplicada idempotente como escenario (Estado 7 diseñado según el tracker); fuente de las listas de elementos y miembros para los selectores por confirmar en arquitectura; sin bloqueos para el BA.
+- **Handoff:** @SA: El diseño visual de la HU [015-HU_relacion_personas_roles_elementos] ha concluido exitosamente en [documents/designer-ux/ux_015_relacion_personas_roles_elementos.md]. Procede con el tech-design y arquitectura.
+
+
+### [04-10-2026] Solutions Architect
+- **Hora:** 20:52:10
+- **Artefacto generado:** `documents/solutions-architect/015-HU_relacion_personas_roles_elementos.md`
+- **Estado:** Gobernanza técnica formalizada en modo Brownfield, sin vacíos de infraestructura y por tanto sin cuestionario. La relación vive en el módulo existente `Teams` (tabla `teams.ItemAssignments`, ADR-003) y lee el elemento por un contrato in-process hacia Backlog sin consultas ni FKs cross-schema (ADR-002, ADR-003); el rol se deriva del miembro y no se almacena. Regla humana B (asignación duplicada idempotente) garantizada por índice único (elemento, miembro) y resuelta también en la carrera concurrente (ADR-004), con 201 para creada y 200 para ya existente (ADR-005). Sin cambios en Shared, sin eventos, Outbox ni caché (ADR-007). Identificadores como texto validados por campo para el 400 (ADR-008). Task-UI y rutas reconciliados: POST y GET /api/backlog-items/{itemId}/assignees y GET /api/team-members/{memberId}/items.
+- **⚠️ Puntos Abiertos:** (1) spec.md aún trata la asignación duplicada como no documentada y conserva FR-015; el BA y Spec Kit deben reflejar la decisión humana B (escenario idempotente, FR de unicidad). (2) Se añade a Backlog una consulta de solo lectura GET /api/backlog-items para el selector del UX (ADR-006) y Backlog pasa a referenciar Teams; a confirmar en plan.md. (3) Propuestos a confirmar con el BA: 404 del miembro cuando faltan ambos, 200 con colección vacía para consultas de ids inexistentes y estado de error de lectura distinto de 401. (4) Código de éxito 201 y contrato HTTP final los fija el API Architect. (5) Informativo heredado: el shell de navegación no existe en el repositorio.
+- **Handoff:** 
+@WATCHER: SDD-FREEZE 015-HU_relacion_personas_roles_elementos.md
+
+### [04-10-2026] WATCHER
+- **Hora:** 20:28:17
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Estructurando plan de arquitectura técnica (/speckit.plan)...
+
+### [04-10-2026] WATCHER
+- **Hora:** 20:30:10
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Desglosando tareas de implementación (/speckit.tasks)...
+
+### [04-10-2026] WATCHER
+- **Hora:** 20:32:20
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Ejecutando auditoría técnica (/speckit.analyze)...
+
+@DA: El plan técnico y las tareas han sido congeladas. Procede con el diseño de persistencia basándote en los nuevos archivos.
+
+
+### [04-10-2026] Data Architect
+- **Hora:** 20:34:46
+- **Artefacto generado:** `documents/data-architect/db_015_relacion_personas_roles_elementos.md`
+- **Estado:** Modelo de persistencia Brownfield completado y verificado en disco: una tabla nueva `teams."ItemAssignments"` en `TeamsDbContext` (migración aditiva `AddItemAssignments`), FK local `MemberId` a `TeamMembers` con RESTRICT, `ItemId` como referencia lógica sin FK por la regla cross-schema, índice único (ItemId, MemberId) que garantiza la asignación idempotente también bajo concurrencia, índice por MemberId, rol derivado del miembro (no persistido), auditoría por interceptor, sin eventos ni Outbox. 6 ADR (4 heredados/aceptados con alternativas), trazabilidad spec/UX a datos sin campos huérfanos.
+- **⚠️ Puntos Abiertos:** (1) data-model.md y T010 dejan CreatedBy/LastModifiedBy como varchar sin longitud; este diseño fija varchar(255) por coherencia con backlog y sprints, a reconciliar en T008/T010 (teams.TeamMembers de HU-012 quedó en text y no se modifica). (2) contracts/item-assignments-api.openapi.yaml referenciado en tasks.md aún no existe. (3) spec.md sigue sin reflejar la resolución humana de asignación duplicada idempotente (pendiente del BA). (4) Sin FK hacia backlog: la existencia del elemento es verificada solo por contrato in-process.
+- **Handoff:** @API: El modelo de datos (MER) y la persistencia han sido definidos a partir de spec.md y tasks.md. Por favor, diseña los contratos de integración (Endpoints/Payloads) basados en estas tablas.
+
+
+### [04-10-2026] API Architect
+- **Hora:** 20:37:13
+- **Artefacto generado:** `documents/api-architect/api_015_relacion_personas_roles_elementos.md`
+- **Estado:** Contrato HTTP completado y verificado en disco: 4 endpoints (POST y GET /api/backlog-items/{itemId}/assignees, GET /api/team-members/{memberId}/items y GET /api/backlog-items aditivo de Backlog), mapeados a teams.ItemAssignments y al contrato in-process IBacklogItemLookup, sin exponer auditoría, estimaciones, estado ni Sprint. POST idempotente: 201 con Location al crear y 200 con el mismo cuerpo si el par ya existía; 400 por campo (itemId, memberId), 404 con detail que distingue miembro de elemento (gana el miembro), 401 y 500 sin trazas; sin 409. 9 ADR MADR con alternativas y trade-offs; formato de errores verificado contra CustomExceptionHandler de Shared.
+- **⚠️ Puntos Abiertos:** (1) contracts/item-assignments-api.openapi.yaml referenciado por plan.md, quickstart.md y tasks.md no existe; este documento es la única definición HTTP y debe sincronizarse. (2) api_012 documenta un 500 con detail y title distinto del que emite CustomExceptionHandler; este contrato sigue el código. (3) spec.md sigue sin reflejar la resolución humana de duplicado idempotente (pendiente del BA). (4) Consultas con id inexistente devuelven 200 vacío (propuesto, D7) y el cliente distingue 404 de miembro y de elemento solo por el texto de detail.
+- **Handoff:** @QT: Los contratos de integración (API) y endpoints para Relación entre Personas, Roles y Elementos de Trabajo (Asignar y Consultar) han sido definidos en api_015_relacion_personas_roles_elementos.md basados en spec.md y db_015_relacion_personas_roles_elementos.md. Por favor, procede con la auditoría cruzada y la compilación del Tech Design (TDD).
+
+
+### [04-10-2026] QA Tech
+- **Hora:** 20:41:00
+- **Artefacto generado:** `documents/qa-tech/tech-design_015_relacion_personas_roles_elementos.md`
+- **Estado:** ✅ AUDITADO Y APROBADO. Auditoría adversarial superada (0 hallazgos críticos): DB, API, spec.md, tasks.md, OpenAPI y UX consistentes, cero campos huérfanos, ADR sin alternativas falsas relevantes ni sycophancy (la decisión humana B de asignación idempotente es regla de negocio, no contradice la constitución). Verificado contra el código: ValidationBehavior valida cualquier IRequest, NotFoundException y CustomExceptionHandler distinguen los 404 por detail, GET /api/backlog-items no colisiona con rutas existentes y el grafo de proyectos Backlog a Teams es acíclico. Tech Design compilado con 3 diagramas Mermaid (archify no ejecutable: Node.js no instalado), 23 ADR consolidados, specs/README.md actualizado a READY-FOR-DEV. constitution.md no se modificó (sin cambios estructurales globales). 12 advertencias vinculantes para Fase D en la sección 7.4 del TDD.
+- **⚠️ Puntos Abiertos:** Ninguno bloqueante. Informativos: CreatedBy/LastModifiedBy varchar(255) frente a varchar sin longitud en T008/T010 (prevalece db_015); el OpenAPI existe en disco aunque DA y API lo daban por inexistente y debe sincronizarse; spec.md aún no refleja la asignación duplicada idempotente (pendiente del BA); la carrera concurrente solo se prueba con PostgreSQL real; 201 y Location propuestos; consultas sin paginación ni tope; sin permisos por rol de acceso; diagramas HTML interactivos no generados.
+- **Handoff:** @DEV-BACK: La arquitectura técnica ha sido validada. Inicia la implementación del Backend.
+@DEV-FRONT: La arquitectura técnica ha sido validada. Inicia la implementación del Frontend.
+
+### [04-10-2026] WATCHER
+- **Hora:** 20:41:11
+- **Mensaje:** ⚡ [SDD Auto-Runner] Ejecutando implementación Backend (/speckit.implement)...
+
+### [04-10-2026] WATCHER
+- **Hora:** 20:46:03
+- **Mensaje:** 🚨 ERROR en /speckit-implement (código 1): You've hit your session limit · resets 12:20am (America/Lima)
+
+### [04-10-2026] WATCHER
+- **Hora:** 00:23:15
+- **Mensaje:** @DEV-BACK: La arquitectura técnica ha sido validada. Reanuda la implementación del Backend (la ejecución anterior se cortó por límite de sesión).
+
+### [05-10-2026] WATCHER
+- **Hora:** 00:24:11
+- **Mensaje:** ⚡ [SDD Auto-Runner] Ejecutando implementación Backend (/speckit.implement)...
+
+### [05-10-2026] Senior Backend Developer
+- **Hora:** 00:39:01
+- **Artefacto generado:** `documents/dev-backend/backend-architecture.md`
+- **Estado:** Implementación backend finalizada exitosamente mediante SDD SpecKit.
+- **Handoff:** @DEV-FRONT: Inicia implementación frontend.
+
+### [05-10-2026] WATCHER
+- **Hora:** 00:39:01
+- **Mensaje:** ⚡ [SDD Auto-Runner] Ejecutando implementación Frontend (/speckit.implement)...
+- 
+### [05-10-2026] WATCHER
+- **Hora:** 01:35:00
+- **Mensaje:** @DEV-FRONT: La arquitectura técnica ha sido validada. Reanuda la implementación del Frontend (la ejecución anterior se cortó al reiniciar el watcher).
+### [05-10-2026] WATCHER
+- **Hora:** 01:33:46
+- **Mensaje:** ⚡ [SDD Auto-Runner] Ejecutando implementación Backend (/speckit.implement)...
+
+### [05-10-2026] WATCHER
+- **Hora:** 01:34:53
+- **Mensaje:** @WATCHER: 🚨 ERROR: SpecKit omitió la documentación viva de Backend en 'documents/dev-backend/backend-architecture.md'. Salida de Claude: T058 y T062). Tampoco T063, el recorrido manual del quickstart. - **Pendiente del analista de negocio:** `spec.md` aún dice "no documentado" para la asignación duplicada. Debe reconciliarse con la decisión de que el duplicado sea idempotente (200).  No escribí en `tracker_bmad.md` ni emití handoffs.
+
+
+### [05-10-2026] WATCHER
+- **Hora:** 01:40:10
+- **Mensaje:** @DEV-FRONT: La arquitectura técnica ha sido validada. Reanuda la implementación del Frontend (el backend ya está completo; la ejecución anterior se cortó al reiniciar el watcher).
+
+### [05-10-2026] WATCHER
+- **Hora:** 01:40:12
+- **Mensaje:** ⚡ [SDD Auto-Runner] Ejecutando implementación Frontend (/speckit.implement)...
+
+### [05-10-2026] Senior Frontend Developer
+- **Hora:** 01:46:35
+- **Artefacto generado:** `documents/dev-frontend/frontend-architecture.md`
+- **Estado:** Implementación frontend finalizada exitosamente mediante SDD SpecKit.
+- **Handoff:** @QA-AUTO: La Fase D (Implementación) ha finalizado exitosamente mediante motor SDD. Inicia el diseño de la matriz de pruebas automatizadas basándote en los criterios de la HU; al terminar, deriva a Code Review.
+
+### [05-10-2026] WATCHER
+- **Hora:** 01:51:29
+- **Mensaje:** ⚠️ [Vigilante] El agente 'qa-auto' terminó su turno 3 veces sin registrar su bloque en el tracker. El flujo está detenido: pídele el registro manualmente o escribe el handoff tú.
+
+### [05-10-2026] WATCHER
+- **Hora:** 01:58:00
+- **Handoff:** @QA-AUTO: La Fase D (Implementación) ha finalizado exitosamentel diseño de la matriz de pruebas automatizadas basándote en los criterios dela HU; al terminar, deriva a Code Review.
+### [05-10-2026] QA Automation
+- **Hora:** 02:24:21
+- **Artefacto generado:** `documents/qa-auto/qa-report.md`
+- **Estado:** [APROBADO] HU-015. Fork-Join satisfecho. Backend: Unit Teams 57, Unit Backlog 70 (+8 propias: BacklogItemLookupTests, ListBacklogItemsQueryHandlerTests, cubren T019/T020 ausentes), Integration Teams 70 y Backlog 34 (Testcontainers PG), todos verdes. Frontend: Jest teams 58 y Jest completo 141, verdes. Regresión Sprints U/I e Identity verdes. Sin Skip/xit. CA: US1 2/2, US2 2/2, US3 1/1, US4 3/3, US5 2/2. 0 defectos. Commit atómico local test(backlog) [TASK-015-QA-01].
+- **⚠️ Puntos Abiertos:** spec.md aún dice "no documentado" para la asignación duplicada (vinculante: 200 idempotente, ADR-004), pendiente del analista de negocio. T063 (quickstart manual) y npm run build no ejecutados por QA.
+- **Handoff:** @CODE-REVIEW: Pruebas automatizadas aprobadas para HU-015; revisa el código y la matriz de trazabilidad en documents/qa-auto/qa-report.md.
+
+### [05-10-2026] Code Review
+- **Hora:** 07:35:00
+- **Artefacto generado:** `documents/code-review/impact-analysis-report.md`
+- **Estado:** [APROBADO] HU-015. Lectura física de 36 archivos (Teams ItemAssignments, contrato IBacklogItemLookup, BacklogItemLookup, ListBacklogItems, migración, 3 componentes Angular, servicio, modelos, rutas). Carter + RequireAuthorization, lógica en handlers, CancellationToken propagado, cero N+1 (lote vía contrato), sin cruce de schemas, sin IDOR/mass assignment, Angular standalone/Signals sin XSS. Build ng build ejecutado por Code Review: OK. Reporte de impacto actualizado.
+- **⚠️ Puntos Abiertos:** (1) [CAPA:SPEC] spec.md aún dice "no documentado" para asignación duplicada; vinculante 200 idempotente (ADR-004). (2) [CAPA:CODE] .subscribe manual con takeUntilDestroyed en assign-assignee-dialog.component.ts:136, mismo precedente que HU-012. (3) [CAPA:TASKS] T063 quickstart manual sin ejecutar.
+@WATCHER: GITOPS-MERGE-CLOSE feat/015-HU_relacion_personas_roles_elementos
+- **Handoff:** @PM: Código certificado y rama consolidada en dev. Procede con las épicas pendientes del plan MVP: P1 (historias 005 a 011), P2 (013 y 014), P3, P4, P5 y P6 sin historia registrada ni implementada.

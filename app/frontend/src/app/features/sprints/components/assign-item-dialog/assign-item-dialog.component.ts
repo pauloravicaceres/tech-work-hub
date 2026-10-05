@@ -8,6 +8,7 @@ import { Subject, catchError, exhaustMap, map, of } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
+import { Fluid } from 'primeng/fluid';
 import { MessageModule } from 'primeng/message';
 
 import { AssignedItem, ProblemDetails } from '../../models/sprint.models';
@@ -40,7 +41,7 @@ type SubmitResult = { ok: true; assigned: AssignedItem } | { ok: false; error: H
   selector: 'app-assign-item-dialog',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule, RouterLink, DialogModule, InputTextModule, ButtonModule, MessageModule],
+  imports: [Fluid, ReactiveFormsModule, RouterLink, DialogModule, InputTextModule, ButtonModule, MessageModule],
   templateUrl: './assign-item-dialog.component.html',
   styleUrls: ['./assign-item-dialog.component.scss'],
 })

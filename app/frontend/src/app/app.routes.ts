@@ -64,6 +64,19 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/teams/components/team-page/team-page.component').then((m) => m.TeamPageComponent),
       },
+      {
+        // HU-015: pestaña Responsables; `data.view` elige la vista Por elemento (por defecto) o Por miembro.
+        path: 'responsables',
+        data: { tab: 'responsables', view: 'elemento' },
+        loadComponent: () =>
+          import('./features/teams/components/team-page/team-page.component').then((m) => m.TeamPageComponent),
+      },
+      {
+        path: 'responsables/miembro',
+        data: { tab: 'responsables', view: 'miembro' },
+        loadComponent: () =>
+          import('./features/teams/components/team-page/team-page.component').then((m) => m.TeamPageComponent),
+      },
     ],
   },
   { path: '', pathMatch: 'full', redirectTo: 'backlog/nuevo' },

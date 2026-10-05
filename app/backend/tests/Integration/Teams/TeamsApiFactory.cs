@@ -6,11 +6,14 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Npgsql;
 using Teams;
+using Teams.Contracts;
 using Teams.Data;
+using Teams.Domain.ItemAssignments;
 using Teams.Domain.TeamMembers;
 
 namespace Integration.Teams;
@@ -54,6 +57,9 @@ public sealed class TeamsApiFactory : WebApplicationFactory<Program>
 {
     public string ConnectionString { get; }
 
+    /// <summary>Doble del contrato <see cref="IBacklogItemLookup"/>: las pruebas de Teams no dependen del módulo Backlog.</summary>
+    public FakeBacklogItemLookup Items { get; } = new();
+
     public TeamsApiFactory(PostgresFixture postgres)
     {
         ConnectionString = postgres.CreateDatabaseAsync().GetAwaiter().GetResult();
@@ -66,13 +72,26 @@ public sealed class TeamsApiFactory : WebApplicationFactory<Program>
         builder.UseSetting("Database:MigrateOnStartup", "true");
 
         builder.ConfigureTestServices(services =>
+        {
             services.AddAuthentication(options =>
                 {
                     options.DefaultScheme = TestAuthHandler.SchemeName;
                     options.DefaultAuthenticateScheme = TestAuthHandler.SchemeName;
                     options.DefaultChallengeScheme = TestAuthHandler.SchemeName;
                 })
-                .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(TestAuthHandler.SchemeName, _ => { }));
+                .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(TestAuthHandler.SchemeName, _ => { });
+
+            services.RemoveAll<IBacklogItemLookup>();
+            services.AddSingleton<IBacklogItemLookup>(Items);
+        });
+    }
+
+    /// <summary>Lo realmente persistido en <c>ItemAssignments</c>, con un contexto nuevo (solo lectura).</summary>
+    public async Task<List<ItemAssignment>> StoredAssignmentsAsync()
+    {
+        using var scope = Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<TeamsDbContext>();
+        return await db.ItemAssignments.AsNoTracking().ToListAsync();
     }
 
     public HttpClient AnonymousClient() => CreateClient();

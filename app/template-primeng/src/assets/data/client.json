@@ -1,0 +1,3772 @@
+{
+    "data": [
+        {
+         "client_id": "000082",
+         "client_code": "000082",
+         "client_name": "2MPERU ASESORIA EMPRESARIAL S.A.C."
+        },
+        {
+         "client_id": "000081",
+         "client_code": "000081",
+         "client_name": "3D WORKS"
+        },
+        {
+         "client_id": "000643",
+         "client_code": "000643",
+         "client_name": "A TEXTILE TOUCH"
+        },
+        {
+         "client_id": "000139",
+         "client_code": "000139",
+         "client_name": "A X SOLUTIONS GENERALS E.I.R.L."
+        },
+        {
+         "client_id": "000657",
+         "client_code": "000657",
+         "client_name": "AA CORPORACION REAL"
+        },
+        {
+         "client_id": "000116",
+         "client_code": "000116",
+         "client_name": "AA GROUP E.I.R.L."
+        },
+        {
+         "client_id": "000706",
+         "client_code": "000706",
+         "client_name": "AA TRADING"
+        },
+        {
+         "client_id": "000707",
+         "client_code": "000707",
+         "client_name": "AB PACIFIC LOGISTICS"
+        },
+        {
+         "client_id": "000134",
+         "client_code": "000134",
+         "client_name": "ABASTECIMIENTOS DEL NORTE"
+        },
+        {
+         "client_id": "000201",
+         "client_code": "000201",
+         "client_name": "ABEDUL ABRIL"
+        },
+        {
+         "client_id": "000408",
+         "client_code": "000408",
+         "client_name": "ABEG SERVICIOS GENERALES E.I.R.L."
+        },
+        {
+         "client_id": "000308",
+         "client_code": "000308",
+         "client_name": "ABEL A. EMPRESA INDIVIDUAL DE RESPONSABI"
+        },
+        {
+         "client_id": "000688",
+         "client_code": "000688",
+         "client_name": "AC ASESORIA COMERCIAL"
+        },
+        {
+         "client_id": "000730",
+         "client_code": "000730",
+         "client_name": "AC CONSTRUCTORES"
+        },
+        {
+         "client_id": "000729",
+         "client_code": "000729",
+         "client_name": "AC INBUSINESS"
+        },
+        {
+         "client_id": "000731",
+         "client_code": "000731",
+         "client_name": "AC INTEGRADORES"
+        },
+        {
+         "client_id": "000689",
+         "client_code": "000689",
+         "client_name": "AC MULTI IMPORT"
+        },
+        {
+         "client_id": "000755",
+         "client_code": "000755",
+         "client_name": "AC PERU INVEST"
+        },
+        {
+         "client_id": "000756",
+         "client_code": "000756",
+         "client_name": "AC QUALITY"
+        },
+        {
+         "client_id": "000711",
+         "client_code": "000711",
+         "client_name": "AC SCIENTIFIC"
+        },
+        {
+         "client_id": "000416",
+         "client_code": "000416",
+         "client_name": "ACEITERA ANDALUZA S.A.C"
+        },
+        {
+         "client_id": "000420",
+         "client_code": "000420",
+         "client_name": "ACEITES ESPECIALES Y DERIVADOS SAC"
+        },
+        {
+         "client_id": "000392",
+         "client_code": "000392",
+         "client_name": "ACEROS Y FIERROS INDUSTRIALES S.A.C."
+        },
+        {
+         "client_id": "000307",
+         "client_code": "000307",
+         "client_name": "ACEROS Y PERFILES RC SAC"
+        },
+        {
+         "client_id": "000315",
+         "client_code": "000315",
+         "client_name": "ACEROS Y SERVICIOS LA UNION SOCIEDAD COM"
+        },
+        {
+         "client_id": "000394",
+         "client_code": "000394",
+         "client_name": "ACEROS Y TECHOS DEL SUR DISTRIB.S.R.L"
+        },
+        {
+         "client_id": "000347",
+         "client_code": "000347",
+         "client_name": "ACET CONSULTORES S.R.L"
+        },
+        {
+         "client_id": "000395",
+         "client_code": "000395",
+         "client_name": "ACEVEDO & ROLANDO ASOCIADOS S.A.C."
+        },
+        {
+         "client_id": "000346",
+         "client_code": "000346",
+         "client_name": "ACF CONSULTORIA Y PROYECTOS S.A.C."
+        },
+        {
+         "client_id": "000339",
+         "client_code": "000339",
+         "client_name": "ACHE PERU S.A.C."
+        },
+        {
+         "client_id": "000393",
+         "client_code": "000393",
+         "client_name": "ACIC TRADING E.I.R.L."
+        },
+        {
+         "client_id": "000446",
+         "client_code": "000446",
+         "client_name": "ACIL INTERIORES E.I.R.L."
+        },
+        {
+         "client_id": "000473",
+         "client_code": "000473",
+         "client_name": "ACLIMATIZACION S.A.C."
+        },
+        {
+         "client_id": "000364",
+         "client_code": "000364",
+         "client_name": "ACOSTA AGAPITO JESUS ALBERTO"
+        },
+        {
+         "client_id": "000302",
+         "client_code": "000302",
+         "client_name": "ACOSTA Y ASOCIADOS CONTADORES PUBLIC.SOC"
+        },
+        {
+         "client_id": "000303",
+         "client_code": "000303",
+         "client_name": "ACP DREESESA SOCIEDAD ANONIMA CERRADA -"
+        },
+        {
+         "client_id": "000304",
+         "client_code": "000304",
+         "client_name": "ACPA GROUP S.A.C."
+        },
+        {
+         "client_id": "000305",
+         "client_code": "000305",
+         "client_name": "ACQUA PRO PERU SOCIEDAD ANONIMA CERRADA"
+        },
+        {
+         "client_id": "000118",
+         "client_code": "000118",
+         "client_name": "ACS INDUSTRIA METAL MECANICA"
+        },
+        {
+         "client_id": "000380",
+         "client_code": "000380",
+         "client_name": "ACUICOLA SCALLOPS E.I.R.L."
+        },
+        {
+         "client_id": "000383",
+         "client_code": "000383",
+         "client_name": "ACUICULTURA VILLAR S.A.C."
+        },
+        {
+         "client_id": "000381",
+         "client_code": "000381",
+         "client_name": "ACUMULADORES DURABAT S.A.C."
+        },
+        {
+         "client_id": "000690",
+         "client_code": "000690",
+         "client_name": "AD INGEMETAL CONTRATISTAS"
+        },
+        {
+         "client_id": "000382",
+         "client_code": "000382",
+         "client_name": "ADACCIF S.A.C."
+        },
+        {
+         "client_id": "000379",
+         "client_code": "000379",
+         "client_name": "ADALTIF E.I.R.L."
+        },
+        {
+         "client_id": "000377",
+         "client_code": "000377",
+         "client_name": "ADAMA TOURS E.I.R.L."
+        },
+        {
+         "client_id": "000385",
+         "client_code": "000385",
+         "client_name": "ADAMINES E.I.R.L."
+        },
+        {
+         "client_id": "000386",
+         "client_code": "000386",
+         "client_name": "ADMINISTRACION ESTRATEGICA S.A.C."
+        },
+        {
+         "client_id": "000387",
+         "client_code": "000387",
+         "client_name": "ADMINISTRACION TURISTICA E.I.R.L."
+        },
+        {
+         "client_id": "000442",
+         "client_code": "000442",
+         "client_name": "ADMINISTRADORA DE NEGOCIOS SA"
+        },
+        {
+         "client_id": "000726",
+         "client_code": "000726",
+         "client_name": "AE AGRONEGOCIOS"
+        },
+        {
+         "client_id": "000691",
+         "client_code": "000691",
+         "client_name": "AG MAQUINARIAS CNC"
+        },
+        {
+         "client_id": "000309",
+         "client_code": "000309",
+         "client_name": "AGRICOLA SANGA S.R.L."
+        },
+        {
+         "client_id": "000403",
+         "client_code": "000403",
+         "client_name": "AGRICOLA SANTA MATILDE SOCIEDAD ANONIMA"
+        },
+        {
+         "client_id": "000306",
+         "client_code": "000306",
+         "client_name": "AGRICOLA SIERRA LINDA E.I.R.L."
+        },
+        {
+         "client_id": "000409",
+         "client_code": "000409",
+         "client_name": "AGRICOLA SUNFIELDS SOCIEDAD ANONIMA CERR"
+        },
+        {
+         "client_id": "000508",
+         "client_code": "000508",
+         "client_name": "AGRO ARROZ SRL"
+        },
+        {
+         "client_id": "000083",
+         "client_code": "000083",
+         "client_name": "AGRO INDUSTRIAS SAVARUWA"
+        },
+        {
+         "client_id": "000432",
+         "client_code": "000432",
+         "client_name": "AGROPECUARIA & ACEITERA CHANCAY SAC"
+        },
+        {
+         "client_id": "000085",
+         "client_code": "000085",
+         "client_name": "AGROPECUARIA DEL SUR"
+        },
+        {
+         "client_id": "000625",
+         "client_code": "000625",
+         "client_name": "AJ INVERSIONES DIVERSAS"
+        },
+        {
+         "client_id": "000626",
+         "client_code": "000626",
+         "client_name": "AK INGENIEROS CONSULTORA"
+        },
+        {
+         "client_id": "000627",
+         "client_code": "000627",
+         "client_name": "AK SERVICIOS MULTIPLES"
+        },
+        {
+         "client_id": "000628",
+         "client_code": "000628",
+         "client_name": "AL ADMINISTRACION"
+        },
+        {
+         "client_id": "000629",
+         "client_code": "000629",
+         "client_name": "AL LINEA MEDICA"
+        },
+        {
+         "client_id": "000630",
+         "client_code": "000630",
+         "client_name": "AL SERVICIOS GENERALES"
+        },
+        {
+         "client_id": "000631",
+         "client_code": "000631",
+         "client_name": "AL SERVICIOS MULTIPLE"
+        },
+        {
+         "client_id": "000204",
+         "client_code": "000204",
+         "client_name": "ALGODONERIA FLORES"
+        },
+        {
+         "client_id": "000073",
+         "client_code": "000073",
+         "client_name": "ALICORP SAC"
+        },
+        {
+         "client_id": "000142",
+         "client_code": "000142",
+         "client_name": "ALMENARA VASQUEZ PATRICIA"
+        },
+        {
+         "client_id": "000692",
+         "client_code": "000692",
+         "client_name": "AM CONSTRUCCION"
+        },
+        {
+         "client_id": "000632",
+         "client_code": "000632",
+         "client_name": "AM ENGLAND TRUCKS"
+        },
+        {
+         "client_id": "000633",
+         "client_code": "000633",
+         "client_name": "AM OBRAS CIVILES"
+        },
+        {
+         "client_id": "000634",
+         "client_code": "000634",
+         "client_name": "AM OFINEX"
+        },
+        {
+         "client_id": "000635",
+         "client_code": "000635",
+         "client_name": "AM TEXTILE"
+        },
+        {
+         "client_id": "000703",
+         "client_code": "000703",
+         "client_name": "AM TRUCKS"
+        },
+        {
+         "client_id": "000704",
+         "client_code": "000704",
+         "client_name": "AM VIRGEN DE CHAPI"
+        },
+        {
+         "client_id": "000653",
+         "client_code": "000653",
+         "client_name": "AMAZON BLUE WHALE S.A.C."
+        },
+        {
+         "client_id": "000654",
+         "client_code": "000654",
+         "client_name": "AMAZON CARES S.A.C."
+        },
+        {
+         "client_id": "000655",
+         "client_code": "000655",
+         "client_name": "AMAZON COOL S.A.C."
+        },
+        {
+         "client_id": "000656",
+         "client_code": "000656",
+         "client_name": "AMAZON EQUIPMENT S.A."
+        },
+        {
+         "client_id": "000658",
+         "client_code": "000658",
+         "client_name": "AMAZON FOREVER"
+        },
+        {
+         "client_id": "000659",
+         "client_code": "000659",
+         "client_name": "AMAZON NATURAL CREATIONS S.A.C."
+        },
+        {
+         "client_id": "000660",
+         "client_code": "000660",
+         "client_name": "AMAZON PRO FOREST CONSULTING S.A.C."
+        },
+        {
+         "client_id": "000661",
+         "client_code": "000661",
+         "client_name": "AMAZON SAFETY S.A.C."
+        },
+        {
+         "client_id": "000662",
+         "client_code": "000662",
+         "client_name": "AMAZON TOURS PERU S.A.C."
+        },
+        {
+         "client_id": "000663",
+         "client_code": "000663",
+         "client_name": "AMAZON TRAILS CUSCO E.I.R.L."
+        },
+        {
+         "client_id": "000664",
+         "client_code": "000664",
+         "client_name": "AMAZON YOGA CENTRE E.I.R.L."
+        },
+        {
+         "client_id": "000665",
+         "client_code": "000665",
+         "client_name": "AMAZONAS TRADING GROUP E.I.R.L."
+        },
+        {
+         "client_id": "000216",
+         "client_code": "000216",
+         "client_name": "ANTARES PUBLICIDAD S.A.C"
+        },
+        {
+         "client_id": "000636",
+         "client_code": "000636",
+         "client_name": "AP CARGO LOGISTICS"
+        },
+        {
+         "client_id": "000637",
+         "client_code": "000637",
+         "client_name": "AP GRUPO MONTERO"
+        },
+        {
+         "client_id": "000102",
+         "client_code": "000102",
+         "client_name": "ARCE PERALTA LUIS GUILLERMO"
+        },
+        {
+         "client_id": "000190",
+         "client_code": "000190",
+         "client_name": "ARICA PERU SAC"
+        },
+        {
+         "client_id": "000638",
+         "client_code": "000638",
+         "client_name": "AS WORKING"
+        },
+        {
+         "client_id": "000418",
+         "client_code": "000418",
+         "client_name": "ASOCIACION DE PRODUCTORES DE PALMA ACEIT"
+        },
+        {
+         "client_id": "000220",
+         "client_code": "000220",
+         "client_name": "ASOCIACION OPERACION SONRISA-PERU"
+        },
+        {
+         "client_id": "000221",
+         "client_code": "000221",
+         "client_name": "ASOCIACION PALMAS MONFORTIANAS"
+        },
+        {
+         "client_id": "000461",
+         "client_code": "000461",
+         "client_name": "ASOCIACION SERVI"
+        },
+        {
+         "client_id": "000397",
+         "client_code": "000397",
+         "client_name": "ASSI BODEGA JUAN"
+        },
+        {
+         "client_id": "000401",
+         "client_code": "000401",
+         "client_name": "ASSI BOTICA GP"
+        },
+        {
+         "client_id": "000412",
+         "client_code": "000412",
+         "client_name": "ASSI CAM CENTER"
+        },
+        {
+         "client_id": "000429",
+         "client_code": "000429",
+         "client_name": "ASSI CASO 10"
+        },
+        {
+         "client_id": "000430",
+         "client_code": "000430",
+         "client_name": "ASSI CASO 11"
+        },
+        {
+         "client_id": "000422",
+         "client_code": "000422",
+         "client_name": "ASSI CASO 4"
+        },
+        {
+         "client_id": "000423",
+         "client_code": "000423",
+         "client_name": "ASSI CASO 5"
+        },
+        {
+         "client_id": "000425",
+         "client_code": "000425",
+         "client_name": "ASSI CASO 6"
+        },
+        {
+         "client_id": "000426",
+         "client_code": "000426",
+         "client_name": "ASSI CASO 7"
+        },
+        {
+         "client_id": "000427",
+         "client_code": "000427",
+         "client_name": "ASSI CASO 8"
+        },
+        {
+         "client_id": "000428",
+         "client_code": "000428",
+         "client_name": "ASSI CASO 9"
+        },
+        {
+         "client_id": "000424",
+         "client_code": "000424",
+         "client_name": "ASSI CASO5"
+        },
+        {
+         "client_id": "000391",
+         "client_code": "000391",
+         "client_name": "ASSI FARM"
+        },
+        {
+         "client_id": "000390",
+         "client_code": "000390",
+         "client_name": "ASSI FARMACIA PEREZ"
+        },
+        {
+         "client_id": "000604",
+         "client_code": "000604",
+         "client_name": "ASSI JUGUERIA"
+        },
+        {
+         "client_id": "000389",
+         "client_code": "000389",
+         "client_name": "ASSI PELUQUERIA"
+        },
+        {
+         "client_id": "000400",
+         "client_code": "000400",
+         "client_name": "ASSI PRUEBA"
+        },
+        {
+         "client_id": "000419",
+         "client_code": "000419",
+         "client_name": "ASSI PRUEBA1"
+        },
+        {
+         "client_id": "000599",
+         "client_code": "000599",
+         "client_name": "ASSI TIENDA MANUEL"
+        },
+        {
+         "client_id": "000641",
+         "client_code": "000641",
+         "client_name": "AT TAPISERVIS"
+        },
+        {
+         "client_id": "000144",
+         "client_code": "000144",
+         "client_name": "AUTOMOTOR GAC"
+        },
+        {
+         "client_id": "000219",
+         "client_code": "000219",
+         "client_name": "AUTOMOTRIZ TEJADA"
+        },
+        {
+         "client_id": "000088",
+         "client_code": "000088",
+         "client_name": "AUTOMOTRIZ VENEZUELA EIRL"
+        },
+        {
+         "client_id": "000727",
+         "client_code": "000727",
+         "client_name": "AV DIGITAL TECHNOLOGY"
+        },
+        {
+         "client_id": "000119",
+         "client_code": "000119",
+         "client_name": "AVICOLA ZEGARRA"
+        },
+        {
+         "client_id": "000642",
+         "client_code": "000642",
+         "client_name": "AX SOLUCIONES"
+        },
+        {
+         "client_id": "000705",
+         "client_code": "000705",
+         "client_name": "AZ CHEMICAL"
+        },
+        {
+         "client_id": "000131",
+         "client_code": "000131",
+         "client_name": "BABY COTHING COCO"
+        },
+        {
+         "client_id": "000143",
+         "client_code": "000143",
+         "client_name": "BAIRES S.A.C."
+        },
+        {
+         "client_id": "000115",
+         "client_code": "000115",
+         "client_name": "BALIZZA"
+        },
+        {
+         "client_id": "000128",
+         "client_code": "000128",
+         "client_name": "BANCO CENCOSUD"
+        },
+        {
+         "client_id": "000040",
+         "client_code": "000040",
+         "client_name": "BANCO DE LA NACION - ACS SOLUTIONS BOLIV"
+        },
+        {
+         "client_id": "000062",
+         "client_code": "000062",
+         "client_name": "BANCOLOMBIA SA MEDELLIN"
+        },
+        {
+         "client_id": "000076",
+         "client_code": "000076",
+         "client_name": "BATA"
+        },
+        {
+         "client_id": "000199",
+         "client_code": "000199",
+         "client_name": "BATMAN TV"
+        },
+        {
+         "client_id": "000045",
+         "client_code": "000045",
+         "client_name": "BEBIDAS DE MANZANA - EM PROXIM"
+        },
+        {
+         "client_id": "000079",
+         "client_code": "000079",
+         "client_name": "BEMBOS SAC"
+        },
+        {
+         "client_id": "000061",
+         "client_code": "000061",
+         "client_name": "BERTONATI TECHNOLOGIES"
+        },
+        {
+         "client_id": "000145",
+         "client_code": "000145",
+         "client_name": "BIENES ADJUDICADOS"
+        },
+        {
+         "client_id": "000410",
+         "client_code": "000410",
+         "client_name": "BIERPS S.A.C"
+        },
+        {
+         "client_id": "000411",
+         "client_code": "000411",
+         "client_name": "BIG BRANDS S.A.C."
+        },
+        {
+         "client_id": "000043",
+         "client_code": "000043",
+         "client_name": "BLOM JOUHARI MARIA CARMEN CRISTINA"
+        },
+        {
+         "client_id": "000103",
+         "client_code": "000103",
+         "client_name": "BORIS KAI CLEMENTE CLEMENTE"
+        },
+        {
+         "client_id": "000140",
+         "client_code": "000140",
+         "client_name": "BREGANTE DURAND JESSICA"
+        },
+        {
+         "client_id": "000169",
+         "client_code": "000169",
+         "client_name": "BUENDIA PEREZ ALAN GUILLERMO"
+        },
+        {
+         "client_id": "000155",
+         "client_code": "000155",
+         "client_name": "CALZATURE MARILI E.I.R.L."
+        },
+        {
+         "client_id": "000149",
+         "client_code": "000149",
+         "client_name": "CAR RENT SA"
+        },
+        {
+         "client_id": "000132",
+         "client_code": "000132",
+         "client_name": "CARBAJAL SANCHEZ MARIA URSULA"
+        },
+        {
+         "client_id": "000110",
+         "client_code": "000110",
+         "client_name": "CARRANZA GONZALES JUAN ALBERTO"
+        },
+        {
+         "client_id": "000111",
+         "client_code": "000111",
+         "client_name": "CARRANZA HURTADO JULIAN MIGUEL"
+        },
+        {
+         "client_id": "000112",
+         "client_code": "000112",
+         "client_name": "CASBERTO JUANES JULIO ALBERTO"
+        },
+        {
+         "client_id": "000366",
+         "client_code": "000366",
+         "client_name": "CASTILLO CALLUPE SUSANA MARIBEL"
+        },
+        {
+         "client_id": "000033",
+         "client_code": "000033",
+         "client_name": "CASTRO ALIAGA FREDDY"
+        },
+        {
+         "client_id": "000106",
+         "client_code": "000106",
+         "client_name": "CAVERO RODRIGUEZ JUAN CARLOS"
+        },
+        {
+         "client_id": "000431",
+         "client_code": "000431",
+         "client_name": "CENTRO DE TRATAMIENTO PARA NIÑOS ESPECIA"
+        },
+        {
+         "client_id": "000153",
+         "client_code": "000153",
+         "client_name": "CHAINV EMPRESA SOCIEDAD COMERCIAL"
+        },
+        {
+         "client_id": "000141",
+         "client_code": "000141",
+         "client_name": "CHINGUEL MARTINEZ KARINA"
+        },
+        {
+         "client_id": "000407",
+         "client_code": "000407",
+         "client_name": "CHOCOLAB PERU"
+        },
+        {
+         "client_id": "000159",
+         "client_code": "000159",
+         "client_name": "CHOCOLATERIA GOLDEN PERU SAC"
+        },
+        {
+         "client_id": "000029",
+         "client_code": "000029",
+         "client_name": "CINEPLANET"
+        },
+        {
+         "client_id": "000060",
+         "client_code": "000060",
+         "client_name": "CLAUDIA FASHION"
+        },
+        {
+         "client_id": "000104",
+         "client_code": "000104",
+         "client_name": "CLEMENTES CLEMENTE KAI KAI"
+        },
+        {
+         "client_id": "000161",
+         "client_code": "000161",
+         "client_name": "CLINICA SAN JUDAS"
+        },
+        {
+         "client_id": "000350",
+         "client_code": "000350",
+         "client_name": "COLEGIO ISABEL I"
+        },
+        {
+         "client_id": "000213",
+         "client_code": "000213",
+         "client_name": "COLEGIO ISABEL III"
+        },
+        {
+         "client_id": "000495",
+         "client_code": "000495",
+         "client_name": "COMERCIAL FERRETERA PRISMA SAC"
+        },
+        {
+         "client_id": "000028",
+         "client_code": "000028",
+         "client_name": "COMERCIAL VANIA"
+        },
+        {
+         "client_id": "000151",
+         "client_code": "000151",
+         "client_name": "COMERCIO Y CIA SA"
+        },
+        {
+         "client_id": "000608",
+         "client_code": "000608",
+         "client_name": "COMIDAS CRIOLLAS LENDING S.A.C"
+        },
+        {
+         "client_id": "000414",
+         "client_code": "000414",
+         "client_name": "COMPAÑIA ACEITERA VILLA EL SALVADOR"
+        },
+        {
+         "client_id": "000475",
+         "client_code": "000475",
+         "client_name": "COMPAÑIA PERUANA DE ASCENSORES"
+        },
+        {
+         "client_id": "000455",
+         "client_code": "000455",
+         "client_name": "CONSTRUCSAN ALE"
+        },
+        {
+         "client_id": "000454",
+         "client_code": "000454",
+         "client_name": "CONSTRUCTURA AYMAR"
+        },
+        {
+         "client_id": "000378",
+         "client_code": "000378",
+         "client_name": "CONSULTORES FINANCIEROS E.I.R.L."
+        },
+        {
+         "client_id": "000717",
+         "client_code": "000717",
+         "client_name": "CONSULTORES Y EJECUTORES S.A.C."
+        },
+        {
+         "client_id": "000778",
+         "client_code": "000778",
+         "client_name": "CONTRATISTA SAC"
+        },
+        {
+         "client_id": "000089",
+         "client_code": "000089",
+         "client_name": "CONZA CONZA MANUEL MANUEL"
+        },
+        {
+         "client_id": "000122",
+         "client_code": "000122",
+         "client_name": "COOP AHORRO CREDITO DE LOS INDUSTRIALES"
+        },
+        {
+         "client_id": "000447",
+         "client_code": "000447",
+         "client_name": "COOPERATIVA DE SERVICIOS MULTIPLES"
+        },
+        {
+         "client_id": "000046",
+         "client_code": "000046",
+         "client_name": "CORPORACION CERAMICA! S.A."
+        },
+        {
+         "client_id": "000421",
+         "client_code": "000421",
+         "client_name": "CORPORACION MINERA GRAN BRETAÑA SOCIEDAD"
+        },
+        {
+         "client_id": "000093",
+         "client_code": "000093",
+         "client_name": "CORPORACION RAMOS"
+        },
+        {
+         "client_id": "000598",
+         "client_code": "000598",
+         "client_name": "CORPORACION REPUESTOS RAFAEL"
+        },
+        {
+         "client_id": "000496",
+         "client_code": "000496",
+         "client_name": "CORPORACION ROANKA SAC"
+        },
+        {
+         "client_id": "000369",
+         "client_code": "000369",
+         "client_name": "COUNTRY CLUB VIDA"
+        },
+        {
+         "client_id": "000781",
+         "client_code": "000781",
+         "client_name": "CREDITEX SAA"
+        },
+        {
+         "client_id": "000150",
+         "client_code": "000150",
+         "client_name": "CU NUEVO - FIADORES NUEVOS"
+        },
+        {
+         "client_id": "000164",
+         "client_code": "000164",
+         "client_name": "CUADROS MORALES JUAN ANTONIO"
+        },
+        {
+         "client_id": "000175",
+         "client_code": "000175",
+         "client_name": "CUADROS MORALES JUAN ANTONIO"
+        },
+        {
+         "client_id": "000135",
+         "client_code": "000135",
+         "client_name": "CUMPA GUZMAN JESSICA ANGELICA"
+        },
+        {
+         "client_id": "000468",
+         "client_code": "000468",
+         "client_name": "D&F PERU TOOLS SAC"
+        },
+        {
+         "client_id": "000506",
+         "client_code": "000506",
+         "client_name": "D&F PERU TOOLS SAC"
+        },
+        {
+         "client_id": "000507",
+         "client_code": "000507",
+         "client_name": "D&F PERU TOOLS SAC"
+        },
+        {
+         "client_id": "000526",
+         "client_code": "000526",
+         "client_name": "D&F PERU TOOLS SAC"
+        },
+        {
+         "client_id": "000581",
+         "client_code": "000581",
+         "client_name": "D&F PERU TOOLS SAC"
+        },
+        {
+         "client_id": "000545",
+         "client_code": "000545",
+         "client_name": "D&F PERU TOOLS SAC"
+        },
+        {
+         "client_id": "000559",
+         "client_code": "000559",
+         "client_name": "D&F PERU TOOLS SAC"
+        },
+        {
+         "client_id": "000565",
+         "client_code": "000565",
+         "client_name": "D&L NEGSOL SAC"
+        },
+        {
+         "client_id": "000566",
+         "client_code": "000566",
+         "client_name": "D&L NEGSOL SAC"
+        },
+        {
+         "client_id": "000536",
+         "client_code": "000536",
+         "client_name": "D&L NEGSOL SAC"
+        },
+        {
+         "client_id": "000541",
+         "client_code": "000541",
+         "client_name": "D&L NEGSOL SAC"
+        },
+        {
+         "client_id": "000603",
+         "client_code": "000603",
+         "client_name": "D&L NEGSOL SAC"
+        },
+        {
+         "client_id": "000601",
+         "client_code": "000601",
+         "client_name": "D&L NEGSOL SAC"
+        },
+        {
+         "client_id": "000592",
+         "client_code": "000592",
+         "client_name": "D&L NEGSOL SAC"
+        },
+        {
+         "client_id": "000518",
+         "client_code": "000518",
+         "client_name": "D&L NEGSOL SAC"
+        },
+        {
+         "client_id": "000522",
+         "client_code": "000522",
+         "client_name": "D&L NEGSOL SAC"
+        },
+        {
+         "client_id": "000504",
+         "client_code": "000504",
+         "client_name": "D&L NEGSOL SAC"
+        },
+        {
+         "client_id": "000512",
+         "client_code": "000512",
+         "client_name": "D&L TRADING SRL"
+        },
+        {
+         "client_id": "000600",
+         "client_code": "000600",
+         "client_name": "D&L TRADING SRL"
+        },
+        {
+         "client_id": "000575",
+         "client_code": "000575",
+         "client_name": "D&L TRADING SRL"
+        },
+        {
+         "client_id": "000552",
+         "client_code": "000552",
+         "client_name": "D&L TRADING SRL"
+        },
+        {
+         "client_id": "000564",
+         "client_code": "000564",
+         "client_name": "D&L TRADING SRL"
+        },
+        {
+         "client_id": "000569",
+         "client_code": "000569",
+         "client_name": "D&L TRADING SRL"
+        },
+        {
+         "client_id": "000550",
+         "client_code": "000550",
+         "client_name": "D&MECC SERVICIOS E.I.R.L"
+        },
+        {
+         "client_id": "000542",
+         "client_code": "000542",
+         "client_name": "D&MECC SERVICIOS E.I.R.L"
+        },
+        {
+         "client_id": "000535",
+         "client_code": "000535",
+         "client_name": "D&MECC SERVICIOS E.I.R.L"
+        },
+        {
+         "client_id": "000568",
+         "client_code": "000568",
+         "client_name": "D&MECC SERVICIOS E.I.R.L"
+        },
+        {
+         "client_id": "000586",
+         "client_code": "000586",
+         "client_name": "D&MECC SERVICIOS E.I.R.L"
+        },
+        {
+         "client_id": "000590",
+         "client_code": "000590",
+         "client_name": "D&MECC SERVICIOS E.I.R.L"
+        },
+        {
+         "client_id": "000597",
+         "client_code": "000597",
+         "client_name": "D&MECC SERVICIOS E.I.R.L"
+        },
+        {
+         "client_id": "000502",
+         "client_code": "000502",
+         "client_name": "D&MECC SERVICIOS E.I.R.L"
+        },
+        {
+         "client_id": "000517",
+         "client_code": "000517",
+         "client_name": "D&MECC SERVICIOS E.I.R.L"
+        },
+        {
+         "client_id": "000499",
+         "client_code": "000499",
+         "client_name": "D&N COURIER S.A.C."
+        },
+        {
+         "client_id": "000553",
+         "client_code": "000553",
+         "client_name": "D&N COURIER S.A.C."
+        },
+        {
+         "client_id": "000549",
+         "client_code": "000549",
+         "client_name": "D&N COURIER S.A.C."
+        },
+        {
+         "client_id": "000501",
+         "client_code": "000501",
+         "client_name": "D&N TRADE SAC"
+        },
+        {
+         "client_id": "000523",
+         "client_code": "000523",
+         "client_name": "D&N TRADE SAC"
+        },
+        {
+         "client_id": "000515",
+         "client_code": "000515",
+         "client_name": "D&P TECNILLANTAS PACIFICO"
+        },
+        {
+         "client_id": "000498",
+         "client_code": "000498",
+         "client_name": "D&P TECNILLANTAS PACIFICO"
+        },
+        {
+         "client_id": "000602",
+         "client_code": "000602",
+         "client_name": "D&P TECNILLANTAS PACIFICO"
+        },
+        {
+         "client_id": "000611",
+         "client_code": "000611",
+         "client_name": "D&P TECNILLANTAS PACIFICO"
+        },
+        {
+         "client_id": "000596",
+         "client_code": "000596",
+         "client_name": "D&R SOLUCIONES S.A.C."
+        },
+        {
+         "client_id": "000589",
+         "client_code": "000589",
+         "client_name": "D&R SOLUCIONES S.A.C."
+        },
+        {
+         "client_id": "000551",
+         "client_code": "000551",
+         "client_name": "D&R SOLUCIONES S.A.C."
+        },
+        {
+         "client_id": "000570",
+         "client_code": "000570",
+         "client_name": "D&R SOLUCIONES S.A.C."
+        },
+        {
+         "client_id": "000572",
+         "client_code": "000572",
+         "client_name": "D&R SOLUCIONES S.A.C."
+        },
+        {
+         "client_id": "000563",
+         "client_code": "000563",
+         "client_name": "D&R SOLUCIONES S.A.C."
+        },
+        {
+         "client_id": "000527",
+         "client_code": "000527",
+         "client_name": "D&R SOLUCIONES S.A.C."
+        },
+        {
+         "client_id": "000534",
+         "client_code": "000534",
+         "client_name": "D&R SOLUCIONES S.A.C."
+        },
+        {
+         "client_id": "000525",
+         "client_code": "000525",
+         "client_name": "D&S OFFICE SOLUTIONS S.A.C."
+        },
+        {
+         "client_id": "000558",
+         "client_code": "000558",
+         "client_name": "D&S OFFICE SOLUTIONS S.A.C."
+        },
+        {
+         "client_id": "000546",
+         "client_code": "000546",
+         "client_name": "D&S OFFICE SOLUTIONS S.A.C."
+        },
+        {
+         "client_id": "000544",
+         "client_code": "000544",
+         "client_name": "D&S OFFICE SOLUTIONS S.A.C."
+        },
+        {
+         "client_id": "000622",
+         "client_code": "000622",
+         "client_name": "D&S OFFICE SOLUTIONS S.A.C."
+        },
+        {
+         "client_id": "000194",
+         "client_code": "000194",
+         "client_name": "DANTE SAC PERU"
+        },
+        {
+         "client_id": "000030",
+         "client_code": "000030",
+         "client_name": "DELTA MULTIFUNCIONAL SAC"
+        },
+        {
+         "client_id": "000084",
+         "client_code": "000084",
+         "client_name": "DIGITAL PRODUCCIONES"
+        },
+        {
+         "client_id": "000075",
+         "client_code": "000075",
+         "client_name": "DIS ARQUITECTURA Y DISEÑO INTEGRAL SAC"
+        },
+        {
+         "client_id": "000715",
+         "client_code": "000715",
+         "client_name": "DISEÑO INGENIERIA CONSTRUCCION S.A.C."
+        },
+        {
+         "client_id": "000123",
+         "client_code": "000123",
+         "client_name": "DISEÑOSACABADOS&DISTSPECTRUM00E.I.R.L.0"
+        },
+        {
+         "client_id": "000433",
+         "client_code": "000433",
+         "client_name": "DIST Y REPRSENT SANTA PATRICIA"
+        },
+        {
+         "client_id": "000091",
+         "client_code": "000091",
+         "client_name": "DONACIONES"
+        },
+        {
+         "client_id": "000189",
+         "client_code": "000189",
+         "client_name": "DULCE DE LECHE SAC"
+        },
+        {
+         "client_id": "000223",
+         "client_code": "000223",
+         "client_name": "DULCES ENJOY"
+        },
+        {
+         "client_id": "000323",
+         "client_code": "000323",
+         "client_name": "E & MCM S.A.C."
+        },
+        {
+         "client_id": "000349",
+         "client_code": "000349",
+         "client_name": "ECHEVASTER ORTIZ MARIA DEL CARMEN"
+        },
+        {
+         "client_id": "000417",
+         "client_code": "000417",
+         "client_name": "ECO ACEITE SAC"
+        },
+        {
+         "client_id": "000547",
+         "client_code": "000547",
+         "client_name": "ECOPET PERU S.A.C"
+        },
+        {
+         "client_id": "000584",
+         "client_code": "000584",
+         "client_name": "ECOPET PERU S.A.C"
+        },
+        {
+         "client_id": "000574",
+         "client_code": "000574",
+         "client_name": "ECOPET PERU S.A.C"
+        },
+        {
+         "client_id": "000529",
+         "client_code": "000529",
+         "client_name": "ECOPET PERU S.A.C"
+        },
+        {
+         "client_id": "000532",
+         "client_code": "000532",
+         "client_name": "ECOPLUS SAC"
+        },
+        {
+         "client_id": "000524",
+         "client_code": "000524",
+         "client_name": "ECOPLUS SAC"
+        },
+        {
+         "client_id": "000579",
+         "client_code": "000579",
+         "client_name": "ECOPLUS SAC"
+        },
+        {
+         "client_id": "000548",
+         "client_code": "000548",
+         "client_name": "ECOPLUS SAC"
+        },
+        {
+         "client_id": "000560",
+         "client_code": "000560",
+         "client_name": "ECOPLUS SAC"
+        },
+        {
+         "client_id": "000593",
+         "client_code": "000593",
+         "client_name": "ECOPOR S.A.C"
+        },
+        {
+         "client_id": "000528",
+         "client_code": "000528",
+         "client_name": "ECOPOR S.A.C"
+        },
+        {
+         "client_id": "000500",
+         "client_code": "000500",
+         "client_name": "ECOPRANA SAC"
+        },
+        {
+         "client_id": "000469",
+         "client_code": "000469",
+         "client_name": "ECOPRANA SAC"
+        },
+        {
+         "client_id": "000580",
+         "client_code": "000580",
+         "client_name": "ECOPRANA SAC"
+        },
+        {
+         "client_id": "000100",
+         "client_code": "000100",
+         "client_name": "EL CORRALITO"
+        },
+        {
+         "client_id": "000092",
+         "client_code": "000092",
+         "client_name": "EL POLLO GORDO"
+        },
+        {
+         "client_id": "000032",
+         "client_code": "000032",
+         "client_name": "EMPRESA 11 PHOENIX"
+        },
+        {
+         "client_id": "000038",
+         "client_code": "000038",
+         "client_name": "EMPRESA 12 PHOENIX"
+        },
+        {
+         "client_id": "000058",
+         "client_code": "000058",
+         "client_name": "EMPRESA 42 PHOENIX"
+        },
+        {
+         "client_id": "000039",
+         "client_code": "000039",
+         "client_name": "EMPRESA 5 PHOENIX"
+        },
+        {
+         "client_id": "000035",
+         "client_code": "000035",
+         "client_name": "EMPRESA 6 PHOENIX"
+        },
+        {
+         "client_id": "000152",
+         "client_code": "000152",
+         "client_name": "EMPRESA CIELO"
+        },
+        {
+         "client_id": "000211",
+         "client_code": "000211",
+         "client_name": "EMPRESA DE TRANSPORTES 28 OCTUBRE S.A.C."
+        },
+        {
+         "client_id": "000063",
+         "client_code": "000063",
+         "client_name": "EMPRESA DE TRANSPORTES Y MULTISERVICIOS"
+        },
+        {
+         "client_id": "000477",
+         "client_code": "000477",
+         "client_name": "EMPRESA GRIFOS"
+        },
+        {
+         "client_id": "000037",
+         "client_code": "000037",
+         "client_name": "EMPRESA SCAD 27"
+        },
+        {
+         "client_id": "000036",
+         "client_code": "000036",
+         "client_name": "EMPRESA SCAD 43"
+        },
+        {
+         "client_id": "000080",
+         "client_code": "000080",
+         "client_name": "EMPRESA TASA MOD"
+        },
+        {
+         "client_id": "000476",
+         "client_code": "000476",
+         "client_name": "EMPRESA TRANSPORTES"
+        },
+        {
+         "client_id": "000445",
+         "client_code": "000445",
+         "client_name": "EMPRESA TRANSPORTES DIANA"
+        },
+        {
+         "client_id": "000127",
+         "client_code": "000127",
+         "client_name": "EMPRESA.2 PPPPPPP"
+        },
+        {
+         "client_id": "000440",
+         "client_code": "000440",
+         "client_name": "EMPRESA1 SAC"
+        },
+        {
+         "client_id": "000435",
+         "client_code": "000435",
+         "client_name": "EMPRESA110"
+        },
+        {
+         "client_id": "000436",
+         "client_code": "000436",
+         "client_name": "EMPRESA978"
+        },
+        {
+         "client_id": "000054",
+         "client_code": "000054",
+         "client_name": "ESPINOSA DIFUSAL DLW"
+        },
+        {
+         "client_id": "000133",
+         "client_code": "000133",
+         "client_name": "ESTRELLA ASOCIADOS"
+        },
+        {
+         "client_id": "000365",
+         "client_code": "000365",
+         "client_name": "EXCLUSIVE WEDDING ITALIA"
+        },
+        {
+         "client_id": "000167",
+         "client_code": "000167",
+         "client_name": "FARFAN DIAZ JUAN MANUEL"
+        },
+        {
+         "client_id": "000178",
+         "client_code": "000178",
+         "client_name": "FARFAN DIAZ JUAN MANUEL"
+        },
+        {
+         "client_id": "000158",
+         "client_code": "000158",
+         "client_name": "FERNANDEZ SAC PERU"
+        },
+        {
+         "client_id": "000714",
+         "client_code": "000714",
+         "client_name": "FERTI GREEN SOCIEDAD ANONIMA CERRADA"
+        },
+        {
+         "client_id": "000206",
+         "client_code": "000206",
+         "client_name": "FLORERIA GIRASOLES"
+        },
+        {
+         "client_id": "000334",
+         "client_code": "000334",
+         "client_name": "FLORERIA TULIPANES"
+        },
+        {
+         "client_id": "000183",
+         "client_code": "000183",
+         "client_name": "FORNET SAC PERU"
+        },
+        {
+         "client_id": "000195",
+         "client_code": "000195",
+         "client_name": "FRUGELE PERU SAC"
+        },
+        {
+         "client_id": "000099",
+         "client_code": "000099",
+         "client_name": "FRUTIRICA"
+        },
+        {
+         "client_id": "000187",
+         "client_code": "000187",
+         "client_name": "GAMER PERU SAC"
+        },
+        {
+         "client_id": "000050",
+         "client_code": "000050",
+         "client_name": "GARAMENDI BELSUZARRI FRANK"
+        },
+        {
+         "client_id": "000049",
+         "client_code": "000049",
+         "client_name": "GARATE RODRIGUEZ MARIO"
+        },
+        {
+         "client_id": "000136",
+         "client_code": "000136",
+         "client_name": "GARCIA TORRES ROSA"
+        },
+        {
+         "client_id": "000766",
+         "client_code": "000766",
+         "client_name": "GILMERT GALDOS E.IR.L."
+        },
+        {
+         "client_id": "000767",
+         "client_code": "000767",
+         "client_name": "GILPARTS S.A.C."
+        },
+        {
+         "client_id": "000768",
+         "client_code": "000768",
+         "client_name": "GILPAS LEON S R LTDA"
+        },
+        {
+         "client_id": "000769",
+         "client_code": "000769",
+         "client_name": "GIMACO SOCIEDAD COMERCIAL"
+        },
+        {
+         "client_id": "000770",
+         "client_code": "000770",
+         "client_name": "GIMAX PERU S.A.C."
+        },
+        {
+         "client_id": "000771",
+         "client_code": "000771",
+         "client_name": "GIMOR SERVICE E.I.R.L."
+        },
+        {
+         "client_id": "000772",
+         "client_code": "000772",
+         "client_name": "GIMYSOL GRUP E.I.R.L."
+        },
+        {
+         "client_id": "000773",
+         "client_code": "000773",
+         "client_name": "GINECOCIRUGIA VIRGEN DEL CARMEN"
+        },
+        {
+         "client_id": "000095",
+         "client_code": "000095",
+         "client_name": "GLOBAL ABASTOS Y COMESTIBLES"
+        },
+        {
+         "client_id": "000078",
+         "client_code": "000078",
+         "client_name": "GONZALES COLLANTES DICK WILFREDO"
+        },
+        {
+         "client_id": "000109",
+         "client_code": "000109",
+         "client_name": "GONZALES HURTADO JUAN MIGUEL"
+        },
+        {
+         "client_id": "000117",
+         "client_code": "000117",
+         "client_name": "GONZALES PRADA MIGUEL ANTONIO"
+        },
+        {
+         "client_id": "000453",
+         "client_code": "000453",
+         "client_name": "GOODLINKS PERU E.I.R.L."
+        },
+        {
+         "client_id": "000129",
+         "client_code": "000129",
+         "client_name": "GRAFICA ARTISTICA Y PUBLICITARIA"
+        },
+        {
+         "client_id": "000503",
+         "client_code": "000503",
+         "client_name": "GRIFO OLMOS SAC"
+        },
+        {
+         "client_id": "000582",
+         "client_code": "000582",
+         "client_name": "GRIFO OLMOS SAC"
+        },
+        {
+         "client_id": "000578",
+         "client_code": "000578",
+         "client_name": "GRIFO OLMOS SAC"
+        },
+        {
+         "client_id": "000594",
+         "client_code": "000594",
+         "client_name": "GRIFO OLMOS SAC"
+        },
+        {
+         "client_id": "000539",
+         "client_code": "000539",
+         "client_name": "GRIFO OLMOS SAC"
+        },
+        {
+         "client_id": "000537",
+         "client_code": "000537",
+         "client_name": "GRIFO OTUZCO S.R.L."
+        },
+        {
+         "client_id": "000538",
+         "client_code": "000538",
+         "client_name": "GRIFO OTUZCO S.R.L."
+        },
+        {
+         "client_id": "000573",
+         "client_code": "000573",
+         "client_name": "GRIFO OTUZCO S.R.L."
+        },
+        {
+         "client_id": "000591",
+         "client_code": "000591",
+         "client_name": "GRIFO OTUZCO S.R.L."
+        },
+        {
+         "client_id": "000516",
+         "client_code": "000516",
+         "client_name": "GRIFO OTUZCO S.R.L."
+        },
+        {
+         "client_id": "000510",
+         "client_code": "000510",
+         "client_name": "GRIFO P Y G E.I.R.L"
+        },
+        {
+         "client_id": "000520",
+         "client_code": "000520",
+         "client_name": "GRIFO P Y G E.I.R.L"
+        },
+        {
+         "client_id": "000561",
+         "client_code": "000561",
+         "client_name": "GRIFO P Y G E.I.R.L"
+        },
+        {
+         "client_id": "000554",
+         "client_code": "000554",
+         "client_name": "GRIFO P Y G E.I.R.L"
+        },
+        {
+         "client_id": "000555",
+         "client_code": "000555",
+         "client_name": "GRIFO P Y G E.I.R.L"
+        },
+        {
+         "client_id": "000556",
+         "client_code": "000556",
+         "client_name": "GRIFO PACAY SRL"
+        },
+        {
+         "client_id": "000585",
+         "client_code": "000585",
+         "client_name": "GRIFO PACAY SRL"
+        },
+        {
+         "client_id": "000587",
+         "client_code": "000587",
+         "client_name": "GRIFO PACAY SRL"
+        },
+        {
+         "client_id": "000588",
+         "client_code": "000588",
+         "client_name": "GRIFO PACAY SRL"
+        },
+        {
+         "client_id": "000595",
+         "client_code": "000595",
+         "client_name": "GRIFO PACAY SRL"
+        },
+        {
+         "client_id": "000513",
+         "client_code": "000513",
+         "client_name": "GRIFO PACAY SRL"
+        },
+        {
+         "client_id": "000514",
+         "client_code": "000514",
+         "client_name": "GRIFO PACAY SRL"
+        },
+        {
+         "client_id": "000612",
+         "client_code": "000612",
+         "client_name": "GRIFO PACAY SRL"
+        },
+        {
+         "client_id": "000074",
+         "client_code": "000074",
+         "client_name": "GRIFO PETROSOL SAC"
+        },
+        {
+         "client_id": "000197",
+         "client_code": "000197",
+         "client_name": "GRIMALDI PERU SAC"
+        },
+        {
+         "client_id": "000780",
+         "client_code": "000780",
+         "client_name": "GRUPO ALTAMIRA"
+        },
+        {
+         "client_id": "000367",
+         "client_code": "000367",
+         "client_name": "GUERRA CAQUIAMARCA ALEJANDRINA"
+        },
+        {
+         "client_id": "000177",
+         "client_code": "000177",
+         "client_name": "GUERRERO OROSCO MIGUEL JOSE"
+        },
+        {
+         "client_id": "000166",
+         "client_code": "000166",
+         "client_name": "GUERRERO OROSCO MIGUEL JOSE"
+        },
+        {
+         "client_id": "000184",
+         "client_code": "000184",
+         "client_name": "GUITAR SAC PERU"
+        },
+        {
+         "client_id": "000533",
+         "client_code": "000533",
+         "client_name": "HAREELI S.A.C."
+        },
+        {
+         "client_id": "000567",
+         "client_code": "000567",
+         "client_name": "HAREELI S.A.C."
+        },
+        {
+         "client_id": "000540",
+         "client_code": "000540",
+         "client_name": "HARENAS E.I.R.L."
+        },
+        {
+         "client_id": "000583",
+         "client_code": "000583",
+         "client_name": "HARENAS E.I.R.L."
+        },
+        {
+         "client_id": "000576",
+         "client_code": "000576",
+         "client_name": "HARENAS E.I.R.L."
+        },
+        {
+         "client_id": "000530",
+         "client_code": "000530",
+         "client_name": "HARENAS E.I.R.L."
+        },
+        {
+         "client_id": "000531",
+         "client_code": "000531",
+         "client_name": "HARENAS E.I.R.L."
+        },
+        {
+         "client_id": "000521",
+         "client_code": "000521",
+         "client_name": "HARENAS E.I.R.L."
+        },
+        {
+         "client_id": "000519",
+         "client_code": "000519",
+         "client_name": "HARENAS E.I.R.L."
+        },
+        {
+         "client_id": "000511",
+         "client_code": "000511",
+         "client_name": "HARERO SAC"
+        },
+        {
+         "client_id": "000505",
+         "client_code": "000505",
+         "client_name": "HARERO SAC"
+        },
+        {
+         "client_id": "000577",
+         "client_code": "000577",
+         "client_name": "HARERO SAC"
+        },
+        {
+         "client_id": "000543",
+         "client_code": "000543",
+         "client_name": "HARERO SAC"
+        },
+        {
+         "client_id": "000571",
+         "client_code": "000571",
+         "client_name": "HARERO SAC"
+        },
+        {
+         "client_id": "000562",
+         "client_code": "000562",
+         "client_name": "HARERO SAC"
+        },
+        {
+         "client_id": "000623",
+         "client_code": "000623",
+         "client_name": "HARERO SAC"
+        },
+        {
+         "client_id": "000624",
+         "client_code": "000624",
+         "client_name": "HARERO SAC"
+        },
+        {
+         "client_id": "000214",
+         "client_code": "000214",
+         "client_name": "HORIZONTE VERDE S.A.C."
+        },
+        {
+         "client_id": "000047",
+         "client_code": "000047",
+         "client_name": "HOTEL GRAN ESPAÑA EMPRESA"
+        },
+        {
+         "client_id": "000034",
+         "client_code": "000034",
+         "client_name": "HOTEL LOS EUCALIPTOS - EM PROXIM"
+        },
+        {
+         "client_id": "000105",
+         "client_code": "000105",
+         "client_name": "HURTADO RIOA JUAN ALBERTO"
+        },
+        {
+         "client_id": "000107",
+         "client_code": "000107",
+         "client_name": "HURTADO RUIZ ESTEBAN CARLOS"
+        },
+        {
+         "client_id": "000186",
+         "client_code": "000186",
+         "client_name": "IMPRANTA BOLIVAR PERU SAC"
+        },
+        {
+         "client_id": "000777",
+         "client_code": "000777",
+         "client_name": "INDUSTRIAS METALICAS MEGARACK"
+        },
+        {
+         "client_id": "000156",
+         "client_code": "000156",
+         "client_name": "INSTITUTO DE ASESORIA"
+        },
+        {
+         "client_id": "000210",
+         "client_code": "000210",
+         "client_name": "INTIQUILLA EIRL"
+        },
+        {
+         "client_id": "000044",
+         "client_code": "000044",
+         "client_name": "INVERSIONES AMARIGE S.A.C"
+        },
+        {
+         "client_id": "000609",
+         "client_code": "000609",
+         "client_name": "INVERSIONES CONDE S.A.C"
+        },
+        {
+         "client_id": "000712",
+         "client_code": "000712",
+         "client_name": "INVERSIONES JR PERÚ E.I.R.L."
+        },
+        {
+         "client_id": "000048",
+         "client_code": "000048",
+         "client_name": "INVERSIONES PLAYA ESMERALDA S.A.C."
+        },
+        {
+         "client_id": "000121",
+         "client_code": "000121",
+         "client_name": "INVERSIONES RAFITA"
+        },
+        {
+         "client_id": "000296",
+         "client_code": "000296",
+         "client_name": "INVERSIONES ROSITA"
+        },
+        {
+         "client_id": "000203",
+         "client_code": "000203",
+         "client_name": "IP PROYECTOS"
+        },
+        {
+         "client_id": "000713",
+         "client_code": "000713",
+         "client_name": "J.J. TRACTION 4X4 E.I.R.L."
+        },
+        {
+         "client_id": "000086",
+         "client_code": "000086",
+         "client_name": "JD SERVICIOS GENERALES"
+        },
+        {
+         "client_id": "000295",
+         "client_code": "000295",
+         "client_name": "JUAN CARLOS MM"
+        },
+        {
+         "client_id": "000348",
+         "client_code": "000348",
+         "client_name": "JUANCHO SAC"
+        },
+        {
+         "client_id": "000209",
+         "client_code": "000209",
+         "client_name": "KAIZEN SAC"
+        },
+        {
+         "client_id": "000042",
+         "client_code": "000042",
+         "client_name": "LA COLOCHITA - GE PROXIM"
+        },
+        {
+         "client_id": "000124",
+         "client_code": "000124",
+         "client_name": "LA ESQUINITA COLOMBIANA - GE PROXIM"
+        },
+        {
+         "client_id": "000148",
+         "client_code": "000148",
+         "client_name": "LA PRIMA SAC"
+        },
+        {
+         "client_id": "000224",
+         "client_code": "000224",
+         "client_name": "LAS CASITAS SAC"
+        },
+        {
+         "client_id": "000384",
+         "client_code": "000384",
+         "client_name": "LAS EMPRENDEDORES SAC"
+        },
+        {
+         "client_id": "000218",
+         "client_code": "000218",
+         "client_name": "LEÑAS Y CARBON"
+        },
+        {
+         "client_id": "000276",
+         "client_code": "000276",
+         "client_name": "LENDING ABI TECNOLOGIA"
+        },
+        {
+         "client_id": "000354",
+         "client_code": "000354",
+         "client_name": "LENDING ACCD CONSULTORES"
+        },
+        {
+         "client_id": "000229",
+         "client_code": "000229",
+         "client_name": "LENDING ACCESORIOS"
+        },
+        {
+         "client_id": "000270",
+         "client_code": "000270",
+         "client_name": "LENDING ADVANCE CORP"
+        },
+        {
+         "client_id": "000248",
+         "client_code": "000248",
+         "client_name": "LENDING AFIANZA PERU"
+        },
+        {
+         "client_id": "000249",
+         "client_code": "000249",
+         "client_name": "LENDING AFINIT"
+        },
+        {
+         "client_id": "000284",
+         "client_code": "000284",
+         "client_name": "LENDING ALLY BANK"
+        },
+        {
+         "client_id": "000281",
+         "client_code": "000281",
+         "client_name": "LENDING AMERICAN EXPRESS"
+        },
+        {
+         "client_id": "000285",
+         "client_code": "000285",
+         "client_name": "LENDING AMERIS BANK"
+        },
+        {
+         "client_id": "000253",
+         "client_code": "000253",
+         "client_name": "LENDING APPLE"
+        },
+        {
+         "client_id": "000360",
+         "client_code": "000360",
+         "client_name": "LENDING ARVEST BANK"
+        },
+        {
+         "client_id": "000272",
+         "client_code": "000272",
+         "client_name": "LENDING ASGENAMM"
+        },
+        {
+         "client_id": "000257",
+         "client_code": "000257",
+         "client_name": "LENDING ASHIMA COSMEDIC SAC"
+        },
+        {
+         "client_id": "000258",
+         "client_code": "000258",
+         "client_name": "LENDING ASIA TECHNOLOGY S.A.C."
+        },
+        {
+         "client_id": "000259",
+         "client_code": "000259",
+         "client_name": "LENDING ASLEG EIRL"
+        },
+        {
+         "client_id": "000290",
+         "client_code": "000290",
+         "client_name": "LENDING ASOCIACION"
+        },
+        {
+         "client_id": "000260",
+         "client_code": "000260",
+         "client_name": "LENDING ASPEM"
+        },
+        {
+         "client_id": "000240",
+         "client_code": "000240",
+         "client_name": "LENDING BANK OF AMERICA"
+        },
+        {
+         "client_id": "000294",
+         "client_code": "000294",
+         "client_name": "LENDING BANK OF NEW YORK"
+        },
+        {
+         "client_id": "000286",
+         "client_code": "000286",
+         "client_name": "LENDING BBVA COMPASS"
+        },
+        {
+         "client_id": "000343",
+         "client_code": "000343",
+         "client_name": "LENDING BC BANK"
+        },
+        {
+         "client_id": "000261",
+         "client_code": "000261",
+         "client_name": "LENDING BERSUR S.R.L."
+        },
+        {
+         "client_id": "000266",
+         "client_code": "000266",
+         "client_name": "LENDING BESITO E.I.R.L."
+        },
+        {
+         "client_id": "000263",
+         "client_code": "000263",
+         "client_name": "LENDING BETO GAS E.I.R.L."
+        },
+        {
+         "client_id": "000262",
+         "client_code": "000262",
+         "client_name": "LENDING BETRAVEL E.I.R.L."
+        },
+        {
+         "client_id": "000264",
+         "client_code": "000264",
+         "client_name": "LENDING BEXCOM S.A.C."
+        },
+        {
+         "client_id": "000293",
+         "client_code": "000293",
+         "client_name": "LENDING BLUE GROUP"
+        },
+        {
+         "client_id": "000356",
+         "client_code": "000356",
+         "client_name": "LENDING BMO FINANCIAL"
+        },
+        {
+         "client_id": "000292",
+         "client_code": "000292",
+         "client_name": "LENDING BNP USA"
+        },
+        {
+         "client_id": "000342",
+         "client_code": "000342",
+         "client_name": "LENDING BOOKSTORE"
+        },
+        {
+         "client_id": "000265",
+         "client_code": "000265",
+         "client_name": "LENDING BOOMERANG S.A.C."
+        },
+        {
+         "client_id": "000232",
+         "client_code": "000232",
+         "client_name": "LENDING BOUTIQUE"
+        },
+        {
+         "client_id": "000245",
+         "client_code": "000245",
+         "client_name": "LENDING CAPITAL ONE BANK"
+        },
+        {
+         "client_id": "000251",
+         "client_code": "000251",
+         "client_name": "LENDING CELLPHONE"
+        },
+        {
+         "client_id": "000301",
+         "client_code": "000301",
+         "client_name": "LENDING CERATO"
+        },
+        {
+         "client_id": "000267",
+         "client_code": "000267",
+         "client_name": "LENDING CERESPERU S.A.C."
+        },
+        {
+         "client_id": "000268",
+         "client_code": "000268",
+         "client_name": "LENDING CHEVAL E I R L"
+        },
+        {
+         "client_id": "000269",
+         "client_code": "000269",
+         "client_name": "LENDING CHOCOLATE Y COCOA S.A.C."
+        },
+        {
+         "client_id": "000241",
+         "client_code": "000241",
+         "client_name": "LENDING CITI"
+        },
+        {
+         "client_id": "000273",
+         "client_code": "000273",
+         "client_name": "LENDING CITUS S.A.C."
+        },
+        {
+         "client_id": "000311",
+         "client_code": "000311",
+         "client_name": "LENDING CITYPETS E.I.R.L."
+        },
+        {
+         "client_id": "000289",
+         "client_code": "000289",
+         "client_name": "LENDING CLUB"
+        },
+        {
+         "client_id": "000280",
+         "client_code": "000280",
+         "client_name": "LENDING COLEGIO"
+        },
+        {
+         "client_id": "000255",
+         "client_code": "000255",
+         "client_name": "LENDING COLIBRI"
+        },
+        {
+         "client_id": "000313",
+         "client_code": "000313",
+         "client_name": "LENDING COLSAM S.A.C"
+        },
+        {
+         "client_id": "000361",
+         "client_code": "000361",
+         "client_name": "LENDING COMENITY BANK"
+        },
+        {
+         "client_id": "000226",
+         "client_code": "000226",
+         "client_name": "LENDING COMERCIO"
+        },
+        {
+         "client_id": "000283",
+         "client_code": "000283",
+         "client_name": "LENDING COMERICA"
+        },
+        {
+         "client_id": "000314",
+         "client_code": "000314",
+         "client_name": "LENDING COMUNICATEL S.A.C."
+        },
+        {
+         "client_id": "000310",
+         "client_code": "000310",
+         "client_name": "LENDING CONFITECA PERU"
+        },
+        {
+         "client_id": "000225",
+         "client_code": "000225",
+         "client_name": "LENDING CONSORCIO"
+        },
+        {
+         "client_id": "000256",
+         "client_code": "000256",
+         "client_name": "LENDING CONSORCIO SWEET"
+        },
+        {
+         "client_id": "000316",
+         "client_code": "000316",
+         "client_name": "LENDING CONSPEC S.A."
+        },
+        {
+         "client_id": "000274",
+         "client_code": "000274",
+         "client_name": "LENDING CONTACTO INFORMATICO E.I.R.L."
+        },
+        {
+         "client_id": "000275",
+         "client_code": "000275",
+         "client_name": "LENDING CONTACTOPERU GLOBAL S.A.C."
+        },
+        {
+         "client_id": "000324",
+         "client_code": "000324",
+         "client_name": "LENDING CORTI HOGAR E.I.R.L."
+        },
+        {
+         "client_id": "000317",
+         "client_code": "000317",
+         "client_name": "LENDING COSMOPLAS PERU S.A.C."
+        },
+        {
+         "client_id": "000318",
+         "client_code": "000318",
+         "client_name": "LENDING COSMOS ARTEFACTOS SRL"
+        },
+        {
+         "client_id": "000319",
+         "client_code": "000319",
+         "client_name": "LENDING COSMOTRADE S.A.C."
+        },
+        {
+         "client_id": "000320",
+         "client_code": "000320",
+         "client_name": "LENDING COSOL DE AMERICA E.I.R.L."
+        },
+        {
+         "client_id": "000321",
+         "client_code": "000321",
+         "client_name": "LENDING COSPER S.A.C."
+        },
+        {
+         "client_id": "000322",
+         "client_code": "000322",
+         "client_name": "LENDING COSPHATECH PERÚ S.A.C."
+        },
+        {
+         "client_id": "000325",
+         "client_code": "000325",
+         "client_name": "LENDING COSSAR S.A.C."
+        },
+        {
+         "client_id": "000326",
+         "client_code": "000326",
+         "client_name": "LENDING COSTA DEL SOL"
+        },
+        {
+         "client_id": "000282",
+         "client_code": "000282",
+         "client_name": "LENDING DISCOVER BANK"
+        },
+        {
+         "client_id": "000297",
+         "client_code": "000297",
+         "client_name": "LENDING DULCES TROME"
+        },
+        {
+         "client_id": "000327",
+         "client_code": "000327",
+         "client_name": "LENDING ELEKTRA"
+        },
+        {
+         "client_id": "000246",
+         "client_code": "000246",
+         "client_name": "LENDING FARMACIA"
+        },
+        {
+         "client_id": "000231",
+         "client_code": "000231",
+         "client_name": "LENDING FERRETERIA"
+        },
+        {
+         "client_id": "000239",
+         "client_code": "000239",
+         "client_name": "LENDING FRUTERIA"
+        },
+        {
+         "client_id": "000355",
+         "client_code": "000355",
+         "client_name": "LENDING GLOBAL VISION"
+        },
+        {
+         "client_id": "000250",
+         "client_code": "000250",
+         "client_name": "LENDING GOLDMAN SACHS"
+        },
+        {
+         "client_id": "000227",
+         "client_code": "000227",
+         "client_name": "LENDING HELADOS"
+        },
+        {
+         "client_id": "000336",
+         "client_code": "000336",
+         "client_name": "LENDING HOUSE"
+        },
+        {
+         "client_id": "000278",
+         "client_code": "000278",
+         "client_name": "LENDING HSBC AMERICA"
+        },
+        {
+         "client_id": "000252",
+         "client_code": "000252",
+         "client_name": "LENDING ICE CREAM"
+        },
+        {
+         "client_id": "000235",
+         "client_code": "000235",
+         "client_name": "LENDING INFORMATICA DELTA"
+        },
+        {
+         "client_id": "000277",
+         "client_code": "000277",
+         "client_name": "LENDING JP MORGAN"
+        },
+        {
+         "client_id": "000338",
+         "client_code": "000338",
+         "client_name": "LENDING JULIET"
+        },
+        {
+         "client_id": "000233",
+         "client_code": "000233",
+         "client_name": "LENDING KARAOKE"
+        },
+        {
+         "client_id": "000298",
+         "client_code": "000298",
+         "client_name": "LENDING LA IBERICA"
+        },
+        {
+         "client_id": "000362",
+         "client_code": "000362",
+         "client_name": "LENDING LUFTHANSA "
+        },
+        {
+         "client_id": "000228",
+         "client_code": "000228",
+         "client_name": "LENDING MALL"
+        },
+        {
+         "client_id": "000254",
+         "client_code": "000254",
+         "client_name": "LENDING MEEBOX"
+        },
+        {
+         "client_id": "000341",
+         "client_code": "000341",
+         "client_name": "LENDING MOLINO"
+        },
+        {
+         "client_id": "000312",
+         "client_code": "000312",
+         "client_name": "LENDING MONEYGRAM"
+        },
+        {
+         "client_id": "000243",
+         "client_code": "000243",
+         "client_name": "LENDING MORGAN STANLEY"
+        },
+        {
+         "client_id": "000234",
+         "client_code": "000234",
+         "client_name": "LENDING MOTORS"
+        },
+        {
+         "client_id": "000236",
+         "client_code": "000236",
+         "client_name": "LENDING OLX PERU"
+        },
+        {
+         "client_id": "000237",
+         "client_code": "000237",
+         "client_name": "LENDING ONLINE GROUP"
+        },
+        {
+         "client_id": "000345",
+         "client_code": "000345",
+         "client_name": "LENDING PHARMA"
+        },
+        {
+         "client_id": "000344",
+         "client_code": "000344",
+         "client_name": "LENDING PLAN"
+        },
+        {
+         "client_id": "000340",
+         "client_code": "000340",
+         "client_name": "LENDING PRODUCCIONES"
+        },
+        {
+         "client_id": "000352",
+         "client_code": "000352",
+         "client_name": "LENDING RAMIREZ"
+        },
+        {
+         "client_id": "000291",
+         "client_code": "000291",
+         "client_name": "LENDING RBC BANK"
+        },
+        {
+         "client_id": "000337",
+         "client_code": "000337",
+         "client_name": "LENDING REACTIVA"
+        },
+        {
+         "client_id": "000271",
+         "client_code": "000271",
+         "client_name": "LENDING RESORT"
+        },
+        {
+         "client_id": "000353",
+         "client_code": "000353",
+         "client_name": "LENDING RETAIL SOFTWARE"
+        },
+        {
+         "client_id": "000357",
+         "client_code": "000357",
+         "client_name": "LENDING SANTANDER BANK"
+        },
+        {
+         "client_id": "000329",
+         "client_code": "000329",
+         "client_name": "LENDING SENTRA"
+        },
+        {
+         "client_id": "000230",
+         "client_code": "000230",
+         "client_name": "LENDING SHOPP"
+        },
+        {
+         "client_id": "000358",
+         "client_code": "000358",
+         "client_name": "LENDING SIGNATURE BANK"
+        },
+        {
+         "client_id": "000359",
+         "client_code": "000359",
+         "client_name": "LENDING SIMMONS BANK"
+        },
+        {
+         "client_id": "000238",
+         "client_code": "000238",
+         "client_name": "LENDING SOFTWARE Y CONSULTORIA"
+        },
+        {
+         "client_id": "000300",
+         "client_code": "000300",
+         "client_name": "LENDING SOUL"
+        },
+        {
+         "client_id": "000299",
+         "client_code": "000299",
+         "client_name": "LENDING TEJAS Y CHOCOTEJAS"
+        },
+        {
+         "client_id": "000363",
+         "client_code": "000363",
+         "client_name": "LENDING UNITED"
+        },
+        {
+         "client_id": "000279",
+         "client_code": "000279",
+         "client_name": "LENDING USAA"
+        },
+        {
+         "client_id": "000244",
+         "client_code": "000244",
+         "client_name": "LENDING USBANK"
+        },
+        {
+         "client_id": "000328",
+         "client_code": "000328",
+         "client_name": "LENDING VERSA"
+        },
+        {
+         "client_id": "000242",
+         "client_code": "000242",
+         "client_name": "LENDING WELLS FARGO"
+        },
+        {
+         "client_id": "000130",
+         "client_code": "000130",
+         "client_name": "LIACHIRI LAPADAT CARMEN PILAR"
+        },
+        {
+         "client_id": "000188",
+         "client_code": "000188",
+         "client_name": "LIMON PERU SAC"
+        },
+        {
+         "client_id": "000154",
+         "client_code": "000154",
+         "client_name": "LINARES LINARES JUAN"
+        },
+        {
+         "client_id": "000138",
+         "client_code": "000138",
+         "client_name": "LINARES SEMINO CONNIE MARIELA"
+        },
+        {
+         "client_id": "000125",
+         "client_code": "000125",
+         "client_name": "LING DE DIAZ NOEMI"
+        },
+        {
+         "client_id": "000212",
+         "client_code": "000212",
+         "client_name": "LOAYZA ACEVEDO JUAN CARLOS"
+        },
+        {
+         "client_id": "000331",
+         "client_code": "000331",
+         "client_name": "LOPEZ ABADIE AIDA"
+        },
+        {
+         "client_id": "000287",
+         "client_code": "000287",
+         "client_name": "LUCERO DEL SUR EIRL"
+        },
+        {
+         "client_id": "000185",
+         "client_code": "000185",
+         "client_name": "LUDO PERU"
+        },
+        {
+         "client_id": "000052",
+         "client_code": "000052",
+         "client_name": "MACEDA CALDERON MIGUEL"
+        },
+        {
+         "client_id": "000031",
+         "client_code": "000031",
+         "client_name": "MACHUPICCHU PALACE HOTEL"
+        },
+        {
+         "client_id": "000191",
+         "client_code": "000191",
+         "client_name": "MADERERA LA MAR PERU SAC"
+        },
+        {
+         "client_id": "000217",
+         "client_code": "000217",
+         "client_name": "MAKIS EDO"
+        },
+        {
+         "client_id": "000779",
+         "client_code": "000779",
+         "client_name": "MALL AVENTURA S.A."
+        },
+        {
+         "client_id": "000448",
+         "client_code": "000448",
+         "client_name": "MAQCSC S.A.C."
+        },
+        {
+         "client_id": "000196",
+         "client_code": "000196",
+         "client_name": "MARKAN TLD PERU SAC"
+        },
+        {
+         "client_id": "000740",
+         "client_code": "000740",
+         "client_name": "MAXCAM AGREGADOS DE CONSTRUCCION S.A.C."
+        },
+        {
+         "client_id": "000741",
+         "client_code": "000741",
+         "client_name": "MAXCON S.A."
+        },
+        {
+         "client_id": "000742",
+         "client_code": "000742",
+         "client_name": "MAXI BABY SOCIEDAD ANONIMA CERRADA"
+        },
+        {
+         "client_id": "000743",
+         "client_code": "000743",
+         "client_name": "MAXI CENTER EMPRESA INDIVIDUAL"
+        },
+        {
+         "client_id": "000744",
+         "client_code": "000744",
+         "client_name": "MAXI'S CAR AUTO BOUTIQUE E.I.R.L."
+        },
+        {
+         "client_id": "000745",
+         "client_code": "000745",
+         "client_name": "MAXI-PRO S.A.C."
+        },
+        {
+         "client_id": "000215",
+         "client_code": "000215",
+         "client_name": "MENDOZA EMPRESA INDIVIDUAL"
+        },
+        {
+         "client_id": "000497",
+         "client_code": "000497",
+         "client_name": "METEORO RACING"
+        },
+        {
+         "client_id": "000147",
+         "client_code": "000147",
+         "client_name": "MOLINOS DEL NORTE"
+        },
+        {
+         "client_id": "000351",
+         "client_code": "000351",
+         "client_name": "MORA SOLANO JESUS"
+        },
+        {
+         "client_id": "000718",
+         "client_code": "000718",
+         "client_name": "MOTO IQUITOS S.A.C."
+        },
+        {
+         "client_id": "000719",
+         "client_code": "000719",
+         "client_name": "MOTO ONE IMPORT S.R.L."
+        },
+        {
+         "client_id": "000720",
+         "client_code": "000720",
+         "client_name": "MOTO REPUESTOS CHARAPA S.A.C."
+        },
+        {
+         "client_id": "000721",
+         "client_code": "000721",
+         "client_name": "MOTO WORKSHOP E.I.R.L."
+        },
+        {
+         "client_id": "000722",
+         "client_code": "000722",
+         "client_name": "MOTODIS S.A.C."
+        },
+        {
+         "client_id": "000723",
+         "client_code": "000723",
+         "client_name": "MOTORCYCLE AMERICAN SPEED S.A.C."
+        },
+        {
+         "client_id": "000724",
+         "client_code": "000724",
+         "client_name": "MOTOREPUESTOS  GIORCA E.I.R.L."
+        },
+        {
+         "client_id": "000413",
+         "client_code": "000413",
+         "client_name": "MOTOREPUESTOS AGP EL TIO S.A.C"
+        },
+        {
+         "client_id": "000415",
+         "client_code": "000415",
+         "client_name": "MOTOREPUESTOS EL AGUILA EIRL"
+        },
+        {
+         "client_id": "000330",
+         "client_code": "000330",
+         "client_name": "MOTORES DE LOS ANDES"
+        },
+        {
+         "client_id": "000710",
+         "client_code": "000710",
+         "client_name": "MOVA PUBLICIDAD S.A.C."
+        },
+        {
+         "client_id": "000146",
+         "client_code": "000146",
+         "client_name": "MOYOBAMBA COFEE"
+        },
+        {
+         "client_id": "000725",
+         "client_code": "000725",
+         "client_name": "MR MACELLAIO S.A.C."
+        },
+        {
+         "client_id": "000728",
+         "client_code": "000728",
+         "client_name": "MULTIALIMENTARIA S.A.C."
+        },
+        {
+         "client_id": "000732",
+         "client_code": "000732",
+         "client_name": "MULTICOPIERS SOCIEDAD ANONIMA CERRADA"
+        },
+        {
+         "client_id": "000733",
+         "client_code": "000733",
+         "client_name": "MULTIMAX S R LTDA"
+        },
+        {
+         "client_id": "000734",
+         "client_code": "000734",
+         "client_name": "MULTIMIURA S.A.C."
+        },
+        {
+         "client_id": "000735",
+         "client_code": "000735",
+         "client_name": "MULTIMUELLES S.A."
+        },
+        {
+         "client_id": "000736",
+         "client_code": "000736",
+         "client_name": "MULTINEGOCIOS ANDAGOTO S.A.C."
+        },
+        {
+         "client_id": "000737",
+         "client_code": "000737",
+         "client_name": "MULTINEGOCIOS CARI S.R.L."
+        },
+        {
+         "client_id": "000738",
+         "client_code": "000738",
+         "client_name": "MULTINEGOCIOS HORUS SAC"
+        },
+        {
+         "client_id": "000739",
+         "client_code": "000739",
+         "client_name": "MULTINEGOCIOS OSIRIS E.I.R.L"
+        },
+        {
+         "client_id": "000288",
+         "client_code": "000288",
+         "client_name": "MULTISERVICIOS COLONIA EIRL"
+        },
+        {
+         "client_id": "000200",
+         "client_code": "000200",
+         "client_name": "NEXO INMOBILIARIO"
+        },
+        {
+         "client_id": "000207",
+         "client_code": "000207",
+         "client_name": "NOTARIA SAN ISIDRO"
+        },
+        {
+         "client_id": "000179",
+         "client_code": "000179",
+         "client_name": "OLIVARES MERCADO DANIEL MARCK"
+        },
+        {
+         "client_id": "000168",
+         "client_code": "000168",
+         "client_name": "OLIVARES MERCADO DANIEL MARCK"
+        },
+        {
+         "client_id": "000460",
+         "client_code": "000460",
+         "client_name": "OMELFA"
+        },
+        {
+         "client_id": "000610",
+         "client_code": "000610",
+         "client_name": "OSTIA COMPANI"
+        },
+        {
+         "client_id": "000605",
+         "client_code": "000605",
+         "client_name": "OTOKA"
+        },
+        {
+         "client_id": "000051",
+         "client_code": "000051",
+         "client_name": "PACHAO GONZALES MILAGROS"
+        },
+        {
+         "client_id": "000087",
+         "client_code": "000087",
+         "client_name": "PASIONES PASTELERIA FINA"
+        },
+        {
+         "client_id": "000441",
+         "client_code": "000441",
+         "client_name": "PATRICIAS DIAMONTTE"
+        },
+        {
+         "client_id": "000094",
+         "client_code": "000094",
+         "client_name": "PAVCO"
+        },
+        {
+         "client_id": "000170",
+         "client_code": "000170",
+         "client_name": "PEREZ LOZA JUAN MIGUEL"
+        },
+        {
+         "client_id": "000478",
+         "client_code": "000478",
+         "client_name": "PERITAJE Y TASACIONES"
+        },
+        {
+         "client_id": "000648",
+         "client_code": "000648",
+         "client_name": "PIKARA EIRL"
+        },
+        {
+         "client_id": "000649",
+         "client_code": "000649",
+         "client_name": "PIKITOS E.I.R.L."
+        },
+        {
+         "client_id": "000650",
+         "client_code": "000650",
+         "client_name": "PILADO Y SERVICIOS ESTRELLITA EMPRESA"
+        },
+        {
+         "client_id": "000192",
+         "client_code": "000192",
+         "client_name": "PORTAL BLUE WEB PERU SAC"
+        },
+        {
+         "client_id": "000405",
+         "client_code": "000405",
+         "client_name": "POTTER SAC"
+        },
+        {
+         "client_id": "000680",
+         "client_code": "000680",
+         "client_name": "PRINTMAKERSPERU E.I.R.L."
+        },
+        {
+         "client_id": "000681",
+         "client_code": "000681",
+         "client_name": "PRISMA ANDES S.A.C."
+        },
+        {
+         "client_id": "000682",
+         "client_code": "000682",
+         "client_name": "PRISMA ASESORIA TECNICA E COMERCIAL"
+        },
+        {
+         "client_id": "000683",
+         "client_code": "000683",
+         "client_name": "PRISMA HIDRAULICA S.A.C."
+        },
+        {
+         "client_id": "000684",
+         "client_code": "000684",
+         "client_name": "PRISMA NEGOCIOS INMOBILIARIOS S.A.C."
+        },
+        {
+         "client_id": "000685",
+         "client_code": "000685",
+         "client_name": "PRISTINO E.I.R.L."
+        },
+        {
+         "client_id": "000686",
+         "client_code": "000686",
+         "client_name": "PRO - YIN S.A.C."
+        },
+        {
+         "client_id": "000687",
+         "client_code": "000687",
+         "client_name": "PRO ARBITRA S.A.C."
+        },
+        {
+         "client_id": "000160",
+         "client_code": "000160",
+         "client_name": "PROYECTO DUPLO"
+        },
+        {
+         "client_id": "000202",
+         "client_code": "000202",
+         "client_name": "PROYECTO HARA"
+        },
+        {
+         "client_id": "000388",
+         "client_code": "000388",
+         "client_name": "PRUEBA 31"
+        },
+        {
+         "client_id": "000465",
+         "client_code": "000465",
+         "client_name": "PRUEBA S.A.C"
+        },
+        {
+         "client_id": "000462",
+         "client_code": "000462",
+         "client_name": "PRUEBA S.A.C"
+        },
+        {
+         "client_id": "000463",
+         "client_code": "000463",
+         "client_name": "PRUEBA S.A.C"
+        },
+        {
+         "client_id": "000467",
+         "client_code": "000467",
+         "client_name": "PRUEBA S.A.C"
+        },
+        {
+         "client_id": "000490",
+         "client_code": "000490",
+         "client_name": "PRUEBA S.A.C"
+        },
+        {
+         "client_id": "000492",
+         "client_code": "000492",
+         "client_name": "PRUEBA S.A.C"
+        },
+        {
+         "client_id": "000484",
+         "client_code": "000484",
+         "client_name": "PRUEBA S.A.C"
+        },
+        {
+         "client_id": "000485",
+         "client_code": "000485",
+         "client_name": "PRUEBA S.A.C"
+        },
+        {
+         "client_id": "000486",
+         "client_code": "000486",
+         "client_name": "PRUEBAS S.A.C"
+        },
+        {
+         "client_id": "000487",
+         "client_code": "000487",
+         "client_name": "PRUEBAS S.A.C"
+        },
+        {
+         "client_id": "000488",
+         "client_code": "000488",
+         "client_name": "PRUEBAS S.A.C"
+        },
+        {
+         "client_id": "000489",
+         "client_code": "000489",
+         "client_name": "PRUEBAS S.A.C"
+        },
+        {
+         "client_id": "000481",
+         "client_code": "000481",
+         "client_name": "PRUEBAS S.A.C"
+        },
+        {
+         "client_id": "000482",
+         "client_code": "000482",
+         "client_name": "PRUEBAS S.A.C"
+        },
+        {
+         "client_id": "000483",
+         "client_code": "000483",
+         "client_name": "PRUEBAS S.A.C"
+        },
+        {
+         "client_id": "000493",
+         "client_code": "000493",
+         "client_name": "PRUEBAS S.A.C"
+        },
+        {
+         "client_id": "000494",
+         "client_code": "000494",
+         "client_name": "PRUEBAS S.A.C"
+        },
+        {
+         "client_id": "000491",
+         "client_code": "000491",
+         "client_name": "PRUEBAS S.A.C"
+        },
+        {
+         "client_id": "000464",
+         "client_code": "000464",
+         "client_name": "PRUEBAS S.A.C"
+        },
+        {
+         "client_id": "000470",
+         "client_code": "000470",
+         "client_name": "PRUEBAS S.A.C"
+        },
+        {
+         "client_id": "000471",
+         "client_code": "000471",
+         "client_name": "PRUEBAS S.A.C"
+        },
+        {
+         "client_id": "000472",
+         "client_code": "000472",
+         "client_name": "PRUEBAS S.A.C"
+        },
+        {
+         "client_id": "000466",
+         "client_code": "000466",
+         "client_name": "PRUEBAS S.A.C"
+        },
+        {
+         "client_id": "000434",
+         "client_code": "000434",
+         "client_name": "PRUEBAS SAC"
+        },
+        {
+         "client_id": "000438",
+         "client_code": "000438",
+         "client_name": "PRUEBAS2 SAC"
+        },
+        {
+         "client_id": "000557",
+         "client_code": "000557",
+         "client_name": "PRUEBAS3 SAC"
+        },
+        {
+         "client_id": "000439",
+         "client_code": "000439",
+         "client_name": "PRUEBAS6 SAC"
+        },
+        {
+         "client_id": "000332",
+         "client_code": "000332",
+         "client_name": "PUNTA CANA TRAVEL"
+        },
+        {
+         "client_id": "000671",
+         "client_code": "000671",
+         "client_name": "PYB LABORATORIO DENTAL S.A.C."
+        },
+        {
+         "client_id": "000672",
+         "client_code": "000672",
+         "client_name": "PYCOCAS SAC"
+        },
+        {
+         "client_id": "000673",
+         "client_code": "000673",
+         "client_name": "PYMEGRAPH E.I.R.L."
+        },
+        {
+         "client_id": "000674",
+         "client_code": "000674",
+         "client_name": "PYMPACK S.A.C."
+        },
+        {
+         "client_id": "000675",
+         "client_code": "000675",
+         "client_name": "PYRE SERVICIOS GENERALES EIRL"
+        },
+        {
+         "client_id": "000676",
+         "client_code": "000676",
+         "client_name": "PZ VIAJES Y REPRESENTACIONES E.I.R.L."
+        },
+        {
+         "client_id": "000041",
+         "client_code": "000041",
+         "client_name": "QUENAYA TACORA JULIANA"
+        },
+        {
+         "client_id": "000113",
+         "client_code": "000113",
+         "client_name": "RAMIREZ ALVARADO JAVIER GUSTAVO"
+        },
+        {
+         "client_id": "000163",
+         "client_code": "000163",
+         "client_name": "RAMOS NAVARRO LUIS ESTUARDO"
+        },
+        {
+         "client_id": "000182",
+         "client_code": "000182",
+         "client_name": "RAMOS NAVARRO LUIS ESTUARDO"
+        },
+        {
+         "client_id": "000174",
+         "client_code": "000174",
+         "client_name": "RAMOS NAVARRO LUIS ESTUARDO"
+        },
+        {
+         "client_id": "000606",
+         "client_code": "000606",
+         "client_name": "RC PRISE S.A.C."
+        },
+        {
+         "client_id": "000651",
+         "client_code": "000651",
+         "client_name": "REPRESENTACIONES PEKIN S.A.C."
+        },
+        {
+         "client_id": "000652",
+         "client_code": "000652",
+         "client_name": "REPRESENTACIONES PERLA DEL NORTE"
+        },
+        {
+         "client_id": "000613",
+         "client_code": "000613",
+         "client_name": "REPRO COLOR OUTDOOR E.I.R.L."
+        },
+        {
+         "client_id": "000614",
+         "client_code": "000614",
+         "client_name": "REPROCAD S.A.C"
+        },
+        {
+         "client_id": "000615",
+         "client_code": "000615",
+         "client_name": "REPRODUCE S.A.C"
+        },
+        {
+         "client_id": "000616",
+         "client_code": "000616",
+         "client_name": "REPRODUCEX S.A.C."
+        },
+        {
+         "client_id": "000617",
+         "client_code": "000617",
+         "client_name": "REPROFERT E.I.R.L."
+        },
+        {
+         "client_id": "000618",
+         "client_code": "000618",
+         "client_name": "REPROFETUS S.A.C."
+        },
+        {
+         "client_id": "000619",
+         "client_code": "000619",
+         "client_name": "REPSAM S.A.C."
+        },
+        {
+         "client_id": "000666",
+         "client_code": "000666",
+         "client_name": "REPUESTOS MICAELA EIRL"
+        },
+        {
+         "client_id": "000774",
+         "client_code": "000774",
+         "client_name": "RESTAURANT CAMPESTRE LOS PECANOS"
+        },
+        {
+         "client_id": "000775",
+         "client_code": "000775",
+         "client_name": "RESTAURANT CEVICHERIA 'EL PEJERREY'"
+        },
+        {
+         "client_id": "000776",
+         "client_code": "000776",
+         "client_name": "RESTAURANT CEVICHERIA NEREA"
+        },
+        {
+         "client_id": "000181",
+         "client_code": "000181",
+         "client_name": "ROJAS BERNAL LUIS CARLOS"
+        },
+        {
+         "client_id": "000173",
+         "client_code": "000173",
+         "client_name": "ROJAS BERNAL LUIS CARLOS"
+        },
+        {
+         "client_id": "000162",
+         "client_code": "000162",
+         "client_name": "ROJAS BERNAL LUIS CARLOS"
+        },
+        {
+         "client_id": "000165",
+         "client_code": "000165",
+         "client_name": "RUIZ ZEVALLOS JHON JOSEPH"
+        },
+        {
+         "client_id": "000176",
+         "client_code": "000176",
+         "client_name": "RUIZ ZEVALLOS JHON JOSEPH"
+        },
+        {
+         "client_id": "000667",
+         "client_code": "000667",
+         "client_name": "SABOR ORIENTAL SOCIEDAD ANONIMA CERRADA"
+        },
+        {
+         "client_id": "000668",
+         "client_code": "000668",
+         "client_name": "SABOR Y DELIRIO S.A.C."
+        },
+        {
+         "client_id": "000669",
+         "client_code": "000669",
+         "client_name": "SABORES COMIDA PERUANA"
+        },
+        {
+         "client_id": "000670",
+         "client_code": "000670",
+         "client_name": "SABOREU S.A.C."
+        },
+        {
+         "client_id": "000059",
+         "client_code": "000059",
+         "client_name": "SAN FERNANDO"
+        },
+        {
+         "client_id": "000696",
+         "client_code": "000696",
+         "client_name": "SAN JOSE CONSTRUCTORA PERU S.A."
+        },
+        {
+         "client_id": "000697",
+         "client_code": "000697",
+         "client_name": "SAN JOSE RITA S.R.L."
+        },
+        {
+         "client_id": "000698",
+         "client_code": "000698",
+         "client_name": "SAN JOSUÉ S.R.L."
+        },
+        {
+         "client_id": "000699",
+         "client_code": "000699",
+         "client_name": "SAN LORENZO BONDADOSO E.I.R.L."
+        },
+        {
+         "client_id": "000700",
+         "client_code": "000700",
+         "client_name": "SAN LUIS MOTOR´S E.I.R.L."
+        },
+        {
+         "client_id": "000701",
+         "client_code": "000701",
+         "client_name": "SAN MARCOS E.I.R.L."
+        },
+        {
+         "client_id": "000702",
+         "client_code": "000702",
+         "client_name": "SAN MARCOS LABORATORIO CLINICO E.I.R.L."
+        },
+        {
+         "client_id": "000208",
+         "client_code": "000208",
+         "client_name": "SANDOVAL PERU SAC"
+        },
+        {
+         "client_id": "000114",
+         "client_code": "000114",
+         "client_name": "SANTOS GOMEZ MIGUEL ANTONIO"
+        },
+        {
+         "client_id": "000437",
+         "client_code": "000437",
+         "client_name": "SAVING SAC"
+        },
+        {
+         "client_id": "000479",
+         "client_code": "000479",
+         "client_name": "SEMKER"
+        },
+        {
+         "client_id": "000456",
+         "client_code": "000456",
+         "client_name": "SERVI ARENAS"
+        },
+        {
+         "client_id": "000444",
+         "client_code": "000444",
+         "client_name": "SERVI ARQ"
+        },
+        {
+         "client_id": "000457",
+         "client_code": "000457",
+         "client_name": "SERVI CAMIONES"
+        },
+        {
+         "client_id": "000458",
+         "client_code": "000458",
+         "client_name": "SERVI CONSTRUCTOR"
+        },
+        {
+         "client_id": "000459",
+         "client_code": "000459",
+         "client_name": "SERVI SA CORREDORES"
+        },
+        {
+         "client_id": "000098",
+         "client_code": "000098",
+         "client_name": "SERVICIOS GENERALES SAC"
+        },
+        {
+         "client_id": "000376",
+         "client_code": "000376",
+         "client_name": "SERVICIOS JS  S.R.L."
+        },
+        {
+         "client_id": "000375",
+         "client_code": "000375",
+         "client_name": "SERVICIOS MATEI E.I.R.L."
+        },
+        {
+         "client_id": "000096",
+         "client_code": "000096",
+         "client_name": "SERVICIOS Y ABAST MULTIPLES"
+        },
+        {
+         "client_id": "000716",
+         "client_code": "000716",
+         "client_name": "SERVICIOS Y MANTENIMIENTOS METALICOS"
+        },
+        {
+         "client_id": "000097",
+         "client_code": "000097",
+         "client_name": "SERVIICOS D ACABADOS MIGUEL JESUS SACCCC"
+        },
+        {
+         "client_id": "000607",
+         "client_code": "000607",
+         "client_name": "SERVITEJO S.A."
+        },
+        {
+         "client_id": "000620",
+         "client_code": "000620",
+         "client_name": "SG TRANSMAR TOUR S.R.L."
+        },
+        {
+         "client_id": "000708",
+         "client_code": "000708",
+         "client_name": "SHAIEL TOURS E.I.R.L."
+        },
+        {
+         "client_id": "000709",
+         "client_code": "000709",
+         "client_name": "SHAKA SOLUCIONES S.A.C."
+        },
+        {
+         "client_id": "000757",
+         "client_code": "000757",
+         "client_name": "SHIPLONG EIRL"
+        },
+        {
+         "client_id": "000758",
+         "client_code": "000758",
+         "client_name": "SHIPROCK PERU S.A.C."
+        },
+        {
+         "client_id": "000759",
+         "client_code": "000759",
+         "client_name": "SHIRINGAS S.R.L."
+        },
+        {
+         "client_id": "000760",
+         "client_code": "000760",
+         "client_name": "SHIZEN ARQUITECTOS S.A.C."
+        },
+        {
+         "client_id": "000761",
+         "client_code": "000761",
+         "client_name": "SHIZENTAI S.A.C."
+        },
+        {
+         "client_id": "000762",
+         "client_code": "000762",
+         "client_name": "SHIZHANG QIN S.A.C."
+        },
+        {
+         "client_id": "000763",
+         "client_code": "000763",
+         "client_name": "SHOBO ENGINEERING S.R.L."
+        },
+        {
+         "client_id": "000764",
+         "client_code": "000764",
+         "client_name": "SHOES LUIGI BERTELO S.A.C."
+        },
+        {
+         "client_id": "000765",
+         "client_code": "000765",
+         "client_name": "SHONQO TOURS E.I.R.L."
+        },
+        {
+         "client_id": "000677",
+         "client_code": "000677",
+         "client_name": "SHUAN CONTRATISTAS GENERALES S.A.C."
+        },
+        {
+         "client_id": "000678",
+         "client_code": "000678",
+         "client_name": "SHULITA E.I.R.L."
+        },
+        {
+         "client_id": "000679",
+         "client_code": "000679",
+         "client_name": "SHYNTECH E.I.R.L."
+        },
+        {
+         "client_id": "000509",
+         "client_code": "000509",
+         "client_name": "SINERGIAS ECONOMICAS SAC"
+        },
+        {
+         "client_id": "000443",
+         "client_code": "000443",
+         "client_name": "SOCIEDAD DE ADMINISTRADORES"
+        },
+        {
+         "client_id": "000368",
+         "client_code": "000368",
+         "client_name": "SOL & PLAYA TRAVEL"
+        },
+        {
+         "client_id": "000474",
+         "client_code": "000474",
+         "client_name": "SOLUCIONES AUTOMATICAS INTEGRALES"
+        },
+        {
+         "client_id": "000480",
+         "client_code": "000480",
+         "client_name": "ST HALCONES"
+        },
+        {
+         "client_id": "000452",
+         "client_code": "000452",
+         "client_name": "SUCURSAL 34"
+        },
+        {
+         "client_id": "000451",
+         "client_code": "000451",
+         "client_name": "SUCURSAL DE PRUEBA"
+        },
+        {
+         "client_id": "000449",
+         "client_code": "000449",
+         "client_name": "SUCURSALES BOMBA"
+        },
+        {
+         "client_id": "000450",
+         "client_code": "000450",
+         "client_name": "SUCURSALES ESTABLECIDAS EN EL EXT"
+        },
+        {
+         "client_id": "000055",
+         "client_code": "000055",
+         "client_name": "TABORI CARDENAS JOSE LUIS"
+        },
+        {
+         "client_id": "000056",
+         "client_code": "000056",
+         "client_name": "TAIPE YEPEZ VANESSA ESPERANZA"
+        },
+        {
+         "client_id": "000057",
+         "client_code": "000057",
+         "client_name": "TANCO SUAREZ MARIO"
+        },
+        {
+         "client_id": "000371",
+         "client_code": "000371",
+         "client_name": "TAXI TOURS EL 10"
+        },
+        {
+         "client_id": "000639",
+         "client_code": "000639",
+         "client_name": "TEIMA S.R.L."
+        },
+        {
+         "client_id": "000640",
+         "client_code": "000640",
+         "client_name": "TEINCO PERU S.A.C."
+        },
+        {
+         "client_id": "000693",
+         "client_code": "000693",
+         "client_name": "TEKNIMODULOS S.A.C."
+        },
+        {
+         "client_id": "000694",
+         "client_code": "000694",
+         "client_name": "TEKNOMAQ S.A.C."
+        },
+        {
+         "client_id": "000695",
+         "client_code": "000695",
+         "client_name": "TEKTRON DATA INGENIEROS S.R.L."
+        },
+        {
+         "client_id": "000398",
+         "client_code": "000398",
+         "client_name": "TIENDA 1"
+        },
+        {
+         "client_id": "000402",
+         "client_code": "000402",
+         "client_name": "TIENDA 2"
+        },
+        {
+         "client_id": "000406",
+         "client_code": "000406",
+         "client_name": "TIENDA 3"
+        },
+        {
+         "client_id": "000404",
+         "client_code": "000404",
+         "client_name": "TIENDA 4"
+        },
+        {
+         "client_id": "000399",
+         "client_code": "000399",
+         "client_name": "TIENDA 5"
+        },
+        {
+         "client_id": "000071",
+         "client_code": "000071",
+         "client_name": "TIGSE LOIZATE NEREA NURIA"
+        },
+        {
+         "client_id": "000077",
+         "client_code": "000077",
+         "client_name": "TOPYTOP SAC"
+        },
+        {
+         "client_id": "000120",
+         "client_code": "000120",
+         "client_name": "TRANSPORTE BENAVIDES"
+        },
+        {
+         "client_id": "000205",
+         "client_code": "000205",
+         "client_name": "TRANSPORTES 2020"
+        },
+        {
+         "client_id": "000198",
+         "client_code": "000198",
+         "client_name": "TRIBUNAL GEL PERU SAC"
+        },
+        {
+         "client_id": "000370",
+         "client_code": "000370",
+         "client_name": "TURISMO Y CULTURA"
+        },
+        {
+         "client_id": "000621",
+         "client_code": "000621",
+         "client_name": "TUTIX E.I.R.L."
+        },
+        {
+         "client_id": "000644",
+         "client_code": "000644",
+         "client_name": "TUTTI FRIO E.I.R.L."
+        },
+        {
+         "client_id": "000645",
+         "client_code": "000645",
+         "client_name": "TV CABLE PERU GLOBAL E.I.R.L"
+        },
+        {
+         "client_id": "000646",
+         "client_code": "000646",
+         "client_name": "TV IDEAS SOCIEDAD ANONIMA CERRADA"
+        },
+        {
+         "client_id": "000647",
+         "client_code": "000647",
+         "client_name": "TWIN CAR S.R.L."
+        },
+        {
+         "client_id": "000068",
+         "client_code": "000068",
+         "client_name": "UAT CASIMIRES NABILA"
+        },
+        {
+         "client_id": "000065",
+         "client_code": "000065",
+         "client_name": "UAT CORPORACION ARES SERVICIOS GENERALES"
+        },
+        {
+         "client_id": "000064",
+         "client_code": "000064",
+         "client_name": "UAT G Y M"
+        },
+        {
+         "client_id": "000069",
+         "client_code": "000069",
+         "client_name": "UAT MULTISERVICIOS Y CONTRATISTAS SAILOR"
+        },
+        {
+         "client_id": "000070",
+         "client_code": "000070",
+         "client_name": "UAT QUIMPAC"
+        },
+        {
+         "client_id": "000066",
+         "client_code": "000066",
+         "client_name": "UAT SERVICIOS MINEROS GLORIA"
+        },
+        {
+         "client_id": "000067",
+         "client_code": "000067",
+         "client_name": "UAT ZEVALLOS CONTRATISTAS GENERALES"
+        },
+        {
+         "client_id": "000746",
+         "client_code": "000746",
+         "client_name": "UCIC ASOCIACION CIVIL"
+        },
+        {
+         "client_id": "000747",
+         "client_code": "000747",
+         "client_name": "UCV GRIFOS SOCIEDAD COMERCIAL"
+        },
+        {
+         "client_id": "000748",
+         "client_code": "000748",
+         "client_name": "UEZU GROUP S.A.C."
+        },
+        {
+         "client_id": "000749",
+         "client_code": "000749",
+         "client_name": "UFLEX SOLUTIONS S.A.C."
+        },
+        {
+         "client_id": "000750",
+         "client_code": "000750",
+         "client_name": "UFS COMERCIAL S.A."
+        },
+        {
+         "client_id": "000751",
+         "client_code": "000751",
+         "client_name": "UG INNOVACIÓN SOCIEDAD ANONIMA CERRADA"
+        },
+        {
+         "client_id": "000752",
+         "client_code": "000752",
+         "client_name": "UGARTE Y COMPAÑÍA SAC"
+        },
+        {
+         "client_id": "000753",
+         "client_code": "000753",
+         "client_name": "UKAY EIRL"
+        },
+        {
+         "client_id": "000754",
+         "client_code": "000754",
+         "client_name": "ULC CONSULTORES & EJECUTORES E.I.R.L."
+        },
+        {
+         "client_id": "000193",
+         "client_code": "000193",
+         "client_name": "VANIA PERU SAC"
+        },
+        {
+         "client_id": "000101",
+         "client_code": "000101",
+         "client_name": "VARGAS HURTADO JOSE MIGUEL"
+        },
+        {
+         "client_id": "000108",
+         "client_code": "000108",
+         "client_name": "VASQUEZ RAMIREZ JUAN PABLO"
+        },
+        {
+         "client_id": "000222",
+         "client_code": "000222",
+         "client_name": "VIAJES CANCUN"
+        },
+        {
+         "client_id": "000333",
+         "client_code": "000333",
+         "client_name": "VIAJES FALABELLA"
+        },
+        {
+         "client_id": "000137",
+         "client_code": "000137",
+         "client_name": "VILCA FLORES MELISSA"
+        },
+        {
+         "client_id": "000172",
+         "client_code": "000172",
+         "client_name": "VILLAR GARCIA KATTIA JIMENA"
+        },
+        {
+         "client_id": "000053",
+         "client_code": "000053",
+         "client_name": "WAGUE LAJE MARIA ROSARIO"
+        },
+        {
+         "client_id": "000396",
+         "client_code": "000396",
+         "client_name": "WBC MUREX"
+        },
+        {
+         "client_id": "000072",
+         "client_code": "000072",
+         "client_name": "WIZNER ILIYANOV MARIA MARIA TERESA"
+        },
+        {
+         "client_id": "000126",
+         "client_code": "000126",
+         "client_name": "WONF WONG LYN"
+        },
+        {
+         "client_id": "000247",
+         "client_code": "000247",
+         "client_name": "YCHANG"
+        },
+        {
+         "client_id": "000374",
+         "client_code": "000374",
+         "client_name": "ZEVALLOS CARRANZA LINDA MIA"
+        },
+        {
+         "client_id": "000180",
+         "client_code": "000180",
+         "client_name": "ZEVALLOS RUIZ ADELA DIANA"
+        },
+        {
+         "client_id": "000171",
+         "client_code": "000171",
+         "client_name": "ZEVALLOS RUIZ ADELA DIANA"
+        },
+        {
+         "client_id": "000157",
+         "client_code": "000157",
+         "client_name": "ZEVALLOS RUIZ ADELA DIANA"
+        },
+        {
+         "client_id": "000335",
+         "client_code": "000335",
+         "client_name": "ZIEMANN HANSEN BEATRIZ DONN"
+        },
+        {
+         "client_id": "000373",
+         "client_code": "000373",
+         "client_name": "ZULOETA HEREDIA ELENA MARIA"
+        },
+        {
+         "client_id": "000372",
+         "client_code": "000372",
+         "client_name": "ZUMARAN FRIAS LUIS MANUEL"
+        }
+    ],
+    "totalRecords": 753,
+    "error": false,
+    "msg": ""
+}

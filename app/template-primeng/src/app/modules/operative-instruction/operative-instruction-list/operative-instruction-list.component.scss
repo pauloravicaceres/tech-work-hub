@@ -1,0 +1,11 @@
+
+.mi-div {
+    opacity: 1;
+    transform: scaleY(1);
+    transition: opacity 500ms ease-in-out, transform 500ms ease-in-out;
+}
+
+.oculto {
+    opacity: 0;
+    transform: scaleY(0);
+}

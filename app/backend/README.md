@@ -17,7 +17,7 @@ app/backend/
 │       ├── Backlog/                 Features/BacklogItems/CreateBacklogItem, Domain, Data (schema backlog)
 │       ├── Application/             Catálogo de aplicaciones (schema application), GET /api/applications
 │       ├── Sprints/                 HU-003: Features/Sprints/{CreateSprint,ListSprints,GetSprintById}; HU-004: Features/SprintItems/{AssignItemToSprint,ListSprintItems}, Contracts/IBacklogModuleApi, Domain, Data (schema sprints)
-│       └── Teams/                   HU-012: Features/TeamMembers/{RegisterTeamMember,ListTeamMembers}, Features/TechnicalRoles/ListTechnicalRoles, Domain, Data (schema teams, catálogo de roles sembrado)
+│       └── Teams/                   HU-012: Features/TeamMembers/{RegisterTeamMember,ListTeamMembers}, Features/TechnicalRoles/ListTechnicalRoles, Domain, Data (schema teams, catálogo de roles sembrado); HU-015: Features/ItemAssignments/{AssignMemberToItem,ListItemAssignees,ListMemberItems}, Contracts/IBacklogItemLookup (implementado por Backlog/BacklogItemLookup.cs)
 └── tests/
     ├── Unit/
     │   ├── Backlog/                 Pruebas unitarias
@@ -44,8 +44,12 @@ app/backend/
 | `POST /api/team-members` | Teams | Registra un miembro con `{ name, role }` (`role` = nombre del rol del catálogo); 201 `{ id, name, role }`, 400 si el rol no existe o faltan datos (HU-012) |
 | `GET /api/team-members` | Teams | Lista los miembros: `id, name, role` (HU-012) |
 | `GET /api/technical-roles` | Teams | Catálogo de roles técnicos sembrado (`Desarrollo`, `QA`): `id, name` (HU-012) |
+| `POST /api/backlog-items/{itemId}/assignees` | Teams | Asigna un miembro (`{ memberId }`) a un elemento; 201 + `Location` al crear, 200 idempotente si el par ya existía; 400 por campo, 404 miembro/elemento (HU-015) |
+| `GET /api/backlog-items/{itemId}/assignees` | Teams | Personas relacionadas con un elemento: `id, name, role` (HU-015) |
+| `GET /api/team-members/{memberId}/items` | Teams | Elementos relacionados con un miembro: `id, title, type` (HU-015) |
+| `GET /api/backlog-items` | Backlog | Lista de elementos `id, title, type` para el selector de asignación (HU-015) |
 
-Todos exigen JWT. Contrato de Sprints: `specs/003-HU_gestion_sprint_dos_semanas/contracts/sprints-api.openapi.yaml`; asignación de elementos: `specs/004-HU_asignacion_elementos_sprint/contracts/sprint-items-api.openapi.yaml`. Detalle de HU-004: sección 12 de `documents/dev-backend/backend-architecture.md`. Contrato de Teams: `specs/012-HU_miembros_equipo_y_roles_tecnicos/contracts/teams-api.openapi.yaml`; detalle de HU-012: sección 13 del mismo documento.
+Todos exigen JWT. Contrato de Sprints: `specs/003-HU_gestion_sprint_dos_semanas/contracts/sprints-api.openapi.yaml`; asignación de elementos: `specs/004-HU_asignacion_elementos_sprint/contracts/sprint-items-api.openapi.yaml`. Detalle de HU-004: sección 12 de `documents/dev-backend/backend-architecture.md`. Contrato de Teams: `specs/012-HU_miembros_equipo_y_roles_tecnicos/contracts/teams-api.openapi.yaml`; detalle de HU-012: sección 13 del mismo documento. Contrato de HU-015: `specs/015-HU_relacion_personas_roles_elementos/contracts/item-assignments-api.openapi.yaml`; detalle: sección 14 del mismo documento.
 
 `tests/Integration/Identity` no usa simulados: importa los realms de `Realm/*.json` en un Keycloak de Testcontainers, pide tokens reales (password grant) y hospeda el `Program` real. La única relajación de configuración es `Keycloak:ssl-required=none` (el Keycloak del contenedor es HTTP); `verify-token-audience`, `realm` y `resource` quedan como en producción y una prueba de guardia lo comprueba.
 
@@ -77,7 +81,7 @@ dotnet test app/backend/tests/Unit/Teams/Teams.UnitTests.csproj
 dotnet test app/backend/tests/Integration/Teams/Teams.IntegrationTests.csproj
 ```
 
-Migraciones: cada módulo tiene su propia migración Code-First (`Sprints`: `src/Modules/Sprints/Data/Migrations/` → `InitialSprintsSchema` y `AddSprintItems`; `Teams`: `src/Modules/Teams/Data/Migrations/` → `InitialTeamsSchema`, con la semilla del catálogo de roles). Se generan con `dotnet ef migrations add <Nombre> --project src/Modules/<Modulo>/<Modulo>.csproj --startup-project src/Modules/<Modulo>/<Modulo>.csproj --output-dir Data/Migrations` (requiere `dotnet tool install --global dotnet-ef --version 8.0.11`). En despliegue las aplica `scripts/apply-migrations.sh|.ps1` para `Application`, `Backlog` y `Sprints` (`Teams` aún no está incluido; se aplica con `Database__MigrateOnStartup`).
+Migraciones: cada módulo tiene su propia migración Code-First (`Sprints`: `src/Modules/Sprints/Data/Migrations/` → `InitialSprintsSchema` y `AddSprintItems`; `Teams`: `src/Modules/Teams/Data/Migrations/` → `InitialTeamsSchema`, con la semilla del catálogo de roles, y `AddItemAssignments` de HU-015). Se generan con `dotnet ef migrations add <Nombre> --project src/Modules/<Modulo>/<Modulo>.csproj --startup-project src/Modules/<Modulo>/<Modulo>.csproj --output-dir Data/Migrations` (requiere `dotnet tool install --global dotnet-ef --version 8.0.11`). En despliegue las aplica `scripts/apply-migrations.sh|.ps1` para `Application`, `Backlog` y `Sprints` (`Teams` aún no está incluido; se aplica con `Database__MigrateOnStartup`).
 
 Ejecutar la API en desarrollo (usa `appsettings.Development.json`, PostgreSQL en `localhost:5432` y Keycloak en `localhost:8080`):
 

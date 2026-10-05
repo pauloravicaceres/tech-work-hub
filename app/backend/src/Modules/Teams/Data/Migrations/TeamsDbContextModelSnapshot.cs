@@ -23,6 +23,43 @@ namespace Teams.Data.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Teams.Domain.ItemAssignments.ItemAssignment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("ItemId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("MemberId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MemberId")
+                        .HasDatabaseName("IX_ItemAssignments_MemberId");
+
+                    b.HasIndex("ItemId", "MemberId")
+                        .IsUnique()
+                        .HasDatabaseName("UX_ItemAssignments_ItemId_MemberId");
+
+                    b.ToTable("ItemAssignments", "teams");
+                });
+
             modelBuilder.Entity("Teams.Domain.TeamMembers.TeamMember", b =>
                 {
                     b.Property<Guid>("Id")
@@ -86,6 +123,17 @@ namespace Teams.Data.Migrations
                             Id = new Guid("7d2e9c48-3b6a-4f0c-8e15-b4a9d1c63f22"),
                             Name = "QA"
                         });
+                });
+
+            modelBuilder.Entity("Teams.Domain.ItemAssignments.ItemAssignment", b =>
+                {
+                    b.HasOne("Teams.Domain.TeamMembers.TeamMember", "Member")
+                        .WithMany()
+                        .HasForeignKey("MemberId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Member");
                 });
 
             modelBuilder.Entity("Teams.Domain.TeamMembers.TeamMember", b =>

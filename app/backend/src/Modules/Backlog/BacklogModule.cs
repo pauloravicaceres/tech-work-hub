@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Shared.Behaviors;
 using Shared.Data.Interceptors;
 using Sprints.Contracts;
+using Teams.Contracts;
 
 namespace Backlog;
 
@@ -34,6 +35,7 @@ public static class BacklogModule
                 provider.GetRequiredService<DispatchDomainEventsInterceptor>()));
         services.AddScoped<IBacklogDbContext>(provider => provider.GetRequiredService<BacklogDbContext>());
         services.AddScoped<IBacklogModuleApi, BacklogModuleApi>();
+        services.AddScoped<IBacklogItemLookup, BacklogItemLookup>();
 
         return services;
     }

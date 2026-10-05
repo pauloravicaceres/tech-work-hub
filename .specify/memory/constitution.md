@@ -94,10 +94,41 @@ El diseño de interfaces (`ux_*.md`) DEBE calcar la **distribución estructural 
 
 * **🚫 ESTILOS PROHIBIDOS (OMITIR):**
   - Ignorar la paleta de colores corporativos, tipografías específicas, logotipos de marca y overrides de CSS personalizados.
-  - El "look and feel" final recaerá 100% sobre el tema neutral por defecto de PrimeNG. El agente `@UX` debe ensamblar los wireframes usando nombres de componentes estándar (ej. `<p-table>`, `<p-menubar>`, `<p-sidebar>`) sin inventar clases CSS utilitarias.
+  - El "look and feel" final recaerá 100% sobre el tema neutral por defecto de PrimeNG. El agente `@UX` debe ensamblar los wireframes usando nombres de componentes estándar (ej. `<p-table>`, `<p-menubar>`, `<p-drawer>`) sin inventar clases CSS propias (las utilidades de PrimeFlex permitidas están acotadas en el Patrón Obligatorio de Formularios).
 
+
+
+### 🧩 Patrón Obligatorio de Formularios PrimeNG 22 (Form Pattern)
+Aplica a TODO formulario o diálogo con campos en `app/frontend`, sin excepción. Verificado contra `primeng@22.1.2` instalado. Los agentes que implementen frontend (`dev-frontend`, `speckit-implement`) DEBEN seguirlo literalmente; no se reconstruye de memoria.
+
+**Esqueleto canónico (imports: `Fluid` de `primeng/fluid`, `InputTextModule`, `MessageModule`, `ButtonModule`, etc.):**
+```html
+<form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+  <p-fluid class="grid">                              <!-- campos a ancho completo -->
+    <div class="col-12 md:col-6 mb-3">                 <!-- PrimeFlex solo para grid/espaciado -->
+      <label for="name" class="block font-bold mb-2">NOMBRE (*)</label>
+      <input pInputText id="name" formControlName="name" [invalid]="!!fieldErrors().name" />
+      @if (fieldErrors().name; as message) {
+        <p-message severity="error" variant="simple" size="small">{{ message }}</p-message>
+      }
+    </div>
+  </p-fluid>
+  <div class="flex justify-content-end gap-2 mt-3">
+    <p-button label="Cancelar" severity="secondary" [outlined]="true" type="button" />
+    <p-button label="Guardar" type="submit" [loading]="isSubmitting()" />
+  </div>
+</form>
+```
+
+**Reglas:**
+1. Ancho completo con el componente `<p-fluid>` (o el input `fluid` del control). Está prohibido usar `class="p-fluid"` sobre un `div`.
+2. Errores con `<p-message severity="error" variant="simple" size="small">`. Para el estado inválido de `pInputText` y `pTextarea` usar `[invalid]`. `p-select`, `p-datepicker` y `p-inputnumber` no tienen el input `invalid`: heredan el estado de `ng-invalid`/`ng-dirty` del control reactivo.
+3. Controles: `pInputText`, `pTextarea`, `p-select`, `p-datepicker`, `p-inputnumber`, `p-checkbox`, etc. Prohibido `<input>`, `<select>` o `<textarea>` sin su directiva o componente de PrimeNG.
+4. Clases heredadas de PrimeNG ≤15 PROHIBIDAS (ya no existen): `p-error`, `p-fluid` como clase suelta, `p-inputtext-lg/sm`, `p-field`, `p-formgrid`, `p-grid`, `p-col-*`. `<p-sidebar>` es `<p-drawer>`.
+5. PrimeFlex v3 se usa únicamente para grid (`grid`, `col-*`), espaciado (`mb-3`, `gap-2`) y flex, nunca para estilizar controles de formulario. Sin `::ng-deep` ni overrides de CSS en `.scss`.
+6. Verificación automática obligatoria antes del handoff: `npm run lint:primeng` en `app/frontend` (falla ante cualquier patrón prohibido).
 ### 📂 Ubicación Física (Para Exploración)
-* La plantilla base se encuentra en el directorio: `./src/template-base/`. 
+* La plantilla base se encuentra en el directorio: `./app/template-primeng/` (referencia SOLO de estructura/Skeleton; su código usa convenciones antiguas de PrimeNG y NO debe copiarse en sintaxis de formularios).
 * **Directiva para el @SA y @QT:** Utilicen la herramienta `list_dir` sobre esa carpeta para auditar la estructura de carpetas estándar de Angular (ej. `/components`, `/services`, `/guards`) y asegurar que los nuevos `tech_guidelines.md` respeten esa nomenclatura estructural exacta.
 
 ---

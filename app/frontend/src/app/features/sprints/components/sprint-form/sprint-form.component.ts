@@ -11,6 +11,7 @@ import { CardModule } from 'primeng/card';
 import { DatePickerModule } from 'primeng/datepicker';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
+import { Fluid } from 'primeng/fluid';
 import { MessageModule } from 'primeng/message';
 
 import { AuthService } from '../../../../core/auth/auth.service';
@@ -44,7 +45,7 @@ const SERVER_FIELD_MAP: Readonly<Record<string, FormField>> = {
   selector: 'app-sprint-form',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule, CardModule, InputTextModule, DatePickerModule, ButtonModule, MessageModule, DialogModule],
+  imports: [Fluid, ReactiveFormsModule, CardModule, InputTextModule, DatePickerModule, ButtonModule, MessageModule, DialogModule],
   templateUrl: './sprint-form.component.html',
   styleUrls: ['./sprint-form.component.scss'],
 })

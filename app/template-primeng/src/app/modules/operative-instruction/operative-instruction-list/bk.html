@@ -1,0 +1,412 @@
+<!-- <p-panel header="{{'product.product-list.titulo-filtros' | translate}}" [style]="{'margin-bottom': '2em', 'font-size': '15px'}">
+
+  <ng-template pTemplate="icons">
+    <p-menubar [model]="itemsMenu">
+    </p-menubar>
+  </ng-template>
+
+</p-panel> -->
+
+<div class="card" *ngIf="!loadPage">
+    <div style="display: flex; justify-content: space-between;">
+        <h5 style="padding-right: 3em;">
+            {{'modules.operative-instruction.form-list.title' | translate}}
+        </h5>
+        <div style="display: flex;" *ngIf="menuStatic">
+            <p-menubar [model]="itemsMenu" [style]="{'margin-bottom': '0px !important'}">
+            </p-menubar>
+            <!-- <button
+            pButton
+            pRipple
+            type="button"
+            [icon]="iconShowHide"
+            class="p-button-rounded p-button-outlined"
+            [pTooltip]="textShowHide"
+            tooltipPosition="top"
+            (click)="setShowHide(!expression)"
+            [style]="{'color': 'var(--text-color) !important', 'border': '0 none !important', 'height': '2rem', 'width': '2rem', 'margin-top': '0.7rem'}">
+            </button> -->
+        </div>
+    </div>
+    <div style="position: relative;" class="speeddial-linear" *ngIf="!menuStatic">
+        <p-speedDial
+        [model]="itemsMenu"
+        direction="left"
+        showIcon="pi pi-bars"
+        hideIcon="pi pi-times">
+        </p-speedDial>
+    </div>
+    <div class="ed-grid rows-gap s-gap-05 m-gap-2 s-grid-4 m-grid-6 lg-grid-12" [ngClass]="{'hidden': !expression}">
+        <div class="s-cols-4 m-cols-1 lg-cols-4">
+            <app-input-text
+            id="credit_number"
+            label="{{'modules.operative-instruction.form-list.filter-credit-number' | translate}}"
+            [floatLabel]="floatLabel"
+            [(ngModel)]="formValueFilter!.credit_number!">
+            </app-input-text>
+            <!-- <div class="p-fluid">
+                <div class="field">
+                    <label>
+                        {{'modules.operative-instruction.form-list.filter-credit-number' | translate}}
+                    </label>
+                    <input
+                    id="credit_number-input"
+                    type="text"
+                    pInputText
+                    [(ngModel)]="formValueFilter.credit_number"
+                    #credit_number="ngModel">
+                </div>
+            </div> -->
+        </div>
+        <div class="s-cols-4 m-cols-5 lg-cols-8">
+            <app-input-auto-complete
+            id="client"
+            [floatLabel]="floatLabel"
+            label="{{'modules.operative-instruction.form-list.filter-client' | translate}}"
+            field="client_name"
+            [(ngModel)]="formValueFilter!.client!"
+            [suggestions]="filteredClients!"
+            (onBlur)="validClientSelected()"
+            (completeMethod)="filterClients($event)"
+            (ngModelChange)="formValueFilter.client = $event.toUpperCase()">
+            </app-input-auto-complete>
+            <!-- <div class="p-fluid">
+                <div class="field">
+                    <label>
+                        {{'modules.operative-instruction.form-list.filter-client' | translate}}
+                    </label>
+                    <p-autoComplete
+                    [(ngModel)]="formValueFilter.client"
+                    [virtualScroll]="true"
+                    [suggestions]="filteredClients!"
+                    (onBlur)="validClientSelected()"
+                    [virtualScrollItemSize]="30"
+                    (completeMethod)="filterClients($event)"
+                    field="client_name"
+                    (ngModelChange)="formValueFilter.client = $event.toUpperCase()">
+                    </p-autoComplete>
+                </div>
+            </div> -->
+        </div>
+
+        
+        <div class="s-cols-4 m-cols-3 lg-cols-4">
+            <app-input-dropdown
+            id="catergory"
+            [floatLabel]="floatLabel"
+            label="{{'modules.operative-instruction.form-list.filter-catergory' | translate}}"
+            [options]="formListFilter.category!.list"
+            optionLabel="category_name"
+            optionValue="category_id"
+            [showClear]="true"
+            [(ngModel)]="formValueFilter.category"
+            (onChange)="loadProducts($event.value)">
+            </app-input-dropdown>
+            <!-- <div class="p-fluid">
+                <div class="field">
+                    <label>
+                        {{'modules.operative-instruction.form-list.filter-catergory' | translate}}
+                    </label>
+                    <p-dropdown
+                    [options]="formListFilter.category!.list"
+                    optionLabel="category_name"
+                    optionValue="category_id"
+                    [showClear]="true"
+                    [(ngModel)]="formValueFilter.category"
+                    (onChange)="loadProducts($event.value)">
+                    </p-dropdown>
+                </div>
+            </div> -->
+        </div>
+
+        <div class="s-cols-4 m-cols-3 lg-cols-4">
+            <app-input-dropdown
+            id="product"
+            [floatLabel]="floatLabel"
+            label="{{'modules.operative-instruction.form-list.filter-product' | translate}}"
+            [options]="formListFilter.product!.list"
+            optionLabel="product_name"
+            optionValue="product_id"
+            [showClear]="true"
+            [(ngModel)]="formValueFilter.product"
+            (onChange)="loadSubproducts($event.value)"
+            [spinner]="formListFilter.product!.load">
+            </app-input-dropdown>
+
+            <!-- <div class="p-fluid">
+                <div class="field">
+                    <label>
+                        {{'modules.operative-instruction.form-list.filter-product' | translate}}
+                    </label>
+                    <span class="p-input-icon-left">
+                        <p-dropdown
+                        [options]="formListFilter.product!.list"
+                        optionLabel="product_name"
+                        optionValue="product_id"
+                        [showClear]="true"
+                        [(ngModel)]="formValueFilter.product"
+                        (onChange)="loadSubproducts($event.value)">
+                        </p-dropdown>
+                        <i class="pi pi-spin pi-spinner"
+                        *ngIf="formListFilter.product!.load"></i>
+                    </span>
+                </div>
+            </div> -->
+        </div>
+
+        <div class="s-cols-4 m-cols-3 lg-cols-4">
+            <app-input-dropdown
+            id="subproduct"
+            [floatLabel]="floatLabel"
+            label="{{'modules.operative-instruction.form-list.filter-subproduct' | translate}}"
+            [options]="formListFilter.subproduct!.list"
+            optionLabel="subproduct_name"
+            optionValue="subproduct_id"
+            [showClear]="true"
+            [(ngModel)]="formValueFilter.subproduct"
+            [spinner]="formListFilter.subproduct!.load">
+            </app-input-dropdown>
+
+            <!-- <div class="p-fluid">
+                <div class="field">
+                    <label>
+                        {{'modules.operative-instruction.form-list.filter-subproduct' | translate}}
+                    </label>
+                    <span class="p-input-icon-left">
+                        <p-dropdown
+                        [options]="formListFilter.subproduct!.list"
+                        optionLabel="subproduct_name"
+                        optionValue="subproduct_id"
+                        [showClear]="true"
+                        [(ngModel)]="formValueFilter.subproduct">
+                        </p-dropdown>
+                        <i class="pi pi-spin pi-spinner"
+                        *ngIf="formListFilter.subproduct!.load"></i>
+                    </span>
+                </div>
+            </div> -->
+        </div>
+
+        <div class="s-cols-4 m-cols-3 lg-cols-4">
+            <div class="p-fluid">
+                <div class="field">
+                    <label>
+                        {{'modules.operative-instruction.form-list.filter-value-date' | translate}}
+                    </label>
+                    <span class="p-input-icon-right">
+                        <p-calendar 
+                        [(ngModel)]="formValueFilter.value_date" 
+                        selectionMode="range"
+                        dateFormat="dd/mm/yy"
+                        [maxDate]="maxDate!"
+                        inputId="range"
+                        [showClear]="true">
+                        </p-calendar>
+                        <i class="pi pi-calendar"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="s-cols-4 m-cols-2 lg-cols-3">
+            <div class="p-fluid">
+                <div class="field">
+                    <label>
+                        {{'modules.operative-instruction.form-list.filter-register-date-start' | translate}}
+                    </label>
+                    <span class="p-input-icon-right">
+                        <p-calendar
+                        [(ngModel)]="formValueFilter.register_date_start"
+                        (onBlur)="setRegisterDateStart()"
+                        [maxDate]="maxDateRegisterStart!"
+                        dateFormat="dd/mm/yy"
+                        [showClear]="true">
+                        </p-calendar>
+                        <i class="pi pi-calendar"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="s-cols-4 m-cols-2 lg-cols-3">
+            <div class="p-fluid">
+                <div class="field">
+                    <label>
+                        {{'modules.operative-instruction.form-list.filter-register-date-end' | translate}}
+                    </label>
+                    <span class="p-input-icon-right">
+                        <p-calendar
+                        [(ngModel)]="formValueFilter.register_date_end"
+                        (onBlur)="setRegisterDateEnd()"
+                        [minDate]="minDateRegisterEnd!"
+                        [maxDate]="maxDate!"
+                        dateFormat="dd/mm/yy"
+                        [showClear]="true">
+                        </p-calendar>
+                        <i class="pi pi-calendar"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="s-cols-4 m-cols-2 lg-cols-2">
+            <app-input-dropdown
+            id="status"
+            [floatLabel]="floatLabel"
+            label="{{'modules.operative-instruction.form-list.filter-status' | translate}}"
+            [options]="formListFilter.status!.list"
+            optionLabel="parameter_name"
+            optionValue="parameter_code"
+            [showClear]="true"
+            [(ngModel)]="formValueFilter.status">
+            </app-input-dropdown>
+            <!-- <div class="p-fluid">
+                <div class="field">
+                    <label>
+                        {{'modules.operative-instruction.form-list.filter-status' | translate}}
+                    </label>
+                    <span class="p-input-icon-left">
+                        <p-dropdown
+                        [options]="formListFilter.status!.list"
+                        optionLabel="parameter_name"
+                        optionValue="parameter_code"
+                        [showClear]="true"
+                        [(ngModel)]="formValueFilter.status">
+                        </p-dropdown>
+                    </span>
+                </div>
+            </div> -->
+        </div>
+    </div>
+
+    <div class="ed-grid rows-gap s-gap-05 m-gap-2 s-grid-4 m-grid-6 lg-grid-12">
+        <div class="s-cols-4 m-cols-6 lg-cols-12" style="margin-top: 1.5rem;">
+            <div class="field">
+                <app-basic-table
+                [headers]="headerList"
+                [filters]="formValueFilter"
+                (action)="table_actions($event)"
+                #tableOperative>
+                </app-basic-table>
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+
+<app-skeleton *ngIf="loadPage"></app-skeleton>
+
+<p-toast>
+    <ng-template let-message pTemplate="message">
+        <div class="flex flex-column align-items-start" style="flex: 1">
+            <div class="flex align-items-center gap-2">
+                <span class="font-bold text-900" style="font-size: 1.2rem;">
+                    {{ 'message.success' | translate }}
+                </span>
+            </div>
+            <div class="font-medium text-lg my-3 text-900">
+                {{ message.summary }}
+            </div>
+            <div class="font-medium text-lg text-900">
+                {{ message.detail }}
+            </div>
+        </div>
+    </ng-template>
+</p-toast>
+
+
+<!-- 
+<p-dialog
+header="{{ dialogMnto.title }}"
+[(visible)]="dialogMnto.isOpen"
+[modal]="true"
+[style]="dialogMnto.styleContainer"
+(onHide)="closeDialogMnto()"
+[contentStyle]="{'overflow-y': 'hidden', 'overflow-x': 'hidden', 'max-height': '90vh','min-height':'400px','padding-bottom':'0px'}">
+    <p-scrollPanel [style]="{width: '100%', height: '57vh', maxHeight: '500px'}">
+        <app-operative-instruction-detail></app-operative-instruction-detail>
+    </p-scrollPanel>
+    <ng-template pTemplate="footer">
+        <app-dialog-buttons (action)="dialog_actions($event)"></app-dialog-buttons>
+    </ng-template>
+</p-dialog> -->
+
+<p-dialog
+header="{{ detailDialog.title }}"
+[(visible)]="detailDialog.isOpen"
+[modal]="true"
+[style]="detailDialog.styleContainer"
+(onHide)="detailDialogActions('close')"
+[breakpoints]="{ '960px': '90vw' }"
+[draggable]="true"
+[resizable]="false">
+    <app-operative-instruction-detail></app-operative-instruction-detail>
+    <ng-template pTemplate="footer">
+        <p-button
+        label="{{ 'generic.button-cancel' | translate}}"
+        styleClass="p-button-secondary"
+        (onClick)="detailDialogActions('close')"
+        [style]="{'margin-left': '.5em'}"
+        icon="pi pi-times">
+        </p-button>
+
+        <p-button
+        label="{{ 'generic.button-add' | translate}}"
+        (onClick)="detailDialogActions('accept')"
+        *ngIf="isReadOnly"
+        icon="pi pi-check">
+        </p-button>
+
+    </ng-template>
+</p-dialog>
+
+
+<!-- <p-dialog header="{{ dialogConfirm.title }}" [(visible)]="dialogConfirm.isOpen" [position]="dialogConfirm.position!"
+[modal]="true" [draggable]="true" [resizable]="false">
+<p>{{ dialogConfirm.message }}</p>
+<ng-template pTemplate="footer">
+    <p-divider></p-divider>
+    <p-button label="{{ 'generic.button-yes' | translate}}"></p-button>
+
+    <p-button label="{{ 'generic.button-no' | translate}}"
+    styleClass="p-button-secondary"
+    [style]="{'margin-left': '.5em'}"></p-button>
+
+</ng-template>
+</p-dialog> -->
+
+
+        <!-- <div class="s-cols-4 m-cols-3 lg-cols-4">
+            <div class="p-fluid">
+                <div class="field">
+                    <label>{{'modules.operative-instruction.form-list.filter-register-date' | translate}}</label>
+                    <span class="p-input-icon-right">
+                        <p-calendar 
+                        [(ngModel)]="formFilter.register_date!.value" 
+                        selectionMode="range" dateFormat="dd/mm/yy"
+                        [maxDate]="maxDate" [readonlyInput]="true"
+                        inputId="range" [showClear]="true"></p-calendar>
+                        <i class="pi pi-calendar"></i>
+                    </span>
+                </div>
+            </div>
+        </div> -->
+
+
+
+
+
+
+
+
+        
+        <!-- 
+            <app-input-calendar
+            id="register_date_end"
+            [floatLabel]="floatLabel"
+            label="{{'modules.operative-instruction.form-list.filter-register-date-end' | translate}}"
+            (onBlur)="setRegisterDateEnd()"
+            [(ngModel)]="formValueFilter.register_date_end"
+            [showClear]="true">
+            </app-input-calendar>  -->

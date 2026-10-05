@@ -1,0 +1,56 @@
+<div class="layout-topbar">
+    <a class="layout-topbar-logo" routerLink="">
+        <img src="assets/img/{{layoutService.config.colorScheme === 'light' ? 'interbank-logo' : 'logo-dark'}}.svg" alt="logo">
+    </a>
+
+    <button #menubutton class="p-link layout-menu-button layout-topbar-button" (click)="layoutService.onMenuToggle()">
+        <i class="pi pi-bars"></i>
+    </button>
+
+    <button #topbarmenubutton class="p-link layout-topbar-menu-button layout-topbar-button"
+    (click)="layoutService.showProfileSidebar()">
+        <i class="pi pi-ellipsis-v"></i>
+    </button>
+    <h3 style="padding-bottom: 0.8rem;">{{ application_name }}</h3>
+    <div #topbarmenu class="layout-topbar-menu" [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
+        <div style="display: flex;">
+            <button
+            class="p-link layout-topbar-button"
+            *ngIf="user.avatar == null"
+            (click)="onConfigButtonClick()"
+            tooltipPosition="bottom"
+            [pTooltip]="profile_label">
+                <i class="pi pi-user"></i>
+                <span>{{ profile_label }}</span>
+            </button>
+            <p-avatar
+            *ngIf="user.avatar != null"
+            image="data:image/png;base64,{{user.avatar}}"
+            [style]="{'width': '50px', 'height': '50px'}"
+            shape="circle"
+            tooltipPosition="bottom"
+            pTooltip="Perfil"
+            (click)="onConfigButtonClick()">
+            </p-avatar>
+            <div style="padding-left: 15px;">
+                <div>
+                    <span style="font-weight: 600;">
+                        {{ user.person_name }}
+                    </span>
+                </div>
+                <div>
+                    <span>
+                        {{ user.profile_name }}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <button class="p-link layout-topbar-button"
+        (click)="logout()"
+        tooltipPosition="bottom"
+        [pTooltip]="go_out_label">
+            <i class="pi pi-sign-in"></i>
+            <span>{{ go_out_label }}</span>
+        </button>
+    </div>
+</div>

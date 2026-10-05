@@ -1,0 +1,29 @@
+<!-- <p-confirmDialog
+    id="dialog"
+    [message]="confirmDialog.message" 
+    [header]="confirmDialog.header" 
+    [icon]="confirmDialog.icon"
+></p-confirmDialog> -->
+
+<!--   -->
+<p-confirmDialog #cd [style]="confirmDialog.style" [icon]="confirmDialog.icon">
+    <ng-template pTemplate="header">
+        <span style="font-size: 1.3rem; font-weight: 500;">
+            {{ confirmDialog.header }}
+        </span>
+    </ng-template>
+    <ng-template pTemplate="message">
+        <div>
+            <p style="padding: 0 10px;">{{ confirmDialog.message }}</p>
+            <p style="padding: 0 10px;" *ngIf="confirmDialog.register != '' && confirmDialog.register != null">{{ confirmDialog.register }}</p>
+        </div>
+        <!-- <span style="padding: 0 10px;">{{ confirmDialog.message }}</span>
+        <span style="padding: 0 10px;" *ngIf="confirmDialog.register != ''">{{ confirmDialog.register }}</span> -->
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <button type="button" pButton icon="pi pi-times" class="p-button-secondary"
+        label="{{ 'generic.button-no' | translate }}" (click)="cd.reject()"></button>
+        <button type="button" pButton icon="pi pi-check" class="p-button-primary"
+        label="{{ 'generic.button-yes' | translate }}" (click)="cd.accept()"></button>
+    </ng-template>
+</p-confirmDialog>

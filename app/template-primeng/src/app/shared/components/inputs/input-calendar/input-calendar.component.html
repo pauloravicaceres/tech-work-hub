@@ -1,0 +1,37 @@
+
+<div class="p-fluid">
+    <div class="field" *ngIf="!floatLabel">
+        <label>
+            {{ label }}
+        </label>
+        <span class="p-input-icon-right">
+            <p-calendar
+            [inputId]="id"
+            [(ngModel)]="ngModel"
+            (onBlur)="onBlur.emit($event);"
+            dateFormat="dd/mm/yy"
+            [showClear]="showClear"
+            (ngModelChange)="ngModelChange.emit($event)">
+            </p-calendar>
+            <i class="pi pi-calendar"></i>
+        </span>
+    </div>
+    <!-- <div class="field field-float-label-container" *ngIf="floatLabel">
+        <span class="p-input-icon-right">
+            <span class="p-float-label">
+                <p-calendar
+                [id]="id"
+                [(ngModel)]="ngModel"
+                (onBlur)="onBlur.emit($event);"
+                dateFormat="dd/mm/yy"
+                [showClear]="showClear">
+                </p-calendar>
+                <label
+                [for]="id">
+                    {{ label }}
+                </label>
+            </span>
+            <i class="pi pi-calendar"></i>
+        </span>
+    </div> -->
+</div>

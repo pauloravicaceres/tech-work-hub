@@ -1,0 +1,106 @@
+<button class="layout-config-button p-link" type="button" (click)="onConfigButtonClick()">
+    <i class="pi pi-cog"></i>
+</button>
+
+<p-sidebar [(visible)]="visible" position="right" [transitionOptions]="'.3s cubic-bezier(0, 0, 0.2, 1)'" styleClass="layout-config-sidebar w-20rem">
+    
+    <!-- <h4 style="font-weight: 700;" [style]="{'color': '#1E1E1F'}">{{'components.config.title' | translate}}</h4> -->
+    
+    <!-- <p-divider></p-divider> -->
+    
+    <ng-container *ngIf="!minimal">
+        <h5>{{ 'components.config.scale' | translate }}</h5>
+        <div class="flex align-items-center">
+            <button icon="pi pi-minus" type="button" pButton (click)="decrementScale()" class="p-button-text p-button-rounded w-2rem h-2rem mr-2" [disabled]="scale === scales[0]"></button>
+            <div class="flex gap-2 align-items-center">
+                <i class="pi pi-circle-fill text-300" *ngFor="let s of scales" [ngClass]="{'text-primary-500': s === scale}"></i>
+            </div>
+            <button icon="pi pi-plus"  type="button" pButton (click)="incrementScale()" class="p-button-text p-button-rounded w-2rem h-2rem ml-2" [disabled]="scale === scales[scales.length - 1]"></button>
+        </div>
+    </ng-container>
+
+    <p-divider></p-divider>
+
+    <!-- <ng-container *ngIf="!minimal">
+        <h5>{{ 'components.config.menu-type.title' | translate }}</h5>
+        <div class="field-radiobutton">
+            <p-radioButton name="menuMode" value="static" [(ngModel)]="menuMode" inputId="mode1"></p-radioButton>
+            <label for="mode1">{{ 'components.config.menu-type.static' | translate }}</label>
+        </div>
+        <div class="field-radiobutton">
+            <p-radioButton name="menuMode" value="overlay" [(ngModel)]="menuMode" inputId="mode2"></p-radioButton>
+            <label for="mode2">{{ 'components.config.menu-type.overlay' | translate }}</label>
+        </div>
+    </ng-container> -->
+    <ng-container *ngIf="!minimal">
+        <h5>{{ 'components.config.menu-type.title' | translate }}</h5>
+        <div class="flex">
+            <div class="field-radiobutton flex-1">
+                <p-radioButton name="menuMode" value="static" [(ngModel)]="menuMode" inputId="mode1"></p-radioButton>
+                <label for="mode1">{{ 'components.config.menu-type.static' | translate }}</label>
+            </div>
+            <div class="field-radiobutton flex-1">
+                <p-radioButton name="menuMode" value="overlay" [(ngModel)]="menuMode" inputId="mode2"></p-radioButton>
+                <label for="mode2">{{ 'components.config.menu-type.overlay' | translate }}</label>
+            </div>
+        </div>
+    </ng-container>
+
+    <p-divider></p-divider>
+    
+    <ng-container *ngIf="!minimal">
+        <h5>{{ 'components.config.input-style.title' | translate }}</h5>
+        <div class="flex">
+            <div class="field-radiobutton flex-1">
+                <p-radioButton name="inputStyle" value="outlined" [(ngModel)]="inputStyle" inputId="outlined_input"></p-radioButton>
+                <label for="outlined_input">{{ 'components.config.input-style.outlined' | translate }}</label>
+            </div>
+            <div class="field-radiobutton flex-1">
+                <p-radioButton name="inputStyle" value="filled" [(ngModel)]="inputStyle" inputId="filled_input"></p-radioButton>
+                <label for="filled_input">{{ 'components.config.input-style.filled' | translate }}</label>
+            </div>
+        </div>
+    </ng-container>
+
+    <p-divider></p-divider>
+
+    <ng-container *ngIf="!minimal">
+        <h5>{{ 'components.config.automatic-search' | translate }}</h5>
+        <p-inputSwitch [(ngModel)]="automaticSearch"></p-inputSwitch>
+    </ng-container>
+
+    <p-divider></p-divider>
+
+    <ng-container *ngIf="!minimal">
+        <h5>{{ 'components.config.menu-static' | translate }}</h5>
+        <p-inputSwitch [(ngModel)]="menuStatic"></p-inputSwitch>
+    </ng-container>
+
+    <p-divider></p-divider>
+
+    <ng-container *ngIf="!minimal">
+        <h5>{{ 'components.config.float-label' | translate }}</h5>
+        <p-inputSwitch [(ngModel)]="floatLabel"></p-inputSwitch>
+    </ng-container>
+
+    <p-divider></p-divider>
+
+    <ng-container *ngIf="!minimal">
+        <h5>{{ 'components.config.language' | translate }}</h5>
+        
+        <div class="p-fluid">
+            <div class="field">
+                <!-- <span class="p-buttonset">
+                    <button pButton pRipple label="Spanish (PE)"></button>
+                    <button pButton pRipple label="English (US)"></button>
+                </span> -->
+                <p-dropdown
+                [options]="locales"
+                optionLabel="label"
+                optionValue="value"
+                [(ngModel)]="locale"
+                (onChange)="updateLocale($event.value)"></p-dropdown>
+            </div>
+        </div>
+    </ng-container>
+</p-sidebar>

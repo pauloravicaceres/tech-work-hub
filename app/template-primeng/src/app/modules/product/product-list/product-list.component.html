@@ -1,0 +1,72 @@
+<!-- <p-panel header="{{'product.product-list.titulo-filtros' | translate}}" [style]="{'margin-bottom': '2em', 'font-size': '15px'}">
+
+  <ng-template pTemplate="icons">
+    <p-menubar [model]="items">
+    </p-menubar>
+  </ng-template>
+
+</p-panel> -->
+
+<div class="card" *ngIf="!loadPage">
+    <h5>{{'modules.product.product-list.title-filters' | translate}}</h5>
+    <div style="position: relative;" class="speeddial-linear">
+        <p-speedDial [model]="items" direction="left"></p-speedDial>
+    </div>
+
+
+
+    
+    <div class="ed-grid rows-gap s-gap-05 m-gap-1 m-gap-3 s-grid-4 m-grid-6 lg-grid-15">
+        <div class="s-cols-4 m-cols-3 lg-cols-3">
+            <div class="p-fluid">
+                <div class="field">
+                    <label htmlFor="email2">Name</label>
+                    <input pInputText id="email2" type="text" />
+                </div>
+            </div>
+        </div>
+        <div class="s-cols-4 m-cols-3 lg-cols-3">
+            <div class="p-fluid">
+                <div class="field">
+                    <label htmlFor="email2">Email</label>
+                    <input pInputText id="email2" type="text" />
+                </div>
+            </div>
+        </div>
+        <div class="s-cols-4 m-cols-3 lg-cols-3">
+            <div class="p-fluid">
+                <div class="field">
+                    <label htmlFor="email2">Code</label>
+                    <input pInputText id="email2" type="text" />
+                </div>
+            </div>
+        </div>
+    
+        <div class="s-cols-4 m-cols-3 lg-cols-3">
+            <div class="p-fluid">
+                <div class="field">
+                    <label htmlFor="email2">Profile</label>
+                    <input pInputText id="email2" type="text" />
+                </div>
+            </div>
+        </div>
+    
+        <div class="s-cols-4 m-cols-3 lg-cols-3">
+            <div class="p-fluid">
+                <div class="field">
+                    <label htmlFor="email2">Status</label>
+                    <input pInputText id="email2" type="text" />
+                </div>
+            </div>
+        </div>
+    
+    </div>
+
+
+</div>
+
+  <app-skeleton *ngIf="loadPage"></app-skeleton>
+
+<!-- <p-toast></p-toast>
+<p-toast position="top-left" key="tl"></p-toast> -->
+

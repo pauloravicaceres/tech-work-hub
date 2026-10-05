@@ -1,0 +1,110 @@
+<!-- [sortField]="this.tableProperties.sortField" -->
+<p-table #basicTable
+[columns]="headers"
+[value]="records.list_records"
+[lazy]="true"
+(onLazyLoad)="loadData($event)"
+dataKey="client_code"
+[selection]="dataSelected" 
+(selectionChange)="onSelectionChange($event)"
+[selectAll]="this.tableProperties.selectAll"
+(selectAllChange)="onSelectAllChange($event)"
+[paginator]="true"
+responsiveLayout="scroll"
+[rows]="this.tableProperties.rows"
+[totalRecords]="this.tableProperties.totalRecords"
+[loading]="this.tableProperties.loading"
+[rowsPerPageOptions]="this.tableProperties.rowsPerPageOptions"
+currentPageReportTemplate="{first} al {last} de {totalRecords} registros"
+selectionMode="single"
+(onPage)="paginate($event)">
+    <ng-template pTemplate="header">
+        <tr>
+            <!-- [style]="header.style"  pSortableColumn="{{ header.codigo }}" -->
+            <th
+            id="header"
+            pFrozenColumn
+            [style]="header.style"
+            *ngFor="let header of headers"
+            [frozen]="header?.isFrozenColumn && screenWidth! > 1023"
+            alignFrozen="header?.alignFrozenColumn && screenWidth! > 1023"
+            [ngClass]="{
+                'p-frozen-column-left': header?.alignFrozenColumn == 'left' && screenWidth! > 1023,
+                'p-frozen-column-right': header?.alignFrozenColumn == 'right'
+            }">
+                <p-tableHeaderCheckbox *ngIf="header.type_control == 'check'"></p-tableHeaderCheckbox>
+                {{ header.description }} <p-sortIcon *ngIf="header.sort" field="{{ header.codigo }}"></p-sortIcon>
+            </th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+        <tr>
+            <!-- [ngStyle]="{'text-align': col.type_control == 'actions' || col.codigo==='cantidad_poliza' || col.codigo==='monto_total' ? 'center' : '' }" -->
+            <td
+            pFrozenColumn
+            [style]="col.style"
+            *ngFor="let col of columns; let i = index"
+            [frozen]="col?.isFrozenColumn && screenWidth! > 1023"
+            [ngClass]="{
+                'p-frozen-column-left': col?.alignFrozenColumn == 'left' && screenWidth! > 1023,
+                'p-frozen-column-right': col?.alignFrozenColumn == 'right'
+            }">
+
+                <p-tableCheckbox *ngIf="col.type_control == 'check' && rowData['state_name'] == 'PENDIENTE'" [value]="rowData"></p-tableCheckbox>
+
+                <span *ngIf="col.type_control == 'span'">{{ rowData[col.codigo]  }}</span>
+
+                <!-- <span [class]="'status-badge status-' + rowData[col.codigo].toLowerCase()">{{ rowData[col.codigo]  }}</span> -->
+                <p-tag *ngIf="col.type_control == 'tag'" [value]="rowData[col.codigo]" [severity]="getSeverity(rowData[col.codigo])!"></p-tag>
+            
+
+                <p-button *ngIf="col.type_control == 'link' && rowData['nombre_estado_producto'] != 'Borrador' && col.action != 'evento'" label="{{col.codigo}}" styleClass="p-button-link"
+                (onClick)="action.emit({ type: col.action, id: rowData['id'] })"></p-button>
+
+                <p-button *ngIf="col.type_control == 'link' && col.action == 'evento'" label="{{rowData[col.codigo]}}" styleClass="p-button-link"
+                (onClick)="action.emit({ type: col.action, id: rowData['id'] })"></p-button>
+
+                <button *ngIf="col.type_control == 'button' && rowData['numero_documento'] == null" pButton type="button" icon="pi pi-search"
+                (click)="action.emit({ type: col.action, row: rowData })" class="p-button-rounded p-button-text"
+                style="width: 2rem; height: 2rem; margin-left: 2rem;" [pTooltip]="col.action" tooltipPosition="top"></button>
+
+                <button *ngIf="col.type_control == 'button' && rowData['numero_documento'] != null && rowData['numero_documento'] > 0" pButton type="button" icon="pi pi-search"
+                (click)="action.emit({ type: col.action, row: rowData })" class="p-button-rounded p-button-text"
+                style="width: 2rem; height: 2rem; margin-left: 2rem;" [pTooltip]="col.action" tooltipPosition="top"></button>
+
+
+                <div class="grid-flex" *ngIf="col.type_control == 'actions'">
+
+                    <button pButton type="button" icon="pi pi-pencil"
+                    (click)="action.emit({ type: 'edit', row: rowData })"
+                    class="p-button-rounded p-button-text p-button-edit"
+                    [pTooltip]="edit_label"
+                    tooltipPosition="top"
+                    *ngIf="rowData['state_name'] == 'PENDIENTE'"></button>
+
+                    <button pButton type="button" icon="pi pi-eye"
+                    (click)="action.emit({ type: 'show', row: rowData })"
+                    class="p-button-rounded p-button-text p-button-show"
+                    style="width: 2rem; height: 2rem;"
+                    [pTooltip]="show_label"
+                    tooltipPosition="top"
+                    *ngIf="rowData['state_name'] == 'APROBADO'"></button>
+
+                    <button pButton type="button" icon="pi pi-trash"
+                    (click)="action.emit({ type: 'delete', row: rowData })"
+                    class="p-button-rounded p-button-text p-button-delete"
+                    [pTooltip]="delete_label"
+                    tooltipPosition="top"
+                    *ngIf="rowData['state_name'] == 'PENDIENTE'"></button>
+<!-- 
+                    <button pButton type="button" icon="pi pi-download" (click)="action.emit({ type: 'descargar', row: rowData })" class="p-button-rounded p-button-text"
+                    style="width: 2rem; height: 2rem;" pTooltip="Descargar" tooltipPosition="top" *ngIf="rowData['state_name'] !== 'ELIMINADO'"></button> -->
+
+                </div>
+
+            </td>
+        </tr>
+    </ng-template>
+
+</p-table>
+
