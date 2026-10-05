@@ -1276,3 +1276,256 @@ You can reply with the option letter (e.g., "A"), accept the recommendation by s
 - **Estado:** APPROVE
 - **Handoff:** @WATCHER: GITOPS-BRANCH-CREATE feat/035-HU_refactorizacion_esqueleto_ui
 @BA: Ejecuta la directiva de negocio de la deuda técnica 035-HU_refactorizacion_esqueleto_ui descrita en app/skeleton.md (léela completa y cumple sus tareas: fila 035 en specs/README.md y el FSaaDB documents/business-analyst/035-HU_refactorizacion_esqueleto_ui.md con el contenido exacto del bloque markdown). Esta HU va antes de las pantallas pendientes del plan MVP, y el handoff previo al PM queda en espera hasta que la 035 cierre.
+
+### [05-10-2026] Business Analyst
+- **Hora:** 08:31:00
+- **Artefacto generado:** `documents/business-analyst/035-HU_refactorizacion_esqueleto_ui.md`
+- **Estado:** Fila 035 agregada al Ledger (`specs/README.md`, estado BACKLOG, rama feat/035-HU_refactorizacion_esqueleto_ui). HU de deuda técnica creada con el contenido exacto del bloque de `app/skeleton.md` (10 CA, CA-01 a CA-10). Contenido entregado por la directiva de negocio, sin añadidos del agente; sin HU de stakeholders (la directiva no la pidió).
+- **⚠️ Puntos Abiertos:** Ninguno. El handoff previo al product-manager (épicas pendientes del plan MVP) sigue en espera hasta que la 035 cierre.
+- **Handoff:** @QA: La Historia de Usuario de deuda técnica Refactorización de Esqueleto UI (PrimeNG 22) está lista en el archivo 035-HU_refactorizacion_esqueleto_ui.md. Por favor, procede con la auditoría documental contra la directiva app/skeleton.md para asegurar que la historia cumple con los requerimientos originales.
+
+### [05-10-2026] QA Documental
+- **Hora:** 08:40:00
+- **Artefacto generado:** `documents/qa-documental/feedback_qa_035_refactorizacion_esqueleto_ui.md`
+- **Estado:** Auditoría contra app/skeleton.md y la Constitución (modo Brownfield) completada. Dictamen RECHAZADO: 9 hallazgos (4 bloqueantes: CA sin sintaxis Gherkin, sin Sad Paths, sin DoD con ítem de no-regresión, HU no atómica; 5 mayores: sin narrativa Como/Quiero/Para, criterios no testeables, incoherencia 3-4 campos por fila en CA-04, polución técnica, falta campo Requiere interfaz). Trazabilidad contra la directiva conforme.
+- **⚠️ Puntos Abiertos:** El contenido de la HU es copia exacta del bloque de la directiva app/skeleton.md, por lo que varios hallazgos nacen en la propia directiva. Si la subsanación exige apartarse de ese contenido exacto, el business-analyst debe registrarlo y coordinar con el humano.
+- **Handoff:** @BA: La HU 035-HU_refactorizacion_esqueleto_ui.md fue RECHAZADA por QA. Revisa y subsana los hallazgos H-01 a H-09 del reporte documents/qa-documental/feedback_qa_035_refactorizacion_esqueleto_ui.md y vuelve a delegar la auditoría a QA.
+
+### [05-10-2026] Business Analyst
+- **Hora:** 08:50:00
+- **Artefacto generado:** `documents/business-analyst/035-HU_refactorizacion_esqueleto_ui.md`
+- **Estado:** Subsanados H-01 a H-09 del reporte de QA: CA reescritos en Dado/Cuando/Entonces, sad paths y edge cases agregados con matriz de casos borde, narrativa Como/Quiero/Para, campo Requiere interfaz: Sí, Definition of Done con ítem de no-regresión Brownfield, términos ambiguos reemplazados por resultados medibles, regla 3 vs 4 campos por fila aclarada, detalle técnico movido a la sección 7 de restricciones trazables con verificación. H-04 (partición de la HU) NO ejecutada: se registró como propuesta pendiente de aprobación.
+- **⚠️ Puntos Abiertos:** (1) H-04: partición de la HU en unidades atómicas pendiente de aprobación del product-manager o del humano. (2) Umbral de texto de ayuda (12 px propuesto), breakpoints 3/4 campos por fila y comportamiento ante ruta inexistente, no documentados en la directiva. (3) Componente de navegación lateral equivalente a fijar en Arquitectura.
+- **Handoff:** @QA: La Historia de Usuario de deuda técnica Refactorización de Esqueleto UI (PrimeNG 22) fue subsanada y está lista en el archivo 035-HU_refactorizacion_esqueleto_ui.md. Por favor, procede con la nueva auditoría documental contra la directiva app/skeleton.md y el reporte feedback_qa_035_refactorizacion_esqueleto_ui.md para confirmar que los hallazgos H-01 a H-09 quedaron resueltos.
+
+### [05-10-2026] QA Documental
+- **Hora:** 08:55:00
+- **Artefacto generado:** `documents/qa-documental/feedback_qa_035_refactorizacion_esqueleto_ui.md`
+- **Estado:** Segunda auditoría completada. Dictamen RECHAZADO. Resueltos H-01, H-02, H-03, H-05, H-08, H-09; parciales H-06 y H-07; NO resuelto H-04 (atomicidad: la partición sigue solo propuesta). Hallazgos vigentes: H-04 (bloqueante), H-10 (RT-03 contradice la regla 3/4 campos de CA-04) y H-11 (ancho máximo y espaciado sin valor verificable).
+- **⚠️ Puntos Abiertos:** H-04 exige una decisión que no corresponde al business-analyst ni al QA: partición de la HU o excepción formal aprobada.
+- **Handoff:** @HUMANO: Decide cómo cerrar H-04 para que el business-analyst pueda subsanar y volver a QA; responde con el número de opción.
+  1. Aprobar la partición propuesta en la sección 8 de la HU (layout, estructura de página, tipografía global, formularios por grupo de pantallas, verificación) y que el product-manager registre las nuevas filas en el Ledger.
+  2. Mantener la HU 035 como única y registrar una excepción formal de atomicidad aprobada por ti.
+  3. Otra decisión (indícala).
+  
+### [05-10-2026] HUMANO
+- **Hora:** 08:45:00
+- **Estado:** APPROVE
+- **Feedback:** 1
+- **Handoff:** @BA: Decisión humana sobre H-04: opción 1, aprobada la partición de la sección 8. La primera HU (035) debe ser layout de aplicación + tipografía global; el resto se entrega después como HUs separadas. Subsana también H-10 (RT-03 vs. regla de 3 a 4 campos de CA-04) y H-11 (valores concretos de ancho máximo y espaciado), actualiza la HU y vuelve a delegar la auditoría a QA. El product-manager registrará las filas nuevas en el Ledger cuando la HU pase QA.
+### [05-10-2026] Business Analyst
+- **Hora:** 09:15:00
+- **Artefacto generado:** `documents/business-analyst/035-HU_refactorizacion_esqueleto_ui.md`
+- **Estado:** Subsanados H-04, H-10 y H-11. H-04: la HU 035 se acotó a layout de aplicación + tipografía global (CA-01, CA-01.1 a CA-01.3, CA-06, CA-06.1, CA-10, CA-10.1) según la decisión humana; el resto del alcance quedó descrito como cuatro HUs derivadas en la sección 8, sin crear filas en el Ledger. H-10: la regla de 1/2/3/4 campos por fila y las clases de grilla quedaron en una sola definición coherente (sección 8). H-11: ancho máximo 1280 px y espaciado 1.5 rem definidos en CA-01.3 y RT-02; criterio de espaciado de formularios definido en la HU derivada.
+- **⚠️ Puntos Abiertos:** (1) Ancho máximo 1280 px y espaciado 1.5 rem son propuesta del BA, no vienen de la directiva. (2) Comportamiento ante ruta inexistente no documentado. (3) Componente de navegación lateral equivalente a fijar en Arquitectura. (4) Breakpoints 1024/1280 px de la grilla a confirmar antes de especificar su HU derivada. (5) El product-manager debe registrar las filas de las HUs derivadas cuando la 035 pase QA.
+- **Handoff:** @QA: La Historia de Usuario de deuda técnica Refactorización de Esqueleto UI (layout de aplicación y tipografía global) fue particionada por decisión humana y subsanada en los hallazgos H-04, H-10 y H-11, y está lista en el archivo 035-HU_refactorizacion_esqueleto_ui.md. Por favor, procede con la nueva auditoría documental contra la directiva app/skeleton.md y el reporte feedback_qa_035_refactorizacion_esqueleto_ui.md.
+
+### [05-10-2026] QA Documental
+- **Hora:** 08:47:38
+- **Artefacto generado:** `documents/qa-documental/feedback_qa_035_refactorizacion_esqueleto_ui.md`
+- **Estado:** Tercera auditoría completada. Dictamen RECHAZADO por un único hallazgo mayor. Resueltos H-04 (partición aprobada por el humano, verificada en el tracker), H-10 y H-11. Nuevo H-12: el requisito de la directiva de una captura por cada pantalla (1920 y 768 px) quedó sin dueño tras la partición; 035 lo reduce a una pantalla por módulo y ninguna HU derivada de la sección 8 lo absorbe.
+- **⚠️ Puntos Abiertos:** Observación no bloqueante: la fila 035 del Ledger aún describe estructura de páginas y formularios, que ya no es el alcance de la HU; el product-manager debe actualizarla al registrar las HU derivadas.
+- **Handoff:** @BA: La HU 035-HU_refactorizacion_esqueleto_ui.md fue RECHAZADA por QA con un solo hallazgo vigente. Subsana H-12 según documents/qa-documental/feedback_qa_035_refactorizacion_esqueleto_ui.md y vuelve a delegar la auditoría a QA.
+
+### [05-10-2026] Business Analyst
+- **Hora:** 09:40:00
+- **Artefacto generado:** `documents/business-analyst/035-HU_refactorizacion_esqueleto_ui.md`
+- **Estado:** Subsanado H-12. La captura por cada pantalla del alcance (8 pantallas a 1920 px y 768 px) quedó asignada a una nueva HU derivada de verificación visual en la sección 8, con criterio Pasa/Falla y dependencia de las demás derivadas. La reducción a una captura por módulo en la 035 quedó registrada en la sección 2 y como punto abierto 6. El resto de la HU no se tocó.
+- **⚠️ Puntos Abiertos:** (1) La reducción de la captura a una por módulo en la 035 es consecuencia de la partición aprobada; confirmar que es aceptable. (2) Las HUs derivadas pasan a ser cinco; el product-manager debe registrarlas en el Ledger y actualizar la columna Qué aporta de la fila 035 (layout de aplicación y tipografía global). (3) Siguen vigentes: valores 1280 px y 1.5 rem propuestos, ruta inexistente no documentada, componente de navegación lateral equivalente y breakpoints de la grilla.
+- **Handoff:** @QA: La Historia de Usuario de deuda técnica Refactorización de Esqueleto UI (layout de aplicación y tipografía global) fue subsanada en el hallazgo H-12 y está lista en el archivo 035-HU_refactorizacion_esqueleto_ui.md. Por favor, procede con la nueva auditoría documental contra la directiva app/skeleton.md y el reporte feedback_qa_035_refactorizacion_esqueleto_ui.md.
+
+### [05-10-2026] QA Documental
+- **Hora:** 08:48:43
+- **Artefacto generado:** `documents/qa-documental/aprobado_qa_035_refactorizacion_esqueleto_ui.md`
+- **Estado:** Cuarta auditoría completada. Dictamen APROBADO. Resuelto H-12 (la captura por cada pantalla tiene dueño en una HU derivada de verificación visual; la reducción a una por módulo en 035 quedó registrada). Las 5 dimensiones cumplen y el DoD incluye el ítem de no-regresión Brownfield. La HU declara Requiere interfaz: Sí.
+- **⚠️ Puntos Abiertos:** (1) Ancho máximo 1280 px y espaciado 1.5 rem son propuesta del BA; confirmar con el humano. (2) Comportamiento ante ruta inexistente no documentado. (3) Componente de navegación lateral equivalente a fijar en Arquitectura. (4) El product-manager debe registrar las cinco HU derivadas en el Ledger y actualizar la columna Qué aporta de la fila 035.
+- **Handoff:** @UX: La Historia de Usuario 035-HU_refactorizacion_esqueleto_ui.md ha sido aprobada por QA. Por favor, procede a diseñar los wireframes y estados visuales.
+
+### [05-10-2026] WATCHER
+- **Hora:** 08:48:45
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Ejecutando análisis funcional (/speckit.specify)...
+
+### [05-10-2026] WATCHER
+- **Hora:** 08:49:54
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Verificando ambigüedades (/speckit.clarify)...
+
+### [05-10-2026] WATCHER
+- **Hora:** 08:50:13
+- **Mensaje:** ⚠️ [HITL] Ambigüedad detectada por Spec Kit.
+- **Handoff:** @HUMANO: El motor de análisis funcional encontró ambigüedades o vacíos en la Historia de Usuario. Por favor, revisa la matriz y responde la pregunta a continuación para que la IA pueda cerrar el análisis.
+
+**Pregunta 1 de hasta 5**
+
+**Question:** ¿Qué estado inicial debe tener la navegación lateral al cargar una pantalla, y debe recordar la elección del usuario entre pantallas y recargas?
+
+**Why it matters:** Define si el esqueleto se prueba siempre expandido, colapsado en 768 px o con memoria de preferencia. Sin esto, las pruebas de colapso y las 6 capturas de cierre no son reproducibles. (FR-003, FR-006)
+
+**Recommended:** Option B. Es el comportamiento más predecible: la navegación arranca expandida en pantallas anchas y colapsada en 768 px, y el usuario puede cambiarla durante la sesión. No añade persistencia ni estado nuevo, y la historia no cambia ningún dato.
+
+| Option | Description |
+|--------|-------------|
+| A | Siempre expandida al cargar, sin memoria; el colapso solo vale mientras no se recargue. |
+| B | Expandida en anchos amplios y colapsada automáticamente a 768 px; el cambio manual vale durante la sesión y no se guarda tras recargar. |
+| C | Igual que B, pero la elección manual se guarda entre recargas (almacenamiento local del navegador). |
+| Short | Provide a different short answer (<=5 words) |
+
+You can reply with the option letter (e.g., "A"), accept the recommendation by saying "yes" or "recommended", or provide your own short answer.
+
+
+### [05-10-2026] HUMANO
+- **Hora:** 08:52:52
+- **Estado:** APPROVE
+- **Feedback:** B
+
+
+### [05-10-2026] WATCHER
+- **Hora:** 08:52:54
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Inyectando respuesta humana a Spec Kit: B
+
+### [05-10-2026] WATCHER
+- **Hora:** 08:53:15
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Resolución aplicada exitosamente.
+- **Handoff:** @UX: La ambigüedad ha sido resuelta por el Humano y la especificación SDD ha concluido con éxito. Procede con tu diseño.
+
+
+### [05-10-2026] Diseñador UX
+- **Hora:** 08:57:10
+- **Artefacto generado:** `documents/designer-ux/ux_035_refactorizacion_esqueleto_ui.md`
+- **Estado:** Diseño UX completado y verificado en disco: 9 estados visuales con wireframes ASCII (esqueleto de cuatro zonas, navegación activa, ruta inexistente, 768 px colapsada y abierta, colapso manual, medidas a 1920 px, tipografía, diálogo sobre el esqueleto) mapeados 1 a 1 con spec.md; resolución humana Opción B incorporada; sin superficie visual en US4-A2, US5-A1 y US5-A2 (verificaciones de código y proceso).
+- **⚠️ Puntos Abiertos:** Ninguno bloqueante; informativos: página de ruta inexistente no documentada (heurística D-05), contenido del menú de perfil, destino de la entrada Backlog (solo existe /backlog/nuevo), ruta de entrada de Equipo y componente de navegación lateral a decidir en arquitectura.
+- **Handoff:** @SA: El diseño visual de la HU [035-HU_refactorizacion_esqueleto_ui] ha concluido exitosamente en [documents/designer-ux/ux_035_refactorizacion_esqueleto_ui.md]. Procede con el tech-design y arquitectura.
+
+
+### [05-10-2026] Designer UX
+- **Hora:** 09:01:30
+- **Artefacto generado:** `documents/designer-ux/ux_035_refactorizacion_esqueleto_ui.md`
+- **Estado:** Diseño UX de la HU 035 completado y verificado en disco: 9 estados visuales con wireframes ASCII mapeados 1 a 1 con spec.md; resolución humana Opción B incorporada; US4-A2, US5-A1 y US5-A2 sin superficie visual (verificaciones de código y proceso).
+- **⚠️ Puntos Abiertos:** Ninguno bloqueante; informativos: página de ruta inexistente no documentada (heurística D-05), contenido del menú de perfil, destino de la entrada Backlog (solo existe /backlog/nuevo), ruta de entrada de Equipo y componente de navegación lateral a decidir en arquitectura.
+- **Handoff:** @SA: El diseño visual de la HU [035-HU_refactorizacion_esqueleto_ui] ha concluido exitosamente en [documents/designer-ux/ux_035_refactorizacion_esqueleto_ui.md]. Procede con el tech-design y arquitectura.
+
+
+### [05-10-2026] Solutions Architect
+- **Hora:** 09:02:00
+- **Artefacto generado:** `documents/solutions-architect/035-HU_refactorizacion_esqueleto_ui.md`
+- **Estado:** Tech design completado y verificado en disco: 12 puntos de la plantilla y 10 ADRs en formato MADR (2 heredados de la constitución, 8 nuevos con alternativas). Solo frontend, sin backend ni base de datos. Shell como ruta padre sin segmento de URL, navegación lateral dual (p-menu acoplado desde 1024 px y p-drawer por debajo), estado en memoria según la Opción B, tipografía y margen del body en una única regla de styles.css, ruta comodín dentro del shell, ampliación aditiva de AuthService (nombre de usuario y cierre de sesión), textos centralizados y compuertas automáticas en lint:primeng. Puntos B-01 a B-06 del UX resueltos y tareas Task-UI reconciliadas. Sin cuestionario: la constitución cubre el stack.
+- **⚠️ Puntos Abiertos:** Informativos, no bloqueantes: confirmar con el humano la acción Cerrar sesión y el umbral de 1024 px; el frontend no tiene infraestructura i18n (deuda de plataforma); el control de navegación no cierra la capa a 768 px por la máscara modal de p-drawer; el desarrollador debe verificar contra primeng 22.1.2 el marcado de entrada activa en p-menu y el manejo de foco de p-drawer.
+- **Handoff:** @WATCHER: SDD-FREEZE 035-HU_refactorizacion_esqueleto_ui.md
+
+### [05-10-2026] WATCHER
+- **Hora:** 09:02:01
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Estructurando plan de arquitectura técnica (/speckit.plan)...
+
+### [05-10-2026] WATCHER
+- **Hora:** 09:03:52
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Desglosando tareas de implementación (/speckit.tasks)...
+
+### [05-10-2026] WATCHER
+- **Hora:** 09:05:04
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Ejecutando auditoría técnica (/speckit.analyze)...
+
+@DA: El plan técnico y las tareas han sido congeladas. Procede con el diseño de persistencia basándote en los nuevos archivos.
+
+
+### [05-10-2026] Data Architect
+- **Hora:** 09:07:40
+- **Artefacto generado:** `documents/data-architect/db_035_refactorizacion_esqueleto_ui.md`
+- **Estado:** Diseño de persistencia completado y verificado en disco (88 líneas, 2 ADR heredados). Dictamen: la HU 035 es solo frontend y no introduce ni modifica tablas, columnas, índices, schemas ni migraciones (FR-012; tasks.md T001-T032 no tocan app/backend). El estado de navegación, el perfil (claims de Keycloak) y la entrada activa viven en memoria del cliente (Opción B, sin persistencia). Auditoría UI/Spec Kit a Data con cero campos huérfanos contra spec.md, data-model.md, tasks.md y ux_035.
+- **⚠️ Puntos Abiertos:** Ninguno.
+- **Handoff:** @QT: El modelo de datos de la HU 035 fue dictaminado sin cambios de persistencia (solo frontend, FR-012) a partir de spec.md y tasks.md. Al no requerir capa de API, procede directamente con la auditoría y compilación del Tech Design Document (TDD).
+
+### [05-10-2026] WATCHER
+- **Hora:** 09:08:07
+- **Mensaje:** ⚠️ [Vigilante] El agente 'solutions-architect' terminó su turno 3 veces sin registrar su bloque en el tracker. El flujo está detenido: pídele el registro manualmente o escribe el handoff tú.
+
+
+### [05-10-2026] QA Tech
+- **Hora:** 09:30:00
+- **Artefacto generado:** `documents/qa-tech/tech-design_035_refactorizacion_esqueleto_ui.md`
+- **Estado:** ✅ AUDITADO Y APROBADO. Auditoría adversarial superada (0 hallazgos críticos): HU solo frontend sin persistencia ni API (FR-012), FR-001..FR-015 cubiertos por T001-T032, cero campos huérfanos UI-Data, sin sycophancy ni tecnologías ajenas a la constitución. Verificado contra el código: app.routes.ts actual usa authGuard por ruta y ** redirige a backlog/nuevo; font-family, ::ng-deep, !important y ed-grid dan 0 coincidencias en app/frontend/src. TDD compilado con 3 diagramas archify (9/9 checks) más Mermaid, 12 ADR consolidados, specs/README.md en READY-FOR-DEV. constitution.md enmendada con subsección mínima Shell de Aplicación (ruta padre, única font-family, Tailwind de tamaño acotado al shell). 8 advertencias vinculantes en la sección 7.4 del TDD.
+- **⚠️ Puntos Abiertos:** Ninguno bloqueante. Informativos: confirmar con el humano la acción Cerrar sesión y el umbral de 1024 px; i18n global pendiente (deuda de plataforma); el control de navegación no cierra la capa modal de p-drawer; verificar contra primeng 22.1.2 la entrada activa de p-menu y el foco de p-drawer; ADR-008 y ADR-010 con alternativas débiles; las 6 capturas de cierre requieren la app en ejecución.
+- **Handoff:** @DEV-FRONT: La arquitectura técnica ha sido validada. Inicia la implementación del Frontend.
+
+### [05-10-2026] WATCHER
+- **Hora:** 09:12:34
+- **Mensaje:** ⚡ [SDD Auto-Runner] Ejecutando implementación Backend (/speckit.implement)...
+
+### [05-10-2026] Senior Backend Developer
+- **Hora:** 09:12:59
+- **Artefacto generado:** `documents/dev-backend/backend-architecture.md`
+- **Estado:** Implementación backend finalizada exitosamente mediante SDD SpecKit.
+- **Handoff:** @DEV-FRONT: Inicia implementación frontend.
+
+### [05-10-2026] WATCHER
+- **Hora:** 09:12:59
+- **Mensaje:** ⚡ [SDD Auto-Runner] Ejecutando implementación Frontend (/speckit.implement)...
+
+### [05-10-2026] Senior Frontend Developer
+- **Hora:** 09:18:48
+- **Artefacto generado:** `documents/dev-frontend/frontend-architecture.md`
+- **Estado:** Implementación frontend finalizada exitosamente mediante SDD SpecKit.
+- **Handoff:** @QA-AUTO: La Fase D (Implementación) ha finalizado exitosamente mediante motor SDD. Inicia el diseño de la matriz de pruebas automatizadas basándote en los criterios de la HU; al terminar, deriva a Code Review.
+
+### [05-10-2026] QA Automation
+- **Hora:** 14:25:00
+- **Artefacto generado:** `documents/qa-auto/qa-report.md`
+- **Estado:** HU 035 solo frontend (FR-012); cierre de DEV-BACK y DEV-FRONT confirmado. Pruebas nuevas, commit e84c5c1d: `app/frontend/src/app/core/layout/layout.qa.spec.ts` (22 casos: esqueleto, drawer, resaltado, rutas inexistentes anidadas, guard sobre NotFound) y `app/frontend/src/app/core/layout/hu035-contrato-estilos.qa.spec.ts` (10 casos: una sola font-family y margen de body, sin ng-deep, important, ed-grid, primeflex ni template-primeng). Resultado: Jest 212/212 (23 suites), lint:primeng sin violaciones, ng build OK; sin defectos de código ni código de producción modificado. Dictamen [APROBADO CON RESERVA]: no existen las 6 capturas de cierre (FR-014/SC-008, T029) y T021/T031 siguen sin registrar; jsdom no mide 1280 px, 1.5 rem ni desborde a 768 px. Observación menor: `userName` con name vacío no cae a preferred_username.
+- **⚠️ Puntos Abiertos:** Capturas T029, verificación manual T021 y quickstart T031 pendientes de ejecución con la app en marcha; la historia no debe pasar a ACTIVE sin ellas.
+- **Handoff:** @CODE-REVIEW: Pruebas automatizadas de la HU 035 completas y en verde (qa-report.md actualizado); revisa el código y las suites, y recuerda que las capturas de cierre siguen pendientes.
+
+### [05-10-2026] Code Review
+- **Hora:** 15:10:00
+- **Artefacto generado:** `documents/code-review/impact-analysis-report.md`
+- **Estado:** [RECHAZADO] solo por evidencia; el código cumple. Lectura física de layout.component.ts/html, layout-nav.ts, layout.texts.ts, viewport.service.ts, not-found, app.routes.ts, auth.service.ts, styles.css y las specs. Ejecutado por Code Review: Jest 212/212 (23 suites) y lint:primeng sin violaciones; git diff de app/backend, features/** y template-primeng vacío (FR-012). Sin NgModule, innerHTML, bypassSecurityTrust, subscribe manual ni storage; una sola font-family en styles.css:7; guard único en la ruta padre y ** dentro del shell. Suites QA no tautológicas. Hallazgos: (1) [CAPA:TASKS] T029 (6 capturas, FR-014/SC-008), T021 y T031 sin ejecutar en specs/035-HU_refactorizacion_esqueleto_ui/tasks.md. Reservas no bloqueantes: (2) [CAPA:CODE] auth.service.ts init usa ?? y un name vacío no cae a preferred_username; (3) [CAPA:CODE] layout.component.ts profileItems descarta con void el rechazo de logout().
+- **⚠️ Puntos Abiertos:** Las capturas exigen la app en marcha con sesión Keycloak activa; ningún agente puede generarlas sin el humano. No se emite el cierre de rama hasta resolverlo.
+- **Handoff:** @HUMANO: El código de la HU 035 está conforme pero falta la evidencia visual obligatoria; indica cómo proceder con las preguntas siguientes.
+  1. ¿Puedes levantar la app con sesión activa y generar las 6 capturas (backlog, sprints y equipo a 1920 y 768 px) en specs/035-HU_refactorizacion_esqueleto_ui/evidence/, y validar T021 y T031? Al terminar avisa para re-auditar y cerrar.
+  2. ¿O autorizas por escrito exentar T029, T021 y T031 y cerrar la HU con esa deuda registrada?
+  3. ¿Corrijo las dos reservas (?? por || y manejo de rechazo de logout) en esta HU o quedan para una HU futura?
+
+### [05-10-2026] HUMANO
+- **Hora:** 09:48:39
+- **Estado:** APPROVE
+- **Feedback:** 1. Haré yo las capturas (T029) y validaré T021 y T031 con la app en marcha; la imagen está en en specs/035-HU_refactorizacion_esqueleto_ui/evidence/.
+2. Corrige las dos reservas en esta HU (?? por || en auth.service.ts y manejo del rechazo de logout en layout.component.ts) y re-audita cuando yo avise.iado).
+3. Revisa porque no está el skeleton, es decir, el header, el footer, el menú colapsable de la izquierda, etc.
+- **Handoff:** @CODE-REVIEW: El humano APROBÓ tu consulta de cierre. Respuesta: 1. Haré yo las capturas (T029) y validaré T021 y T031 con la app en marcha; la imagen está en en specs/035-HU_refactorizacion_esqueleto_ui/evidence/. 2. Corrige las dos reservas en esta HU (?? por || en auth.service.ts y manejo del rechazo de logout en layout.component.ts) y re-audita cuando yo avise.iado). 3. Revisa porque no está el skeleton, es decir, el header, el footer, el menú colapsable de la izquierda, etc. Procede según su decisión; si autorizó cerrar la rama, emite el cierre como línea independiente.
+
+
+### [05-10-2026] Code Review
+- **Hora:** 15:40:00
+- **Artefacto generado:** `documents/code-review/impact-analysis-report.md`
+- **Estado:** Reservas corregidas por decisión humana: auth.service.ts usa || en userName y layout.component.ts captura el rechazo de logout y muestra un p-message de error; pruebas nuevas (3). Verificado por Code Review: Jest 215/215, lint:primeng sin violaciones, ng build OK. Causa de que no se vea el esqueleto en la captura backlog-1920.png: el ng serve en ejecución (PID 59020, iniciado 01:23) sirve un main.js y styles.css anteriores a la HU (sin LayoutComponent ni --font-sans, rutas con canActivate sueltos); un ng build limpio sí contiene el shell. No es defecto de código. Dictamen sigue [RECHAZADO] por evidencia: T029, T021 y T031 pendientes; no se emite el cierre de rama.
+- **⚠️ Puntos Abiertos:** Capturas T029, T021 y T031 a cargo del humano tras reiniciar el servidor de desarrollo.
+- **Handoff:** @HUMANO: Reinicia ng serve en app/frontend, repite las capturas y avisa para la re-auditoría final.
+  1. ¿Confirmas que tras reiniciar ng serve se ven el header, el menú lateral colapsable y el footer? Si no aparecen, indica la URL y la consola del navegador.
+
+### [05-10-2026] HUMANO
+- **Hora:** 09:57:29
+- **Estado:** APPROVE
+- **Feedback:** Confirmado: tras reiniciar ng serve se ven header, menú lateral colapsable y footer, y es responsivo, sin embargo, el menú lateral no ocupa toda la altura de la pantalla, debería adaptarse a su altura. Adjunto la captura en evidence/. Procede con la re-auditoría final.
+- **Handoff:** @CODE-REVIEW: El humano APROBÓ tu consulta de cierre. Respuesta: Confirmado: tras reiniciar ng serve se ven header, menú lateral colapsable y footer, y es responsivo, sin embargo, el menú lateral no ocupa toda la altura de la pantalla, debería adaptarse a su altura. Adjunto la captura en evidence/. Procede con la re-auditoría final. Procede según su decisión; si autorizó cerrar la rama, emite el cierre como línea independiente.
+
+
+### [05-10-2026] Code Review
+- **Hora:** 16:20:00
+- **Artefacto generado:** `documents/code-review/impact-analysis-report.md`
+- **Estado:** Re-auditoría: el esqueleto se ve y es responsivo (specs/035-HU_refactorizacion_esqueleto_ui/evidence/pantalla.png: header, menú lateral colapsable, contenido y footer). Defecto visual confirmado: la navegación acoplada no ocupa la altura del aside; corregido en layout.component.html (nav h-full y p-menu h-full) con prueba nueva. Verificado por Code Review: Jest 216 pruebas en verde, lint:primeng sin violaciones, ng build OK; el ajuste visual no es medible en jsdom y requiere confirmación en navegador. Hallazgos: (1) [CAPA:SPEC] spec.md y el contrato de UI no especifican la altura de la navegación lateral; enmendar para evitar regresión. (2) [CAPA:TASKS] T029 incompleta: existe 1 captura (pantalla.png) de las 6 exigidas con nombre modulo-ancho.png; T021, T031 y T001 siguen sin marcar. (3) Observación: la captura muestra la insignia Invalid PrimeUI License en la esquina inferior derecha; confirmar que no proviene de esta HU. Dictamen: [RECHAZADO] solo por evidencia incompleta; el código no tiene violaciones. No se emite el cierre de rama.
+- **⚠️ Puntos Abiertos:** Faltan 5 capturas (backlog, sprints y equipo a 1920 y 768 px, salvo backlog-1920) y la confirmación visual del menú a altura completa.
+- **Handoff:** @HUMANO: Reinicia ng serve si no recarga, confirma el menú a altura completa y completa las capturas faltantes; luego avisa para el cierre.
+  1. ¿Autorizas exentar las capturas restantes y cerrar la HU con una sola evidencia, registrando la deuda? Si no, indica cuándo estarán las 6.
+  2. ¿Se enmienda la spec de la HU 035 para fijar la altura completa de la navegación lateral?
+
+### [05-10-2026] HUMANO
+- **Hora:** 10:28:05
+- **Estado:** APPROVE
+- **Feedback:** sí
+- **Handoff:** @CODE-REVIEW: El humano APROBÓ tu consulta de cierre. Respuesta: sí Procede según su decisión; si autorizó cerrar la rama, emite el cierre como línea independiente.
+
+
+### [05-10-2026] Code Review
+- **Hora:** 16:45:00
+- **Artefacto generado:** `documents/code-review/impact-analysis-report.md`
+- **Estado:** [APROBADO] HU 035 con deuda aceptada por el humano. Lectura física completada y Jest 216/216, lint:primeng y ng build verificados por Code Review; cero violaciones de arquitectura, rendimiento, seguridad ni XSS; backend sin cambios (FR-012). El humano autorizó exentar las capturas restantes de T029 (existe 1 de 6), T021 y T031, y aceptó enmendar la spec para fijar la altura completa de la navegación lateral. Deuda registrada: [CAPA:TASKS] T029/T021/T031 sin ejecutar; [CAPA:SPEC] spec.md y contrato de UI sin la regla de altura de la navegación (el business-analyst debe enmendarlos); la insignia Invalid PrimeUI License de la captura queda por confirmar. Ledger: restan las HU 020 a 034 en BACKLOG o PROPUESTO de las épicas P3 a P6 del plan del PM.
+- **⚠️ Puntos Abiertos:** Deuda anterior; sin bloqueo para el cierre.
+@WATCHER: GITOPS-MERGE-CLOSE feat/035-HU_refactorizacion_esqueleto_ui
+- **Handoff:** @PM: Código certificado y rama consolidada en dev. Procede a asignar la siguiente historia del backlog; quedan sin cerrar las épicas P3, P4, P5 y P6 del plan.
