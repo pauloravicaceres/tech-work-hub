@@ -1,8 +1,8 @@
-<div class="flex justify-content-end mb-3">
+<div class="flex justify-end mb-4">
   <p-button label="Asignar responsable" icon="pi pi-plus" (onClick)="openDialog()" />
 </div>
 
-<p-fluid class="block mb-3">
+<p-fluid class="block mb-4">
   <label for="miembro" class="block font-bold">MIEMBRO</label>
   <p-select
     inputId="miembro"
@@ -26,7 +26,7 @@
   }
   @case ('error') {
     <p-message severity="error">No fue posible consultar los elementos del miembro. Intente nuevamente.</p-message>
-    <div class="flex justify-content-end mt-3">
+    <div class="flex justify-end mt-4">
       <p-button label="Reintentar" icon="pi pi-refresh" severity="secondary" [outlined]="true" (onClick)="reload()" />
     </div>
   }

@@ -8,10 +8,10 @@
 >
   <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
     @if (banner(); as current) {
-      <p-message [severity]="current.severity" styleClass="mb-3">{{ current.message }}</p-message>
+      <p-message [severity]="current.severity" styleClass="mb-4">{{ current.message }}</p-message>
     }
 
-    <p-fluid class="block mb-3">
+    <p-fluid class="block mb-4">
       <label for="itemId" class="block font-bold">ELEMENTO (*)</label>
       <p-select
         inputId="itemId"
@@ -31,7 +31,7 @@
       }
     </p-fluid>
 
-    <p-fluid class="block mb-3">
+    <p-fluid class="block mb-4">
       <label for="memberId" class="block font-bold">MIEMBRO (*)</label>
       <p-select
         inputId="memberId"
@@ -51,7 +51,7 @@
       }
     </p-fluid>
 
-    <p-fluid class="block mb-3">
+    <p-fluid class="block mb-4">
       <label for="role" class="block font-bold">ROL TÉCNICO</label>
       <input pInputText id="role" readonly [value]="selectedRole() || '-'" />
       <small class="block mt-1">
@@ -59,7 +59,7 @@
       </small>
     </p-fluid>
 
-    <div class="flex justify-content-end gap-2 mt-3">
+    <div class="flex justify-end gap-2 mt-4">
       <p-button
         label="Cancelar"
         icon="pi pi-times"

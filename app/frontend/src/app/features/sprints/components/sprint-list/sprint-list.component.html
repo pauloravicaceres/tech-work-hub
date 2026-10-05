@@ -1,6 +1,6 @@
 <p-toast position="top-right" />
 
-<div class="flex justify-content-between align-items-center mb-3">
+<div class="flex justify-between items-center mb-4">
   <div>
     <h2 class="m-0">SPRINTS</h2>
     <p class="m-0">Ciclos de trabajo de 2 semanas registrados.</p>
@@ -14,7 +14,7 @@
   }
   @case ('error') {
     <p-message severity="error">No fue posible consultar los Sprints. Intente nuevamente.</p-message>
-    <div class="flex justify-content-end mt-3">
+    <div class="flex justify-end mt-4">
       <p-button label="Reintentar" icon="pi pi-refresh" severity="secondary" [outlined]="true" (onClick)="reload()" />
     </div>
   }

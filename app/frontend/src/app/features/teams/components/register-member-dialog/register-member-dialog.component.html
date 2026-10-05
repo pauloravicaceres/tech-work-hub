@@ -7,10 +7,10 @@
 >
   <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
     @if (banner(); as current) {
-      <p-message [severity]="current.severity" styleClass="mb-3">{{ current.message }}</p-message>
+      <p-message [severity]="current.severity" styleClass="mb-4">{{ current.message }}</p-message>
     }
 
-    <p-fluid class="block mb-3">
+    <p-fluid class="block mb-4">
       <label for="name" class="block font-bold">NOMBRE (*)</label>
       <input
         pInputText
@@ -26,7 +26,7 @@
       }
     </p-fluid>
 
-    <p-fluid class="block mb-3">
+    <p-fluid class="block mb-4">
       <label for="role" class="block font-bold">ROL TÉCNICO (*)</label>
       <p-select
         inputId="role"
@@ -45,7 +45,7 @@
       <small class="block mt-1">Se registra un miembro con un rol por solicitud.</small>
     </p-fluid>
 
-    <div class="flex justify-content-end gap-2 mt-3">
+    <div class="flex justify-end gap-2 mt-4">
       <p-button label="Cancelar" icon="pi pi-times" severity="secondary" [outlined]="true" type="button" (onClick)="onCancel()" />
       <p-button label="Registrar" icon="pi pi-check" type="submit" [disabled]="isSubmitting()" [loading]="isSubmitting()" />
     </div>

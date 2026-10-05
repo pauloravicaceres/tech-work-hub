@@ -81,6 +81,7 @@ Para mantener un orden estricto y evitar archivos dispersos en la raíz del proy
 * **Paradigma Reactivo:** Arquitectura 100% **Zoneless** utilizando **Signals** para el manejo de estado y reactividad.
 * **Internacionalización:** Soporte nativo i18n desde el inicio.
 * **Librería de Componentes UI:** PrimeNG v22.1.1 (https://primeng.dev/components).
+* **Utilidades CSS:** Tailwind CSS v4 + plugin `tailwindcss-primeui` (https://primeng.org/tailwind), solo para grid, espaciado y flex. Reemplaza a PrimeFlex, que ya no forma parte del stack.
 
 ### 📐 Directiva Estricta de Maquetación (Skeleton vs. Theme)
 El diseño de interfaces (`ux_*.md`) DEBE calcar la **distribución estructural (Skeleton)** de la plantilla base, pero tiene ESTRICTAMENTE PROHIBIDO heredar su **capa visual corporativa (Theme)**. 
@@ -94,7 +95,7 @@ El diseño de interfaces (`ux_*.md`) DEBE calcar la **distribución estructural 
 
 * **🚫 ESTILOS PROHIBIDOS (OMITIR):**
   - Ignorar la paleta de colores corporativos, tipografías específicas, logotipos de marca y overrides de CSS personalizados.
-  - El "look and feel" final recaerá 100% sobre el tema neutral por defecto de PrimeNG. El agente `@UX` debe ensamblar los wireframes usando nombres de componentes estándar (ej. `<p-table>`, `<p-menubar>`, `<p-drawer>`) sin inventar clases CSS propias (las utilidades de PrimeFlex permitidas están acotadas en el Patrón Obligatorio de Formularios).
+  - El "look and feel" final recaerá 100% sobre el tema neutral por defecto de PrimeNG. El agente `@UX` debe ensamblar los wireframes usando nombres de componentes estándar (ej. `<p-table>`, `<p-menubar>`, `<p-drawer>`) sin inventar clases CSS propias (las utilidades de Tailwind CSS permitidas están acotadas en el Patrón Obligatorio de Formularios).
 
 
 
@@ -104,8 +105,8 @@ Aplica a TODO formulario o diálogo con campos en `app/frontend`, sin excepción
 **Esqueleto canónico (imports: `Fluid` de `primeng/fluid`, `InputTextModule`, `MessageModule`, `ButtonModule`, etc.):**
 ```html
 <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
-  <p-fluid class="grid">                              <!-- campos a ancho completo -->
-    <div class="col-12 md:col-6 mb-3">                 <!-- PrimeFlex solo para grid/espaciado -->
+  <p-fluid class="grid grid-cols-12 gap-4">                           <!-- campos a ancho completo -->
+    <div class="col-span-12 md:col-span-6">            <!-- Tailwind solo para grid/espaciado -->
       <label for="name" class="block font-bold mb-2">NOMBRE (*)</label>
       <input pInputText id="name" formControlName="name" [invalid]="!!fieldErrors().name" />
       @if (fieldErrors().name; as message) {
@@ -113,7 +114,7 @@ Aplica a TODO formulario o diálogo con campos en `app/frontend`, sin excepción
       }
     </div>
   </p-fluid>
-  <div class="flex justify-content-end gap-2 mt-3">
+  <div class="flex justify-end gap-2 mt-4">
     <p-button label="Cancelar" severity="secondary" [outlined]="true" type="button" />
     <p-button label="Guardar" type="submit" [loading]="isSubmitting()" />
   </div>
@@ -125,7 +126,7 @@ Aplica a TODO formulario o diálogo con campos en `app/frontend`, sin excepción
 2. Errores con `<p-message severity="error" variant="simple" size="small">`. Para el estado inválido de `pInputText` y `pTextarea` usar `[invalid]`. `p-select`, `p-datepicker` y `p-inputnumber` no tienen el input `invalid`: heredan el estado de `ng-invalid`/`ng-dirty` del control reactivo.
 3. Controles: `pInputText`, `pTextarea`, `p-select`, `p-datepicker`, `p-inputnumber`, `p-checkbox`, etc. Prohibido `<input>`, `<select>` o `<textarea>` sin su directiva o componente de PrimeNG.
 4. Clases heredadas de PrimeNG ≤15 PROHIBIDAS (ya no existen): `p-error`, `p-fluid` como clase suelta, `p-inputtext-lg/sm`, `p-field`, `p-formgrid`, `p-grid`, `p-col-*`. `<p-sidebar>` es `<p-drawer>`.
-5. PrimeFlex v3 se usa únicamente para grid (`grid`, `col-*`), espaciado (`mb-3`, `gap-2`) y flex, nunca para estilizar controles de formulario. Sin `::ng-deep` ni overrides de CSS en `.scss`.
+5. Tailwind CSS v4 (con el plugin `tailwindcss-primeui`) se usa únicamente para grid (`grid grid-cols-12 gap-4`, `col-span-*`), espaciado (`mb-4`, `gap-2`) y flex (`flex justify-end`), nunca para estilizar controles de formulario. Escala de espaciado: 1 = 0.25rem. Sin `::ng-deep` ni overrides de CSS en `.scss`. PrimeFlex ya no se usa: están PROHIBIDAS sus clases (`col-12`, `md:col-6`, `justify-content-*`, `align-items-*`, `text-secondary`, `border-round`, `surface-*` sin `bg-`).
 6. Verificación automática obligatoria antes del handoff: `npm run lint:primeng` en `app/frontend` (falla ante cualquier patrón prohibido).
 ### 📂 Ubicación Física (Para Exploración)
 * La plantilla base se encuentra en el directorio: `./app/template-primeng/` (referencia SOLO de estructura/Skeleton; su código usa convenciones antiguas de PrimeNG y NO debe copiarse en sintaxis de formularios).

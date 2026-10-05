@@ -1,7 +1,7 @@
 # TechWorkHub — Frontend
 
 ## Propósito
-SPA de TechWorkHub construida con Angular 22 (Zoneless + Signals) y PrimeNG 22. Consume la API del Modulith .NET bajo `/api/**` y se autentica con Keycloak (Authorization Code + PKCE).
+SPA de TechWorkHub construida con Angular 22 (Zoneless + Signals) y PrimeNG 22, con Tailwind CSS v4 (plugin `tailwindcss-primeui`) solo para grid, espaciado y flex. Consume la API del Modulith .NET bajo `/api/**` y se autentica con Keycloak (Authorization Code + PKCE).
 
 Funcionalidades actuales:
 - **Backlog (HU-001):** registro de elementos del backlog multitipo.
@@ -31,6 +31,7 @@ npm start      # ng serve
 ```bash
 npm test       # jest (jest-preset-angular, modo zoneless)
 npm run build  # ng build
+npm run lint:primeng  # falla ante clases de PrimeNG ≤15
 ```
 
 ## Estructura de carpetas

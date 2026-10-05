@@ -9,7 +9,8 @@ const ROOT = fileURLToPath(new URL('../src', import.meta.url));
 const LINE_RULES = [
   { re: /class="[^"]*\bp-error\b/, why: '`p-error` no existe en PrimeNG 22: usar <p-message severity="error" variant="simple" size="small">' },
   { re: /class="[^"]*\bp-fluid\b/, why: '`class="p-fluid"` no aplica: usar el componente <p-fluid> (import Fluid de primeng/fluid)' },
-  { re: /class="[^"]*\bp-(?:field|formgrid|grid|col-\d+|inputtext-(?:lg|sm))\b/, why: 'Clase heredada de PrimeNG ≤15: usar grid/col-* de PrimeFlex o el input `size`' },
+  { re: /class="[^"]*\bp-(?:field|formgrid|grid|col-\d+|inputtext-(?:lg|sm))\b/, why: 'Clase heredada de PrimeNG ≤15: usar grid-cols-*/col-span-* de Tailwind o el input `size`' },
+  { re: /(?:class|styleClass)="[^"]*\b(?:col-\d+|(?:sm|md|lg|xl):col-\d+|justify-content-\w+|align-items-\w+|text-secondary|border-round(?:-\w+)?|flex-column|flex-row-reverse)\b/, why: 'Clase de PrimeFlex (ya no está en el stack): usar Tailwind (col-span-*, justify-*, items-*, text-muted-color, rounded-*, flex-col)' },
   { re: /<p-sidebar\b/, why: '<p-sidebar> fue reemplazado por <p-drawer>' },
   { re: /\*ngIf|\*ngFor|\[\(ngModel\)\]/, why: 'Usar @if/@for y Reactive Forms tipados' },
 ];

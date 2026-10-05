@@ -3,11 +3,11 @@
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
     @if (bannerMessage(); as banner) {
-      <p-message severity="error" styleClass="mb-3">{{ banner }}</p-message>
+      <p-message severity="error" styleClass="mb-4">{{ banner }}</p-message>
     }
 
-    <p-fluid class="grid">
-      <div class="col-12 mb-3">
+    <p-fluid class="grid grid-cols-12 gap-4">
+      <div class="col-span-12">
         <label for="identification">IDENTIFICACIÓN (*)</label>
         <input
           pInputText
@@ -24,7 +24,7 @@
         }
       </div>
 
-      <div class="col-12 md:col-6 mb-3">
+      <div class="col-span-12 md:col-span-6">
         <label for="startDate">FECHA DE INICIO (*)</label>
         <p-datepicker inputId="startDate" formControlName="startDate" dateFormat="dd/mm/yy" [showIcon]="true" />
         @if (fieldErrors().startDate; as serverMessage) {
@@ -34,7 +34,7 @@
         }
       </div>
 
-      <div class="col-12 md:col-6 mb-3">
+      <div class="col-span-12 md:col-span-6">
         <label for="endDate">FECHA DE FIN (*)</label>
         <p-datepicker inputId="endDate" formControlName="endDate" dateFormat="dd/mm/yy" [showIcon]="true" />
         <small class="block">Ventana de 2 semanas: 14 días calendario, extremos incluidos.</small>
@@ -46,7 +46,7 @@
       </div>
     </p-fluid>
 
-    <div class="flex justify-content-end gap-2 mt-3">
+    <div class="flex justify-end gap-2 mt-4">
       <p-button label="Cancelar" icon="pi pi-times" severity="secondary" [outlined]="true" type="button" (onClick)="onCancel()" />
       <p-button
         [label]="serverError() ? 'Reintentar Envío' : 'Crear Sprint'"

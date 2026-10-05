@@ -4,8 +4,8 @@
   <p>Diligencie los campos requeridos para incorporar el requerimiento a la planificación.</p>
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <p-fluid class="grid">
-      <div class="col-12 md:col-6 lg:col-4 mb-3">
+    <p-fluid class="grid grid-cols-12 gap-4">
+      <div class="col-span-12 md:col-span-6 lg:col-span-4">
         <label for="title">TÍTULO DEL ELEMENTO (*)</label>
         <input pInputText id="title" formControlName="title" placeholder="Ej: Implementar autenticación..." />
         <small class="block">{{ charsCount() }}/200</small>
@@ -16,7 +16,7 @@
         }
       </div>
 
-      <div class="col-12 md:col-6 lg:col-4 mb-3">
+      <div class="col-span-12 md:col-span-6 lg:col-span-4">
         <label for="type">TIPO (*)</label>
         <p-select inputId="type" [options]="types" formControlName="type" />
         @if (fieldErrors().type; as serverMessage) {
@@ -24,7 +24,7 @@
         }
       </div>
 
-      <div class="col-12 md:col-6 lg:col-4 mb-3">
+      <div class="col-span-12 md:col-span-6 lg:col-span-4">
         <label for="priority">PRIORIDAD (*)</label>
         <p-select inputId="priority" [options]="priorities" formControlName="priority" />
         @if (fieldErrors().priority; as serverMessage) {
@@ -32,7 +32,7 @@
         }
       </div>
 
-      <div class="col-12 md:col-6 lg:col-4 mb-3">
+      <div class="col-span-12 md:col-span-6 lg:col-span-4">
         <label for="applicationId">APLICACIÓN VINCULADA (Opcional)</label>
         <p-select
           inputId="applicationId"
@@ -51,14 +51,14 @@
         }
       </div>
 
-      <div class="col-12 md:col-6 lg:col-4 mb-3">
+      <div class="col-span-12 md:col-span-6 lg:col-span-4">
         <label for="status">ESTADO INICIAL (Fijo)</label>
         <input pInputText id="status" formControlName="status" />
       </div>
 
-      <div class="col-12 md:col-6 lg:col-4 mb-3"></div>
+      <div class="col-span-12 md:col-span-6 lg:col-span-4"></div>
 
-      <div class="col-12 md:col-6 lg:col-4 mb-3">
+      <div class="col-span-12 md:col-span-6 lg:col-span-4">
         <label for="devPoints">ESTIMACIÓN DESARROLLO (DevPoints)</label>
         <p-inputnumber inputId="devPoints" formControlName="devPoints" [min]="0" [step]="0.5" mode="decimal" />
         @if (fieldErrors().devPoints; as serverMessage) {
@@ -68,7 +68,7 @@
         }
       </div>
 
-      <div class="col-12 md:col-6 lg:col-4 mb-3">
+      <div class="col-span-12 md:col-span-6 lg:col-span-4">
         <label for="qaPoints">ESTIMACIÓN QA (QAPoints)</label>
         <p-inputnumber
           inputId="qaPoints"
@@ -79,14 +79,14 @@
           [placeholder]="isQaNotApplicable() ? 'N/A' : ''"
         />
         @if (isQaNotApplicable()) {
-          <small class="block text-secondary">* Este tipo de ítem técnico no requiere validación QA *</small>
+          <small class="block text-muted-color">* Este tipo de ítem técnico no requiere validación QA *</small>
         }
         @if (fieldErrors().qaPoints; as serverMessage) {
           <p-message severity="error" variant="simple" size="small">{{ serverMessage }}</p-message>
         }
       </div>
 
-      <div class="col-12 mb-3">
+      <div class="col-span-12">
         <label for="description">DESCRIPCIÓN TÉCNICA</label>
         <textarea pTextarea id="description" formControlName="description" rows="4"></textarea>
         @if (fieldErrors().description; as serverMessage) {
@@ -94,7 +94,7 @@
         }
       </div>
 
-      <div class="col-12 mb-3">
+      <div class="col-span-12">
         <label for="acceptanceCriteria">CRITERIOS DE ACEPTACIÓN (Opcional)</label>
         <textarea pTextarea id="acceptanceCriteria" formControlName="acceptanceCriteria" rows="4"></textarea>
         @if (fieldErrors().acceptanceCriteria; as serverMessage) {
@@ -112,7 +112,7 @@
       </p-message>
     }
 
-    <div class="flex justify-content-end gap-2 mt-3">
+    <div class="flex justify-end gap-2 mt-4">
       <p-button label="Cancelar" icon="pi pi-times" severity="secondary" [outlined]="true" type="button" (onClick)="onCancel()" />
       <p-button
         [label]="serverError() ? 'Reintentar Envío' : 'Guardar Elemento'"

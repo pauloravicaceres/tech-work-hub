@@ -20,6 +20,11 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(withInterceptors([bearerTokenInterceptor])),
     provideAppInitializer(() => inject(AuthService).init()),
-    providePrimeNG({ theme: { preset: Aura } }),
+    providePrimeNG({
+      theme: {
+        preset: Aura,
+        options: { cssLayer: { name: 'primeng', order: 'theme, base, primeng' } },
+      },
+    }),
   ],
 };

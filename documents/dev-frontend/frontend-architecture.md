@@ -21,7 +21,7 @@ flowchart TD
   - `features/backlog/components/create-backlog-item/`: `CreateBacklogItemComponent` (`.ts`, `.html`, `.scss` sin reglas de maquetación, `.spec.ts`).
   - `features/backlog/models/`: `backlog-item.models.ts` (contratos tipados: request, response, `RegisteredApplication`, `ProblemDetails`) y `backlog-item.constants.ts` (catálogo de tipos y prioridades, y `TECHNICAL_BACKLOG_ITEM_TYPES` como única fuente de los tipos técnicos).
   - `features/backlog/services/backlog-api.service.ts`: `BacklogApiService` (`createItem`, `getApplications`).
-  - Configuración del proyecto (HU-001, T033): `package.json`, `angular.json`, `tsconfig*.json`, `jest.config.ts`, `src/setup-jest.ts`, `src/styles.scss` (importa PrimeFlex), `src/main.ts`, `app.config.ts` (zoneless + `provideHttpClient` + tema Aura).
+  - Configuración del proyecto (HU-001, T033): `package.json`, `angular.json`, `tsconfig*.json`, `jest.config.ts`, `src/setup-jest.ts`, `src/styles.css` (importa Tailwind CSS v4, `tailwindcss-primeui` y PrimeIcons) y `.postcssrc.json` (`@tailwindcss/postcss`), `src/main.ts`, `app.config.ts` (zoneless + `provideHttpClient` + tema Aura).
 - **Rutas Principales:**
 ```mermaid
 flowchart TD
@@ -420,3 +420,10 @@ sequenceDiagram
   - El selector `Por elemento`/`Por miembro` usa dos `p-button` (sin `ngModel`) en lugar de `p-selectbutton`.
 - **Verificación:** NO ejecutada. El entorno de esta sesión no tiene Node/npm, por lo que `npm test`, `npm run build` y `npm run lint:primeng` (T062) y la validación manual del quickstart (T063) siguen pendientes; el cumplimiento de `lint:primeng` se revisó a mano sobre los `.html` nuevos.
 - **Puntos abiertos:** (1) Sin i18n en el frontend (textos literales en español, como el resto). (2) La grilla no ofrece filtros, paginación ni acciones por fila (D-03, D-04). (3) El 404 se clasifica por el texto del `detail` ("miembro"), igual que ADR-005 de HU-004.
+
+### ADR — Tailwind CSS v4 reemplaza a PrimeFlex (2026-10-05)
+- **Contexto:** PrimeFlex v3 está en mantenimiento y sus utilidades (`col-12`, `justify-content-*`, `p-fluid`) se confundían con clases de PrimeNG ≤15 que ya no existen. PrimeNG 22 se integra oficialmente con Tailwind mediante el plugin `tailwindcss-primeui`.
+- **Decisión:** `tailwindcss` 4.3, `@tailwindcss/postcss` 4.3 y `tailwindcss-primeui` 0.6 sustituyen a `primeflex`. `src/styles.css` importa `tailwindcss`, `tailwindcss-primeui` y `primeicons`; `.postcssrc.json` activa `@tailwindcss/postcss`; `providePrimeNG` declara `cssLayer: { name: 'primeng', order: 'theme, base, primeng' }` para que el reset de Tailwind no pise los estilos de PrimeNG.
+- **Alcance de uso:** solo grid (`grid grid-cols-12 gap-4`, `col-span-*`), espaciado y flex, nunca para estilizar controles. Escala de espaciado de Tailwind (1 = 0.25rem): `mb-3` de PrimeFlex equivale a `mb-4`.
+- **Migración:** las 11 plantillas `.html` existentes se migraron de forma mecánica (`col-12 md:col-6 lg:col-4` → `col-span-12 md:col-span-6 lg:col-span-4`, `justify-content-end` → `justify-end`, `align-items-center` → `items-center`, `text-secondary` → `text-muted-color`, `surface-100` → `bg-surface-100`). La reestructuración visual (layout, breadcrumbs, tipografía) queda para la HU 035.
+- **Verificación:** `ng build`, `jest` (141 tests) y `npm run lint:primeng` en verde; el CSS generado contiene las utilidades usadas. El orden de capas CSS pendiente de validación visual en navegador.

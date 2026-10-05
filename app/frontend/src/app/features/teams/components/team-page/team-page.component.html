@@ -1,8 +1,8 @@
 <p-toast position="top-right" />
 
-<p-breadcrumb [home]="home" [model]="breadcrumbItems()" styleClass="mb-3" />
+<p-breadcrumb [home]="home" [model]="breadcrumbItems()" styleClass="mb-4" />
 
-<div class="flex justify-content-between align-items-center mb-3">
+<div class="flex justify-between items-center mb-4">
   <div>
     <h2 class="m-0">{{ title() }}</h2>
     <p class="m-0">{{ subtitle() }}</p>
@@ -22,7 +22,7 @@
 
 @switch (state().status) {
   @case ('idle') {
-    <div class="flex gap-2 mt-3 mb-3">
+    <div class="flex gap-2 mt-4 mb-4">
       <p-button label="Por elemento" [outlined]="view() !== 'elemento'" (onClick)="selectView('elemento')" />
       <p-button label="Por miembro" [outlined]="view() !== 'miembro'" (onClick)="selectView('miembro')" />
     </div>
@@ -33,21 +33,21 @@
     }
   }
   @case ('loading') {
-    <p-message severity="info" styleClass="mt-3">Cargando...</p-message>
+    <p-message severity="info" styleClass="mt-4">Cargando...</p-message>
   }
   @case ('error') {
-    <p-message severity="error" styleClass="mt-3">
+    <p-message severity="error" styleClass="mt-4">
       {{ tab() === 'roles' ? 'No fue posible consultar los roles técnicos.' : 'No fue posible consultar los miembros del equipo.' }}
       Intente nuevamente.
     </p-message>
-    <div class="flex justify-content-end mt-3">
+    <div class="flex justify-end mt-4">
       <p-button label="Reintentar" icon="pi pi-refresh" severity="secondary" [outlined]="true" (onClick)="reload()" />
     </div>
   }
   @case ('members') {
     @if (state(); as current) {
       @if (current.status === 'members') {
-        <p-table [value]="current.members" dataKey="id" styleClass="mt-3">
+        <p-table [value]="current.members" dataKey="id" styleClass="mt-4">
           <ng-template #header>
             <tr>
               <th>IDENTIFICADOR</th>
@@ -74,7 +74,7 @@
   @case ('roles') {
     @if (state(); as current) {
       @if (current.status === 'roles') {
-        <p-table [value]="current.roles" dataKey="id" styleClass="mt-3">
+        <p-table [value]="current.roles" dataKey="id" styleClass="mt-4">
           <ng-template #header>
             <tr>
               <th>IDENTIFICADOR</th>
