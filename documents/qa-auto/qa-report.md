@@ -1,11 +1,81 @@
 # QA Report — Calidad y Trazabilidad Viva
 
-> Última actualización: 04-10-2026 · Iteración: **HU-004 Asignación de Elementos a un Sprint** · Agente: QA-AUTO
-> Áreas no afectadas por esta iteración: _Sin cambios en esta iteración_ (HU-003, HU-002 y HU-001 se conservan sin modificar).
+> Última actualización: 04-10-2026 · Iteración: **HU-012 Miembros del Equipo y Roles Técnicos** · Agente: QA-AUTO
+> Áreas no afectadas por esta iteración: _Sin cambios en esta iteración_ (HU-004, HU-003, HU-002 y HU-001 se conservan sin modificar).
 
 ---
 
-# ▶ Iteración actual: HU-004 (`specs/004-HU_asignacion_elementos_sprint`)
+# ▶ Iteración actual: HU-012 (`specs/012-HU_miembros_equipo_y_roles_tecnicos`)
+
+Barrera Fork-Join satisfecha (DEV-BACK y DEV-FRONT finalizaron). QA-AUTO auditó las suites entregadas (`tests/Unit/Teams`, `tests/Integration/Teams` con Testcontainers PostgreSQL y specs Jest de `features/teams`), sin `Skip`/`xit`. No se modificó código de producción.
+
+## 1. AI QA Review Dashboard (HU-012)
+
+```
+┌──────────────── HU-012 · DICTAMEN: [APROBADO CON RESERVA] ────────────────────────────┐
+│ Capa                              Ejecutados  Pasados  Fallados  Bloqueados          │
+│ Backend · Unit Teams                  27         27       0         0                │
+│ Backend · Integration Teams (PG)      38         38       0         0                │
+│ Frontend · Jest features/teams        22          0       0        22  (Node ausente) │
+│ Bloqueado: Jest no ejecutable, node/npx no existen en el PATH de este entorno.        │
+│ Cobertura funcional de CA: US1 3/3 · US2 2/2 · US3 1/1 · US4 2/2 · US5 2/2 (backend) │
+│ Nivel de riesgo: BAJO backend · MEDIO frontend (specs auditadas, no ejecutadas)       │
+└───────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+Comandos: `dotnet test tests/Unit/Teams/Teams.UnitTests.csproj`, `dotnet test tests/Integration/Teams/Teams.IntegrationTests.csproj`. Jest (`npx jest --ci --runInBand --forceExit --no-coverage src/app/features/teams`) no pudo ejecutarse.
+
+## 2. Requirements Traceability (HU-012)
+
+```mermaid
+flowchart LR
+  HU12[HU-012 Miembros y Roles]
+  HU12 --> US1[US1 Registrar 201 + auditoría] --> TC1[RegisterTeamMemberTests + CommandHandlerTests + TeamMemberDomainTests + team-api.service.spec]
+  HU12 --> US2[US2 Listar miembros 200/vacío] --> TC2[ListTeamMembersTests + ListTeamMembersQueryHandlerTests + team-page.spec]
+  HU12 --> US3[US3 Catálogo de roles] --> TC3[ListTechnicalRolesTests + QueryHandlerTests + TeamsMigrationTests semilla]
+  HU12 --> US4[US4 Rechazo 400] --> TC4[ValidatorTests + RegisterTeamMemberValidationTests + register-member-dialog.spec]
+  HU12 --> US5[US5 401/500] --> TC5[TeamsAuthTests + RegisterTeamMemberFailureTests]
+  HU12 --> FR14[FR-014 sin regresión] --> TC6[RegisterTeamMemberNoRegressionTests]
+  HU12 --> FR16[FR-016 aislamiento schema] --> TC7[TeamsMigrationTests]
+```
+
+## 3. Failure Impact Diagram (HU-012)
+
+0 fallos críticos detectados. (Los logs de error en `Registrar_ConFalloDePersistencia...` son el fallo simulado esperado y el test pasa.)
+
+## 4. State Transition / User Journey (HU-012)
+
+```mermaid
+stateDiagram-v2
+  [*] --> SinMiembros
+  SinMiembros --> ConMiembros: POST /api/team-members 201
+  ConMiembros --> ConMiembros: POST 201 (homónimos permitidos)
+  SinMiembros --> SinMiembros: 400 / 401 / 500 (nada persistido)
+  ConMiembros --> ConMiembros: 400 / 401 / 500 (nada parcial)
+```
+
+## 5. Test Coverage & Hotspots (HU-012)
+
+| Módulo | Pruebas | Estado |
+|---|---|---|
+| Teams · Validador y dominio | Unit (27) | Verde |
+| Teams · API + PostgreSQL + migración | Integration (38) | Verde |
+| Teams · Frontend | Jest (22 specs) | No ejecutado |
+
+Defect Hotspots: ninguno.
+
+## Defectos (etiquetado por capa)
+
+Ninguno.
+
+## Reservas (no bloqueantes)
+
+- R-01 Jest de `features/teams` sin ejecutar: Node.js no instalado en el entorno de QA; re-ejecutar el comando indicado donde exista Node 22.22.3 o superior.
+- R-02 Puntos abiertos 1 a 8 de la HU (unicidad, longitud del nombre, ciclo de vida) sin comportamiento definido: probados solo como "no se restringe" (homónimos y nombre muy largo se aceptan).
+
+---
+
+# Iteración anterior: HU-004 (`specs/004-HU_asignacion_elementos_sprint`)
 
 Barrera Fork-Join satisfecha (DEV-BACK y DEV-FRONT finalizaron). QA-AUTO auditó las suites entregadas (`tests/Unit/Sprints`, `tests/Integration/Sprints`, specs Jest de `features/sprints`) y añadió pruebas adversariales propias. Sin `Skip`/`xit`. No se modificó código de producción.
 
