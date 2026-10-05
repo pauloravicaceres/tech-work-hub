@@ -1073,3 +1073,11 @@ You can reply with the option letter (e.g., "A"), accept the recommendation by s
 - **⚠️ Puntos Abiertos:** (1) [CAPA:TASKS] T058 y T061 sin ejecutar: Jest (22 specs) y build del frontend nunca corrieron por falta de Node; re-ejecutar con Node 22.22.3 o superior. (2) [CAPA:CODE] subscribe manual del diálogo de registro (precedente HU-001/003/004). (3) [CAPA:CODE] comentario "schema sprints" en TeamsModule.cs:41. (4) [CAPA:SPEC] puntos abiertos 1 a 8 de la HU y text frente a varchar(255) en auditoría. (5) [CAPA:CODE] helpers de prueba sin CancellationToken (ambigüedad de la constitución).
 @WATCHER: GITOPS-MERGE-CLOSE feat/012-HU_miembros_equipo_y_roles_tecnicos
 - **Handoff:** @PM: Código certificado y rama consolidada en dev. Las épicas P1 a P6 ya tienen historias registradas en el ledger y quedan historias en BACKLOG (005 a 011 y 013 a 034): procede a asignar la siguiente historia del backlog.
+
+### [04-10-2026] Product Manager
+- **Hora:** 20:16:00
+- **Artefacto generado:** `specs/README.md`
+- **Estado:** Ledger actualizado: 012 promovida a ACTIVE (rama fusionada); ninguna otra HU fusionada en estado previo. Descomposición verificada: todas las capacidades de P1 a P6 ya tienen fila en BACKLOG, sin faltantes. Selección (épica en curso P2): 013 bloqueada por ❓ modelo de capacidad, 014 depende de actividades de P4 aún no construidas, 015 elegible (depende de 012 ACTIVE y de elementos de P1 ya construidos, sin ❓). 015 pasa a IN-PROGRESS.
+- **⚠️ Puntos Abiertos:** Ninguno bloqueante para 015. Siguen abiertos los ❓ del plan (estados, retrasada, en riesgo, capacidad, incidentes, adjuntos, documentación, Sprint).
+@WATCHER: GITOPS-BRANCH-CREATE feat/015-HU_relacion_personas_roles_elementos
+- **Handoff:** @BA: Iniciar el análisis de negocio y redacción de la Historia de Usuario seleccionada.
