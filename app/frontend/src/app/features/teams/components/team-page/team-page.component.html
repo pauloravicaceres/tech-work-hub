@@ -4,8 +4,8 @@
 
 <div class="flex justify-content-between align-items-center mb-3">
   <div>
-    <h2 class="m-0">MIEMBROS DEL EQUIPO</h2>
-    <p class="m-0">Personas del equipo técnico y su rol.</p>
+    <h2 class="m-0">{{ title() }}</h2>
+    <p class="m-0">{{ subtitle() }}</p>
   </div>
   @if (tab() === 'miembros') {
     <p-button label="Registrar miembro" icon="pi pi-plus" (onClick)="openDialog()" />
@@ -16,10 +16,22 @@
   <p-tablist>
     <p-tab value="miembros" (click)="selectTab('miembros')">Miembros</p-tab>
     <p-tab value="roles" (click)="selectTab('roles')">Roles técnicos</p-tab>
+    <p-tab value="responsables" (click)="selectTab('responsables')">Responsables</p-tab>
   </p-tablist>
 </p-tabs>
 
 @switch (state().status) {
+  @case ('idle') {
+    <div class="flex gap-2 mt-3 mb-3">
+      <p-button label="Por elemento" [outlined]="view() !== 'elemento'" (onClick)="selectView('elemento')" />
+      <p-button label="Por miembro" [outlined]="view() !== 'miembro'" (onClick)="selectView('miembro')" />
+    </div>
+    @if (view() === 'miembro') {
+      <app-member-items-view (unauthorized)="onUnauthorized()" />
+    } @else {
+      <app-item-assignees-view (unauthorized)="onUnauthorized()" />
+    }
+  }
   @case ('loading') {
     <p-message severity="info" styleClass="mt-3">Cargando...</p-message>
   }

@@ -1,0 +1,77 @@
+
+<div class="scalein animation-duration-500 h-full w-full m-0 py-4 px-4">
+    <div class="text-center mb-5">
+        <div class="text-900 text-3xl font-medium mb-3">RECUPERAR CONTRASEÑA</div>
+    </div>
+
+    <div class="w-full md:w-10 mx-auto" *ngIf="formActive == 'email'">
+        <div class="p-inputgroup">
+            <span class="p-inputgroup-addon"><i class="pi pi-at"></i></span>
+            <input type="text" placeholder="Correo electrónico" pInputText styleClass="w-full" class="p-inputtext-lg"
+            [(ngModel)]="recoverForm.email.val" #email="ngModel">
+        </div>
+        
+        <div class="p-inputgroup mb-2" *ngIf="(send && !recoverForm.email.isValid())">
+            <small class="p-error block">{{ recoverForm.email.error }}</small>
+        </div>
+
+        <div class="flex align-items-center justify-content-between mb-5 mt-2">
+            <a class="font-medium no-underline ml-2 text-right cursor-pointer" (click)="goToEnterForm()">Volver</a>
+        </div>
+        <button pButton pRipple label="Siguiente" class="w-full p-3 text-xl" (click)="sendCode()"></button>
+    </div>
+
+
+    <div class="w-full md:w-10 mx-auto" *ngIf="formActive == 'code'">
+        <div class="p-inputgroup">
+            <span class="p-inputgroup-addon"><i class="pi pi-code"></i></span>
+            <p-inputMask mask="99999" styleClass="w-full" class="p-inputtext-lg"
+            [(ngModel)]="code"></p-inputMask>
+        </div>
+        <div class="p-inputgroup mb-2" *ngIf="(validating && code == '')">
+            <small class="p-error block">Ingrese el código que se envió a su correo</small>
+        </div>
+
+        <div class="flex align-items-center justify-content-between mb-5 mt-2">
+            <a class="font-medium no-underline ml-2 text-right cursor-pointer" (click)="goToEnterForm()">Volver</a>
+        </div>
+        <button pButton pRipple label="Siguiente" class="w-full p-3 text-xl" (click)="validateCode()"></button>
+    </div>
+
+
+    <div class="w-full md:w-10 mx-auto" *ngIf="formActive == 'password'">
+        
+        
+        <div class="p-inputgroup mb-3">
+            <span class="p-inputgroup-addon"><i class="pi pi-lock"></i></span>
+            <p-password [toggleMask]="true" placeholder="Nueva contraseña" styleClass="w-full" class="p-inputtext-lg"
+            [(ngModel)]="passwordForm.password" #clave="ngModel">
+            </p-password>
+        </div>
+    
+    
+        <div class="p-inputgroup">
+            <span class="p-inputgroup-addon"><i class="pi pi-lock"></i></span>
+            <p-password [toggleMask]="true" placeholder="Repetir contraseña" styleClass="w-full" class="p-inputtext-lg"
+            [(ngModel)]="passwordForm.repeat_password" #repetir_clave="ngModel">
+            </p-password>
+        </div>
+
+        <div class="p-inputgroup mb-2" *ngIf="(creating && (!passwordForm.password.isValid() || !passwordForm.repeat_password.isValid()))">
+            <small class="p-error block">{{ passwordForm.password.error }}</small>
+        </div>
+        <div class="p-inputgroup mb-2" *ngIf="(creating && passwordForm.password.isValid() && passwordForm.repeat_password.isValid() && passwordForm.password.val != passwordForm.repeat_password.val)">
+            <small class="p-error block">Las contraseñas no coinciden</small>
+        </div>
+
+
+        <div class="flex align-items-center justify-content-between mb-5 mt-2">
+            <a class="font-medium no-underline ml-2 text-right cursor-pointer" (click)="goToEnterForm()">Volver</a>
+        </div>
+        <button pButton pRipple label="Siguiente" class="w-full p-3 text-xl" (click)="updatePassword()"></button>
+    </div>
+
+
+</div>
+
+<!-- <app-basic-message [icono]="icono" [estilo]="estilo" [dialogMessage]="dialogMessage"></app-basic-message> -->

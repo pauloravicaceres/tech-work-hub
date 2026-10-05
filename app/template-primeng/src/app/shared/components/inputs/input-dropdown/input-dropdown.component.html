@@ -1,0 +1,48 @@
+
+<div class="p-fluid">
+    <div class="field" *ngIf="!floatLabel">
+        <label>
+            {{ label }}
+        </label>
+        <span class="p-input-icon-left">
+            <p-dropdown
+            [id]="id"
+            [options]="options"
+            [optionLabel]="optionLabel"
+            [optionValue]="optionValue"
+            [showClear]="showClear"
+            [(ngModel)]="ngModel"
+            (onChange)="onChange.emit($event);"
+            (ngModelChange)="ngModelChange.emit($event)">
+            </p-dropdown>
+            <i
+            *ngIf="spinner"
+            class="pi pi-spin pi-spinner">
+            </i>
+        </span>
+    </div>
+    <div class="field field-float-label-container" *ngIf="floatLabel">
+        <span class="p-input-icon-right">
+            <span class="p-float-label">
+                <p-dropdown
+                [id]="id"
+                [options]="options"
+                [optionLabel]="optionLabel"
+                [optionValue]="optionValue"
+                [showClear]="showClear"
+                [(ngModel)]="ngModel"
+                (onChange)="onChange.emit($event);"
+                (ngModelChange)="ngModelChange.emit($event)">
+                </p-dropdown>
+                <label
+                [for]="id">
+                    {{ label }}
+                </label>
+            </span>
+            <i
+            *ngIf="spinner"
+            class="pi pi-spin pi-spinner" style="margin-right: 2rem;">
+            </i>
+        </span>
+    </div>
+</div>

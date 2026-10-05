@@ -6,7 +6,7 @@
       <p-message severity="error" styleClass="mb-3">{{ banner }}</p-message>
     }
 
-    <div class="p-fluid grid">
+    <p-fluid class="grid">
       <div class="col-12 mb-3">
         <label for="identification">IDENTIFICACIÓN (*)</label>
         <input
@@ -18,9 +18,9 @@
           autofocus
         />
         @if (fieldErrors().identification; as serverMessage) {
-          <small class="p-error block">{{ serverMessage }}</small>
+          <p-message severity="error" variant="simple" size="small">{{ serverMessage }}</p-message>
         } @else if (form.controls.identification.invalid && form.controls.identification.touched) {
-          <small class="p-error block">La identificación es obligatoria y no puede exceder los 100 caracteres.</small>
+          <p-message severity="error" variant="simple" size="small">La identificación es obligatoria y no puede exceder los 100 caracteres.</p-message>
         }
       </div>
 
@@ -28,9 +28,9 @@
         <label for="startDate">FECHA DE INICIO (*)</label>
         <p-datepicker inputId="startDate" formControlName="startDate" dateFormat="dd/mm/yy" [showIcon]="true" />
         @if (fieldErrors().startDate; as serverMessage) {
-          <small class="p-error block">{{ serverMessage }}</small>
+          <p-message severity="error" variant="simple" size="small">{{ serverMessage }}</p-message>
         } @else if (form.controls.startDate.invalid && form.controls.startDate.touched) {
-          <small class="p-error block">La fecha de inicio es obligatoria.</small>
+          <p-message severity="error" variant="simple" size="small">La fecha de inicio es obligatoria.</p-message>
         }
       </div>
 
@@ -39,12 +39,12 @@
         <p-datepicker inputId="endDate" formControlName="endDate" dateFormat="dd/mm/yy" [showIcon]="true" />
         <small class="block">Ventana de 2 semanas: 14 días calendario, extremos incluidos.</small>
         @if (fieldErrors().endDate; as serverMessage) {
-          <small class="p-error block">{{ serverMessage }}</small>
+          <p-message severity="error" variant="simple" size="small">{{ serverMessage }}</p-message>
         } @else if (form.controls.endDate.invalid && form.controls.endDate.touched) {
-          <small class="p-error block">La fecha de fin es obligatoria.</small>
+          <p-message severity="error" variant="simple" size="small">La fecha de fin es obligatoria.</p-message>
         }
       </div>
-    </div>
+    </p-fluid>
 
     <div class="flex justify-content-end gap-2 mt-3">
       <p-button label="Cancelar" icon="pi pi-times" severity="secondary" [outlined]="true" type="button" (onClick)="onCancel()" />

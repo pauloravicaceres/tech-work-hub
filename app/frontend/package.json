@@ -6,7 +6,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "test": "jest"
+    "test": "jest",
+    "lint:primeng": "node scripts/lint-primeng.mjs"
   },
   "dependencies": {
     "@angular/common": "^22.2.1",

@@ -768,6 +768,26 @@ def ejecutar_sdd_fase_arquitectura(ruta_hu: str = ""):
         print(f"❌ [SDD Arquitectura] Error inesperado: {e}")
         return False
 
+MARCAS_TAREA_BACKEND = ("app/backend", "dotnet ", ".cs`", ".csproj")
+
+def backend_sin_tareas_pendientes():
+    """
+    True solo si tasks.md (carpeta de .specify/feature.json) existe y NO queda ninguna tarea sin marcar
+    ([ ]) que toque backend. Ante cualquier duda (archivo ausente, ilegible o sin tareas) devuelve False,
+    es decir, se conserva el comportamiento anterior y el backend se ejecuta.
+    """
+    try:
+        feature = json.loads((DIRECTORIO_RAIZ / ".specify" / "feature.json").read_text(encoding="utf-8"))
+        tasks = DIRECTORIO_RAIZ / feature["feature_directory"] / "tasks.md"
+        lineas = tasks.read_text(encoding="utf-8", errors="replace").splitlines()
+    except (OSError, ValueError, KeyError):
+        return False
+    tareas = [l for l in lineas if re.match(r"^\s*- \[[ xX]\] T\d+", l)]
+    if not tareas:
+        return False
+    pendientes = [l for l in tareas if re.match(r"^\s*- \[ \]", l)]
+    return not any(m in l for l in pendientes for m in MARCAS_TAREA_BACKEND)
+
 def ejecutar_sdd_fase_implementacion(retrabajo=None):
     """
     Hito 3 del SDD Auto-Runner: Fase D (Implementación) usando SpecKit + Soul Mounting.
@@ -815,6 +835,17 @@ def ejecutar_sdd_fase_implementacion(retrabajo=None):
                 f"que correspondan a este alcance; no rehagas tareas ya validadas. Hallazgos a resolver: {segmentos.get(capa, '')}"
             )
         
+        # Reintento de solo frontend: si el backend ya no tiene tareas pendientes y su documentación viva
+        # existe, se omite. Si no, SpecKit no tocaría backend-architecture.md y el post-check abortaría la
+        # fase antes de llegar al frontend. Sin frontend que ejecutar nunca se omite (no habría handoff).
+        if involucra_backend and involucra_frontend and backend_sin_tareas_pendientes():
+            doc_back = DIRECTORIO_RAIZ / "documents" / "dev-backend" / "backend-architecture.md"
+            readme_back = DIRECTORIO_RAIZ / ruta_readme_codigo("backend")
+            if doc_back.exists() and doc_back.stat().st_size > 0 and readme_back.exists() and readme_back.stat().st_size > 0:
+                involucra_backend = False
+                print("⏭️ [SDD Implementación] Backend sin tareas pendientes en tasks.md: se omite y se continúa con Frontend.")
+                write_watcher_log("⏭️ [SDD Auto-Runner] Backend sin tareas pendientes en tasks.md; se omite y se continúa con Frontend.")
+
         # 1. Ejecutar Backend si aplica
         if involucra_backend:
             print("🚀 [Soul Mounting] Montando alma de @DEV-BACK...")

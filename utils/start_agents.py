@@ -28,35 +28,30 @@ if sys.platform == "win32":
 # ==========================================
 WORKSPACE_DIR = Path(__file__).resolve().parent.parent
 
-# Nombre amigable -> ID de modelo válido para `claude --model`
-MODEL_IDS = {
-    "Sonnet 5": "claude-sonnet-5-5",
-}
-
 TABS_CONFIG = {
     "Negocio y Producto": [
         # Fila 1
-        {"name": "business-storyteller", "model": "Sonnet 5", "effort": "low"},
-        {"name": "product-manager",     "model": "Sonnet 5", "effort": "low", "target": "business-storyteller", "direction": "right"},
-        {"name": "business-analyst",    "model": "Sonnet 5", "effort": "medium", "target": "product-manager", "direction": "right"},
+        {"name": "business-storyteller", "model": "claude-sonnet-5-5", "effort": "low"},
+        {"name": "product-manager",     "model": "claude-sonnet-5-5", "effort": "low", "target": "business-storyteller", "direction": "right"},
+        {"name": "business-analyst",    "model": "claude-sonnet-5-5", "effort": "medium", "target": "product-manager", "direction": "right"},
 
         # Fila 2
-        {"name": "product-analyst",     "model": "Sonnet 5", "effort": "low", "target": "business-storyteller", "direction": "down"},
-        {"name": "qa-documental",       "model": "Sonnet 5", "effort": "low", "target": "product-manager", "direction": "down"},
-        {"name": "designer-ux",         "model": "Sonnet 5", "effort": "low", "target": "business-analyst", "direction": "down"},
+        {"name": "product-analyst",     "model": "claude-sonnet-5-5", "effort": "low", "target": "business-storyteller", "direction": "down"},
+        {"name": "qa-documental",       "model": "claude-sonnet-5-5", "effort": "low", "target": "product-manager", "direction": "down"},
+        {"name": "designer-ux",         "model": "claude-sonnet-5-5", "effort": "low", "target": "business-analyst", "direction": "down"},
     ],
     "Arquitectura e Ingeniería": [
-        {"name": "solutions-architect", "model": "Sonnet 5", "effort": "medium"},
-        {"name": "data-architect",      "model": "Sonnet 5", "effort": "medium", "target": "solutions-architect", "direction": "right"},
-        {"name": "api-architect",       "model": "Sonnet 5", "effort": "medium", "target": "solutions-architect", "direction": "down"},
-        {"name": "qa-tech",             "model": "Sonnet 5", "effort": "medium", "target": "data-architect", "direction": "down"},
+        {"name": "solutions-architect", "model": "claude-sonnet-5-5", "effort": "medium"},
+        {"name": "data-architect",      "model": "claude-sonnet-5-5", "effort": "medium", "target": "solutions-architect", "direction": "right"},
+        {"name": "api-architect",       "model": "claude-sonnet-5-5", "effort": "medium", "target": "solutions-architect", "direction": "down"},
+        {"name": "qa-tech",             "model": "claude-sonnet-5-5", "effort": "medium", "target": "data-architect", "direction": "down"},
     ],
     "Desarrollo y Despliegue": [
         # Fase D automatizada: @DEV-BACK y @DEV-FRONT son asimilados por SpecKit.
         # Solo mantenemos a los auditores e infraestructura.
-        {"name": "qa-auto",      "model": "Sonnet 5", "effort": "low"},
-        {"name": "code-review",  "model": "Sonnet 5", "effort": "low", "target": "qa-auto", "direction": "right"},
-        {"name": "devops",       "model": "Sonnet 5", "effort": "low", "target": "code-review", "direction": "right"},
+        {"name": "qa-auto",      "model": "claude-sonnet-5-5", "effort": "low"},
+        {"name": "code-review",  "model": "claude-sonnet-5-5", "effort": "low", "target": "qa-auto", "direction": "right"},
+        {"name": "devops",       "model": "claude-sonnet-5-5", "effort": "low", "target": "code-review", "direction": "right"},
     ]
 }
 
@@ -142,10 +137,8 @@ def extraer_id_pane(salida_cruda):
 
 def configurar_agente_en_panel(pane_id, nombre_agente, config_agente):
     """Renombra el panel, inicia el agente con sandboxing y asigna modelo/esfuerzo FinOps."""
-    modelo_base = config_agente.get("model", "Sonnet 5")
+    modelo_final = config_agente.get("model", "claude-sonnet-5-5")
     esfuerzo = config_agente.get("effort", "low")
-    # Claude Code no acepta nombres de visualización ("Sonnet 5 (Medium)"): usar ID/alias
-    modelo_final = MODEL_IDS.get(modelo_base, modelo_base)
 
     # 1. Renombrar panel en Herdr
     try:

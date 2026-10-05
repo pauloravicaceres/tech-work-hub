@@ -1,0 +1,280 @@
+{
+    "data": [
+        {
+         "row": 1,
+         "category_id": "400",
+         "product_id": "000400",
+         "product_code": "000400",
+         "product_name": "ADEUDADO"
+        },
+        {
+         "row": 2,
+         "category_id": "345",
+         "product_id": "000345",
+         "product_code": "000345",
+         "product_name": "ADEUDADO COFIDE"
+        },
+        {
+         "row": 3,
+         "category_id": "345",
+         "product_id": "000301",
+         "product_code": "000301",
+         "product_name": "ADEUDADO COFIDE VAC"
+        },
+        {
+         "row": 4,
+         "category_id": "250",
+         "product_id": "000250",
+         "product_code": "000250",
+         "product_name": "AVANCE EN CUENTA CORRIENTE"
+        },
+        {
+         "row": 5,
+         "category_id": "143",
+         "product_id": "000143",
+         "product_code": "000143",
+         "product_name": "FIDEICOMISO BANCO NUEVO MUNDO"
+        },
+        {
+         "row": 6,
+         "category_id": "141",
+         "product_id": "000141",
+         "product_code": "000141",
+         "product_name": "FIDEICOMISO LATINO LEASING"
+        },
+        {
+         "row": 7,
+         "category_id": "112",
+         "product_id": "000112",
+         "product_code": "000112",
+         "product_name": "FINANCIAMIENTO - LEASE BACK"
+        },
+        {
+         "row": 8,
+         "category_id": "111",
+         "product_id": "000111",
+         "product_code": "000111",
+         "product_name": "FINANCIAMIENTO - LEASING"
+        },
+        {
+         "row": 9,
+         "category_id": "211",
+         "product_id": "000211",
+         "product_code": "000211",
+         "product_name": "FINANCIAMIENTO - PAGARE TASA VENCIDA"
+        },
+        {
+         "row": 10,
+         "category_id": "212",
+         "product_id": "000212",
+         "product_code": "000212",
+         "product_name": "FINANCIAMIENTO - PAGARE TASA VENCIDA VAC"
+        },
+        {
+         "row": 11,
+         "category_id": "240",
+         "product_id": "000240",
+         "product_code": "000240",
+         "product_name": "FINANCIAMIENTO - SUCURSAL PANAMA"
+        },
+        {
+         "row": 12,
+         "category_id": "241",
+         "product_id": "000241",
+         "product_code": "000241",
+         "product_name": "FINANCIAMIENTO COMERCIO EXTERIOR"
+        },
+        {
+         "row": 13,
+         "category_id": "241",
+         "product_id": "0211",
+         "product_code": "0211",
+         "product_name": "FINANCIAMIENTO COMERCIO EXTERIOR"
+        },
+        {
+         "row": 14,
+         "category_id": "211",
+         "product_id": "000242",
+         "product_code": "000242",
+         "product_name": "FINANCIAMIENTOS ESPECIALES"
+        },
+        {
+         "row": 15,
+         "category_id": "132",
+         "product_id": "000132",
+         "product_code": "000132",
+         "product_name": "JUDICIAL - LEASE BACK"
+        },
+        {
+         "row": 16,
+         "category_id": "131",
+         "product_id": "000131",
+         "product_code": "000131",
+         "product_name": "JUDICIAL - LEASING"
+        },
+        {
+         "row": 17,
+         "category_id": "232",
+         "product_id": "000232",
+         "product_code": "000232",
+         "product_name": "JUDICIAL - PAGARE TASA VENCIDA VAC"
+        },
+        {
+         "row": 18,
+         "category_id": "173",
+         "product_id": "000173",
+         "product_code": "000173",
+         "product_name": "JUDICIAL FIDEICOMISO BANCO NUEVO MUNDO"
+        },
+        {
+         "row": 19,
+         "category_id": "142",
+         "product_id": "000142",
+         "product_code": "000142",
+         "product_name": "JUDICIAL FIDEICOMISO LATINO LEASING"
+        },
+        {
+         "row": 20,
+         "category_id": "115",
+         "product_id": "000160",
+         "product_code": "000160",
+         "product_name": "LEASING BPE"
+        },
+        {
+         "row": 21,
+         "category_id": "115",
+         "product_id": "000115",
+         "product_code": "000115",
+         "product_name": "LEASING BPE (NO USAR)"
+        },
+        {
+         "row": 22,
+         "category_id": "180",
+         "product_id": "000180",
+         "product_code": "000180",
+         "product_name": "LEASING OPERATIVO"
+        },
+        {
+         "row": 23,
+         "category_id": "280",
+         "product_id": "000280",
+         "product_code": "000280",
+         "product_name": "PAGARE - EUROS"
+        },
+        {
+         "row": 24,
+         "category_id": "215",
+         "product_id": "000360",
+         "product_code": "000360",
+         "product_name": "PAGARE DESCONTADO NO USAR"
+        },
+        {
+         "row": 25,
+         "category_id": "211",
+         "product_id": "330",
+         "product_code": "330",
+         "product_name": "PAGARE PRUEBA"
+        },
+        {
+         "row": 26,
+         "category_id": "215",
+         "product_id": "000215",
+         "product_code": "000215",
+         "product_name": "PAGARE TASA DESCONTADA"
+        },
+        {
+         "row": 27,
+         "category_id": "215",
+         "product_id": "000331",
+         "product_code": "000331",
+         "product_name": "PAGARE TASA DESCONTADA 2"
+        },
+        {
+         "row": 28,
+         "category_id": "215",
+         "product_id": "000332",
+         "product_code": "000332",
+         "product_name": "PAGARE TASA DESCONTADA 4"
+        },
+        {
+         "row": 29,
+         "category_id": "211",
+         "product_id": "365",
+         "product_code": "365",
+         "product_name": "PRUEBA 3"
+        },
+        {
+         "row": 30,
+         "category_id": "163",
+         "product_id": "000163",
+         "product_code": "000163",
+         "product_name": "REESTRUCTURADO FIDEICOMISO BANCO NUEVO MUNDO"
+        },
+        {
+         "row": 31,
+         "category_id": "245",
+         "product_id": "000245",
+         "product_code": "000245",
+         "product_name": "REF FINANCIAMIENTOS ESPECIALES"
+        },
+        {
+         "row": 32,
+         "category_id": "153",
+         "product_id": "000153",
+         "product_code": "000153",
+         "product_name": "REFINANCIADO FIDEICOMISO BANCO NUEVO MUNDO"
+        },
+        {
+         "row": 33,
+         "category_id": "154",
+         "product_id": "000154",
+         "product_code": "000154",
+         "product_name": "REFINANCIADO FIDEICOMISO NUEVO MUNDO SIN IGV"
+        },
+        {
+         "row": 34,
+         "category_id": "122",
+         "product_id": "000122",
+         "product_code": "000122",
+         "product_name": "REFINANCIAMIENTO - LEASE BACK"
+        },
+        {
+         "row": 35,
+         "category_id": "121",
+         "product_id": "000121",
+         "product_code": "000121",
+         "product_name": "REFINANCIAMIENTO - LEASING"
+        },
+        {
+         "row": 36,
+         "category_id": "222",
+         "product_id": "000222",
+         "product_code": "000222",
+         "product_name": "REFINANCIAMIENTO - PAGARE TASA VENCIDA VAC"
+        },
+        {
+         "row": 37,
+         "category_id": "151",
+         "product_id": "000151",
+         "product_code": "000151",
+         "product_name": "REFINANCIAMIENTO FIDEICOMISO LATINO LEASING"
+        },
+        {
+         "row": 38,
+         "category_id": "152",
+         "product_id": "000152",
+         "product_code": "000152",
+         "product_name": "REFINANCIAMIENTO LAT.LS.SIN IGV"
+        },
+        {
+         "row": 39,
+         "category_id": "221",
+         "product_id": "000221",
+         "product_code": "000221",
+         "product_name": "REFINANCIAMIENTO- PAGARE TASA VENCIDA"
+        }
+    ],
+    "totalRecords": 39,
+    "error": false,
+    "msg": ""
+}

@@ -1,0 +1,28 @@
+
+<div class="p-fluid">
+    <div class="field" *ngIf="!floatLabel">
+        <label>
+            {{ label }}
+        </label>
+        <input
+        pInputText
+        [id]="id"
+        type="text"
+        [(ngModel)]="ngModel"
+        (ngModelChange)="ngModelChange.emit($event)">
+    </div>
+    <div class="field field-float-label-container" *ngIf="floatLabel">
+        <span class="p-float-label">
+            <input
+            pInputText
+            [id]="id"
+            type="text"
+            [(ngModel)]="ngModel"
+            (ngModelChange)="ngModelChange.emit($event)" />
+            <label
+            [for]="id">
+                {{ label }}
+            </label>
+        </span>
+    </div>
+</div>

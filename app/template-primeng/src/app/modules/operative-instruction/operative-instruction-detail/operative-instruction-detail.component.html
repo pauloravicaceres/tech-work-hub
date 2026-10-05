@@ -1,0 +1,193 @@
+
+
+<p-blockUI [blocked]="loading">
+    <i class="pi pi-spin pi-spinner" style="font-size: 2.5rem"></i>
+</p-blockUI>
+
+<div class="ed-grid rows-gap s-gap-05 m-gap-2 s-grid-4 m-grid-6 lg-grid-12">
+    <div class="s-cols-4 m-cols-2 lg-cols-4">
+        <div class="p-fluid">
+            <div class="field">
+                <label>
+                    {{'modules.operative-instruction.form-detail.credit-number' | translate}}
+                </label>
+                <input
+                id="credit_number-input"
+                type="text"
+                pInputText
+                [disabled]="isReadOnly"
+                [(ngModel)]="form.credit_number.val"
+                #credit_number="ngModel">
+                <small
+                class="p-error block"
+                *ngIf="(send && !form.credit_number.isValid())">
+                    {{ form.credit_number.error | translate}}
+                </small>
+            </div>
+        </div>
+    </div>
+    <div class="s-cols-4 m-cols-4 lg-cols-12">
+        <div class="p-fluid">
+            <div class="field">
+                <label>
+                    {{'modules.operative-instruction.form-detail.client' | translate}}
+                </label>
+                <input
+                id="credit_number-input"
+                type="text"
+                pInputText
+                [disabled]="isReadOnly"
+                [(ngModel)]="form.client.val">
+                <small
+                class="p-error block"
+                *ngIf="(send && !form.client.isValid())">
+                    {{ form.client.error | translate}}
+                </small>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="s-cols-4 m-cols-3 lg-cols-12">
+        <div class="p-fluid">
+            <div class="field">
+                <label>
+                    {{'modules.operative-instruction.form-detail.category' | translate}}
+                </label>
+                <p-dropdown
+                [options]="formListFilter.category!.list"
+                optionLabel="category_name"
+                optionValue="category_id"
+                [showClear]="true"
+                [(ngModel)]="form.category.val"
+                appendTo="body"
+                [disabled]="isReadOnly"
+                (onChange)="loadProducts($event.value)">
+                </p-dropdown>
+                <small
+                class="p-error block"
+                *ngIf="(send && !form.category.isValid())">
+                    {{ form.category.error | translate}}
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <div class="s-cols-4 m-cols-3 lg-cols-6">
+        <div class="p-fluid">
+            <div class="field">
+                <label>
+                    {{'modules.operative-instruction.form-detail.product' | translate}}
+                </label>
+                <span class="p-input-icon-left">
+                    <p-dropdown
+                    [options]="formListFilter.product!.list"
+                    optionLabel="product_name"
+                    optionValue="product_id"
+                    [showClear]="true"
+                    [(ngModel)]="form.product.val"
+                    appendTo="body"
+                    [disabled]="isReadOnly"
+                    (onChange)="loadSubproducts($event.value)">
+                    </p-dropdown>
+                    <i class="pi pi-spin pi-spinner"
+                    *ngIf="formListFilter.product!.load"></i>
+                    <small
+                    class="p-error block"
+                    *ngIf="(send && !form.product.isValid())">
+                        {{ form.product.error | translate}}
+                    </small>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="s-cols-4 m-cols-3 lg-cols-6">
+        <div class="p-fluid">
+            <div class="field">
+                <label>
+                    {{'modules.operative-instruction.form-detail.subproduct' | translate}}
+                </label>
+                <span class="p-input-icon-left">
+                    <p-dropdown
+                    [options]="formListFilter.subproduct!.list"
+                    optionLabel="subproduct_name"
+                    optionValue="subproduct_id"
+                    [showClear]="true"
+                    appendTo="body"
+                    [disabled]="isReadOnly"
+                    [(ngModel)]="form.subproduct.val">
+                    </p-dropdown>
+                    <i class="pi pi-spin pi-spinner"
+                    *ngIf="formListFilter.subproduct!.load"></i>
+                    <small
+                    class="p-error block"
+                    *ngIf="(send && !form.subproduct.isValid())">
+                        {{ form.subproduct.error | translate}}
+                    </small>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="s-cols-4 m-cols-3 lg-cols-6">
+        <div class="p-fluid">
+            <div class="field">
+                <label>
+                    {{'modules.operative-instruction.form-detail.value-date' | translate}}
+                </label>
+                <span class="p-input-icon-right">
+                    <p-calendar 
+                    [(ngModel)]="form.value_date.val"
+                    [maxDate]="maxDate"
+                    dateFormat="dd/mm/yy"
+                    [disabled]="isReadOnly"
+                    appendTo="body"
+                    [showClear]="true">
+                    </p-calendar>
+                    <i class="pi pi-calendar"></i>
+                </span>
+                <small
+                class="p-error block"
+                *ngIf="(send && !form.value_date.isValid())">
+                    {{ form.value_date.error | translate}}
+                </small>
+            </div>
+        </div>
+    </div>
+    <div class="s-cols-4 m-cols-3 lg-cols-6">
+        <div class="p-fluid">
+            <div class="field">
+                <label>
+                    {{'modules.operative-instruction.form-detail.register-date' | translate}}
+                </label>
+                <span class="p-input-icon-right">
+                    <p-calendar
+                    [(ngModel)]="form.register_date.val"
+                    [maxDate]="maxDate"
+                    dateFormat="dd/mm/yy"
+                    [disabled]="isReadOnly"
+                    appendTo="body"
+                    [showClear]="true">
+                    </p-calendar>
+                    <i class="pi pi-calendar"></i>
+                </span>
+                <small
+                class="p-error block"
+                *ngIf="(send && !form.register_date.isValid())">
+                    {{ form.register_date.error | translate}}
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- <ng-template pTemplate="header">
+    <div style="width: 100%; text-align: center;">
+        <span style="font-size: 1.3rem; font-weight: 500;">
+            {{'modules.operative-instruction.form-detail.register-date' | translate}}
+        </span>
+    </div>
+</ng-template> -->

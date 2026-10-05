@@ -4,15 +4,15 @@
   <p>Diligencie los campos requeridos para incorporar el requerimiento a la planificación.</p>
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <div class="p-fluid grid">
+    <p-fluid class="grid">
       <div class="col-12 md:col-6 lg:col-4 mb-3">
         <label for="title">TÍTULO DEL ELEMENTO (*)</label>
         <input pInputText id="title" formControlName="title" placeholder="Ej: Implementar autenticación..." />
         <small class="block">{{ charsCount() }}/200</small>
         @if (fieldErrors().title; as serverMessage) {
-          <small class="p-error block">{{ serverMessage }}</small>
+          <p-message severity="error" variant="simple" size="small">{{ serverMessage }}</p-message>
         } @else if (form.controls.title.invalid && form.controls.title.touched) {
-          <small class="p-error block">El título es un campo obligatorio y no puede exceder los 200 caracteres.</small>
+          <p-message severity="error" variant="simple" size="small">El título es un campo obligatorio y no puede exceder los 200 caracteres.</p-message>
         }
       </div>
 
@@ -20,7 +20,7 @@
         <label for="type">TIPO (*)</label>
         <p-select inputId="type" [options]="types" formControlName="type" />
         @if (fieldErrors().type; as serverMessage) {
-          <small class="p-error block">{{ serverMessage }}</small>
+          <p-message severity="error" variant="simple" size="small">{{ serverMessage }}</p-message>
         }
       </div>
 
@@ -28,7 +28,7 @@
         <label for="priority">PRIORIDAD (*)</label>
         <p-select inputId="priority" [options]="priorities" formControlName="priority" />
         @if (fieldErrors().priority; as serverMessage) {
-          <small class="p-error block">{{ serverMessage }}</small>
+          <p-message severity="error" variant="simple" size="small">{{ serverMessage }}</p-message>
         }
       </div>
 
@@ -44,10 +44,10 @@
           placeholder="(Sin aplicación vinculada)"
         />
         @if (fieldErrors().applicationId; as serverMessage) {
-          <small class="p-error block">{{ serverMessage }}</small>
+          <p-message severity="error" variant="simple" size="small">{{ serverMessage }}</p-message>
         }
         @if (applicationsLoadFailed()) {
-          <small class="p-error block">No fue posible cargar el catálogo de aplicaciones. Puede registrar el ítem sin aplicación vinculada.</small>
+          <p-message severity="error" variant="simple" size="small">No fue posible cargar el catálogo de aplicaciones. Puede registrar el ítem sin aplicación vinculada.</p-message>
         }
       </div>
 
@@ -62,9 +62,9 @@
         <label for="devPoints">ESTIMACIÓN DESARROLLO (DevPoints)</label>
         <p-inputnumber inputId="devPoints" formControlName="devPoints" [min]="0" [step]="0.5" mode="decimal" />
         @if (fieldErrors().devPoints; as serverMessage) {
-          <small class="p-error block">{{ serverMessage }}</small>
+          <p-message severity="error" variant="simple" size="small">{{ serverMessage }}</p-message>
         } @else if (form.controls.devPoints.invalid && form.controls.devPoints.touched) {
-          <small class="p-error block">Los puntos de estimación deben ser mayores o iguales a cero.</small>
+          <p-message severity="error" variant="simple" size="small">Los puntos de estimación deben ser mayores o iguales a cero.</p-message>
         }
       </div>
 
@@ -82,7 +82,7 @@
           <small class="block text-secondary">* Este tipo de ítem técnico no requiere validación QA *</small>
         }
         @if (fieldErrors().qaPoints; as serverMessage) {
-          <small class="p-error block">{{ serverMessage }}</small>
+          <p-message severity="error" variant="simple" size="small">{{ serverMessage }}</p-message>
         }
       </div>
 
@@ -90,7 +90,7 @@
         <label for="description">DESCRIPCIÓN TÉCNICA</label>
         <textarea pTextarea id="description" formControlName="description" rows="4"></textarea>
         @if (fieldErrors().description; as serverMessage) {
-          <small class="p-error block">{{ serverMessage }}</small>
+          <p-message severity="error" variant="simple" size="small">{{ serverMessage }}</p-message>
         }
       </div>
 
@@ -98,10 +98,10 @@
         <label for="acceptanceCriteria">CRITERIOS DE ACEPTACIÓN (Opcional)</label>
         <textarea pTextarea id="acceptanceCriteria" formControlName="acceptanceCriteria" rows="4"></textarea>
         @if (fieldErrors().acceptanceCriteria; as serverMessage) {
-          <small class="p-error block">{{ serverMessage }}</small>
+          <p-message severity="error" variant="simple" size="small">{{ serverMessage }}</p-message>
         }
       </div>
-    </div>
+    </p-fluid>
 
     @if (form.invalid && form.touched) {
       <p-message severity="error">Formulario incompleto: Corrija los errores marcados antes de continuar.</p-message>

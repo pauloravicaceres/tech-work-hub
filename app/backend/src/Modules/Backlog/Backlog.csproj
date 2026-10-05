@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\BuildingBlocks\Shared\Shared.csproj" />
     <ProjectReference Include="..\Sprints\Sprints.csproj" />
+    <ProjectReference Include="..\Teams\Teams.csproj" />
   </ItemGroup>
 
 </Project>

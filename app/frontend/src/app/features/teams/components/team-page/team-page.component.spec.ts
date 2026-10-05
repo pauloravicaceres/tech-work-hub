@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
-import { ActivatedRoute, provideRouter } from '@angular/router';
+import { ActivatedRoute, Router, provideRouter } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { MessageService } from 'primeng/api';
 import { TeamPageComponent } from './team-page.component';
@@ -25,8 +25,8 @@ describe('TeamPageComponent', () => {
   let data$: BehaviorSubject<Record<string, string>>;
   let messages: MessageService;
 
-  const create = (tab: 'miembros' | 'roles' = 'miembros') => {
-    data$.next({ tab });
+  const create = (tab: 'miembros' | 'roles' | 'responsables' = 'miembros', view?: 'elemento' | 'miembro') => {
+    data$.next(view ? { tab, view } : { tab });
     const fixture = TestBed.createComponent(TeamPageComponent);
     fixture.detectChanges();
     return fixture;
@@ -206,5 +206,74 @@ describe('TeamPageComponent', () => {
     // Assert
     http.expectOne(ROLES_URL).flush(ROLES);
     expect(fixture.componentInstance.state().status).toBe('roles');
+  });
+
+  // HU-015 — pestaña "Responsables": vistas Por elemento y Por miembro.
+  it('render_PestanaResponsablesPorElemento_DebeMontarLaVistaDeElementosSinConsultarMiembrosNiRoles', () => {
+    // Arrange
+    const fixture = create('responsables', 'elemento');
+
+    // Act
+    http.expectOne('/api/backlog-items').flush([]);
+    fixture.detectChanges();
+    const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
+
+    // Assert
+    expect(fixture.componentInstance.tab()).toBe('responsables');
+    expect(fixture.componentInstance.view()).toBe('elemento');
+    expect(fixture.componentInstance.title()).toBe('RESPONSABLES DE ELEMENTOS');
+    expect(fixture.componentInstance.breadcrumbItems().map((item) => item.label)).toEqual([
+      'Equipos y Roles',
+      'Responsables',
+      'Por elemento',
+    ]);
+    expect(text).toContain('Seleccione un elemento');
+    expect(text).not.toContain('Registrar miembro');
+  });
+
+  it('render_PestanaResponsablesPorMiembro_DebeMontarLaVistaDeMiembros', () => {
+    // Arrange
+    const fixture = create('responsables', 'miembro');
+
+    // Act
+    http.expectOne(MEMBERS_URL).flush(MEMBERS);
+    fixture.detectChanges();
+
+    // Assert
+    expect(fixture.componentInstance.view()).toBe('miembro');
+    expect(fixture.componentInstance.breadcrumbItems().map((item) => item.label)).toEqual([
+      'Equipos y Roles',
+      'Responsables',
+      'Por miembro',
+    ]);
+    expect((fixture.nativeElement as HTMLElement).textContent).toContain('Seleccione un miembro');
+  });
+
+  it('selectTabYSelectView_DebenNavegarALasRutasDeResponsables', () => {
+    // Arrange
+    const fixture = create();
+    http.expectOne(MEMBERS_URL).flush(MEMBERS);
+    const navigate = jest.spyOn(TestBed.inject(Router), 'navigateByUrl').mockResolvedValue(true);
+
+    // Act
+    fixture.componentInstance.selectTab('responsables');
+    fixture.componentInstance.selectView('miembro');
+    fixture.componentInstance.selectView('elemento');
+
+    // Assert
+    expect(navigate.mock.calls.map(([url]) => url)).toEqual([
+      '/equipos/responsables',
+      '/equipos/responsables/miembro',
+      '/equipos/responsables',
+    ]);
+  });
+
+  it('onUnauthorized_DesdeLaVistaDeResponsables_DebeMostrarElDialogoDeReautenticacion', () => {
+    // Arrange
+    const fixture = create('responsables', 'elemento');
+    http.expectOne('/api/backlog-items').flush(null, { status: 401, statusText: 'Unauthorized' });
+
+    // Assert
+    expect(fixture.componentInstance.sessionExpired()).toBe(true);
   });
 });

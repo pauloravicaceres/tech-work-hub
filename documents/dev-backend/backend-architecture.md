@@ -1,8 +1,8 @@
 # 🏗️ ARQUITECTURA BACKEND VIVA
 
 - **Sistema:** TechWorkHub (Modulith .NET 8, PostgreSQL)
-- **Última actualización:** 2026-10-04 (HU-004: asignación de elementos del Backlog a un Sprint; ver sección 12)
-- **HU vigente:** 004 – Asignación de Elementos del Backlog a un Sprint, sobre 003 – Gestión de Sprint de Dos Semanas (Crear y Consultar), sobre 001 – Registro de Elementos en Backlog Multitipo y 002 – Pruebas de Integración contra Keycloak Real
+- **Última actualización:** 2026-10-05 (HU-015: relación personas–roles–elementos; ver sección 14)
+- **HU vigente:** 015 – Relación entre Personas, Roles y Elementos de Trabajo, sobre 012 – Miembros del Equipo y Roles Técnicos, sobre 004 – Asignación de Elementos del Backlog a un Sprint, sobre 003 – Gestión de Sprint de Dos Semanas (Crear y Consultar), sobre 001 – Registro de Elementos en Backlog Multitipo y 002 – Pruebas de Integración contra Keycloak Real
 - **Fuente de verdad:** `specs/003-HU_gestion_sprint_dos_semanas/` (`plan.md`, `data-model.md`, `contracts/sprints-api.openapi.yaml`, `tasks.md`), `documents/qa-tech/tech-design_003_gestion_sprint_dos_semanas.md`, `specs/002-pruebas-integracion-keycloak-catalogo/` y `specs/001-registro-backlog-multitipo/`
 
 > Renderizado selectivo: solo se documenta lo alterado en esta iteración (host, `Shared`, módulos `Backlog`/`Application`, persistencia, pipeline, errores). Lo no tocado queda como "sin cambios".
@@ -605,7 +605,101 @@ Todos exigen JWT. **Desviación respecto de `tasks.md` (T031/T036):** el 400 por
 
 `Teams.UnitTests` 27 y `Teams.IntegrationTests` 38 (PostgreSQL 16 real por Testcontainers) en verde: migración solo en `teams`, semilla, `UX_TechnicalRoles_Name` (23505), FK (23503), 201/400/401/500, auditoría desde el claim `sub`, no regresión en `backlog` y `sprints`, y consultas con 100 miembros en < 2 s.
 
+## 14. HU-015 — Relación entre personas, roles y elementos de trabajo (renderizado selectivo)
+
+Fuente: `specs/015-HU_relacion_personas_roles_elementos/` (`plan.md`, `data-model.md`, `contracts/item-assignments-api.openapi.yaml`, `tasks.md`). Alcance de esta pasada: solo backend; las tareas de frontend (T004, T015, T021, T022, T031, T032, T037, T045, T048–T050, T053, T056–T058, T062) y el recorrido manual del quickstart (T063) no se ejecutaron. Sin cambios en `Shared`, `Application`, `Sprints`, `BacklogItem`, `BacklogDbContext`, `TeamMember`, `TechnicalRole` ni en la migración `InitialTeamsSchema`.
+
+**Decisión vinculante (ADR-004 del SA):** repetir el par `(itemId, memberId)` es **idempotente**: 200 con la relación existente, sin nueva fila. No hay 409. Pendiente del BA reconciliar `spec.md` (Edge Case y FR-015).
+
+### 14.1 Componentes nuevos o alterados
+
+```mermaid
+flowchart LR
+    subgraph TM[Modules/Teams]
+        EP1[AssignMemberToItemEndpoint POST] --> H1[AssignMemberToItemCommandHandler + Validator]
+        EP2[ListItemAssigneesEndpoint GET] --> H2[ListItemAssigneesQueryHandler]
+        EP3[ListMemberItemsEndpoint GET] --> H3[ListMemberItemsQueryHandler]
+        H1 --> IA[ItemAssignment aggregate]
+        H1 --> DB[(teams.ItemAssignments)]
+        H2 -->|JOIN local| DB
+        H3 --> DB
+        C[Contracts/IBacklogItemLookup]
+    end
+    subgraph BL[Modules/Backlog]
+        LK[BacklogItemLookup solo lectura] --> BDB[(backlog.BacklogItems)]
+        EP4[ListBacklogItemsEndpoint GET]
+    end
+    H1 -->|ExistsAsync| C
+    H3 -->|GetItemsAsync una sola llamada de lote| C
+    LK -.implementa.-> C
+    BL -->|ProjectReference| TM
+```
+
+| Elemento | Ubicación | Nota |
+|---|---|---|
+| `IBacklogItemLookup`, `BacklogItemRef(Id, Title, Type)` | `Teams/Contracts/` | `Type` viaja como `string`; no expone estimaciones, estado ni Sprint |
+| `BacklogItemLookup` | `Backlog/BacklogItemLookup.cs` | `AsNoTracking`, una consulta por lote; registrado en `BacklogModule.cs`; `Backlog.csproj` referencia `Teams.csproj` (Teams no referencia Backlog) |
+| `ItemAssignment`, `ItemAssignmentRules` | `Teams/Domain/ItemAssignments/` | `Aggregate<Guid>, IAuditableEntity`; sin rol, estado ni eventos |
+| `ItemAssignmentConfiguration` + migración `AddItemAssignments` | `Teams/Data/` | Fluent API; solo crea `teams."ItemAssignments"` |
+| `AssignMemberToItem`, `ListItemAssignees`, `ListMemberItems` | `Teams/Features/ItemAssignments/` | Co-localizados (VSA): comando/consulta, validador, handler, endpoint Carter |
+| `ListBacklogItems` | `Backlog/Features/BacklogItems/ListBacklogItems/` | Consulta aditiva `GET /api/backlog-items` para el selector del UX (ADR-006) |
+
+### 14.2 Modelo de datos
+
+```mermaid
+erDiagram
+    TeamMembers ||--o{ ItemAssignments : "FK RESTRICT"
+    ItemAssignments {
+        uuid Id PK
+        uuid ItemId "SIN FK hacia backlog; UNIQUE (ItemId, MemberId) UX_ItemAssignments_ItemId_MemberId"
+        uuid MemberId FK "IX_ItemAssignments_MemberId"
+        timestamptz CreatedAt
+        varchar CreatedBy
+        timestamptz LastModified
+        varchar LastModifiedBy
+    }
+```
+
+El rol NO se almacena: sale del rol técnico vigente del miembro (JOIN local con `TechnicalRoles`).
+
+### 14.3 API
+
+| Método y ruta | Respuestas |
+|---|---|
+| `POST /api/backlog-items/{itemId}/assignees` cuerpo `{ memberId }` | 201 `{ itemId, memberId, memberName, role }` + `Location: /api/backlog-items/{itemId}/assignees`; 200 mismo cuerpo si el par ya existía; 400 por campo (`itemId`/`memberId`); 401; 404 miembro o elemento (gana el miembro); 500 |
+| `GET /api/backlog-items/{itemId:guid}/assignees` | 200 `[{ id, name, role }]` o `[]` (también para un elemento inexistente); 401 |
+| `GET /api/team-members/{memberId:guid}/items` | 200 `[{ id, title, type }]` o `[]`; 401 |
+| `GET /api/backlog-items` | 200 `[{ id, title, type }]` (sin paginación); 401 |
+
+### 14.4 Secuencia de asignación
+
+```mermaid
+sequenceDiagram
+    actor U as Cliente
+    participant E as AssignMemberToItemEndpoint
+    participant H as Handler
+    participant B as IBacklogItemLookup
+    participant DB as teams.ItemAssignments
+    U->>E: POST /api/backlog-items/{itemId}/assignees {memberId}
+    E->>H: AssignMemberToItemCommand (ValidationBehavior → 400 por campo)
+    H->>H: ICurrentUser.UserId (401 si falta)
+    H->>DB: Miembro + rol (JOIN local) (404 miembro)
+    H->>B: ExistsAsync(itemId, ct) (404 elemento)
+    H->>DB: AnyAsync por par (si existe → 200 sin escribir)
+    H->>DB: Add + SaveChangesAsync(ct)
+    DB-->>H: 23505 UX_ItemAssignments_ItemId_MemberId (carrera) → relee la fila ganadora → 200
+    H-->>U: 201 Created + Location
+```
+
+Otro `DbUpdateException` (distinta restricción o código) se relanza y termina en 500 sin traza.
+
+### 14.5 Verificación (2026-10-05)
+
+`Teams.UnitTests` 57 y `Teams.IntegrationTests` 70 (PostgreSQL 16 real por Testcontainers) en verde, además de `Backlog.UnitTests` 62, `Backlog.IntegrationTests` 34, `Sprints.*` 86/89 e `Identity.IntegrationTests` 19. Cubren 201/200 idempotente, auditoría desde `sub`, concurrencia (un solo 201 y una fila), 400/404 con mensajes exactos, 401 sin lectura ni escritura, 500 sin traza ni fila parcial, no regresión en `backlog`/`sprints`/`teams`, y las consultas de lectura con una sola llamada de lote al contrato. Ajuste a una prueba previa: `TeamsMigrationTests` ahora espera también `teams.ItemAssignments`. Desviación respecto de `tasks.md`: T019 y T020 (pruebas de `BacklogItemLookup` y `GET /api/backlog-items`) se cubren como pruebas de integración sobre PostgreSQL real (`ListBacklogItemsTests`), sin añadir EF InMemory a `Backlog.UnitTests`.
+
 ## 9. Puntos abiertos
+
+- HU-015: el frontend (pestaña `Responsables`, diálogo de asignación, vistas por elemento y por miembro, rutas e i18n) y el recorrido manual del quickstart (T063) no se ejecutaron en esta pasada, por alcance solo backend. `spec.md` aún dice "no documentado" para la asignación duplicada; es vinculante el 200 idempotente (ADR-004) y su actualización corresponde al BA. `scripts/apply-migrations.sh|.ps1` siguen sin incluir `Teams`.
 
 - HU-004: frontend (T002, T041–T049, T051) y recorrido manual del quickstart (T052) no se ejecutaron en esta pasada, por alcance solo backend.
 

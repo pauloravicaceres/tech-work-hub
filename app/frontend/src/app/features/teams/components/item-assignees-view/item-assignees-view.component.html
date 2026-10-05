@@ -1,0 +1,72 @@
+<div class="flex justify-content-end mb-3">
+  <p-button label="Asignar responsable" icon="pi pi-plus" (onClick)="openDialog()" />
+</div>
+
+<p-fluid class="block mb-3">
+  <label for="elemento" class="block font-bold">ELEMENTO</label>
+  <p-select
+    inputId="elemento"
+    [formControl]="itemControl"
+    [options]="itemsState().options"
+    optionLabel="title"
+    optionValue="id"
+    [filter]="true"
+    filterBy="title"
+    placeholder="Seleccione un elemento"
+    [loading]="itemsState().loading"
+  />
+</p-fluid>
+
+@switch (state().status) {
+  @case ('idle') {
+    <p-message severity="info">Seleccione un elemento para ver sus responsables.</p-message>
+  }
+  @case ('loading') {
+    <p-message severity="info">Cargando...</p-message>
+  }
+  @case ('error') {
+    <p-message severity="error">No fue posible consultar los responsables del elemento. Intente nuevamente.</p-message>
+    <div class="flex justify-content-end mt-3">
+      <p-button label="Reintentar" icon="pi pi-refresh" severity="secondary" [outlined]="true" (onClick)="reload()" />
+    </div>
+  }
+  @case ('ready') {
+    @if (state(); as current) {
+      @if (current.status === 'ready') {
+        <p-table [value]="current.assignees" dataKey="id">
+          <ng-template #caption>Personas relacionadas con {{ selectedItem()?.title }}</ng-template>
+          <ng-template #header>
+            <tr>
+              <th>IDENTIFICADOR</th>
+              <th>NOMBRE</th>
+              <th>ROL</th>
+            </tr>
+          </ng-template>
+          <ng-template #body let-assignee>
+            <tr [class.surface-100]="assignee.id === highlightedMemberId()">
+              <td>{{ assignee.id }}</td>
+              <td>{{ assignee.name }}</td>
+              <td>{{ assignee.role }}</td>
+            </tr>
+          </ng-template>
+          <ng-template #emptymessage>
+            <tr>
+              <td colspan="3">
+                Este elemento aún no tiene responsables asignados. Use "Asignar responsable" para relacionar al primero.
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      }
+    }
+  }
+}
+
+@if (dialogVisible()) {
+  <app-assign-assignee-dialog
+    [(visible)]="dialogVisible"
+    [itemId]="itemControl.value"
+    (assigned)="onAssigned($event)"
+    (unauthorized)="onUnauthorized()"
+  />
+}

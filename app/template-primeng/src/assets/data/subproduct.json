@@ -1,0 +1,1435 @@
+{
+    "data": [
+        {
+         "row": 1,
+         "product_id": "000211",
+         "subproduct_id": "000379",
+         "subproduct_code": "000379",
+         "subproduct_name": "30K REACTIVA PERU - Mediano Plazo"
+        },
+        {
+         "row": 2,
+         "product_id": "000211",
+         "subproduct_id": "000378",
+         "subproduct_code": "000378",
+         "subproduct_name": "30K REPRO - REACTIVA PERU - MP"
+        },
+        {
+         "row": 3,
+         "product_id": "000211",
+         "subproduct_id": "000381",
+         "subproduct_code": "000381",
+         "subproduct_name": "30K REPRO 2022 - REACTIVA PERU  MP"
+        },
+        {
+         "row": 4,
+         "product_id": "000211",
+         "subproduct_id": "000382",
+         "subproduct_code": "000382",
+         "subproduct_name": "30K REPRO 2023 - REACTIVA PERU MP"
+        },
+        {
+         "row": 5,
+         "product_id": "000400",
+         "subproduct_id": "000401",
+         "subproduct_code": "000401",
+         "subproduct_name": "ADEUDADO"
+        },
+        {
+         "row": 6,
+         "product_id": "000400",
+         "subproduct_id": "000405",
+         "subproduct_code": "000405",
+         "subproduct_name": "ADEUDADO COFIDE-MESA"
+        },
+        {
+         "row": 7,
+         "product_id": "000211",
+         "subproduct_id": "000354",
+         "subproduct_code": "000354",
+         "subproduct_name": "AMERIKA FINANCIERA S.A."
+        },
+        {
+         "row": 8,
+         "product_id": "000250",
+         "subproduct_id": "000101",
+         "subproduct_code": "000101",
+         "subproduct_name": "AVANCE EN CTA COMERCIAL"
+        },
+        {
+         "row": 9,
+         "product_id": "000250",
+         "subproduct_id": "000102",
+         "subproduct_code": "000102",
+         "subproduct_name": "AVANCE EN CTA COMERCIAL D\/P"
+        },
+        {
+         "row": 10,
+         "product_id": "000250",
+         "subproduct_id": "000103",
+         "subproduct_code": "000103",
+         "subproduct_name": "AVANCE EN CTA MES"
+        },
+        {
+         "row": 11,
+         "product_id": "000250",
+         "subproduct_id": "000104",
+         "subproduct_code": "000104",
+         "subproduct_name": "AVANCE EN CTA MES D\/P"
+        },
+        {
+         "row": 12,
+         "product_id": "000250",
+         "subproduct_id": "000105",
+         "subproduct_code": "000105",
+         "subproduct_name": "AVANCE EN CUENTA MESA"
+        },
+        {
+         "row": 13,
+         "product_id": "000211",
+         "subproduct_id": "000355",
+         "subproduct_code": "000355",
+         "subproduct_name": "BANCO AGROPECUARIO"
+        },
+        {
+         "row": 14,
+         "product_id": "000211",
+         "subproduct_id": "000344",
+         "subproduct_code": "000344",
+         "subproduct_name": "BANCO FALABELLA PERU"
+        },
+        {
+         "row": 15,
+         "product_id": "000211",
+         "subproduct_id": "000341",
+         "subproduct_code": "000341",
+         "subproduct_name": "BANCO RIPLEY"
+        },
+        {
+         "row": 16,
+         "product_id": "000345",
+         "subproduct_id": "000043",
+         "subproduct_code": "000043",
+         "subproduct_name": "C.T.M.P. - EXPORTACIONES NO TRADICIONALES"
+        },
+        {
+         "row": 17,
+         "product_id": "000211",
+         "subproduct_id": "000332",
+         "subproduct_code": "000332",
+         "subproduct_name": "CAJA MUNIC AH Y CRED AREQUIPA"
+        },
+        {
+         "row": 18,
+         "product_id": "000211",
+         "subproduct_id": "000337",
+         "subproduct_code": "000337",
+         "subproduct_name": "CAJA MUNIC AH Y CRED DE MAYNAS"
+        },
+        {
+         "row": 19,
+         "product_id": "000211",
+         "subproduct_id": "000339",
+         "subproduct_code": "000339",
+         "subproduct_name": "CAJA MUNICIPAL AHO Y CRED TRUJILLO"
+        },
+        {
+         "row": 20,
+         "product_id": "000211",
+         "subproduct_id": "000365",
+         "subproduct_code": "000365",
+         "subproduct_name": "CAJA MUNICIPAL AHO Y CRED. CUSCO"
+        },
+        {
+         "row": 21,
+         "product_id": "000211",
+         "subproduct_id": "000338",
+         "subproduct_code": "000338",
+         "subproduct_name": "CAJA MUNICIPAL AHO. Y CRED. HUANCAYO"
+        },
+        {
+         "row": 22,
+         "product_id": "000211",
+         "subproduct_id": "000346",
+         "subproduct_code": "000346",
+         "subproduct_name": "CAJA MUNICIPAL DE AHORRO Y CREDITO DE TACNA"
+        },
+        {
+         "row": 23,
+         "product_id": "000211",
+         "subproduct_id": "000353",
+         "subproduct_code": "000353",
+         "subproduct_name": "CAJA MUNICIPAL DE AHORRO Y CREDITO DEL SANTA"
+        },
+        {
+         "row": 24,
+         "product_id": "000211",
+         "subproduct_id": "000367",
+         "subproduct_code": "000367",
+         "subproduct_name": "CAJA MUNICIPAL DE AHORRO Y CREDITO ICA"
+        },
+        {
+         "row": 25,
+         "product_id": "000211",
+         "subproduct_id": "000347",
+         "subproduct_code": "000347",
+         "subproduct_name": "CAJA MUNICIPAL DE AHORRO Y CREDITO SULLANA"
+        },
+        {
+         "row": 26,
+         "product_id": "000211",
+         "subproduct_id": "000360",
+         "subproduct_code": "000360",
+         "subproduct_name": "CAJA RURAL DE AHORRO Y CREDITO CHAVIN"
+        },
+        {
+         "row": 27,
+         "product_id": "000211",
+         "subproduct_id": "000366",
+         "subproduct_code": "000366",
+         "subproduct_name": "CAJA RURAL DE AHORRO Y CREDITO CREDINKA"
+        },
+        {
+         "row": 28,
+         "product_id": "000211",
+         "subproduct_id": "000357",
+         "subproduct_code": "000357",
+         "subproduct_name": "CAJA RURAL DE AHORRO Y CREDITO PROFINANZAS"
+        },
+        {
+         "row": 29,
+         "product_id": "000345",
+         "subproduct_id": "000040",
+         "subproduct_code": "000040",
+         "subproduct_name": "CAPITAL DE TRABAJO MEDIANO PLAZO - M\/E"
+        },
+        {
+         "row": 30,
+         "product_id": "000211",
+         "subproduct_id": "000345",
+         "subproduct_code": "000345",
+         "subproduct_name": "COFIDE"
+        },
+        {
+         "row": 31,
+         "product_id": "000212",
+         "subproduct_id": "000345",
+         "subproduct_code": "000345",
+         "subproduct_name": "COFIDE"
+        },
+        {
+         "row": 32,
+         "product_id": "000232",
+         "subproduct_id": "000345",
+         "subproduct_code": "000345",
+         "subproduct_name": "COFIDE"
+        },
+        {
+         "row": 33,
+         "product_id": "000212",
+         "subproduct_id": "000350",
+         "subproduct_code": "000350",
+         "subproduct_name": "COFIDE DUDOSO PERDIDA"
+        },
+        {
+         "row": 34,
+         "product_id": "000211",
+         "subproduct_id": "000350",
+         "subproduct_code": "000350",
+         "subproduct_name": "COFIDE DUDOSO PERDIDA"
+        },
+        {
+         "row": 35,
+         "product_id": "000211",
+         "subproduct_id": "000750",
+         "subproduct_code": "000750",
+         "subproduct_name": "COFIDE DUDOSO PERDIDA MES"
+        },
+        {
+         "row": 36,
+         "product_id": "000212",
+         "subproduct_id": "000750",
+         "subproduct_code": "000750",
+         "subproduct_name": "COFIDE DUDOSO PERDIDA MES"
+        },
+        {
+         "row": 37,
+         "product_id": "000211",
+         "subproduct_id": "000376",
+         "subproduct_code": "000376",
+         "subproduct_name": "COFIDE FONDO CRECER - Corto Plazo"
+        },
+        {
+         "row": 38,
+         "product_id": "000211",
+         "subproduct_id": "000377",
+         "subproduct_code": "000377",
+         "subproduct_name": "COFIDE FONDO CRECER - Mediano Plazo"
+        },
+        {
+         "row": 39,
+         "product_id": "000212",
+         "subproduct_id": "000745",
+         "subproduct_code": "000745",
+         "subproduct_name": "COFIDE MES"
+        },
+        {
+         "row": 40,
+         "product_id": "000211",
+         "subproduct_id": "000745",
+         "subproduct_code": "000745",
+         "subproduct_name": "COFIDE MES"
+        },
+        {
+         "row": 41,
+         "product_id": "000301",
+         "subproduct_id": "000001",
+         "subproduct_code": "000001",
+         "subproduct_name": "COFIDE VAC"
+        },
+        {
+         "row": 42,
+         "product_id": "000211",
+         "subproduct_id": "000336",
+         "subproduct_code": "000336",
+         "subproduct_name": "COOPERATIVA DE AHORRO Y CREDITO"
+        },
+        {
+         "row": 43,
+         "product_id": "000211",
+         "subproduct_id": "000358",
+         "subproduct_code": "000358",
+         "subproduct_name": "CORPORACION FINANCIERA DE DESARROLO - COFIDE"
+        },
+        {
+         "row": 44,
+         "product_id": "000112",
+         "subproduct_id": "000506",
+         "subproduct_code": "000506",
+         "subproduct_name": "DUDOSO PERDIDA RP"
+        },
+        {
+         "row": 45,
+         "product_id": "000211",
+         "subproduct_id": "000351",
+         "subproduct_code": "000351",
+         "subproduct_name": "EDPYME ALTERNATIVA"
+        },
+        {
+         "row": 46,
+         "product_id": "000211",
+         "subproduct_id": "000359",
+         "subproduct_code": "000359",
+         "subproduct_name": "EDPYME SOLIDARIDAD"
+        },
+        {
+         "row": 47,
+         "product_id": "000141",
+         "subproduct_id": "000503",
+         "subproduct_code": "000503",
+         "subproduct_name": "FID.LATINO LEASING"
+        },
+        {
+         "row": 48,
+         "product_id": "000143",
+         "subproduct_id": "000504",
+         "subproduct_code": "000504",
+         "subproduct_name": "FIDEICOMISO BANCO NUEVO MUNDO BONISTAS"
+        },
+        {
+         "row": 49,
+         "product_id": "000143",
+         "subproduct_id": "000505",
+         "subproduct_code": "000505",
+         "subproduct_name": "FIDEICOMISO BANCO NUEVO MUNDO COFIDE"
+        },
+        {
+         "row": 50,
+         "product_id": "000240",
+         "subproduct_id": "000325",
+         "subproduct_code": "000325",
+         "subproduct_name": "FINANC. IMPORTACION - PANAMA"
+        },
+        {
+         "row": 51,
+         "product_id": "000240",
+         "subproduct_id": "000327",
+         "subproduct_code": "000327",
+         "subproduct_name": "FINANC. POST EMBARQUE - PANAMA"
+        },
+        {
+         "row": 52,
+         "product_id": "000240",
+         "subproduct_id": "000326",
+         "subproduct_code": "000326",
+         "subproduct_name": "FINANC. PRE EMBARQUE - PANAMA"
+        },
+        {
+         "row": 53,
+         "product_id": "000280",
+         "subproduct_id": "000280",
+         "subproduct_code": "000280",
+         "subproduct_name": "FINANC. PRE EMBARQUE EUROS"
+        },
+        {
+         "row": 54,
+         "product_id": "000211",
+         "subproduct_id": "000380",
+         "subproduct_code": "000380",
+         "subproduct_name": "FINANCIACION DE PROYECTOS"
+        },
+        {
+         "row": 55,
+         "product_id": "000241",
+         "subproduct_id": "000321",
+         "subproduct_code": "000321",
+         "subproduct_name": "FINANCIAMIENTO IMPORTACION"
+        },
+        {
+         "row": 56,
+         "product_id": "000241",
+         "subproduct_id": "000312",
+         "subproduct_code": "000312",
+         "subproduct_name": "FINANCIAMIENTO POST EMBARQUE"
+        },
+        {
+         "row": 57,
+         "product_id": "000241",
+         "subproduct_id": "000314",
+         "subproduct_code": "000314",
+         "subproduct_name": "Financiamiento Post-Embarque-FONDO CRECER"
+        },
+        {
+         "row": 58,
+         "product_id": "000241",
+         "subproduct_id": "000311",
+         "subproduct_code": "000311",
+         "subproduct_name": "FINANCIAMIENTO PRE EMBARQUE"
+        },
+        {
+         "row": 59,
+         "product_id": "000241",
+         "subproduct_id": "000303",
+         "subproduct_code": "000303",
+         "subproduct_name": "Financiamiento Pre-Embarque FONDO CRECER"
+        },
+        {
+         "row": 60,
+         "product_id": "000211",
+         "subproduct_id": "000349",
+         "subproduct_code": "000349",
+         "subproduct_name": "FINANCIERA CONFIANZA"
+        },
+        {
+         "row": 61,
+         "product_id": "000211",
+         "subproduct_id": "000342",
+         "subproduct_code": "000342",
+         "subproduct_name": "FINANCIERA CREAR"
+        },
+        {
+         "row": 62,
+         "product_id": "000211",
+         "subproduct_id": "000348",
+         "subproduct_code": "000348",
+         "subproduct_name": "FINANCIERA EDYFICAR S.A."
+        },
+        {
+         "row": 63,
+         "product_id": "000211",
+         "subproduct_id": "000340",
+         "subproduct_code": "000340",
+         "subproduct_name": "FINANCIERA EFECTIVA S.A."
+        },
+        {
+         "row": 64,
+         "product_id": "000211",
+         "subproduct_id": "000352",
+         "subproduct_code": "000352",
+         "subproduct_name": "FINANCIERA TFC (VOLVO FINANCE DEL PERU SA)"
+        },
+        {
+         "row": 65,
+         "product_id": "000211",
+         "subproduct_id": "000364",
+         "subproduct_code": "000364",
+         "subproduct_name": "FINANCIERA UNO"
+        },
+        {
+         "row": 66,
+         "product_id": "000241",
+         "subproduct_id": "000325",
+         "subproduct_code": "000325",
+         "subproduct_name": "FORFAITING EXPO. T. VENCIDA"
+        },
+        {
+         "row": 67,
+         "product_id": "000141",
+         "subproduct_id": "000504",
+         "subproduct_code": "000504",
+         "subproduct_name": "IFC\/DEG FIDEICOMISO LATINO LEASING"
+        },
+        {
+         "row": 68,
+         "product_id": "000241",
+         "subproduct_id": "000322",
+         "subproduct_code": "000322",
+         "subproduct_name": "IMPORTACIONES FINANCIAMIENTOS"
+        },
+        {
+         "row": 69,
+         "product_id": "000245",
+         "subproduct_id": "000466",
+         "subproduct_code": "000466",
+         "subproduct_name": "INMOB REPROG EN SUSPENSO"
+        },
+        {
+         "row": 70,
+         "product_id": "000245",
+         "subproduct_id": "000464",
+         "subproduct_code": "000464",
+         "subproduct_name": "INMOBILIARIA SUSPENSO"
+        },
+        {
+         "row": 71,
+         "product_id": "000173",
+         "subproduct_id": "000504",
+         "subproduct_code": "000504",
+         "subproduct_name": "JUDICIAL FIDEICOMISO BANCO NUEVO MUNDO BONISTA"
+        },
+        {
+         "row": 72,
+         "product_id": "000173",
+         "subproduct_id": "000505",
+         "subproduct_code": "000505",
+         "subproduct_name": "JUDICIAL FIDEICOMISO BANCO NUEVO MUNDO COFIDE"
+        },
+        {
+         "row": 73,
+         "product_id": "000142",
+         "subproduct_id": "000504",
+         "subproduct_code": "000504",
+         "subproduct_name": "JUDICIAL FIDEICOMISO LATINO LEASING IFC\/DEG"
+        },
+        {
+         "row": 74,
+         "product_id": "000131",
+         "subproduct_id": "000501",
+         "subproduct_code": "000501",
+         "subproduct_name": "JUDICIAL RP"
+        },
+        {
+         "row": 75,
+         "product_id": "000132",
+         "subproduct_id": "000505",
+         "subproduct_code": "000505",
+         "subproduct_name": "JUDICIAL RP"
+        },
+        {
+         "row": 76,
+         "product_id": "000131",
+         "subproduct_id": "000601",
+         "subproduct_code": "000601",
+         "subproduct_name": "JUDICIAL RP MES"
+        },
+        {
+         "row": 77,
+         "product_id": "000111",
+         "subproduct_id": "000515",
+         "subproduct_code": "000515",
+         "subproduct_name": "LEASEBACK 2000"
+        },
+        {
+         "row": 78,
+         "product_id": "000111",
+         "subproduct_id": "000516",
+         "subproduct_code": "000516",
+         "subproduct_name": "LEASEBACK 2000 D\/P"
+        },
+        {
+         "row": 79,
+         "product_id": "000111",
+         "subproduct_id": "000616",
+         "subproduct_code": "000616",
+         "subproduct_name": "LEASEBACK 2000 D\/P MES"
+        },
+        {
+         "row": 80,
+         "product_id": "000111",
+         "subproduct_id": "000615",
+         "subproduct_code": "000615",
+         "subproduct_name": "LEASEBACK 2000 MES"
+        },
+        {
+         "row": 81,
+         "product_id": "000111",
+         "subproduct_id": "000505",
+         "subproduct_code": "000505",
+         "subproduct_name": "LEASEBACK 2001"
+        },
+        {
+         "row": 82,
+         "product_id": "000111",
+         "subproduct_id": "000506",
+         "subproduct_code": "000506",
+         "subproduct_name": "LEASEBACK 2001 D\/P"
+        },
+        {
+         "row": 83,
+         "product_id": "000111",
+         "subproduct_id": "000606",
+         "subproduct_code": "000606",
+         "subproduct_name": "LEASEBACK 2001 D\/P MES"
+        },
+        {
+         "row": 84,
+         "product_id": "000111",
+         "subproduct_id": "000605",
+         "subproduct_code": "000605",
+         "subproduct_name": "LEASEBACK 2001 MES"
+        },
+        {
+         "row": 85,
+         "product_id": "000111",
+         "subproduct_id": "000517",
+         "subproduct_code": "000517",
+         "subproduct_name": "LEASEBACK 2001 OTROS SUSPENSO"
+        },
+        {
+         "row": 86,
+         "product_id": "000111",
+         "subproduct_id": "000523",
+         "subproduct_code": "000523",
+         "subproduct_name": "LEASEBACK COFIDE"
+        },
+        {
+         "row": 87,
+         "product_id": "000111",
+         "subproduct_id": "000511",
+         "subproduct_code": "000511",
+         "subproduct_name": "LEASING 2000"
+        },
+        {
+         "row": 88,
+         "product_id": "000111",
+         "subproduct_id": "000512",
+         "subproduct_code": "000512",
+         "subproduct_name": "LEASING 2000 D\/P"
+        },
+        {
+         "row": 89,
+         "product_id": "000111",
+         "subproduct_id": "000612",
+         "subproduct_code": "000612",
+         "subproduct_name": "LEASING 2000 D\/P MES"
+        },
+        {
+         "row": 90,
+         "product_id": "000111",
+         "subproduct_id": "000611",
+         "subproduct_code": "000611",
+         "subproduct_name": "LEASING 2000 MES"
+        },
+        {
+         "row": 91,
+         "product_id": "000111",
+         "subproduct_id": "000510",
+         "subproduct_code": "000510",
+         "subproduct_name": "LEASING 2000 OTROS SUSPENSO"
+        },
+        {
+         "row": 92,
+         "product_id": "000111",
+         "subproduct_id": "000501",
+         "subproduct_code": "000501",
+         "subproduct_name": "LEASING 2001"
+        },
+        {
+         "row": 93,
+         "product_id": "000111",
+         "subproduct_id": "000507",
+         "subproduct_code": "000507",
+         "subproduct_name": "LEASING 2001 BIEN ADJUDICADO"
+        },
+        {
+         "row": 94,
+         "product_id": "000111",
+         "subproduct_id": "000508",
+         "subproduct_code": "000508",
+         "subproduct_name": "LEASING 2001 BIEN ADJUDICADO D\/P"
+        },
+        {
+         "row": 95,
+         "product_id": "000111",
+         "subproduct_id": "000502",
+         "subproduct_code": "000502",
+         "subproduct_name": "LEASING 2001 D\/P"
+        },
+        {
+         "row": 96,
+         "product_id": "000111",
+         "subproduct_id": "000602",
+         "subproduct_code": "000602",
+         "subproduct_name": "LEASING 2001 D\/P MES"
+        },
+        {
+         "row": 97,
+         "product_id": "000111",
+         "subproduct_id": "000601",
+         "subproduct_code": "000601",
+         "subproduct_name": "LEASING 2001 MES"
+        },
+        {
+         "row": 98,
+         "product_id": "000111",
+         "subproduct_id": "000509",
+         "subproduct_code": "000509",
+         "subproduct_name": "LEASING 2001 OTROS SUSPENSO"
+        },
+        {
+         "row": 99,
+         "product_id": "000111",
+         "subproduct_id": "000607",
+         "subproduct_code": "000607",
+         "subproduct_name": "LEASING ADJUDICADO MES 2001"
+        },
+        {
+         "row": 100,
+         "product_id": "000115",
+         "subproduct_id": "000511",
+         "subproduct_code": "000511",
+         "subproduct_name": "LEASING BPE"
+        },
+        {
+         "row": 101,
+         "product_id": "000111",
+         "subproduct_id": "000115",
+         "subproduct_code": "000115",
+         "subproduct_name": "LEASING BPE"
+        },
+        {
+         "row": 102,
+         "product_id": "000111",
+         "subproduct_id": "000520",
+         "subproduct_code": "000520",
+         "subproduct_name": "LEASING COFIGAS"
+        },
+        {
+         "row": 103,
+         "product_id": "000111",
+         "subproduct_id": "000503",
+         "subproduct_code": "000503",
+         "subproduct_name": "LEASING EN PROCESO"
+        },
+        {
+         "row": 104,
+         "product_id": "000111",
+         "subproduct_id": "000603",
+         "subproduct_code": "000603",
+         "subproduct_name": "LEASING EN PROCESO MES"
+        },
+        {
+         "row": 105,
+         "product_id": "000111",
+         "subproduct_id": "000504",
+         "subproduct_code": "000504",
+         "subproduct_name": "LEASING FINANC. SISMO"
+        },
+        {
+         "row": 106,
+         "product_id": "000180",
+         "subproduct_id": "000180",
+         "subproduct_code": "000180",
+         "subproduct_name": "LEASING OPERATIVO"
+        },
+        {
+         "row": 107,
+         "product_id": "000111",
+         "subproduct_id": "000617",
+         "subproduct_code": "000617",
+         "subproduct_name": "LEASING REFINANCIADO COFIGAS"
+        },
+        {
+         "row": 108,
+         "product_id": "000121",
+         "subproduct_id": "000606",
+         "subproduct_code": "000606",
+         "subproduct_name": "LEASING REFINANCIADO COFIGAS"
+        },
+        {
+         "row": 109,
+         "product_id": "000131",
+         "subproduct_id": "000518",
+         "subproduct_code": "000518",
+         "subproduct_name": "LEASING RESUELTO COB JUD PT"
+        },
+        {
+         "row": 110,
+         "product_id": "000131",
+         "subproduct_id": "000618",
+         "subproduct_code": "000618",
+         "subproduct_name": "LEASING RESUELTO COB JUD PT MES"
+        },
+        {
+         "row": 111,
+         "product_id": "000131",
+         "subproduct_id": "000519",
+         "subproduct_code": "000519",
+         "subproduct_name": "LEASING RESUELTO VENC PTE RECUP BIEN"
+        },
+        {
+         "row": 112,
+         "product_id": "000131",
+         "subproduct_id": "000619",
+         "subproduct_code": "000619",
+         "subproduct_name": "LEASING RESUELTO VENC PTE RECUP BIEN MES"
+        },
+        {
+         "row": 113,
+         "product_id": "000211",
+         "subproduct_id": "000356",
+         "subproduct_code": "000356",
+         "subproduct_name": "MAPFRE PERU CIA DE SEGUROS Y REASEGUROS"
+        },
+        {
+         "row": 114,
+         "product_id": "000211",
+         "subproduct_id": "000361",
+         "subproduct_code": "000361",
+         "subproduct_name": "MIBANCO"
+        },
+        {
+         "row": 115,
+         "product_id": "000211",
+         "subproduct_id": "000368",
+         "subproduct_code": "000368",
+         "subproduct_name": "MITSUI AUTO FINANCE PERU"
+        },
+        {
+         "row": 116,
+         "product_id": "000211",
+         "subproduct_id": "000313",
+         "subproduct_code": "000313",
+         "subproduct_name": "PAG TAS. VCDA SISMO"
+        },
+        {
+         "row": 117,
+         "product_id": "000211",
+         "subproduct_id": "000334",
+         "subproduct_code": "000334",
+         "subproduct_name": "PAGARE BIEN ADJUDICADO"
+        },
+        {
+         "row": 118,
+         "product_id": "000211",
+         "subproduct_id": "000335",
+         "subproduct_code": "000335",
+         "subproduct_name": "PAGARE BIEN ADJUDICADO D\/P"
+        },
+        {
+         "row": 119,
+         "product_id": "000211",
+         "subproduct_id": "000311",
+         "subproduct_code": "000311",
+         "subproduct_name": "PAGARE CONTRATO CUOTA FIJA"
+        },
+        {
+         "row": 120,
+         "product_id": "000211",
+         "subproduct_id": "000732",
+         "subproduct_code": "000732",
+         "subproduct_name": "PAGARE CONTRATO CUOTA FIJA MES"
+        },
+        {
+         "row": 121,
+         "product_id": "000211",
+         "subproduct_id": "000711",
+         "subproduct_code": "000711",
+         "subproduct_name": "PAGARE D\/P CONTRATO C\/FIJA MES"
+        },
+        {
+         "row": 122,
+         "product_id": "000211",
+         "subproduct_id": "000312",
+         "subproduct_code": "000312",
+         "subproduct_name": "PAGARE D\/P CONTRATO CUOTA FIJA"
+        },
+        {
+         "row": 123,
+         "product_id": "000360",
+         "subproduct_id": "000379",
+         "subproduct_code": "000379",
+         "subproduct_name": "PAGARE DESCONTADO"
+        },
+        {
+         "row": 124,
+         "product_id": "000211",
+         "subproduct_id": "000333",
+         "subproduct_code": "000333",
+         "subproduct_name": "PAGARE DEUDORES VENTA DE CARTERA"
+        },
+        {
+         "row": 125,
+         "product_id": "000211",
+         "subproduct_id": "000373",
+         "subproduct_code": "000373",
+         "subproduct_name": "PAGARE DIRECTO"
+        },
+        {
+         "row": 126,
+         "product_id": "000211",
+         "subproduct_id": "000363",
+         "subproduct_code": "000363",
+         "subproduct_name": "PAGARE INMOBILIARIA"
+        },
+        {
+         "row": 127,
+         "product_id": "000211",
+         "subproduct_id": "000343",
+         "subproduct_code": "000343",
+         "subproduct_name": "PAGARE OTRO SUSPENSO"
+        },
+        {
+         "row": 128,
+         "product_id": "000212",
+         "subproduct_id": "000351",
+         "subproduct_code": "000351",
+         "subproduct_name": "PAGARE OTROS SUSPENSO VAC"
+        },
+        {
+         "row": 129,
+         "product_id": "000221",
+         "subproduct_id": "000354",
+         "subproduct_code": "000354",
+         "subproduct_name": "PAGARE REEST CONTRATO C\/FIJA"
+        },
+        {
+         "row": 130,
+         "product_id": "000221",
+         "subproduct_id": "000753",
+         "subproduct_code": "000753",
+         "subproduct_name": "PAGARE REESTR CONTRATO C\/FIJA MES"
+        },
+        {
+         "row": 131,
+         "product_id": "000221",
+         "subproduct_id": "000355",
+         "subproduct_code": "000355",
+         "subproduct_name": "PAGARE REFINAC CONTRATO C\/FIJA"
+        },
+        {
+         "row": 132,
+         "product_id": "000221",
+         "subproduct_id": "000750",
+         "subproduct_code": "000750",
+         "subproduct_name": "PAGARE REFINAN CONTRATO C\/FIJA MES"
+        },
+        {
+         "row": 133,
+         "product_id": "000245",
+         "subproduct_id": "000469",
+         "subproduct_code": "000469",
+         "subproduct_name": "PAGARE REPROG EN SUSPENSO"
+        },
+        {
+         "row": 134,
+         "product_id": "000221",
+         "subproduct_id": "000310",
+         "subproduct_code": "000310",
+         "subproduct_name": "PAGARE REPROGRAMADO"
+        },
+        {
+         "row": 135,
+         "product_id": "000245",
+         "subproduct_id": "000467",
+         "subproduct_code": "000467",
+         "subproduct_name": "PAGARE SUSPENSO"
+        },
+        {
+         "row": 136,
+         "product_id": "000215",
+         "subproduct_id": "000111",
+         "subproduct_code": "000111",
+         "subproduct_name": "PAGARE TASA DESCONTADA"
+        },
+        {
+         "row": 137,
+         "product_id": "000331",
+         "subproduct_id": "000001",
+         "subproduct_code": "000001",
+         "subproduct_name": "PAGARE TASA DESCONTADA"
+        },
+        {
+         "row": 138,
+         "product_id": "000332",
+         "subproduct_id": "000001",
+         "subproduct_code": "000001",
+         "subproduct_name": "PAGARE TASA DESCONTADA 2"
+        },
+        {
+         "row": 139,
+         "product_id": "000240",
+         "subproduct_id": "000328",
+         "subproduct_code": "000328",
+         "subproduct_name": "PAGARE TASA VENCIDA - PANAMA"
+        },
+        {
+         "row": 140,
+         "product_id": "000280",
+         "subproduct_id": "000281",
+         "subproduct_code": "000281",
+         "subproduct_name": "PAGARE TASA VENCIDA EUROS"
+        },
+        {
+         "row": 141,
+         "product_id": "000241",
+         "subproduct_id": "000302",
+         "subproduct_code": "000302",
+         "subproduct_name": "PRE EMBARQUE FINANCIAMIENTOS"
+        },
+        {
+         "row": 142,
+         "product_id": "000241",
+         "subproduct_id": "000300",
+         "subproduct_code": "000300",
+         "subproduct_name": "PRE EMBARQUE SEPYMEX"
+        },
+        {
+         "row": 143,
+         "product_id": "000345",
+         "subproduct_id": "000042",
+         "subproduct_code": "000042",
+         "subproduct_name": "PRIDA"
+        },
+        {
+         "row": 144,
+         "product_id": "000345",
+         "subproduct_id": "000045",
+         "subproduct_code": "000045",
+         "subproduct_name": "PROGRAMA AGROEXPORTADOR"
+        },
+        {
+         "row": 145,
+         "product_id": "000345",
+         "subproduct_id": "000036",
+         "subproduct_code": "000036",
+         "subproduct_name": "PROGRAMA BID US$ 100MM (PROBID I)"
+        },
+        {
+         "row": 146,
+         "product_id": "000345",
+         "subproduct_id": "000035",
+         "subproduct_code": "000035",
+         "subproduct_name": "PROGRAMA BID US200MM (PROBID II)"
+        },
+        {
+         "row": 147,
+         "product_id": "000345",
+         "subproduct_id": "000039",
+         "subproduct_code": "000039",
+         "subproduct_name": "PROGRAMA MICROGLOBAL BID I"
+        },
+        {
+         "row": 148,
+         "product_id": "000345",
+         "subproduct_id": "000038",
+         "subproduct_code": "000038",
+         "subproduct_name": "PROGRAMA MICROGLOBAL BID II"
+        },
+        {
+         "row": 149,
+         "product_id": "000345",
+         "subproduct_id": "000037",
+         "subproduct_code": "000037",
+         "subproduct_name": "PROGRAMA PROPEM - BID"
+        },
+        {
+         "row": 150,
+         "product_id": "000345",
+         "subproduct_id": "000044",
+         "subproduct_code": "000044",
+         "subproduct_name": "RECURSOS CAF:MULTISECT.II,PROPEM II,PRIDA,FOMENTO"
+        },
+        {
+         "row": 151,
+         "product_id": "000112",
+         "subproduct_id": "000505",
+         "subproduct_code": "000505",
+         "subproduct_name": "RECURSOS PROPIOS"
+        },
+        {
+         "row": 152,
+         "product_id": "000232",
+         "subproduct_id": "000346",
+         "subproduct_code": "000346",
+         "subproduct_name": "RECURSOS PROPIOS"
+        },
+        {
+         "row": 153,
+         "product_id": "000221",
+         "subproduct_id": "000754",
+         "subproduct_code": "000754",
+         "subproduct_name": "RECURSOS PROPIOS"
+        },
+        {
+         "row": 154,
+         "product_id": "000211",
+         "subproduct_id": "000331",
+         "subproduct_code": "000331",
+         "subproduct_name": "RECURSOS PROPIOS"
+        },
+        {
+         "row": 155,
+         "product_id": "000211",
+         "subproduct_id": "000362",
+         "subproduct_code": "000362",
+         "subproduct_name": "RECURSOS PROPIOS - MEDIANO PLAZO"
+        },
+        {
+         "row": 156,
+         "product_id": "000211",
+         "subproduct_id": "000310",
+         "subproduct_code": "000310",
+         "subproduct_name": "RECURSOS PROPIOS DUDOSO PERDIDA"
+        },
+        {
+         "row": 157,
+         "product_id": "000212",
+         "subproduct_id": "000300",
+         "subproduct_code": "000300",
+         "subproduct_name": "RECURSOS PROPIOS DUDOSO PERDIDA"
+        },
+        {
+         "row": 158,
+         "product_id": "000212",
+         "subproduct_id": "000700",
+         "subproduct_code": "000700",
+         "subproduct_name": "RECURSOS PROPIOS DUDOSO PERDIDA MES"
+        },
+        {
+         "row": 159,
+         "product_id": "000211",
+         "subproduct_id": "000710",
+         "subproduct_code": "000710",
+         "subproduct_name": "RECURSOS PROPIOS DUDOSO PERDIDA MES"
+        },
+        {
+         "row": 160,
+         "product_id": "000232",
+         "subproduct_id": "000746",
+         "subproduct_code": "000746",
+         "subproduct_name": "RECURSOS PROPIOS MES"
+        },
+        {
+         "row": 161,
+         "product_id": "000211",
+         "subproduct_id": "000731",
+         "subproduct_code": "000731",
+         "subproduct_name": "RECURSOS PROPIOS MES"
+        },
+        {
+         "row": 162,
+         "product_id": "000212",
+         "subproduct_id": "000751",
+         "subproduct_code": "000751",
+         "subproduct_name": "RECURSOS PROPIOS MES"
+        },
+        {
+         "row": 163,
+         "product_id": "000163",
+         "subproduct_id": "000505",
+         "subproduct_code": "000505",
+         "subproduct_name": "REESTRUCTURA FID.BANCO NUEVO MUNDO COFIDE"
+        },
+        {
+         "row": 164,
+         "product_id": "000221",
+         "subproduct_id": "000352",
+         "subproduct_code": "000352",
+         "subproduct_name": "REESTRUCTURADO"
+        },
+        {
+         "row": 165,
+         "product_id": "000222",
+         "subproduct_id": "000345",
+         "subproduct_code": "000345",
+         "subproduct_name": "REESTRUCTURADO COFIDE"
+        },
+        {
+         "row": 166,
+         "product_id": "000221",
+         "subproduct_id": "000345",
+         "subproduct_code": "000345",
+         "subproduct_name": "REESTRUCTURADO COFIDE"
+        },
+        {
+         "row": 167,
+         "product_id": "000221",
+         "subproduct_id": "000745",
+         "subproduct_code": "000745",
+         "subproduct_name": "REESTRUCTURADO COFIDE MES"
+        },
+        {
+         "row": 168,
+         "product_id": "000163",
+         "subproduct_id": "000504",
+         "subproduct_code": "000504",
+         "subproduct_name": "REESTRUCTURADO FID. BANCO NUEVO MUNDO BONISTA"
+        },
+        {
+         "row": 169,
+         "product_id": "000121",
+         "subproduct_id": "000501",
+         "subproduct_code": "000501",
+         "subproduct_name": "REESTRUCTURADO LEASING 2000"
+        },
+        {
+         "row": 170,
+         "product_id": "000121",
+         "subproduct_id": "000601",
+         "subproduct_code": "000601",
+         "subproduct_name": "REESTRUCTURADO LEASING 2000 MES"
+        },
+        {
+         "row": 171,
+         "product_id": "000221",
+         "subproduct_id": "000752",
+         "subproduct_code": "000752",
+         "subproduct_name": "REESTRUCTURADO MES"
+        },
+        {
+         "row": 172,
+         "product_id": "000222",
+         "subproduct_id": "000001",
+         "subproduct_code": "000001",
+         "subproduct_name": "REESTRUCTURADO RP"
+        },
+        {
+         "row": 173,
+         "product_id": "000122",
+         "subproduct_id": "000505",
+         "subproduct_code": "000505",
+         "subproduct_name": "REESTRUCTURADO RP"
+        },
+        {
+         "row": 174,
+         "product_id": "000222",
+         "subproduct_id": "000372",
+         "subproduct_code": "000372",
+         "subproduct_name": "REESTRUCTURADO VAC"
+        },
+        {
+         "row": 175,
+         "product_id": "000222",
+         "subproduct_id": "000772",
+         "subproduct_code": "000772",
+         "subproduct_name": "REESTRUCTURADO VAC MES"
+        },
+        {
+         "row": 176,
+         "product_id": "000221",
+         "subproduct_id": "000351",
+         "subproduct_code": "000351",
+         "subproduct_name": "REFINANCIADO"
+        },
+        {
+         "row": 177,
+         "product_id": "000221",
+         "subproduct_id": "000756",
+         "subproduct_code": "000756",
+         "subproduct_name": "REFINANCIADO  REACTIVA COFIDE"
+        },
+        {
+         "row": 178,
+         "product_id": "000221",
+         "subproduct_id": "000755",
+         "subproduct_code": "000755",
+         "subproduct_name": "REFINANCIADO  REACTIVA IBK"
+        },
+        {
+         "row": 179,
+         "product_id": "000121",
+         "subproduct_id": "000512",
+         "subproduct_code": "000512",
+         "subproduct_name": "REFINANCIADO 2000"
+        },
+        {
+         "row": 180,
+         "product_id": "000121",
+         "subproduct_id": "000502",
+         "subproduct_code": "000502",
+         "subproduct_name": "REFINANCIADO 2001"
+        },
+        {
+         "row": 181,
+         "product_id": "000121",
+         "subproduct_id": "000602",
+         "subproduct_code": "000602",
+         "subproduct_name": "REFINANCIADO 2001 MES"
+        },
+        {
+         "row": 182,
+         "product_id": "000222",
+         "subproduct_id": "000362",
+         "subproduct_code": "000362",
+         "subproduct_name": "REFINANCIADO COFIDE"
+        },
+        {
+         "row": 183,
+         "product_id": "000221",
+         "subproduct_id": "000353",
+         "subproduct_code": "000353",
+         "subproduct_name": "REFINANCIADO COFIDE"
+        },
+        {
+         "row": 184,
+         "product_id": "000151",
+         "subproduct_id": "000503",
+         "subproduct_code": "000503",
+         "subproduct_name": "REFINANCIADO FID. LATINO LEASING"
+        },
+        {
+         "row": 185,
+         "product_id": "000154",
+         "subproduct_id": "000505",
+         "subproduct_code": "000505",
+         "subproduct_name": "REFINANCIADO FID. NUEVO MUNDO SIN IGV COFIDE"
+        },
+        {
+         "row": 186,
+         "product_id": "000152",
+         "subproduct_id": "000503",
+         "subproduct_code": "000503",
+         "subproduct_name": "REFINANCIADO FID.LATINO LEASING SIN IGV"
+        },
+        {
+         "row": 187,
+         "product_id": "000154",
+         "subproduct_id": "000504",
+         "subproduct_code": "000504",
+         "subproduct_name": "REFINANCIADO FID.NUEVO MUNDO SIN IGV BONISTAS"
+        },
+        {
+         "row": 188,
+         "product_id": "000153",
+         "subproduct_id": "000504",
+         "subproduct_code": "000504",
+         "subproduct_name": "REFINANCIADO FIDEICOMISO BANCO NUEVO MUNDO BONISTA"
+        },
+        {
+         "row": 189,
+         "product_id": "000153",
+         "subproduct_id": "000505",
+         "subproduct_code": "000505",
+         "subproduct_name": "REFINANCIADO FIDEICOMISO BANCO NUEVO MUNDO COFIDE"
+        },
+        {
+         "row": 190,
+         "product_id": "000121",
+         "subproduct_id": "000505",
+         "subproduct_code": "000505",
+         "subproduct_name": "REFINANCIADO LEASEBACK 2001"
+        },
+        {
+         "row": 191,
+         "product_id": "000121",
+         "subproduct_id": "000605",
+         "subproduct_code": "000605",
+         "subproduct_name": "REFINANCIADO LEASEBACK 2001 MES"
+        },
+        {
+         "row": 192,
+         "product_id": "000221",
+         "subproduct_id": "000751",
+         "subproduct_code": "000751",
+         "subproduct_name": "REFINANCIADO MES"
+        },
+        {
+         "row": 193,
+         "product_id": "000222",
+         "subproduct_id": "000361",
+         "subproduct_code": "000361",
+         "subproduct_name": "REFINANCIADO RP"
+        },
+        {
+         "row": 194,
+         "product_id": "000122",
+         "subproduct_id": "000506",
+         "subproduct_code": "000506",
+         "subproduct_name": "REFINANCIADO RP"
+        },
+        {
+         "row": 195,
+         "product_id": "000222",
+         "subproduct_id": "000761",
+         "subproduct_code": "000761",
+         "subproduct_name": "REFINANCIADO RP MES"
+        },
+        {
+         "row": 196,
+         "product_id": "000245",
+         "subproduct_id": "000471",
+         "subproduct_code": "000471",
+         "subproduct_name": "REPROG  REACTIVA COFIDE"
+        },
+        {
+         "row": 197,
+         "product_id": "000245",
+         "subproduct_id": "000421",
+         "subproduct_code": "000421",
+         "subproduct_name": "REPROG IMPORTACIONES"
+        },
+        {
+         "row": 198,
+         "product_id": "000245",
+         "subproduct_id": "000463",
+         "subproduct_code": "000463",
+         "subproduct_name": "REPROG INMOBILIARIO"
+        },
+        {
+         "row": 199,
+         "product_id": "000245",
+         "subproduct_id": "000462",
+         "subproduct_code": "000462",
+         "subproduct_name": "REPROG MEDIANO PLAZO"
+        },
+        {
+         "row": 200,
+         "product_id": "000245",
+         "subproduct_id": "000412",
+         "subproduct_code": "000412",
+         "subproduct_name": "REPROG POST EMBARQUE"
+        },
+        {
+         "row": 201,
+         "product_id": "000245",
+         "subproduct_id": "000402",
+         "subproduct_code": "000402",
+         "subproduct_name": "REPROG PRE EMBARQUE"
+        },
+        {
+         "row": 202,
+         "product_id": "000245",
+         "subproduct_id": "000476",
+         "subproduct_code": "000476",
+         "subproduct_name": "REPROG REACTIVA IBK"
+        },
+        {
+         "row": 203,
+         "product_id": "000245",
+         "subproduct_id": "000431",
+         "subproduct_code": "000431",
+         "subproduct_name": "REPROG RECURSOS PROPIOS"
+        },
+        {
+         "row": 204,
+         "product_id": "000345",
+         "subproduct_id": "000041",
+         "subproduct_code": "000041",
+         "subproduct_name": "SANEAMIENTO FINANCIERO"
+        }
+    ],
+    "totalRecords": 204,
+    "error": false,
+    "msg": ""
+}

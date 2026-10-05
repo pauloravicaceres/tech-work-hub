@@ -1,15 +1,44 @@
 # 🏗️ Reporte de Impacto y Code Review Vivo (`impact-analysis-report.md`)
 
-**HU vigente:** 012-HU_miembros_equipo_y_roles_tecnicos · **Rama:** `feat/012-HU_miembros_equipo_y_roles_tecnicos`
-**Fecha:** 04-10-2026 · **Dictamen (1.ª revisión de código HU-012):** ✅ **[APROBADO CON RESERVAS]**
-**HUs anteriores (cerradas):** 004-HU_asignacion_elementos_sprint ([APROBADO CON RESERVAS]), 003-HU_gestion_sprint_dos_semanas ([APROBADO CON RESERVAS]), 002-HU_pruebas_integracion_keycloak_y_catalogo_application ([APROBADO CON RESERVAS]) y 001-HU_registro_elementos_backlog_multitipo (6.ª iteración [APROBADO CON RESERVAS]); sus secciones se conservan abajo como histórico.
+**HU vigente:** 015-HU_relacion_personas_roles_elementos · **Rama:** `feat/015-HU_relacion_personas_roles_elementos`
+**Fecha:** 05-10-2026 · **Dictamen (1.ª revisión de código HU-015):** ✅ **[APROBADO]** (con reservas no bloqueantes)
+**HUs anteriores (cerradas):** 012 ([APROBADO CON RESERVAS]), 004, 003, 002 y 001; sus secciones se conservan abajo como histórico.
 
-> Renderizado selectivo: solo se documentan los componentes alterados por la HU-012: módulo nuevo `Modules/Teams` (Domain, Data + migración `InitialTeamsSchema`, Features `TeamMembers` y `TechnicalRoles`, `TeamsModule`), registro en `Api.csproj`/`Program.cs`, y `features/teams` del frontend con la ruta `equipos` en `app.routes.ts`. `Modules/Backlog`, `Modules/Sprints`, `Modules/Application`, `BuildingBlocks/Shared`, `core/auth`, `features/backlog` y `features/sprints`: *Sin impacto en este PR/HU* (`Shared` solo se consume).
+> Renderizado selectivo: solo se documenta lo alterado por la HU-015: `Modules/Teams` (Domain/ItemAssignments, Contracts/IBacklogItemLookup, Data + migración `AddItemAssignments`, Features/ItemAssignments), `Modules/Backlog` (`BacklogItemLookup`, `ListBacklogItems`, ProjectReference a Teams) y `features/teams` del frontend (3 componentes nuevos, servicio, modelos, rutas `responsables`). `Modules/Sprints`, `Modules/Application`, `Shared`, `core/auth`, `features/sprints`: *Sin impacto en este PR/HU*.
 ---
 
 ## 1. AI Code Review Dashboard
 
-### 1.000 HU-012 — Miembros del equipo y roles técnicos (vigente)
+### 1.0000 HU-015 — Relación personas, roles y elementos (vigente)
+
+```text
+┌──────────────── CODE REVIEW HU-015 · [APROBADO] ──────────────────────────┐
+│ Archivos analizados (lectura física)     : 36 (.cs prod 25 + .ts/.html 11)│
+│ Violaciones arquitectónicas              : 0                              │
+│ Problemas de seguridad/calidad           : 0 bloqueantes · 3 reservas     │
+│ Deuda técnica                            : baja (ver reservas)            │
+│ Cobertura de tests faltante              : 0 (QA 100 % de CA; build OK)   │
+└───────────────────────────────────────────────────────────────────────────┘
+```
+
+| Regla | Resultado |
+|---|---|
+| Carter `ICarterModule` + `.RequireAuthorization()` (3 endpoints Teams + 1 Backlog) | ✅ |
+| Lógica en handlers MediatR; endpoints solo despachan | ✅ |
+| `CancellationToken` propagado a EF/`ExistsAsync`/`GetItemsAsync` | ✅ |
+| N+1: `GetItemsAsync` en lote; el `foreach` de `ListMemberItemsQueryHandler` solo lee un diccionario en memoria | ✅ |
+| Cruce de schemas: Teams no consulta `backlog`; usa `IBacklogItemLookup` (ADR-002/003); sin FK a `backlog`, FK local a `teams.TeamMembers` | ✅ |
+| IDOR: el recurso es compartido por el equipo (sin propietario por spec); la acción exige identidad (`ICurrentUser`) y el rol sale de BD, no del request | ✅ |
+| Mass assignment: el body solo admite `memberId`; rol nunca viaja | ✅ |
+| Angular: standalone, OnPush, Signals; sin `innerHTML`/`bypassSecurityTrust*`/NgModule/zone.js | ✅ |
+| Build `ng build` ejecutado por Code Review (T062) | ✅ OK |
+
+#### Reservas (no bloqueantes)
+1. `[CAPA:SPEC]` `spec.md` (Edge Case y FR-015) aún dice "no documentado" para la asignación duplicada; vinculante el 200 idempotente (ADR-004). Pendiente del analista de negocio.
+2. `[CAPA:CODE]` `assign-assignee-dialog.component.ts:136` conserva un `.subscribe` manual (patrón `exhaustMap` + `takeUntilDestroyed`, mismo precedente aprobado en HU-012); sin fuga. Migrar a `rxResource`/signal en una HU futura.
+3. `[CAPA:TASKS]` T063 (quickstart manual) sin ejecutar; no hay evidencia de validación manual en navegador.
+
+### 1.000 HU-012 — Miembros del equipo y roles técnicos (histórico)
 
 ```text
 ╔══════════════════════════════════════════════════════════════╗
@@ -325,7 +354,27 @@ Evidencia: `documents/qa-auto/qa-report.md` (cuarta ejecución, T043) más lectu
 
 ## 2. Architecture Compliance & Traceability
 
-### 2.000 HU-012 — Flujo real implementado (solo lo alterado, vigente)
+### 2.0000 HU-015 — Flujo real implementado (solo lo alterado, vigente)
+
+```mermaid
+flowchart LR
+  subgraph FE[Frontend features/teams]
+    TP[team-page · pestaña Responsables] --> IV[item-assignees-view] & MV[member-items-view]
+    IV & MV --> DLG[assign-assignee-dialog]
+    IV & MV & DLG --> API[TeamApiService]
+  end
+  API -->|POST/GET /api/backlog-items/id/assignees · GET /api/team-members/id/items| EP[Carter Endpoints Teams]
+  API -->|GET /api/backlog-items| EPB[Carter ListBacklogItemsEndpoint]
+  EP --> H[MediatR Handlers Teams]
+  H --> TDB[(schema teams: ItemAssignments)]
+  H -->|IBacklogItemLookup contrato| L[BacklogItemLookup]
+  L --> BDB[(schema backlog)]
+  EPB --> HB[ListBacklogItemsQueryHandler] --> BDB
+```
+
+Sin saltos de capa ni cruce de schemas: Teams solo toca `backlog` vía contrato in-process.
+
+### 2.000 HU-012 — Flujo real implementado (solo lo alterado, histórico)
 
 ```mermaid
 flowchart LR
@@ -471,7 +520,35 @@ flowchart LR
 
 ## 3. Change Impact Diagram
 
-### 3.000 HU-012 — Impacto de los cambios y cobertura (vigente)
+### 3.0000 HU-015 — Impacto de los cambios y cobertura (vigente)
+
+```mermaid
+flowchart LR
+  subgraph Cambios
+    A[AssignMemberToItem endpoint+handler+validator]:::ok
+    B[ListItemAssignees]:::ok
+    C[ListMemberItems]:::ok
+    D[ItemAssignment + migración]:::ok
+    E[BacklogItemLookup]:::ok
+    F[ListBacklogItems]:::ok
+    G[assign-assignee-dialog / item-assignees-view / member-items-view]:::ok
+    H[TeamApiService]:::ok
+  end
+  A --- T1[AssignMemberToItem Unit+Validator+Integration+Concurrency+Failure]
+  B --- T2[ListItemAssignees Unit+Integration]
+  C --- T3[ListMemberItems Unit+Integration]
+  D --- T4[ItemAssignmentDomainTests + MigrationTests]
+  E --- T5[BacklogItemLookupTests]
+  F --- T6[ListBacklogItems Unit+Integration]
+  G --- T7[3 specs Jest]
+  H --- T8[team-api.service.spec]
+  A & B & C --- T9[ItemAssignmentsAuthTests + NoRegression]
+  classDef ok fill:#d4edda,stroke:#28a745
+```
+
+Todos los componentes alterados tienen pruebas; 0 nodos sin cobertura.
+
+### 3.000 HU-012 — Impacto de los cambios y cobertura (histórico)
 
 ```mermaid
 flowchart LR
@@ -697,7 +774,19 @@ Componentes de #16..#19 sin cobertura: 4 de 4. Resto de la HU (cierre de DEF-01.
 
 ## 4. Dependency / Coupling Graph
 
-### 4.000 HU-012 (vigente)
+### 4.0000 HU-015 (vigente)
+
+```mermaid
+flowchart LR
+  Backlog --> TeamsContracts[Teams.Contracts]
+  Backlog --> Shared
+  Teams --> Shared
+  Teams -. no referencia .-> Backlog
+```
+
+Dependencia unidireccional Backlog → Teams.Contracts (implementa `IBacklogItemLookup`); sin ciclo (Teams no referencia Backlog). Reserva: `Backlog.csproj` referencia el proyecto Teams completo, no un ensamblado de contratos aislado; aceptable, mismo patrón que `Sprints.Contracts`.
+
+### 4.000 HU-012 (histórico)
 
 ```mermaid
 flowchart LR

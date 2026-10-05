@@ -1,9 +1,16 @@
 import { TestBed } from '@angular/core/testing';
-import { provideHttpClient } from '@angular/common/http';
+import { HttpResponse, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { TeamApiService } from './team-api.service';
-import { TeamMember, TechnicalRole } from '../models/team.models';
+import {
+  AssigneeResponse,
+  BacklogItemSummary,
+  ItemAssigneeResponse,
+  MemberItemResponse,
+  TeamMember,
+  TechnicalRole,
+} from '../models/team.models';
 
 const MEMBER: TeamMember = { id: '5d2e71aa-0000-4000-8000-00000000c013', name: 'Ana Torres', role: 'Desarrollo' };
 
@@ -68,5 +75,78 @@ describe('TeamApiService', () => {
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(request);
     expect(result).toEqual(MEMBER);
+  });
+
+  // HU-015 — relación personas, roles y elementos.
+  const ITEM_ID = '9c1a0000-0000-4000-8000-000000000101';
+  const ASSIGNMENT: ItemAssigneeResponse = {
+    itemId: ITEM_ID,
+    memberId: MEMBER.id,
+    memberName: 'Ana Torres',
+    role: 'Desarrollo',
+  };
+
+  it.each([
+    [201, 'Created'],
+    [200, 'OK'],
+  ])('assignMember_Con%i_DebeHacerPostConMemberIdYExponerElCodigoHttp', (status, statusText) => {
+    // Arrange
+    let result: HttpResponse<ItemAssigneeResponse> | undefined;
+
+    // Act
+    service.assignMember(ITEM_ID, MEMBER.id).subscribe((response) => (result = response));
+    const req = http.expectOne(`/api/backlog-items/${ITEM_ID}/assignees`);
+    req.flush(ASSIGNMENT, { status, statusText });
+
+    // Assert
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({ memberId: MEMBER.id });
+    expect(result?.status).toBe(status);
+    expect(result?.body).toEqual(ASSIGNMENT);
+  });
+
+  it('listBacklogItems_DebeHacerGetAApiBacklogItems', () => {
+    // Arrange
+    const items: BacklogItemSummary[] = [{ id: ITEM_ID, title: 'Historia 101', type: 'UserStory' }];
+    let result: BacklogItemSummary[] | undefined;
+
+    // Act
+    service.listBacklogItems().subscribe((list) => (result = list));
+    const req = http.expectOne('/api/backlog-items');
+    req.flush(items);
+
+    // Assert
+    expect(req.request.method).toBe('GET');
+    expect(result).toEqual(items);
+  });
+
+  it('listItemAssignees_DebeHacerGetDeLosResponsablesDelElemento', () => {
+    // Arrange
+    const assignees: AssigneeResponse[] = [{ id: MEMBER.id, name: 'Ana Torres', role: 'Desarrollo' }];
+    let result: AssigneeResponse[] | undefined;
+
+    // Act
+    service.listItemAssignees(ITEM_ID).subscribe((list) => (result = list));
+    const req = http.expectOne(`/api/backlog-items/${ITEM_ID}/assignees`);
+    req.flush(assignees);
+
+    // Assert
+    expect(req.request.method).toBe('GET');
+    expect(result).toEqual(assignees);
+  });
+
+  it('listMemberItems_DebeHacerGetDeLosElementosDelMiembro', () => {
+    // Arrange
+    const items: MemberItemResponse[] = [{ id: ITEM_ID, title: 'Historia 101', type: 'UserStory' }];
+    let result: MemberItemResponse[] | undefined;
+
+    // Act
+    service.listMemberItems(MEMBER.id).subscribe((list) => (result = list));
+    const req = http.expectOne(`/api/team-members/${MEMBER.id}/items`);
+    req.flush(items);
+
+    // Assert
+    expect(req.request.method).toBe('GET');
+    expect(result).toEqual(items);
   });
 });

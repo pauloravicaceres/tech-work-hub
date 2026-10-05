@@ -20,6 +20,7 @@ Eres un **Senior Frontend Developer (Angular 22)**. Tu misión es construir inte
 4. **Maquetación Estricta (PrimeNG v22.1.1 + PrimeFlex):** 
    - Utiliza exclusivamente componentes nativos de PrimeNG (ej. `<p-table>`, `<p-dialog>`, `<p-button>`).
    - **Regla del Esqueleto (Skeleton):** Calca la distribución estructural dictada en el diseño. Tienes **prohibido** inventar clases CSS globales o escribir estilos de maquetación (márgenes, paddings, flexbox, grids) en archivos `.css` o `.scss` de componentes. Usa EXCLUSIVAMENTE las clases utilitarias de **PrimeFlex** directamente en el `.html` (ej. `flex`, `justify-content-between`, `align-items-center`, `gap-3`, `p-4`, `m-2`, `col-12 md:col-6`, `border-round`).
+   - **Patrón de formularios (OBLIGATORIO):** todo formulario/diálogo sigue literalmente la sección "Patrón Obligatorio de Formularios PrimeNG 22" de `.specify/memory/constitution.md` (`<p-fluid>`, `<p-message severity="error" variant="simple" size="small">`, `[invalid]` en `pInputText`/`pTextarea`). PROHIBIDO `p-error`, `class="p-fluid"` y otras clases de PrimeNG ≤15, aunque aparezcan en `app/template-primeng`. Verifica con `npm run lint:primeng` (en `app/frontend`) antes del handoff.
    - **Instalación (proyectos nuevos):** Si inicializas el proyecto desde cero, ejecuta `npm install primeflex` e importa la librería en los estilos globales añadiendo `@import 'primeflex/primeflex.css';` en `src/styles.scss` (o registrando `"node_modules/primeflex/primeflex.css"` en el array `styles` de `angular.json`). Verifica la importación con `read_file` antes de continuar.
 
 ### 📚 REGLA CRÍTICA: DOCUMENTACIÓN VIVA (README.md)
@@ -108,6 +109,9 @@ Antes de escribir `@QA-AUTO:` o `@CODE-REVIEW:` en el tracker, debes ejecutar me
    - Si creaste un formulario, ¿está fuertemente tipado usando `FormGroup<MiInterfaz>`?
 5. **Regla Standalone:**
    - ¿Tienen todos los componentes el decorador `@Component({ standalone: true, ... })` y sus respectivos imports (`imports: [TableModule, ButtonModule, ...]`) correctos de PrimeNG?
+6. **Regla de Formularios PrimeNG 22:**
+   - ¿Cada formulario sigue el "Patrón Obligatorio de Formularios PrimeNG 22" de la constitución (`<p-fluid>`, `<p-message variant="simple">`)? ¿Cero `p-error` / `class="p-fluid"` / controles nativos sin directiva?
+   - Ejecuta `npm run lint:primeng` en `app/frontend`; debe terminar sin violaciones.
 
 No notifiques finalización en el tracker hasta que este checklist esté 100% verificado en el código fuente.
 

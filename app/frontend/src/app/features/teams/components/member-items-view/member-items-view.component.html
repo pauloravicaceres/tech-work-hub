@@ -1,0 +1,69 @@
+<div class="flex justify-content-end mb-3">
+  <p-button label="Asignar responsable" icon="pi pi-plus" (onClick)="openDialog()" />
+</div>
+
+<p-fluid class="block mb-3">
+  <label for="miembro" class="block font-bold">MIEMBRO</label>
+  <p-select
+    inputId="miembro"
+    [formControl]="memberControl"
+    [options]="membersState().options"
+    optionLabel="name"
+    optionValue="id"
+    [filter]="true"
+    filterBy="name"
+    placeholder="Seleccione un miembro"
+    [loading]="membersState().loading"
+  />
+</p-fluid>
+
+@switch (state().status) {
+  @case ('idle') {
+    <p-message severity="info">Seleccione un miembro para ver sus elementos.</p-message>
+  }
+  @case ('loading') {
+    <p-message severity="info">Cargando...</p-message>
+  }
+  @case ('error') {
+    <p-message severity="error">No fue posible consultar los elementos del miembro. Intente nuevamente.</p-message>
+    <div class="flex justify-content-end mt-3">
+      <p-button label="Reintentar" icon="pi pi-refresh" severity="secondary" [outlined]="true" (onClick)="reload()" />
+    </div>
+  }
+  @case ('ready') {
+    @if (state(); as current) {
+      @if (current.status === 'ready') {
+        <p-table [value]="current.items" dataKey="id">
+          <ng-template #caption>Elementos relacionados con {{ selectedMember()?.name }}</ng-template>
+          <ng-template #header>
+            <tr>
+              <th>IDENTIFICADOR</th>
+              <th>TÍTULO</th>
+              <th>TIPO</th>
+            </tr>
+          </ng-template>
+          <ng-template #body let-item>
+            <tr>
+              <td>{{ item.id }}</td>
+              <td>{{ item.title }}</td>
+              <td>{{ item.type }}</td>
+            </tr>
+          </ng-template>
+          <ng-template #emptymessage>
+            <tr>
+              <td colspan="3">Este miembro aún no tiene elementos relacionados.</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      }
+    }
+  }
+}
+
+@if (dialogVisible()) {
+  <app-assign-assignee-dialog
+    [(visible)]="dialogVisible"
+    (assigned)="onAssigned($event)"
+    (unauthorized)="onUnauthorized()"
+  />
+}

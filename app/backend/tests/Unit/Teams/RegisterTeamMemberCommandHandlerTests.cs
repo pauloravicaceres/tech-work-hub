@@ -4,6 +4,7 @@ using NSubstitute;
 using Shared.Exceptions;
 using Shared.Identity;
 using Teams.Data;
+using Teams.Domain.ItemAssignments;
 using Teams.Domain.TeamMembers;
 using Teams.Domain.TechnicalRoles;
 using Teams.Features.TeamMembers;
@@ -107,6 +108,7 @@ public class RegisterTeamMemberCommandHandlerTests
 
         public DbSet<TeamMember> TeamMembers => inner.TeamMembers;
         public DbSet<TechnicalRole> TechnicalRoles => inner.TechnicalRoles;
+        public DbSet<ItemAssignment> ItemAssignments => inner.ItemAssignments;
 
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {

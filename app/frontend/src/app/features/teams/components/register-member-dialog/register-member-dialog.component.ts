@@ -7,6 +7,7 @@ import { BehaviorSubject, Subject, catchError, exhaustMap, map, of, startWith, s
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
+import { Fluid } from 'primeng/fluid';
 import { MessageModule } from 'primeng/message';
 import { SelectModule } from 'primeng/select';
 
@@ -41,7 +42,7 @@ type SubmitResult = { ok: true; member: TeamMember } | { ok: false; error: HttpE
   selector: 'app-register-member-dialog',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule, DialogModule, InputTextModule, SelectModule, ButtonModule, MessageModule],
+  imports: [Fluid, ReactiveFormsModule, DialogModule, InputTextModule, SelectModule, ButtonModule, MessageModule],
   templateUrl: './register-member-dialog.component.html',
   styleUrls: ['./register-member-dialog.component.scss'],
 })

@@ -1,5 +1,6 @@
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using Teams.Domain.ItemAssignments;
 using Teams.Domain.TeamMembers;
 using Teams.Domain.TechnicalRoles;
 
@@ -12,6 +13,8 @@ public class TeamsDbContext(DbContextOptions<TeamsDbContext> options) : DbContex
     public DbSet<TeamMember> TeamMembers => Set<TeamMember>();
 
     public DbSet<TechnicalRole> TechnicalRoles => Set<TechnicalRole>();
+
+    public DbSet<ItemAssignment> ItemAssignments => Set<ItemAssignment>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

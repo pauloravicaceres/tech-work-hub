@@ -10,6 +10,7 @@ import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
+import { Fluid } from 'primeng/fluid';
 import { MessageModule } from 'primeng/message';
 import { SelectModule } from 'primeng/select';
 import { TextareaModule } from 'primeng/textarea';
@@ -66,6 +67,7 @@ const SERVER_FIELD_MAP: Readonly<Record<string, FormField>> = {
   selector: 'app-create-backlog-item',
   standalone: true,
   imports: [
+    Fluid,
     ReactiveFormsModule,
     CardModule,
     InputTextModule,

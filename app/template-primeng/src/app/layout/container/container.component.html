@@ -1,0 +1,9 @@
+<div style="margin-bottom: 0px;" *ngIf="pageActive != homepage">
+    <h4 style="font-weight: 700;"
+    [style]="{'color': layoutService.config.colorScheme === 'light' ? '#1E1E1F' : '#FFFFFF'}">{{ pageActive }}
+    </h4>
+    <p-breadcrumb [model]="items" [home]="home"></p-breadcrumb>
+</div>
+<!-- <div class="card">
+</div> -->
+<router-outlet></router-outlet>

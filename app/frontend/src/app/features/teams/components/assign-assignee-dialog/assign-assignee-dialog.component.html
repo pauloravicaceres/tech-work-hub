@@ -1,0 +1,81 @@
+<p-dialog
+  header="ASIGNAR RESPONSABLE"
+  [modal]="true"
+  [(visible)]="visible"
+  [closable]="!isSubmitting()"
+  [style]="{ width: '40rem' }"
+  (onShow)="resetState()"
+>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+    @if (banner(); as current) {
+      <p-message [severity]="current.severity" styleClass="mb-3">{{ current.message }}</p-message>
+    }
+
+    <p-fluid class="block mb-3">
+      <label for="itemId" class="block font-bold">ELEMENTO (*)</label>
+      <p-select
+        inputId="itemId"
+        formControlName="itemId"
+        [options]="itemsState().options"
+        optionLabel="title"
+        optionValue="id"
+        [filter]="true"
+        filterBy="title"
+        placeholder="Seleccione un elemento"
+        [loading]="itemsState().loading"
+        [class.ng-invalid]="itemError()"
+        [class.ng-dirty]="itemError()"
+      />
+      @if (itemError(); as message) {
+        <p-message severity="error" variant="simple" size="small">{{ message }}</p-message>
+      }
+    </p-fluid>
+
+    <p-fluid class="block mb-3">
+      <label for="memberId" class="block font-bold">MIEMBRO (*)</label>
+      <p-select
+        inputId="memberId"
+        formControlName="memberId"
+        [options]="membersState().options"
+        optionLabel="name"
+        optionValue="id"
+        [filter]="true"
+        filterBy="name"
+        placeholder="Seleccione un miembro"
+        [loading]="membersState().loading"
+        [class.ng-invalid]="memberError()"
+        [class.ng-dirty]="memberError()"
+      />
+      @if (memberError(); as message) {
+        <p-message severity="error" variant="simple" size="small">{{ message }}</p-message>
+      }
+    </p-fluid>
+
+    <p-fluid class="block mb-3">
+      <label for="role" class="block font-bold">ROL TÉCNICO</label>
+      <input pInputText id="role" readonly [value]="selectedRole() || '-'" />
+      <small class="block mt-1">
+        Rol registrado del miembro (solo lectura). Se asigna un miembro por solicitud; puede haber más de un responsable.
+      </small>
+    </p-fluid>
+
+    <div class="flex justify-content-end gap-2 mt-3">
+      <p-button
+        label="Cancelar"
+        icon="pi pi-times"
+        severity="secondary"
+        [outlined]="true"
+        type="button"
+        [disabled]="isSubmitting()"
+        (onClick)="onCancel()"
+      />
+      <p-button
+        [label]="failed() ? 'Reintentar' : 'Asignar'"
+        icon="pi pi-check"
+        type="submit"
+        [disabled]="isSubmitting()"
+        [loading]="isSubmitting()"
+      />
+    </div>
+  </form>
+</p-dialog>

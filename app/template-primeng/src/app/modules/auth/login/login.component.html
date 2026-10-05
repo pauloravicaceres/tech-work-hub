@@ -1,0 +1,113 @@
+
+<div class="scalein animation-duration-500 h-full w-full m-0 py-4 px-4">
+
+    <div class="text-center mb-5">
+
+        <div class="text-900 text-3xl font-medium mb-3">
+            {{ 'modules.auth.login.title-log-in' | translate }}
+        </div>
+    </div>
+
+    <div class="w-full md:w-10 mx-auto">
+
+        <div class="mb-3">
+
+            <div class="p-inputgroup">
+                <span class="p-inputgroup-addon"><i class="pi pi-user"></i></span>
+                <input type="text"
+                placeholder="{{ 'modules.auth.login.input-user' | translate }}"
+                class="p-inputtext-lg"
+                pInputText
+                [(ngModel)]="loginForm.user.val"
+                #user="ngModel">
+            </div>
+            <div class="p-inputgroup mb-2"
+            *ngIf="(send && !loginForm.user.isValid())">
+                <small class="p-error block">{{ loginForm.user.error }}</small>
+            </div>
+        </div>
+    
+    
+        <div class="mb-3">
+            <div class="p-inputgroup">
+                <span class="p-inputgroup-addon"><i class="pi pi-lock"></i></span>
+                <p-password [toggleMask]="true"
+                placeholder="{{ 'modules.auth.login.input-password' | translate }}"
+                styleClass="w-full"
+                class="p-inputtext-lg"
+                [(ngModel)]="loginForm.password.val"
+                #password="ngModel">
+                </p-password>
+            </div>
+            <div class="p-inputgroup mb-2" *ngIf="(send && !loginForm.password.isValid())">
+                <small class="p-error block">{{ loginForm.password.error }}</small>
+            </div>
+        </div>
+    
+        <div class="flex align-items-center justify-content-between mb-5 mt-2">
+            <a class="font-medium no-underline ml-2 text-right cursor-pointer"
+            (click)="goToRecoverPasswordForm()">
+                {{ 'modules.auth.login.forget-password' | translate }}
+            </a>
+        </div>
+        
+        <button pButton pRipple
+        label="{{ 'generic.button-get-into' | translate }}"
+        class="w-full p-3 text-xl"
+        (click)="authenticate()"></button>
+
+        <div class="flex align-items-center justify-content-star mb-5 mt-2">
+            {{ 'modules.auth.login.account' | translate }}
+            <a class="font-medium no-underline ml-2 text-right cursor-pointer"
+            (click)="goToCheckInForm()">
+                {{ 'modules.auth.login.register' | translate }} 
+            </a>
+        </div>
+    </div>
+    
+    
+    
+</div>
+
+
+
+<!-- <app-basic-message [icono]="icono" [estilo]="estilo" [dialogMessage]="dialogMessage"></app-basic-message> -->
+
+
+
+    
+<!--     
+    <div class="w-full md:w-10 mx-auto" *ngIf="formActive == 'password'">
+        <div class="p-inputgroup mb-3">
+            <span class="p-inputgroup-addon"><i class="pi pi-lock"></i></span>
+            <p-password [toggleMask]="true" placeholder="Nueva contraseña" styleClass="w-full" class="p-inputtext-lg"
+            [(ngModel)]="passwordForm.password" #clave="ngModel">
+            </p-password>
+        </div>
+    
+    
+        <div class="p-inputgroup">
+            <span class="p-inputgroup-addon"><i class="pi pi-lock"></i></span>
+            <p-password [toggleMask]="true" placeholder="Repetir contraseña" styleClass="w-full" class="p-inputtext-lg"
+            [(ngModel)]="passwordForm.repeat_password" #repetir_clave="ngModel">
+            </p-password>
+        </div>
+    
+        <div class="p-inputgroup mb-2" *ngIf="((!passwordForm.password.isValid() || !passwordForm.repeat_password.isValid()))">
+            <small class="p-error block">{{ passwordForm.password.error }}</small>
+        </div>
+        <div class="p-inputgroup mb-2" *ngIf="(passwordForm.password.isValid() && passwordForm.repeat_password.isValid() && passwordForm.password.val != passwordForm.repeat_password.val)">
+            <small class="p-error block">Las contraseñas no coinciden</small>
+        </div>
+        <div class="p-inputgroup mb-2" *ngIf="mensajeValidate != ''">
+            <small class="p-error block">{{ mensajeValidate }}</small>
+        </div>
+    
+    
+        <div class="flex align-items-center justify-content-between mb-5 mt-2">
+        </div>
+        <button pButton pRipple label="Siguiente" class="w-full p-3 text-xl" (click)="resetPassword()"></button>
+    </div>
+
+     -->
+    

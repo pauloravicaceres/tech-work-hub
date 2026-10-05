@@ -1,0 +1,38 @@
+
+<div class="p-fluid">
+    <div class="field" *ngIf="!floatLabel">
+        <label>
+            {{ label }}
+        </label>
+        <p-autoComplete
+        [id]="id"
+        [virtualScroll]="true"
+        [virtualScrollItemSize]="30"
+        [(ngModel)]="ngModel"
+        [field]="field"
+        [suggestions]="suggestions!"
+        (onBlur)="onBlur.emit($event);"
+        (completeMethod)="completeMethod.emit($event)"
+        (ngModelChange)="ngModelChange.emit($event)">
+        </p-autoComplete>
+    </div>
+    <div class="field field-float-label-container" *ngIf="floatLabel">
+        <span class="p-float-label">
+            <p-autoComplete
+            [id]="id"
+            [virtualScroll]="true"
+            [virtualScrollItemSize]="30"
+            [(ngModel)]="ngModel"
+            [field]="field"
+            [suggestions]="suggestions!"
+            (onBlur)="onBlur.emit($event);"
+            (completeMethod)="completeMethod.emit($event)"
+            (ngModelChange)="ngModelChange.emit($event)">
+            </p-autoComplete>
+            <label
+            [for]="id">
+                {{ label }}
+            </label>
+        </span>
+    </div>
+</div>

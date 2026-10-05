@@ -1,0 +1,13 @@
+.grid-flex {
+    display: flex !important;
+    justify-content: center;
+}
+.p-frozen-column-left {
+    position: sticky !important;
+    background: inherit;
+}
+.p-frozen-column-right {
+    position: sticky !important;
+    background: inherit;
+    right: 0px;
+}

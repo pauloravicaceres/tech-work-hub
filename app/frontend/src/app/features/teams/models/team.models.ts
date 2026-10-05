@@ -25,3 +25,33 @@ export interface ProblemDetails {
   detail?: string;
   errors?: Record<string, string[]>;
 }
+
+/** Relación creada o existente (`ItemAssigneeResponse` de `POST /api/backlog-items/{itemId}/assignees`): sin auditoría. */
+export interface ItemAssigneeResponse {
+  itemId: string;
+  memberId: string;
+  memberName: string;
+  role: string;
+}
+
+/** Persona relacionada con un elemento (`AssigneeResponse` de `GET /api/backlog-items/{itemId}/assignees`). */
+export interface AssigneeResponse {
+  id: string;
+  name: string;
+  role: string;
+}
+
+/** Elemento relacionado con un miembro (`MemberItemResponse` de `GET /api/team-members/{memberId}/items`). */
+export interface MemberItemResponse {
+  id: string;
+  title: string;
+  type: string;
+}
+
+/** Elemento del backlog para el selector (`GET /api/backlog-items`): solo `id`, `title` y `type`. */
+export type BacklogItemSummary = MemberItemResponse;
+
+/** Cuerpo de `POST /api/backlog-items/{itemId}/assignees`: un miembro por solicitud. */
+export interface AssignMemberRequest {
+  memberId: string;
+}

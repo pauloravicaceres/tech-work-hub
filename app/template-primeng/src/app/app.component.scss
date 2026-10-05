@@ -1,0 +1,121 @@
+ng-scrollbar {
+    --scrollbar-gap: 2px;
+    --scrollbar-track-color: rgba(0, 0, 0, 0.1);
+    --scrollbar-thumb-color: var(--color-accent);
+    --scrollbar-size: 8px;
+    --scrollbar-padding: 0px;
+    --scrollbar-border-radius: 0px;
+    --scrollbar-hover-size: 16px;
+  }
+  
+  .page-wrapper {
+    padding-top: 2em;
+    background-color: white;
+  }
+  
+  .go-top {
+    position: fixed;
+    bottom: 2em;
+    right: 2em;
+  }
+  
+  .mat-fab {
+    position: fixed;
+    bottom: 2em;
+    left: 2em;
+  }
+  
+  
+  // :host ::ng-deep {
+  //   label {
+  //     font-size: 13px !important;
+  //   }
+  
+  //   .p-dropdown-item {
+  //     font-size: 13px;
+  //   }
+  
+  //   .p-button-label {
+  //     font-size: 13px;
+  //     font-weight: 500;
+  //   }
+  
+  //   .p-button .p-button-icon-left{
+  //     font-size: 1.3em !important;
+  //   }
+  //   .p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link .p-menuitem-icon{
+  //     font-size: 1.3em !important;
+  //   }
+  //   .p-error {
+  //     font-size: 1.05em;
+  //   }
+  
+  //   .pi-spinner {
+  //     font-size: 25px;
+  //     color: #eee;
+  //   }
+  
+  //   .p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link {
+  //     font-size: 1.1em;
+  // }
+  // .p-datatable-responsive-scroll>.p-datatable-wrapper{
+  //   font-size: 1.25em !important;
+  // }
+  // .pi {
+  //   font-size: 15px;
+  // }
+  // .p-paginator {
+  //   font-size: 1.3em;
+  // }
+  // .p-paginator .p-paginator-pages .p-paginator-page {
+  //   font-size: 1.1em;
+  // }
+  // .p-dialog {
+  //   font-size: 13px;
+  // }
+  
+  // .p-dialog .p-dialog-header .p-dialog-title {
+  //   font-size: 15px;
+  // }
+  // .p-dialog .p-dialog-footer button {
+  //   font-size: 0.8em !important;
+  // }
+  // .p-confirm-popup .p-confirm-popup-content {
+  //   font-size: 1.3em !important;
+  // }
+  // .p-confirm-popup .p-confirm-popup-footer button {
+  //   font-size: 13px !important;
+  // }
+  
+  // .p-confirm-popup-message {
+  //   font-size: 20px !important;
+  // }
+  
+  // .p-toast, .p-toast-icon-close {
+  //   font-size: 1.3em;
+  // }
+  
+  // .p-treeselect .p-treeselect-label {
+  //   padding: 0.9375rem 0.9375rem;
+  //   font-size: 1.25rem;
+  // }
+  
+  
+  // .p-tree-wrapper .pi-check:before {
+  //   color: green;
+  //   font-size: 16px;
+  // }
+  // .p-tree-wrapper .pi-ban:before {
+  //   color: red;
+  //   font-size: 16px;
+  // }
+  // .p-treenode-selectable {
+  //   font-size: 15px;
+  // }
+  
+  // .p-scrollpanel .p-scrollpanel-bar {
+  //   background: #dddddd;
+  // }
+  
+  // }
+  

@@ -10,7 +10,7 @@
       <p-message [severity]="current.severity" styleClass="mb-3">{{ current.message }}</p-message>
     }
 
-    <div class="p-fluid mb-3">
+    <p-fluid class="block mb-3">
       <label for="name" class="block font-bold">NOMBRE (*)</label>
       <input
         pInputText
@@ -19,15 +19,14 @@
         placeholder="Ej: Ana Torres"
         autocomplete="off"
         autofocus
-        [class.ng-invalid]="nameError()"
-        [class.ng-dirty]="nameError()"
+        [invalid]="!!nameError()"
       />
       @if (nameError(); as message) {
-        <small class="p-error block">{{ message }}</small>
+        <p-message severity="error" variant="simple" size="small">{{ message }}</p-message>
       }
-    </div>
+    </p-fluid>
 
-    <div class="p-fluid mb-3">
+    <p-fluid class="block mb-3">
       <label for="role" class="block font-bold">ROL TÉCNICO (*)</label>
       <p-select
         inputId="role"
@@ -41,10 +40,10 @@
         [class.ng-dirty]="roleError()"
       />
       @if (roleError(); as message) {
-        <small class="p-error block">{{ message }}</small>
+        <p-message severity="error" variant="simple" size="small">{{ message }}</p-message>
       }
       <small class="block mt-1">Se registra un miembro con un rol por solicitud.</small>
-    </div>
+    </p-fluid>
 
     <div class="flex justify-content-end gap-2 mt-3">
       <p-button label="Cancelar" icon="pi pi-times" severity="secondary" [outlined]="true" type="button" (onClick)="onCancel()" />

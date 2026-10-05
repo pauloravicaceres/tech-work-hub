@@ -1,0 +1,167 @@
+{
+  "components": {
+    "confirmation": {
+      "header": "Confirmation",
+      "message": {
+          "continue": "Are you sure you want to continue?",
+          "sign-off": "Are you sure you want to log out?",
+          "add": "Are you sure to save the registry",
+          "update": "Are you sure to update the registry",
+          "delete": "Are you sure to delete the registry?"
+      }
+    },
+    "config": {
+      "title": "Setting",
+      "scale": "Scale",
+      "menu-type": {
+        "title": "Menu type",
+        "static": "Static",
+        "overlay": "Overlay"
+      },
+      "input-style": {
+        "title": "Input style",
+        "outlined": "Outlined",
+        "filled": "Filled"
+      },
+      "automatic-search": "Automatic Search",
+      "menu-static": "Static menu",
+      "float-label": "Float label",
+      "language": "Language"
+    }
+  },
+  "generic": {
+    "button-yes": "Yes",
+    "button-no": "No",
+    "button-cancel": "Cancel",
+    "button-add": "Save",
+    "button-update": "Update",
+    "button-go-out": "Go out",
+    "button-get-into": "Get into",
+    "credit_number": "Credit number",
+    "delete": "Delete",
+    "search": "Search",
+    "clear": "Clear",
+    "add": "Add",
+    "export": "Export",
+    "edit": "Edit",
+    "show": "Show",
+    "hide": "Ocultar",
+    "profile": "Profile"
+  },
+  "message": {
+    "success": "Success",
+    "delete-success": "Record was deleted successfully",
+    "add-success": "The record was successfully saved",
+    "update-success": "The record was successfully updated"
+  },
+  "modules": {
+    "auth": {
+      "login": {
+        "title-log-in": "Iniciar Sesión",
+        "title-reset-password": "Resetear Password",
+        "forget-password": "¿Olvidaste tu contraseña?",
+        "account": "¿No tienes cuenta?",
+        "register": "Regístrate aquí"
+      }
+    },
+    "profile": {
+      "user": "User",
+      "address": "Address",
+      "email": "Email",
+      "mobile": "Mobile",
+      "document": "Document",
+      "creation-date": "Creation Date"
+    },
+    "product": {
+      "product-list": {
+        "title-filters": "Product List"
+      }
+    },
+    "operative-instruction": {
+      "form-list": {
+        "filter-catergory": "Catergory",
+        "filter-product": "Product",
+        "filter-subproduct": "Subproduct",
+        "filter-value-date": "Value Date",
+        "filter-register-date": "Register Date",
+        "filter-register-date-start": "Register Date Start",
+        "filter-register-date-end": "Register Date End",
+        "filter-client": "Client",
+        "filter-credit-number": "Credit Number",
+        "filter-status": "Status",
+        "title": "Operative Instruction List",
+        "export-document-name": "Operative Instruction",
+        "export-document-sheet-1": "List"
+      },
+      "form-detail": {
+        "title-add": "Add Operative Instruction",
+        "title-update": "Update Operative Instruction",
+        "title-show": "Show Operative Instruction",
+        "category": "Category",
+        "product": "Product",
+        "subproduct": "Subproduct",
+        "value-date": "Value Date",
+        "register-date": "Register Date",
+        "client": "Client",
+        "credit-number": "Credit Number",
+        "status": "Status"
+      },
+      "validations": {
+        "credit-number-required": "Enter Credit Number",
+        "client-required": "Enter Client",
+        "category-required": "Select a Category",
+        "product-required": "Select a Product",
+        "subproduct-required": "Select a Subproduct",
+        "value-date-required": "Enter Value Date",
+        "register-date-required": "Enter Register Date"
+      }
+    }
+  },
+  "primeng": {
+      "startsWith": "Starts with",
+      "contains": "Contains",
+      "notContains": "Not contains",
+      "endsWith": "Ends with",
+      "equals": "Equals",
+      "notEquals": "Not equals",
+      "noFilter": "No Filter",
+      "lt": "Less than",
+      "lte": "Less than or equal to",
+      "gt": "Greater than",
+      "gte": "Greater than or equal to",
+      "is": "Is",
+      "isNot": "Is not",
+      "before": "Before",
+      "after": "After",
+      "dateIs": "Date is",
+      "dateIsNot": "Date is not",
+      "dateBefore": "Date is before",
+      "dateAfter": "Date is after",
+      "clear": "Clear",
+      "apply": "Apply",
+      "matchAll": "Match All",
+      "matchAny": "Match Any",
+      "addRule": "Add Rule",
+      "removeRule": "Remove Rule",
+      "accept": "Sí",
+      "reject": "No",
+      "choose": "Choose",
+      "upload": "Upload",
+      "cancel": "Cancel",
+      "dayNames": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+      "dayNamesShort": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+      "dayNamesMin": ["Su","Mo","Tu","We","Th","Fr","Sa"],
+      "monthNames": ["January","February","March","April","May","June","July","August","September","October","November","December"],
+      "monthNamesShort": ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+      "dateFormat": "mm/dd/yy",
+      "firstDayOfWeek": 0,
+      "today": "Today",
+      "weekHeader": "Wk",
+      "weak": "Bajo",
+      "medium": "Medio",
+      "strong": "Alto",
+      "passwordPrompt": "Enter a password",
+      "emptyMessage": "No results found",
+      "emptyFilterMessage": "No results found"
+  }
+}

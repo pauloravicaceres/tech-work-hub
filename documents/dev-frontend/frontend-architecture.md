@@ -3,7 +3,7 @@
 ## 1. Información General y Objetivo
 - **Sistema:** TechWorkHub
 - **Versión:** 1.0.0
-- **Fecha de última actualización:** 2026-10-04 (HU-012)
+- **Fecha de última actualización:** 2026-10-05 (HU-015)
 - **Equipo:** Frontend / SpecKit
 - **Objetivo:** Plataforma modular basada en Angular 22 Zoneless con Signals para la gestión de proyectos y backlog multitipo.
 
@@ -353,3 +353,70 @@ sequenceDiagram
 ```
 
 - **Verificación:** no ejecutada. El entorno de esta sesión no tiene Node/npm en el PATH, por lo que `npm test` y `npm run build` (T058) y el recorrido del quickstart (T061) quedan pendientes.
+
+### HU-015 — Relación entre Personas, Roles y Elementos de Trabajo (speckit-implement, 2026-10-05, tareas frontend T004, T015, T021, T022, T031, T032, T037, T045, T048–T050, T053, T056–T058)
+Se amplió `features/teams/` con la pestaña `Responsables`. Fuera de la feature solo se tocó `app.routes.ts` (dos rutas hijas nuevas); no se modificó `features/backlog`, `features/sprints` ni `core/auth`.
+
+- **Archivos nuevos (`app/frontend/src/app/features/teams/components/`):**
+  - `assign-assignee-dialog/`: `AssignAssigneeDialogComponent` (`p-dialog` con `FormGroup<{ itemId, memberId }>` tipado, dos `p-select` alimentados por `GET /api/backlog-items` y `GET /api/team-members`, rol técnico de solo lectura derivado del miembro, 201 vs 200 con toast distinto).
+  - `item-assignees-view/`: `ItemAssigneesViewComponent` (vista `Por elemento`: selector de elemento, `p-table` identificador/nombre/rol, estados idle/cargando/datos/vacío/error).
+  - `member-items-view/`: `MemberItemsViewComponent` (vista `Por miembro`: selector de miembro, `p-table` identificador/título/tipo, mismos estados).
+- **Modificados:** `models/team.models.ts` (`ItemAssigneeResponse`, `AssigneeResponse`, `MemberItemResponse`, `BacklogItemSummary`, `AssignMemberRequest`), `services/team-api.service.ts` (`listBacklogItems`, `assignMember` con `observe: 'response'`, `listItemAssignees`, `listMemberItems`), `team-page.component.{ts,html}` (pestaña `Responsables`, `view`, `selectView`, estado `idle`) y `app.routes.ts`.
+- **Rutas:** `equipos/responsables` (`data: { tab: 'responsables', view: 'elemento' }`) y `equipos/responsables/miembro` (`view: 'miembro'`); heredan `authGuard` y `MessageService` del bloque `equipos`.
+
+```mermaid
+flowchart TD
+    Guard{{"authGuard"}} --> Equipos["/equipos (MessageService)"]
+    Equipos --> Miembros["'' tab=miembros"]
+    Equipos --> Roles["roles tab=roles"]
+    Equipos --> RespE["responsables tab=responsables view=elemento (NUEVA)"]
+    Equipos --> RespM["responsables/miembro view=miembro (NUEVA)"]
+    Miembros & Roles & RespE & RespM --> Page["TeamPageComponent"]
+    Page -- "view=elemento" --> IV["ItemAssigneesViewComponent"]
+    Page -- "view=miembro" --> MV["MemberItemsViewComponent"]
+    IV -- "GET /api/backlog-items" --> API[("Backlog / Teams")]
+    IV -- "GET /api/backlog-items/{itemId}/assignees" --> API
+    MV -- "GET /api/team-members" --> API
+    MV -- "GET /api/team-members/{memberId}/items" --> API
+    IV & MV -- "Asignar responsable" --> Dlg["AssignAssigneeDialogComponent"]
+    Dlg -- "POST /api/backlog-items/{itemId}/assignees" --> API
+```
+
+```mermaid
+sequenceDiagram
+    actor U as Usuario
+    participant D as AssignAssigneeDialogComponent
+    participant V as Vista (Por elemento / Por miembro)
+    participant API as POST /api/backlog-items/{itemId}/assignees
+
+    U->>D: Elige elemento y miembro (rol solo lectura) y pulsa Asignar
+    D->>API: { memberId }
+    alt 201 Created
+        API-->>D: ItemAssigneeResponse
+        D-->>U: Toast de éxito
+        D-->>V: assigned(created=true) → consulta fresca y resalta la fila
+    else 200 OK (ya existía, idempotente)
+        API-->>D: ItemAssigneeResponse
+        D-->>U: Toast informativo "ya era responsable"
+        D-->>V: assigned(created=false) → consulta fresca
+    else 400
+        API-->>D: errors { itemId | memberId }
+        D-->>U: Mensaje en línea bajo el campo; el diálogo sigue abierto
+    else 404
+        API-->>D: detail "miembro" o "elemento"
+        D-->>U: Banner; vacía el campo culpable y recarga su lista
+    else 401
+        D-->>V: unauthorized() → diálogo de reautenticación de la página
+    else 500
+        D-->>U: Banner genérico sin cuerpo, botón Reintentar, campos conservados
+    end
+```
+
+- **Decisiones:**
+  - **ADR-006: las vistas se montan dentro de `TeamPageComponent`.** *Contexto:* el tasks.md pedía `loadComponent` de `ItemAssigneesViewComponent` en la ruta, pero las pestañas (`p-tabs`) viven en `TeamPageComponent` y desaparecerían al navegar. *Decisión:* ambas rutas cargan `TeamPageComponent`; con `tab = 'responsables'` el estado es `idle` (sin consulta propia) y `data.view` elige el componente hijo. *Consecuencias:* (+) pestañas y breadcrumb consistentes, 401 centralizado; (−) las vistas no se cargan de forma diferida.
+  - **ADR-007: el rol nunca se envía.** El cuerpo es solo `{ memberId }`; el rol mostrado es el registrado del miembro (FR-005).
+  - **El servidor es la fuente de verdad (D-05)** salvo un caso: sin `itemId` no existe URL a la que enviar, por lo que ese único campo se exige en el cliente; `memberId` vacío sí se envía y el 400 se muestra bajo el campo.
+  - **Sin Optimistic UI:** tras 200/201 las vistas vuelven a consultar al servidor.
+  - El selector `Por elemento`/`Por miembro` usa dos `p-button` (sin `ngModel`) en lugar de `p-selectbutton`.
+- **Verificación:** NO ejecutada. El entorno de esta sesión no tiene Node/npm, por lo que `npm test`, `npm run build` y `npm run lint:primeng` (T062) y la validación manual del quickstart (T063) siguen pendientes; el cumplimiento de `lint:primeng` se revisó a mano sobre los `.html` nuevos.
+- **Puntos abiertos:** (1) Sin i18n en el frontend (textos literales en español, como el resto). (2) La grilla no ofrece filtros, paginación ni acciones por fila (D-03, D-04). (3) El 404 se clasifica por el texto del `detail` ("miembro"), igual que ADR-005 de HU-004.

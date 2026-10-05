@@ -1,0 +1,58 @@
+
+<div class="login-container" [ngStyle]="STYLE_BACKGROUND">
+    <div class="login-form">
+    
+        <div id="login-page">
+            <div class="container">
+                <div class="form-login">
+        
+                    <div class="base">
+                        <div class="dot">
+            
+            
+            
+                            <p-blockUI [target]="pnl" [blocked]="blockedPanel">
+                                <i class="pi pi-spin pi-spinner" style="font-size: 3rem"></i>
+                            </p-blockUI>
+                            
+                            <div class="flex align-items-center justify-content-center min-h-screen overflow-hidden">
+                                <div style="max-width:30%">
+                                    <div class="col-12 xl:mt-0 text-center">
+                                        <img [src]="LOGO" alt="logo"
+                                        class="mb-2" style="width:40%;">
+                                    </div>
+                                
+                                
+                                    <div class="col-12" style="border-radius:56px; padding:0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%);">
+                                
+                                        <p-panel #pnl header="Header">
+                                    
+                                            <div class="login-form-content" *ngIf="showLogin" app-login
+                                            (check_in_emitter)="goToRegisterForm()" (get_into_emitter)="getInto($event)" (recover_key_emitter)="goToRecoverForm()">
+                                            </div>
+                    
+                                            <div class="login-form-content" (send_code_emitter)="getInto($event)" *ngIf="Recover" app-recover (get_into_emitter)="goToEnterForm()">
+                                            </div>
+                    
+                                            <div class="login-form-content" (send_code_emitter)="getInto($event)" *ngIf="Register" app-register (get_into_emitter)="goToEnterForm()">
+                                            </div>
+                    
+                                        </p-panel>
+                                
+                                    </div>
+                                
+                                
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+        
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+

@@ -1,0 +1,172 @@
+{
+  "components": {
+    "confirmation": {
+      "header": "Confirmación",
+      "message": {
+          "continue": "¿Está seguro que desea continuar?",
+          "sign-off": "¿Está seguro que desea cerrar sesión?",
+          "add": "¿Está seguro de guardar el registro?",
+          "update": "¿Está seguro de actualizar el registro?",
+          "delete": "¿Está seguro de eliminar el registro?"
+      }
+    },
+    "config": {
+      "title": "Configuración",
+      "scale": "Escala",
+      "menu-type": {
+        "title": "Tipo de menú",
+        "static": "Estático",
+        "overlay": "Flotante"
+      },
+      "input-style": {
+        "title": "Estilo del input",
+        "outlined": "Delineado",
+        "filled": "Rellenado"
+      },
+      "automatic-search": "Búsqueda automática",
+      "menu-static": "Menú estático",
+      "float-label": "Label flotante",
+      "language": "Idioma"
+    }
+  },
+  "generic": {
+    "button-yes": "Sí",
+    "button-no": "No",
+    "button-cancel": "Cancelar",
+    "button-add": "Guardar",
+    "button-update": "Actualizar",
+    "button-go-out": "Salir",
+    "button-get-into": "Ingresar",
+    "credit_number": "Nro Crédito",
+    "delete": "Eliminar",
+    "search": "Consultar",
+    "clear": "Limpiar",
+    "add": "Agregar",
+    "export": "Exportar",
+    "edit": "Editar",
+    "show": "Ver",
+    "hide": "Ocultar",
+    "profile": "Perfil"
+  },
+  "message": {
+    "success": "Éxito",
+    "delete-success": "El registro se eliminó correctamente",
+    "add-success": "Se guardó correctamente el registro",
+    "update-success": "Se actualizó correctamente el registro"
+  },
+  "modules": {
+    "auth": {
+      "login": {
+        "title-log-in": "Iniciar sesión",
+        "title-reset-password": "Resetear Password",
+        "forget-password": "¿Olvidaste tu contraseña?",
+        "account": "¿No tienes cuenta?",
+        "register": "Regístrate aquí",
+        "input-user": "Usuario",
+        "input-password": "Contraseña"
+      },
+      "register": {
+        "title-register": "Crear cuenta"
+      }
+    },
+    "profile": {
+      "user": "Usuario",
+      "address": "Dirección",
+      "email": "Correo",
+      "mobile": "Celular",
+      "document": "Documento",
+      "creation-date": "Fecha creación"
+    },
+    "product": {
+      "product-list": {
+        "title-filters": "Listado de productos"
+      }
+    },
+    "operative-instruction": {
+      "form-list": {
+        "filter-catergory": "Categoría",
+        "filter-product": "Producto",
+        "filter-subproduct": "Subproducto",
+        "filter-value-date": "Fecha Valor",
+        "filter-register-date": "Fecha Registro",
+        "filter-register-date-start": "Fecha Registro Inicio",
+        "filter-register-date-end": "Fecha Registro Fin",
+        "filter-client": "Cliente",
+        "filter-credit-number": "Nro Crédito",
+        "filter-status": "Estado",
+        "title": "Listado de Instrucciones Operativas",
+        "export-document-name": "Instrucciones Operativas",
+        "export-document-sheet-1": "Listado"
+      },
+      "form-detail": {
+        "title-add": "Agregar Instrucción Operativa",
+        "title-update": "Actualizar Instrucción Operativa",
+        "title-show": "Visualizar Instrucción Operativa",
+        "category": "Categoría",
+        "product": "Producto",
+        "subproduct": "Subproducto",
+        "value-date": "Fecha Valor",
+        "register-date": "Fecha Registro",
+        "client": "Cliente",
+        "credit-number": "Nro Crédito",
+        "status": "Estado"
+      },
+      "validations": {
+        "credit-number-required": "Ingrese Nro Crédito",
+        "client-required": "Ingrese Cliente",
+        "category-required": "Seleccione una Categoría",
+        "product-required": "Seleccione un Producto",
+        "subproduct-required": "Seleccione un Subproducto",
+        "value-date-required": "Ingrese una Fecha Valor",
+        "register-date-required": "Ingrese una Fecha Registro"
+      }
+    }
+  },
+  "primeng": {
+      "startsWith": "Starts with",
+      "contains": "Contains",
+      "notContains": "Not contains",
+      "endsWith": "Ends with",
+      "equals": "Equals",
+      "notEquals": "Not equals",
+      "noFilter": "No Filter",
+      "lt": "Less than",
+      "lte": "Less than or equal to",
+      "gt": "Greater than",
+      "gte": "Greater than or equal to",
+      "is": "Is",
+      "isNot": "Is not",
+      "before": "Before",
+      "after": "After",
+      "dateIs": "Date is",
+      "dateIsNot": "Date is not",
+      "dateBefore": "Date is before",
+      "dateAfter": "Date is after",
+      "clear": "Clear",
+      "apply": "Apply",
+      "matchAll": "Match All",
+      "matchAny": "Match Any",
+      "addRule": "Add Rule",
+      "removeRule": "Remove Rule",
+      "accept": "Síxx",
+      "reject": "No",
+      "choose": "Choose",
+      "upload": "Upload",
+      "cancel": "Cancel",
+      "dayNames": ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
+      "dayNamesShort": ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
+      "dayNamesMin": ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
+      "monthNames": ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Setiembre","Octubre","Noviembre","Diciembre"],
+      "monthNamesShort": ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+      "dateFormat": "mm/dd/yy",
+      "firstDayOfWeek": 0,
+      "today": "Today",
+      "weekHeader": "Wk",
+      "weak": "Bajo",
+      "medium": "Medio",
+      "strong": "Alto",
+      "passwordPrompt": "Enter a password",
+      "emptyMessage": "No hay resultados",
+      "emptyFilterMessage": "No hay resultados"
+  }
+}

@@ -51,7 +51,7 @@ public sealed class TeamsMigrationTests(PostgresFixture postgres)
     {
         var connectionString = await MigratedDatabaseAsync();
 
-        (await TablesAsync(connectionString, "teams")).Should().BeEquivalentTo(["TechnicalRoles", "TeamMembers", "__EFMigrationsHistory"]);
+        (await TablesAsync(connectionString, "teams")).Should().BeEquivalentTo(["TechnicalRoles", "TeamMembers", "ItemAssignments", "__EFMigrationsHistory"]);
         foreach (var other in new[] { "backlog", "sprints", "application" })
         {
             (await TablesAsync(connectionString, other)).Should().BeEmpty($"el schema {other} no debe cambiar");

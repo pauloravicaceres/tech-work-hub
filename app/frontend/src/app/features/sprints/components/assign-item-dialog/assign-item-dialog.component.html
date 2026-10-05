@@ -15,7 +15,7 @@
       <span>{{ sprintName() }} ({{ sprintId() }})</span>
     </div>
 
-    <div class="p-fluid mb-3">
+    <p-fluid class="block mb-3">
       <label for="itemId" class="block font-bold">IDENTIFICADOR DEL ELEMENTO DEL BACKLOG (*)</label>
       <input
         pInputText
@@ -24,14 +24,13 @@
         placeholder="Ej: 7b1c2d3e-0000-4000-8000-000000000003"
         autocomplete="off"
         autofocus
-        [class.ng-invalid]="fieldError()"
-        [class.ng-dirty]="fieldError()"
+        [invalid]="!!fieldError()"
       />
       @if (fieldError(); as message) {
-        <small class="p-error block">{{ message }}</small>
+        <p-message severity="error" variant="simple" size="small">{{ message }}</p-message>
       }
       <small class="block mt-1">Se asigna un elemento por solicitud.</small>
-    </div>
+    </p-fluid>
 
     <div class="flex justify-content-end gap-2 mt-3">
       @if (sprintMissing()) {

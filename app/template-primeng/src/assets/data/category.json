@@ -1,0 +1,175 @@
+{
+    "data": [
+        {
+            "row": 1,
+            "category_id": "400",
+            "category_code": "400",
+            "category_name": "ADEUDADO"
+        },
+        {
+            "row": 2,
+            "category_id": "345",
+            "category_code": "345",
+            "category_name": "ADEUDADO COFIDE"
+        },
+        {
+            "row": 3,
+            "category_id": "250",
+            "category_code": "250",
+            "category_name": "AVANCE EN CUENTA CORRIENTE"
+        },
+        {
+            "row": 4,
+            "category_id": "143",
+            "category_code": "143",
+            "category_name": "FIDEICOMISO BANCO NUEVO MUNDO"
+        },
+        {
+            "row": 5,
+            "category_id": "141",
+            "category_code": "141",
+            "category_name": "FIDEICOMISO LATINO LEASING"
+        },
+        {
+            "row": 6,
+            "category_id": "115",
+            "category_code": "115",
+            "category_name": "FINANC LEASING BPE (NO USAR)"
+        },
+        {
+            "row": 7,
+            "category_id": "112",
+            "category_code": "112",
+            "category_name": "FINANCIAMIENTO - LEASE BACK"
+        },
+        {
+            "row": 8,
+            "category_id": "111",
+            "category_code": "111",
+            "category_name": "FINANCIAMIENTO - LEASING"
+        },
+        {
+            "row": 9,
+            "category_id": "215",
+            "category_code": "215",
+            "category_name": "FINANCIAMIENTO - PAGARE TASA DESCONTADA"
+        },
+        {
+            "row": 10,
+            "category_id": "211",
+            "category_code": "211",
+            "category_name": "FINANCIAMIENTO - PAGARE TASA VENCIDA"
+        },
+        {
+         "row": 11,
+         "category_id": "212",
+         "category_code": "212",
+         "category_name": "FINANCIAMIENTO - PAGARE TASA VENCIDA VAC"
+        },
+        {
+         "row": 12,
+         "category_id": "240",
+         "category_code": "240",
+         "category_name": "FINANCIAMIENTO - SUCURSAL PANAMA"
+        },
+        {
+         "row": 13,
+         "category_id": "241",
+         "category_code": "241",
+         "category_name": "FINANCIAMIENTO COMERCIO EXTERIOR"
+        },
+        {
+         "row": 14,
+         "category_id": "131",
+         "category_code": "131",
+         "category_name": "JUDICIAL - LEASING"
+        },
+        {
+         "row": 15,
+         "category_id": "232",
+         "category_code": "232",
+         "category_name": "JUDICIAL - PAGARE TASA VENCIDA VAC"
+        },
+        {
+         "row": 16,
+         "category_id": "173",
+         "category_code": "173",
+         "category_name": "JUDICIAL FIDEICOMISO BANCO NUEVO MUNDO"
+        },
+        {
+         "row": 17,
+         "category_id": "142",
+         "category_code": "142",
+         "category_name": "JUDICIAL FIDEICOMISO LATINO LEASING"
+        },
+        {
+         "row": 18,
+         "category_id": "180",
+         "category_code": "180",
+         "category_name": "LEASING OPERATIVO"
+        },
+        {
+         "row": 19,
+         "category_id": "280",
+         "category_code": "280",
+         "category_name": "PAGARE - EUROS"
+        },
+        {
+         "row": 20,
+         "category_id": "163",
+         "category_code": "163",
+         "category_name": "REESTRUCTURADO BANCO NUEVO MUNDO"
+        },
+        {
+         "row": 21,
+         "category_id": "245",
+         "category_code": "245",
+         "category_name": "REF FINANCIAMIENTOS ESPECIALES"
+        },
+        {
+         "row": 22,
+         "category_id": "121",
+         "category_code": "121",
+         "category_name": "REFINANCIADO - LEASING"
+        },
+        {
+         "row": 23,
+         "category_id": "221",
+         "category_code": "221",
+         "category_name": "REFINANCIADO - PAGARE TASA VENCIDA"
+        },
+        {
+         "row": 24,
+         "category_id": "222",
+         "category_code": "222",
+         "category_name": "REFINANCIADO - PAGARE TASA VENCIDA VAC"
+        },
+        {
+         "row": 25,
+         "category_id": "154",
+         "category_code": "154",
+         "category_name": "REFINANCIADO FID.NVO MUNDO SIN IGV"
+        },
+        {
+            "row": 26,
+            "category_id": "153",
+            "category_code": "153",
+            "category_name": "REFINANCIADO FIDEICOMISO BANCO NUEVO MUNDO"
+        },
+        {
+            "row": 27,
+            "category_id": "152",
+            "category_code": "152",
+            "category_name": "REFINANCIAMIENTO FID.LAT.LS. SIN IGV"
+        },
+        {
+            "row": 28,
+            "category_id": "151",
+            "category_code": "151",
+            "category_name": "REFINANCIAMIENTO FIDEICOMISO LATINO LEASING"
+        }
+    ],
+    "totalRecords": 28,
+    "error": false,
+    "msg": ""
+}
