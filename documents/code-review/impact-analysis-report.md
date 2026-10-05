@@ -1,15 +1,52 @@
 # 🏗️ Reporte de Impacto y Code Review Vivo (`impact-analysis-report.md`)
 
-**HU vigente:** 015-HU_relacion_personas_roles_elementos · **Rama:** `feat/015-HU_relacion_personas_roles_elementos`
-**Fecha:** 05-10-2026 · **Dictamen (1.ª revisión de código HU-015):** ✅ **[APROBADO]** (con reservas no bloqueantes)
-**HUs anteriores (cerradas):** 012 ([APROBADO CON RESERVAS]), 004, 003, 002 y 001; sus secciones se conservan abajo como histórico.
+**HU vigente:** 035-HU_refactorizacion_esqueleto_ui · **Rama:** `feat/035-HU_refactorizacion_esqueleto_ui`
+**Fecha:** 05-10-2026 · **Dictamen (1.ª revisión de código HU-035):** ✅ **[APROBADO]** con deuda aceptada por el humano (05-10-2026): capturas restantes de T029, T021 y T031 exentas; código y suites conformes.
+**HUs anteriores:** 015 ([APROBADO] con reservas), 012, 004, 003, 002 y 001; sus secciones se conservan abajo como histórico.
 
-> Renderizado selectivo: solo se documenta lo alterado por la HU-015: `Modules/Teams` (Domain/ItemAssignments, Contracts/IBacklogItemLookup, Data + migración `AddItemAssignments`, Features/ItemAssignments), `Modules/Backlog` (`BacklogItemLookup`, `ListBacklogItems`, ProjectReference a Teams) y `features/teams` del frontend (3 componentes nuevos, servicio, modelos, rutas `responsables`). `Modules/Sprints`, `Modules/Application`, `Shared`, `core/auth`, `features/sprints`: *Sin impacto en este PR/HU*.
+> Renderizado selectivo: solo se documenta lo alterado por la HU-035 (solo frontend, FR-012): `core/layout/*` (nuevo), `app.routes.ts`, `core/auth/auth.service.ts` (aditivo), `styles.css`, `scripts/lint-primeng.mjs`. `app/backend`, `features/**`, `app/template-primeng`: *Sin impacto en este PR/HU* (`git diff --stat` vacío).
 ---
 
 ## 1. AI Code Review Dashboard
 
-### 1.0000 HU-015 — Relación personas, roles y elementos (vigente)
+### 1.00000 HU-035 — Refactorización del esqueleto UI (vigente)
+
+```text
+┌──────────────── CODE REVIEW HU-035 · [APROBADO c/ deuda] ─────────────────┐
+│ Archivos analizados (lectura física)     : 9 prod .ts/.html/.css + 7 specs │
+│ Violaciones arquitectónicas              : 0                              │
+│ Problemas de seguridad/calidad           : 0 bloqueantes · 2 reservas     │
+│ Deuda técnica                            : baja (i18n global pendiente)   │
+│ Cobertura de tests faltante              : 0 en jsdom; 6 capturas y       │
+│                                            medidas reales (1280 px) sin   │
+│                                            evidencia                      │
+└───────────────────────────────────────────────────────────────────────────┘
+```
+
+| Regla | Resultado |
+|---|---|
+| Standalone + OnPush + `@if`; sin NgModule ni zone.js | ✅ |
+| Signals (`toSignal`, `computed`, `linkedSignal`); cero `.subscribe` manual | ✅ |
+| XSS: sin `innerHTML` ni `bypassSecurityTrust*`; textos desde `LAYOUT_TEXTS` | ✅ |
+| Seguridad: shell bajo `canActivateChild: [authGuard]`; `**` dentro del shell, sin redirección; sin credenciales ni `localStorage` | ✅ |
+| Backend/BD/IDOR/CancellationToken/N+1: no aplica (FR-012, `git diff --stat` de `app/backend` vacío) | ✅ |
+| Constitución (Shell de Aplicación): una sola `font-family` (`styles.css:7`), sin `::ng-deep`/`!important`/`ed-grid`, Tailwind de tamaño solo en `LayoutComponent` | ✅ |
+| Jest ejecutado por Code Review: 23 suites, 212/212 | ✅ |
+| `npm run lint:primeng` ejecutado por Code Review | ✅ sin violaciones |
+| QA: suites no tautológicas (`layout.qa.spec.ts`, `hu035-contrato-estilos.qa.spec.ts`) | ✅ |
+| FR-014/SC-008: 6 capturas en `specs/035-.../evidence/` | ❌ T029 sin ejecutar |
+
+#### Hallazgos (exentos por decisión humana; deuda registrada)
+1. `[CAPA:TASKS]` T029 (6 capturas), T021 (verificación manual 768/1920 px y diálogos) y T031 (quickstart §4) sin ejecutar en `tasks.md`; son criterio de aceptación (FR-014, SC-008) y la HU no puede pasar a ACTIVE sin ellos. T001 sin marcar (línea base; cubierta por T028).
+
+#### Reservas (CORREGIDAS en esta HU por decisión humana, 05-10-2026)
+1. `[CAPA:CODE]` `auth.service.ts` (`init`): `??` cambiado por `||`; pruebas añadidas (name vacío con y sin `preferred_username`).
+2. `[CAPA:CODE]` `layout.component.ts`: `logout()` captura el rechazo y muestra `p-message` de error (`LAYOUT_TEXTS.logoutError`); prueba añadida. Jest 215/215, `lint:primeng` y `ng build` OK.
+
+#### Hallazgo de entorno (sin cambio de código)
+El `ng serve` en ejecución (iniciado 01:23) sirve rutas y estilos anteriores a la HU (sin `LayoutComponent` ni `--font-sans`): por eso la captura `backlog-1920.png` no muestra esqueleto y usa fuente serif. Un `ng build` limpio sí contiene el shell y `--font-sans`. Reiniciar `ng serve` y repetir las capturas.
+
+### 1.0000 HU-015 — Relación personas, roles y elementos (histórico)
 
 ```text
 ┌──────────────── CODE REVIEW HU-015 · [APROBADO] ──────────────────────────┐
@@ -354,7 +391,24 @@ Evidencia: `documents/qa-auto/qa-report.md` (cuarta ejecución, T043) más lectu
 
 ## 2. Architecture Compliance & Traceability
 
-### 2.0000 HU-015 — Flujo real implementado (solo lo alterado, vigente)
+### 2.00000 HU-035 — Flujo real implementado (solo lo alterado, vigente)
+
+```mermaid
+flowchart LR
+  R[app.routes.ts · ruta padre canActivateChild authGuard] --> L[LayoutComponent]
+  L --> VS[ViewportService · matchMedia 1024 px]
+  L --> NAV[layout-nav · NAV_ITEMS + resolveActiveModule]
+  L --> TXT[LAYOUT_TEXTS]
+  L --> AU[AuthService.userName / logout]
+  AU --> KC[(Keycloak)]
+  L --> OUT[router-outlet]
+  OUT --> F[features/** sin cambios]
+  OUT --> NF[NotFoundComponent · ruta **]
+```
+
+Sin saltos de capa: el shell solo consume servicios de `core`; las pantallas de `features/**` no se modificaron y el guard se aplica una vez en la ruta padre.
+
+### 2.0000 HU-015 — Flujo real implementado (solo lo alterado, histórico)
 
 ```mermaid
 flowchart LR
@@ -520,7 +574,35 @@ flowchart LR
 
 ## 3. Change Impact Diagram
 
-### 3.0000 HU-015 — Impacto de los cambios y cobertura (vigente)
+### 3.00000 HU-035 — Impacto de los cambios y cobertura (vigente)
+
+```mermaid
+flowchart LR
+  subgraph Cambios
+    A[LayoutComponent ts/html]:::ok
+    B[layout-nav]:::ok
+    C[ViewportService]:::ok
+    D[NotFoundComponent]:::ok
+    E[app.routes.ts]:::ok
+    F[AuthService userName/logout]:::ok
+    G[styles.css + lint-primeng.mjs]:::ok
+    H[Evidencia visual 6 capturas]:::gap
+  end
+  A --- T1[layout.component.spec + layout.qa.spec]
+  B --- T2[layout-nav.spec]
+  C --- T3[viewport.service.spec]
+  D --- T4[not-found.component.spec]
+  E --- T5[app.routes.spec]
+  F --- T6[auth.service.spec]
+  G --- T7[hu035-contrato-estilos.qa.spec + lint:primeng]
+  H -.- T8[sin ejecutar: T029 / T021 / T031]
+  classDef ok fill:#d4edda,stroke:#28a745
+  classDef gap fill:#f8d7da,stroke:#dc3545
+```
+
+Todo componente alterado tiene pruebas Jest; el único nodo sin cobertura es la evidencia visual (medidas reales, desborde a 768 px).
+
+### 3.0000 HU-015 — Impacto de los cambios y cobertura (histórico)
 
 ```mermaid
 flowchart LR
@@ -774,7 +856,24 @@ Componentes de #16..#19 sin cobertura: 4 de 4. Resto de la HU (cierre de DEF-01.
 
 ## 4. Dependency / Coupling Graph
 
-### 4.0000 HU-015 (vigente)
+### 4.00000 HU-035 (vigente)
+
+```mermaid
+flowchart LR
+  LC[LayoutComponent] --> VS[ViewportService]
+  LC --> LN[layout-nav]
+  LC --> LT[LAYOUT_TEXTS]
+  LC --> AS[AuthService]
+  LN --> LT
+  RT[app.routes.ts] --> LC
+  RT --> NF[NotFoundComponent] --> LT
+  RT --> AG[authGuard] --> AS
+  LC -.-> PN[primeng: Menubar, Menu, Drawer, Button]
+```
+
+Sin ciclos. Acoplamiento acotado a `core/**` y PrimeNG; el shell no depende de `features/**`.
+
+### 4.0000 HU-015 (histórico)
 
 ```mermaid
 flowchart LR
@@ -922,3 +1021,6 @@ flowchart LR
 - Cierre de rama pendiente de decisión humana (ver tracker).
 (Histórico: 5.ª iteración, 19:13, [RECHAZADO] por #16..#19.)
 ```
+
+
+> **Cierre HU-035 (05-10-2026):** el humano autorizó cerrar con 1 de 6 capturas (`evidence/pantalla.png`) y aceptó enmendar la spec (altura completa de la navegación lateral, `[CAPA:SPEC]`). Jest 216/216, `lint:primeng` y `ng build` OK.

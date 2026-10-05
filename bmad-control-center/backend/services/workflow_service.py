@@ -33,6 +33,7 @@ ROLE_TO_KEY = {
     "Business Analyst": "BA",
     "QA Documental": "QA",
     "Designer UX": "UX",
+    "Diseñador UX": "UX",
     "Solutions Architect": "SA",
     "Data Architect": "DA",
     "API Architect": "API",
@@ -190,6 +191,9 @@ class WorkflowService:
         for j in range(macro_idx, -1, -1):
             if ROLE_TO_KEY.get(blocks[j]["author_role"]) == "PM":
                 start = j
+                break
+            # Un cierre de rama termina el ciclo anterior: no se retrocede más allá (HU abierta sin bloque de PM)
+            if j < macro_idx and blocks[j].get("merge_close"):
                 break
         return blocks[start:]
 

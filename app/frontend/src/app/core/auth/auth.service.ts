@@ -7,6 +7,10 @@ export class AuthService {
 
   readonly isAuthenticated = signal(false);
 
+  private readonly _userName = signal<string | null>(null);
+  /** Nombre del perfil autenticado (`name` ⇒ `preferred_username` ⇒ `null`). */
+  readonly userName = this._userName.asReadonly();
+
   /** Inicializa Keycloak con Authorization Code + PKCE (S256) y restaura la sesión si existe. */
   async init(): Promise<void> {
     const authenticated = await this.keycloak.init({
@@ -15,6 +19,8 @@ export class AuthService {
       checkLoginIframe: false,
     });
     this.isAuthenticated.set(authenticated);
+    const profile = this.keycloak.tokenParsed;
+    this._userName.set(profile?.['name'] || profile?.['preferred_username'] || null);
   }
 
   get token(): string | undefined {
@@ -38,5 +44,10 @@ export class AuthService {
     const token = this.keycloak.token;
     if (!token) throw new Error('Keycloak no devolvió un token tras la renovación.');
     return token;
+  }
+
+  /** Cierra la sesión en Keycloak y regresa al origen de la aplicación. */
+  logout(): Promise<void> {
+    return this.keycloak.logout({ redirectUri: window.location.origin });
   }
 }

@@ -102,6 +102,35 @@ def test_cuando_la_macro_esta_en_el_bloque_humano_el_pm_previo_se_conserva(tmp_p
     assert resp.active_stage == "QA"
 
 
+HU_SIN_PM_TRAS_CIERRE = """
+### [05-10-2026] HUMANO
+- **Hora:** 08:00:00
+- **Estado:** APPROVE
+- **Handoff:** @WATCHER: GITOPS-BRANCH-CREATE feat/035-HU_ui
+@BA: deuda técnica
+### [05-10-2026] Business Analyst
+- **Hora:** 08:31:00
+- **Handoff:** @QA: audita
+### [05-10-2026] QA Documental
+- **Hora:** 08:48:00
+- **Handoff:** @UX: diseña
+### [05-10-2026] Diseñador UX
+- **Hora:** 08:57:10
+- **Handoff:** @SA: arquitectura
+"""
+
+
+def test_una_hu_abierta_sin_bloque_de_pm_no_arrastra_el_ciclo_cerrado(tmp_path):
+    resp, st = _stages(tmp_path, CICLO_1_COMPLETO + CIERRE_CON_AVISO_A_HUMANO + HU_SIN_PM_TRAS_CIERRE)
+
+    assert resp.overall_status == "IN_PROGRESS"
+    assert resp.active_stage == "SA"
+    assert st["SA"].status == "IN_PROGRESS" and st["SA"].is_active
+    assert st["UX"].status == "COMPLETED", "'Diseñador UX' también es la etapa UX"
+    for clave in ("DA", "API", "QT", "DEV-BACK", "DEV-FRONT", "QA-AUTO", "CR"):
+        assert st[clave].status == "PENDING", f"{clave} no debe arrastrar el verde de la HU cerrada"
+
+
 def test_una_mencion_de_la_macro_en_prosa_no_reinicia_el_pipeline(tmp_path):
     prosa = """
 ### [03-10-2026] Code Review

@@ -10,3 +10,12 @@ class ResizeObserverStub implements ResizeObserver {
   disconnect(): void {}
 }
 globalThis.ResizeObserver ??= ResizeObserverStub;
+
+// jsdom no implementa `matchMedia` y `p-menubar` y `ViewportService` lo consultan; por defecto, ancho reducido.
+window.matchMedia ??= ((query: string) =>
+  ({
+    matches: false,
+    media: query,
+    addEventListener: () => undefined,
+    removeEventListener: () => undefined,
+  }) as unknown as MediaQueryList) as typeof window.matchMedia;

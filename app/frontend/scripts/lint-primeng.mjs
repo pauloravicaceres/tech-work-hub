@@ -46,6 +46,44 @@ for (const file of htmlFiles(ROOT)) {
   }
 }
 
+// Reglas globales (HU-035, ADR-010) sobre .css/.scss/.html/.ts de src/ (sin specs).
+// Los comentarios se descartan antes de analizar; aun así, no escribir `font-family` en comentarios ni cadenas.
+const GLOBAL_EXT = /\.(?:css|scss|html|ts)$/;
+const FORBIDDEN = [
+  { re: /::ng-deep/g, why: '`::ng-deep` prohibido: ajustar PrimeNG con [style], [class] o styleClass' },
+  { re: /!important/g, why: '`!important` prohibido' },
+  { re: /\bed-grid\b/g, why: '`ed-grid` es del template de referencia: usar grid de Tailwind' },
+  { re: /primeng\/(?:dropdown|calendar)\b/g, why: 'Componente retirado en PrimeNG 22: usar primeng/select y primeng/datepicker' },
+];
+const stripComments = (text) =>
+  text
+    .replace(/\/\*[\s\S]*?\*\//g, (m) => m.replace(/[^\n]/g, ' '))
+    .replace(/<!--[\s\S]*?-->/g, (m) => m.replace(/[^\n]/g, ' '))
+    .replace(/(^|[^:'"`])\/\/.*$/gm, '$1');
+
+function* sourceFiles(dir) {
+  for (const name of readdirSync(dir)) {
+    const p = join(dir, name);
+    if (statSync(p).isDirectory()) yield* sourceFiles(p);
+    else if (GLOBAL_EXT.test(name) && !name.endsWith('.spec.ts')) yield p;
+  }
+}
+
+const fontFamilyHits = [];
+const bodyMarginHits = [];
+for (const file of sourceFiles(ROOT)) {
+  const text = stripComments(readFileSync(file, 'utf8'));
+  const lineOf = (index) => text.slice(0, index).split('\n').length;
+  for (const { re, why } of FORBIDDEN)
+    for (const m of text.matchAll(re)) report(file, lineOf(m.index), why, m[0]);
+  for (const m of text.matchAll(/font-family\s*:/g)) fontFamilyHits.push([file, lineOf(m.index)]);
+  for (const m of text.matchAll(/(?:^|[}\s,])body\s*\{[^}]*\bmargin\s*:/g)) bodyMarginHits.push([file, lineOf(m.index)]);
+}
+for (const [label, hits] of [['font-family', fontFamilyHits], ['margen de body', bodyMarginHits]]) {
+  if (hits.length > 1)
+    for (const [file, line] of hits) report(file, line, `Más de una declaración de ${label}: solo se permite una, en src/styles.css`, label);
+}
+
 if (violations) {
   console.error(`\n✖ lint:primeng — ${violations} violación(es). Ver constitución: "Patrón Obligatorio de Formularios PrimeNG 22".`);
   process.exit(1);

@@ -1,11 +1,96 @@
 # QA Report — Calidad y Trazabilidad Viva
 
-> Última actualización: 05-10-2026 · Iteración: **HU-015 Relación entre Personas, Roles y Elementos de Trabajo** · Agente: QA-AUTO
-> Áreas no afectadas por esta iteración: _Sin cambios en esta iteración_ (HU-012, HU-004, HU-003, HU-002 y HU-001 se conservan sin modificar).
+> Última actualización: 05-10-2026 · Iteración: **HU-035 Refactorización de Esqueleto UI** · Agente: QA-AUTO
+> Áreas no afectadas por esta iteración: _Sin cambios en esta iteración_ (backend, HU-015, HU-012, HU-004, HU-003, HU-002 y HU-001 se conservan sin modificar).
 
 ---
 
-# ▶ Iteración actual: HU-015 (`specs/015-HU_relacion_personas_roles_elementos`)
+# ▶ Iteración actual: HU-035 (`specs/035-HU_refactorizacion_esqueleto_ui`)
+
+Solo frontend (FR-012: sin backend, API ni BD). Barrera Fork-Join: el tracker registra cierre de DEV-BACK (sin cambios de servidor) y de DEV-FRONT. Sin `skip`/`xit`/`describe.skip`. No se modificó código de producción.
+
+## 1. AI QA Review Dashboard (HU-035)
+
+```
+┌──────────────── HU-035 · DICTAMEN: [APROBADO CON RESERVA] ────────────────────────────┐
+│ Capa                                       Ejecutados  Pasados  Fallados  Bloqueados │
+│ Jest completo (23 suites, incluye DEV)         212        212       0         0       │
+│ Jest QA-AUTO nuevas (2 suites)                  32         32       0         0       │
+│ lint:primeng (reglas globales ADR-010)          —       sin violaciones              │
+│ ng build                                        —       OK                           │
+│ Cobertura de CA automatizable: US1 3/3 · US2 1/1 · US3 1/2 · US4 2/2 · US5 1/2       │
+│ Bloqueados por evidencia manual: T021, T029 (6 capturas, SC-008), T031 (quickstart)   │
+│ Nivel de riesgo: BAJO (código) · MEDIO (cierre: faltan capturas FR-014)               │
+└───────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+Comandos: `npx jest --ci --runInBand --forceExit --no-coverage`, `npm run lint:primeng`, `npx ng build`.
+
+## 2. Requirements Traceability (HU-035)
+
+```mermaid
+flowchart LR
+  HU35[HU-035 Esqueleto UI]
+  HU35 --> US1[US1 Esqueleto común FR-001..005] --> CA1[A1 cuatro zonas · A2 URL intactas · A3 ruta inexistente]
+  CA1 --> TC1[layout.component.spec · layout.qa.spec: header/footer fuera de main, hrefs reales, resaltado único · app.routes.spec · app.routes QA: 5 rutas inexistentes sin redirección + guard sobre NotFound · not-found.component.spec]
+  HU35 --> US2[US2 768 px / colapsada FR-006] --> TC2[layout.component.spec + layout.qa.spec: aria-expanded, drawer único, cierra y navega · viewport.service.spec]
+  HU35 --> US3[US3 Medidas FR-007] --> TC3[layout.component.spec: main = max-w-7xl mx-auto p-6 una sola vez. Medición a 1920 px: manual T021/T031]
+  HU35 --> US4[US4 Tipografía FR-008..010] --> TC4[hu035-contrato-estilos.qa.spec: 1 font-family, 1 margen body, sin ng-deep/important/ed-grid/primeflex/template-primeng/estilos propios · lint-primeng.mjs]
+  HU35 --> US5[US5 Cierre FR-013..014] --> TC5[Jest 212/212 + lint + build · capturas T029 PENDIENTES]
+```
+
+## 3. Failure Impact Diagram (HU-035)
+
+0 fallos críticos detectados. Brecha de proceso (no de código): no existe `specs/035-HU_refactorizacion_esqueleto_ui/evidence/` (SC-008 / FR-014 sin cumplir); T001, T021, T029 y T031 siguen `[ ]` en `tasks.md` (honestamente sin marcar).
+
+## 4. State Transition / User Journey (HU-035)
+
+```mermaid
+stateDiagram-v2
+  [*] --> SinSesion
+  SinSesion --> Login: authGuard (canActivateChild) bloquea, incluso NotFound
+  [*] --> Autenticado
+  Autenticado --> Esqueleto: cualquier URL existente
+  Esqueleto --> Acoplada: ancho >= 1024 px (aside)
+  Esqueleto --> Capa: ancho < 1024 px (p-drawer)
+  Acoplada --> Colapsada: control ≡
+  Colapsada --> Acoplada: control ≡
+  Capa --> Capa: elegir entrada, cierra y navega
+  Esqueleto --> NotFound: ruta inexistente (sin redirección, esqueleto visible)
+```
+
+## 5. Test Coverage & Hotspots (HU-035)
+
+```mermaid
+flowchart LR
+  L[LayoutComponent · alta] --- R[Rutas app.routes · alta] --- N[layout-nav · alta] --- V[ViewportService · alta]
+  A[AuthService userName/logout · media] --- S[Estilos globales · alta, estática]
+  M[Medidas 1920 px y capturas · SIN automatizar: manual T021/T029/T031]:::hot
+  classDef hot fill:#ffd6d6,stroke:#c00;
+```
+
+Hotspots: sin defectos. Riesgo residual: jsdom no mide layout real (ancho 1280 px, 1.5 rem, desborde a 768 px) ni valida el foco del drawer; solo se cubre por clases utilitarias y verificación manual pendiente.
+
+## Pruebas propias (QA-AUTO, HU-035)
+
+| Archivo | Casos | Intención |
+|---|---|---|
+| `app/frontend/src/app/core/layout/layout.qa.spec.ts` | 22 | Esqueleto adversarial, drawer, resaltado, `resolveActiveModule` límite, rutas inexistentes anidadas, guard sobre NotFound |
+| `app/frontend/src/app/core/layout/hu035-contrato-estilos.qa.spec.ts` | 10 | Escaneo del código real: una sola `font-family` y margen de body, prohibidos (`::ng-deep`, `!important`, `ed-grid`, primeflex, template-primeng), sin estilos propios en el esqueleto |
+
+## Reservas (no bloqueantes)
+
+1. SC-008/FR-014: las 6 capturas (3 módulos × 2 anchos) no existen; la historia no debe pasar a ACTIVE hasta adjuntarlas (T029) y registrar T021/T031.
+2. Informativo, `[CAPA:CODE]` menor: `userName` usa `??`; un `name` vacío (`""`) en el token no cae a `preferred_username` y la barra mostraría texto vacío. Está fuera del contrato de la spec.
+3. Las medidas reales (1280 px, 1.5 rem, sin desborde a 768 px) no son verificables en jsdom.
+
+## Dictamen (HU-035)
+
+**[APROBADO CON RESERVA]** — 212/212 Jest, lint:primeng y build en verde; sin defectos de código. Se devuelve el turno a `@CODE-REVIEW`.
+
+---
+
+# Iteración previa: HU-015 (`specs/015-HU_relacion_personas_roles_elementos`)
 
 Barrera Fork-Join satisfecha (DEV-BACK y DEV-FRONT finalizaron). QA-AUTO auditó las suites entregadas, sin `Skip`/`xit`/`describe.skip`, y completó el hueco T019/T020 (Backlog unit). No se modificó código de producción.
 

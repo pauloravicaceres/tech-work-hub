@@ -52,6 +52,7 @@ Para mantener el determinismo del *Ledger*, los agentes mutadores y lectores uti
 | 032 | [P6] Dashboard Ejecutivo del Líder Técnico | 032-HU_dashboard_alertas_retrasos_bloqueos_riesgo | ⚠️ [PROPUESTO] Tarjetas retrasadas, bloqueadas y en riesgo, y alertas relevantes. Bloqueada por ❓ definiciones de "Retrasada" y "En riesgo"; depende de 007, 008 y 009. | BACKLOG | — |
 | 033 | [P6] Dashboard Ejecutivo del Líder Técnico | 033-HU_dashboard_trabajo_no_planificado | ⚠️ [PROPUESTO] Trabajo planificado versus no planificado, actividades pendientes y en progreso, incidentes abiertos y atendidos y tiempo invertido en incidentes. Depende de P4. | BACKLOG | — |
 | 034 | [P6] Dashboard Ejecutivo del Líder Técnico | 034-HU_dashboard_compromisos_pendientes | ⚠️ [PROPUESTO] Compromisos pendientes de reuniones. Depende de 028. | BACKLOG | — |
+| 035 | Deuda Técnica / UI Core | 035-HU_refactorizacion_esqueleto_ui | Layout de aplicación y estructura de páginas y formularios alineados al Skeleton de la Constitución, con PrimeNG 22 nativo | READY-FOR-DEV | feat/035-HU_refactorizacion_esqueleto_ui |
 
 ---
 

@@ -10,12 +10,15 @@ describe('AuthService', () => {
     init: jest.fn(),
     login: jest.fn().mockResolvedValue(undefined),
     updateToken: jest.fn(),
+    logout: jest.fn().mockResolvedValue(undefined),
+    tokenParsed: undefined as Record<string, unknown> | undefined,
   };
   let service: AuthService;
 
   beforeEach(() => {
     jest.clearAllMocks();
     keycloak.token = 'abc';
+    keycloak.tokenParsed = undefined;
     TestBed.configureTestingModule({
       providers: [provideZonelessChangeDetection(), { provide: KEYCLOAK, useValue: keycloak }],
     });
@@ -65,5 +68,26 @@ describe('AuthService', () => {
 
     // Act / Assert
     await expect(service.refreshToken()).rejects.toThrow('expirado');
+  });
+
+  it.each([
+    [{ name: 'Ana Pérez', preferred_username: 'ana' }, 'Ana Pérez'],
+    [{ preferred_username: 'ana' }, 'ana'],
+    [{ name: '', preferred_username: 'ana' }, 'ana'],
+    [{ name: '' }, null],
+    [undefined, null],
+  ])('userName_TrasInit_%j_Devuelve_%s', async (tokenParsed, esperado) => {
+    keycloak.init.mockResolvedValue(true);
+    keycloak.tokenParsed = tokenParsed;
+
+    await service.init();
+
+    expect(service.userName()).toBe(esperado);
+  });
+
+  it('logout_DebeLlamarAKeycloakConElOrigenComoRedirect', async () => {
+    await service.logout();
+
+    expect(keycloak.logout).toHaveBeenCalledWith({ redirectUri: window.location.origin });
   });
 });

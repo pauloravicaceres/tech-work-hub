@@ -1,7 +1,7 @@
 # 🏗️ ARQUITECTURA BACKEND VIVA
 
 - **Sistema:** TechWorkHub (Modulith .NET 8, PostgreSQL)
-- **Última actualización:** 2026-10-05 (HU-015: relación personas–roles–elementos; ver sección 14)
+- **Última actualización:** 2026-10-05 (HU-035 sin cambios de backend, arquitectura vigente; ver sección 15. Último cambio funcional: HU-015, sección 14)
 - **HU vigente:** 015 – Relación entre Personas, Roles y Elementos de Trabajo, sobre 012 – Miembros del Equipo y Roles Técnicos, sobre 004 – Asignación de Elementos del Backlog a un Sprint, sobre 003 – Gestión de Sprint de Dos Semanas (Crear y Consultar), sobre 001 – Registro de Elementos en Backlog Multitipo y 002 – Pruebas de Integración contra Keycloak Real
 - **Fuente de verdad:** `specs/003-HU_gestion_sprint_dos_semanas/` (`plan.md`, `data-model.md`, `contracts/sprints-api.openapi.yaml`, `tasks.md`), `documents/qa-tech/tech-design_003_gestion_sprint_dos_semanas.md`, `specs/002-pruebas-integracion-keycloak-catalogo/` y `specs/001-registro-backlog-multitipo/`
 
@@ -697,7 +697,23 @@ Otro `DbUpdateException` (distinta restricción o código) se relanza y termina 
 
 `Teams.UnitTests` 57 y `Teams.IntegrationTests` 70 (PostgreSQL 16 real por Testcontainers) en verde, además de `Backlog.UnitTests` 62, `Backlog.IntegrationTests` 34, `Sprints.*` 86/89 e `Identity.IntegrationTests` 19. Cubren 201/200 idempotente, auditoría desde `sub`, concurrencia (un solo 201 y una fila), 400/404 con mensajes exactos, 401 sin lectura ni escritura, 500 sin traza ni fila parcial, no regresión en `backlog`/`sprints`/`teams`, y las consultas de lectura con una sola llamada de lote al contrato. Ajuste a una prueba previa: `TeamsMigrationTests` ahora espera también `teams.ItemAssignments`. Desviación respecto de `tasks.md`: T019 y T020 (pruebas de `BacklogItemLookup` y `GET /api/backlog-items`) se cubren como pruebas de integración sobre PostgreSQL real (`ListBacklogItemsTests`), sin añadir EF InMemory a `Backlog.UnitTests`.
 
+## 15. HU-035 — Refactorización de esqueleto UI (sin cambios de backend)
+
+Fuente: `specs/035-HU_refactorizacion_esqueleto_ui/` (`tasks.md`, `plan.md`, `contracts/ui-shell-contract.md`). Las 32 tareas (T001–T032) afectan solo a `app/frontend/` (layout de aplicación, rutas, tipografía global, lint). `tasks.md` prohíbe expresamente tocar `app/backend/**`, por lo que con alcance solo backend **no hay tareas que ejecutar**.
+
+**Arquitectura backend vigente, sin cambios:** módulos `Backlog`, `Application`, `Sprints` y `Teams`, `Shared`, esquemas de datos, migraciones, contratos HTTP y pruebas descritos en las secciones 1–14 siguen siendo válidos. No se añadieron endpoints, tablas, lógica de dominio ni integraciones.
+
+```mermaid
+flowchart LR
+    FE[Frontend Angular: shell, rutas, tipografía - HU-035] -->|mismos contratos HTTP + JWT| API[Bootstrapper/Api sin cambios]
+    API --> PG[(PostgreSQL sin cambios)]
+```
+
+Verificación: no se ejecutaron ni modificaron pruebas de backend; `app/backend/README.md` sigue vigente y no requirió cambios.
+
 ## 9. Puntos abiertos
+
+- HU-035: el esqueleto de UI (T001–T032) corresponde al agente frontend; el backend no requiere trabajo.
 
 - HU-015: el frontend (pestaña `Responsables`, diálogo de asignación, vistas por elemento y por miembro, rutas e i18n) y el recorrido manual del quickstart (T063) no se ejecutaron en esta pasada, por alcance solo backend. `spec.md` aún dice "no documentado" para la asignación duplicada; es vinculante el 200 idempotente (ADR-004) y su actualización corresponde al BA. `scripts/apply-migrations.sh|.ps1` siguen sin incluir `Teams`.
 

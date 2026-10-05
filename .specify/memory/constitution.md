@@ -99,6 +99,11 @@ El diseño de interfaces (`ux_*.md`) DEBE calcar la **distribución estructural 
 
 
 
+### 🧱 Shell de Aplicación (HU-035, enmienda 05-10-2026)
+* **Montaje:** el shell (`app/frontend/src/app/core/layout/`) es la ruta padre sin segmento de URL con `canActivateChild: [authGuard]`; toda pantalla autenticada, presente o futura, DEBE declararse como ruta hija. La ruta comodín `**` vive dentro del shell y no redirige.
+* **Tipografía global:** exactamente UNA declaración de `font-family` y de margen de `body`, en `app/frontend/src/styles.css`; sin fuentes externas. Se garantiza con `npm run lint:primeng`.
+* **Tailwind en el shell:** además de grid, espaciado y flex, se permiten utilidades de tamaño (`max-w-7xl`, `w-64`, `min-h-screen`, `flex-1`, `min-w-0`) SOLO en `LayoutComponent`, para el contenedor de contenido (1280 px, `p-6`). Fuera del shell sigue vigente la restricción original.
+
 ### 🧩 Patrón Obligatorio de Formularios PrimeNG 22 (Form Pattern)
 Aplica a TODO formulario o diálogo con campos en `app/frontend`, sin excepción. Verificado contra `primeng@22.1.2` instalado. Los agentes que implementen frontend (`dev-frontend`, `speckit-implement`) DEBEN seguirlo literalmente; no se reconstruye de memoria.
 
