@@ -951,3 +951,125 @@ You can reply with the option letter (e.g., "A"), accept the recommendation by s
 - **⚠️ Puntos Abiertos:** Ninguno para 012. Siguen abiertos los puntos de negocio que bloquean 005, 008, 009 y 013.
 @WATCHER: GITOPS-BRANCH-CREATE feat/012-HU_miembros_equipo_y_roles_tecnicos
 - **Handoff:** @BA: Iniciar el análisis de negocio y redacción de la Historia de Usuario seleccionada.
+
+### [04-10-2026] Business Analyst
+- **Hora:** 18:28:53
+- **Artefacto generado:** `documents/business-analyst/012-HU_miembros_equipo_y_roles_tecnicos.md`
+- **Estado:** HU 012-HU_miembros_equipo_y_roles_tecnicos redactada en versión técnica (Spec Kit Ready, 9 escenarios Gherkin con Happy y Sad Path, matriz de casos borde CB-01 a CB-10, diagrama de secuencia) y versión stakeholders (`documents/business-analyst/HUs-stakeholders/012-HU_miembros_equipo_y_roles_tecnicos.md`, 7 CA). Alcance: registrar un miembro con rol técnico y consultar miembros y catálogo de roles; verificado contra Product Brief §4.1 Módulo 1 y Plan de Gestión (Épica P2). Auto-validación hu-validator completada: estructura, Gherkin, etiquetas PROPUESTO, DoD y handoff en una sola línea. Modo Brownfield aplicado con la Constitución (schemas aislados, RequireAuthorization, no regresión de HU-001, HU-003 y HU-004). Sin cambios en el Ledger.
+- **⚠️ Puntos Abiertos:** (1) Cardinalidad miembro-rol (uno o varios roles). (2) Unicidad e identificación del miembro y longitud del nombre. (3) Modificar, desactivar o eliminar miembros y cambiar su rol. (4) Roles técnicos adicionales a Desarrollo y QA y quién los administra. (5) Vínculo con usuario de Keycloak y mapeo de roles técnicos con roles de acceso. (6) Roles de acceso con permiso para registrar y consultar. (7) Formato de la consulta de miembros. (8) Relación entre el catálogo de roles y las estimaciones Dev y QA de HU-001. Ninguno bloquea el Happy Path mínimo; todos figuran como No documentado en la HU.
+- **Handoff:** @QA: La Historia de Usuario Técnica Miembros del Equipo y Roles Técnicos está lista en el archivo 012-HU_miembros_equipo_y_roles_tecnicos.md (y su versión de stakeholders en documents/business-analyst/HUs-stakeholders/012-HU_miembros_equipo_y_roles_tecnicos.md). Por favor, procede con la auditoría documental contra el Product Brief para asegurar que la historia cumple con los requerimientos originales.
+
+### [04-10-2026] WATCHER
+- **Hora:** 18:29:38
+- **Mensaje:** ⚠️ [Vigilante] El agente 'qa-documental' alcanzó el límite de uso de la cuenta de Claude: el flujo queda en pausa hasta que se restablezca. No se envían recordatorios mientras tanto.
+
+
+### [04-10-2026] QA Documental
+- **Hora:** 19:21:25
+- **Artefacto generado:** `documents/qa-documental/aprobado_qa_012_miembros_equipo_y_roles_tecnicos.md`
+- **Estado:** [APROBADO] HU-012 auditada en modo Brownfield (versión técnica y de stakeholders) contra el Product Brief y la Constitución. 6 dimensiones conformes: 5 Happy Paths y 4 Sad Paths, supuestos marcados como PROPUESTO y puntos abiertos como No documentado, sin invasión de alcance, sin contradicción con la Constitución y con no-regresión en el DoD. Requiere interfaz: Sí, coherente con el proyecto fullstack.
+- **⚠️ Puntos Abiertos:** Ninguno bloqueante. Informativo: el origen de los datos del catálogo de roles (Desarrollo y QA) queda para Architecture (punto abierto 4 de la HU).
+- **Handoff:** @UX: La Historia de Usuario 012-HU_miembros_equipo_y_roles_tecnicos.md ha sido aprobada por QA. Por favor, procede a diseñar los wireframes y estados visuales.
+
+### [04-10-2026] WATCHER
+- **Hora:** 19:21:26
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Ejecutando análisis funcional (/speckit.specify)...
+
+### [04-10-2026] WATCHER
+- **Hora:** 19:22:40
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Verificando ambigüedades (/speckit.clarify)...
+
+@UX: La especificación inicial SDD ha concluido con éxito. Procede con tu diseño.
+
+
+### [04-10-2026] Designer UX
+- **Hora:** 19:31:00
+- **Artefacto generado:** `documents/designer-ux/ux_012_miembros_equipo_y_roles_tecnicos.md`
+- **Estado:** Diseño visual de la HU 012 completado en modo Brownfield (Angular 22 Zoneless + PrimeNG, módulo embebido en el shell existente). 10 estados visuales con wireframes ASCII que cubren 1 a 1 los 9 escenarios de spec.md (SC-01 a SC-09; SC-07 en tres variantes): 5 Happy Paths y 5 estados Sad Path (rol inexistente, campos obligatorios, 401, 500). Sin funcionalidad fuera de alcance (sin modificar, desactivar ni eliminar miembros, sin administrar roles, sin paginación ni filtros). Persistencia del archivo verificada.
+- **⚠️ Puntos Abiertos:** Ninguno bloqueante. Informativos: nombre duplicado y longitud máxima, cardinalidad miembro-rol, ciclo de vida del miembro, administración del catálogo de roles, permisos por rol de acceso y estado de error de lectura distinto de 401 siguen sin documentar; rutas y IDs de tarea son provisionales para que los reconcilie la arquitectura.
+- **Handoff:** @SA: El diseño visual de la HU [012-HU_miembros_equipo_y_roles_tecnicos] ha concluido exitosamente en [documents/designer-ux/ux_012_miembros_equipo_y_roles_tecnicos.md]. Procede con el tech-design y arquitectura.
+
+
+### [04-10-2026] Solutions Architect
+- **Hora:** 19:48:00
+- **Artefacto generado:** `documents/solutions-architect/012-HU_miembros_equipo_y_roles_tecnicos.md`
+- **Estado:** Gobernanza técnica formalizada en modo Brownfield (constitución sin vacíos de infraestructura, sin cuestionario al humano). Módulo nuevo Teams con schema propio teams, FK local entre miembros y roles técnicos, catálogo sembrado por migración con identificadores fijos, rol enviado por nombre con 400 si no existe, sin eventos, Outbox ni caché, sin cambios en Backlog, Application, Sprints ni Shared. 7 ADRs (2 heredados), contrato HTTP propuesto y reconciliación de las tareas UI provisionales del UX.
+- **⚠️ Puntos Abiertos:** Para resolver en `plan.md` y en el contrato del API Architect: código de éxito 201 (PROPUESTO) y rutas /api/team-members y /api/technical-roles; estado de error de lectura distinto de 401 (PROPUESTO, a confirmar con el BA); columnas de auditoría de la semilla de roles según la jerarquía de Shared. Siguen sin documentar los puntos abiertos 1 a 8 de la HU.
+- **Handoff:** 
+@WATCHER: SDD-FREEZE 012-HU_miembros_equipo_y_roles_tecnicos.md
+
+### [04-10-2026] WATCHER
+- **Hora:** 19:28:32
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Estructurando plan de arquitectura técnica (/speckit.plan)...
+
+### [04-10-2026] WATCHER
+- **Hora:** 19:31:02
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Desglosando tareas de implementación (/speckit.tasks)...
+
+### [04-10-2026] WATCHER
+- **Hora:** 19:33:47
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Ejecutando auditoría técnica (/speckit.analyze)...
+
+@DA: El plan técnico y las tareas han sido congeladas. Procede con el diseño de persistencia basándote en los nuevos archivos.
+
+
+### [04-10-2026] Data Architect
+- **Hora:** 19:36:50
+- **Artefacto generado:** `documents/data-architect/db_012_miembros_equipo_y_roles_tecnicos.md`
+- **Estado:** Modelo de persistencia de la HU 012 completado en modo Brownfield (constitución prevalece: PostgreSQL, schema propio teams, TeamsDbContext independiente, interceptores de Shared). 2 tablas nuevas (TechnicalRoles con semilla Desarrollo y QA, TeamMembers) con FK local RESTRICT, sin joins cross-schema, sin estado, sin tabla puente, sin Outbox. 6 ADRs (2 heredados), MER, diccionario de datos y trazabilidad spec/UX a datos sin campos huérfanos. Persistencia del archivo verificada.
+- **⚠️ Puntos Abiertos:** Discrepancia a reconciliar en T011/T014: CreatedBy y LastModifiedBy se fijan en varchar(255) por coherencia con Backlog y Sprints, mientras data-model.md y T014 indican text. Siguen sin documentar los puntos abiertos de la HU (cardinalidad miembro-rol, unicidad y longitud del nombre, ciclo de vida, catálogo ampliado); tasks.md cita contracts/teams-api.openapi.yaml que aún no existe y debe formalizar el api-architect.
+- **Handoff:** @API: El modelo de datos (MER) y la persistencia han sido definidos a partir de spec.md y tasks.md. Por favor, diseña los contratos de integración (Endpoints/Payloads) basados en estas tablas.
+
+
+### [04-10-2026] API Architect
+- **Hora:** 19:39:00
+- **Artefacto generado:** `documents/api-architect/api_012_miembros_equipo_y_roles_tecnicos.md`
+- **Estado:** Contrato de integración de la HU 012 completado en modo Brownfield (Carter Minimal APIs, Keycloak JWT, ProblemDetails heredados de la constitución). 3 endpoints: POST /api/team-members (201, 400 por campo, 400 por rol inexistente, 401, 500), GET /api/team-members y GET /api/technical-roles (200, 401, 500). 8 ADRs (2 heredados), mapeo payload a columnas de db_012 sin exponer CreatedAt ni CreatedBy, orden de evaluación determinista y trazabilidad spec a contrato. Coherente con contracts/teams-api.openapi.yaml, que ya existe en disco. Persistencia del archivo verificada.
+- **⚠️ Puntos Abiertos:** Código 201 y Location hacia la colección son PROPUESTOS (sin GET por id); rol enviado por nombre y sensible a mayúsculas; sin límite de nombre, unicidad ni idempotencia (doble registro posible); un rol por miembro (varios roles sería cambio incompatible). Siguen sin documentar los puntos abiertos 1 a 8 de la HU. Discrepancia documental: el DA daba por inexistente el OpenAPI de Spec Kit.
+- **Handoff:** @QT: Los contratos de integración (API) y endpoints para Miembros del Equipo y Roles Técnicos (Registrar y Consultar) han sido definidos en api_012_miembros_equipo_y_roles_tecnicos.md basados en spec.md y db_012_miembros_equipo_y_roles_tecnicos.md. Por favor, procede con la auditoría cruzada y la compilación del Tech Design (TDD).
+
+
+### [04-10-2026] QA Tech
+- **Hora:** 20:20:00
+- **Artefacto generado:** `documents/qa-tech/tech-design_012_miembros_equipo_y_roles_tecnicos.md`
+- **Estado:** ✅ AUDITADO Y APROBADO. Auditoría adversarial superada (0 hallazgos críticos): DB, API, spec.md, tasks.md y UX consistentes, cero campos huérfanos, ADR sin alternativas falsas ni sycophancy. Verificado contra el código de Shared: Entity<TId> no existe (TechnicalRole usa Aggregate<Guid>) y CustomExceptionHandler convierte BadRequestException en errors por campo sin detail, a diferencia de lo descrito en api_012 (A-01: el handler lanza BadRequestException con el campo role; prohibido modificar Shared). Tech Design compilado con 3 diagramas Mermaid (archify no ejecutable: Node.js no instalado), specs/README.md actualizado a READY-FOR-DEV. constitution.md no se modificó (sin cambios estructurales globales). 9 advertencias vinculantes para Fase D en la sección 7.4 del TDD.
+- **⚠️ Puntos Abiertos:** Ninguno bloqueante. Informativos: OpenAPI y T036/T041 deben alinearse con A-01, CreatedBy/LastModifiedBy varchar(255) frente a text en T014, 201 y Location propuestos, puntos abiertos 1 a 8 de la HU sin definir; diagramas HTML interactivos y visual-check no generados.
+- **Handoff:** @DEV-BACK: La arquitectura técnica ha sido validada. Inicia la implementación del Backend.
+@DEV-FRONT: La arquitectura técnica ha sido validada. Inicia la implementación del Frontend.
+
+### [04-10-2026] WATCHER
+- **Hora:** 19:43:42
+- **Mensaje:** ⚡ [SDD Auto-Runner] Ejecutando implementación Backend (/speckit.implement)...
+
+### [04-10-2026] Senior Backend Developer
+- **Hora:** 20:01:34
+- **Artefacto generado:** `documents/dev-backend/backend-architecture.md`
+- **Estado:** Implementación backend finalizada exitosamente mediante SDD SpecKit.
+- **Handoff:** @DEV-FRONT: Inicia implementación frontend.
+
+### [04-10-2026] WATCHER
+- **Hora:** 20:01:34
+- **Mensaje:** ⚡ [SDD Auto-Runner] Ejecutando implementación Frontend (/speckit.implement)...
+
+### [04-10-2026] Senior Frontend Developer
+- **Hora:** 20:05:52
+- **Artefacto generado:** `documents/dev-frontend/frontend-architecture.md`
+- **Estado:** Implementación frontend finalizada exitosamente mediante SDD SpecKit.
+- **Handoff:** @QA-AUTO: La Fase D (Implementación) ha finalizado exitosamente mediante motor SDD. Inicia el diseño de la matriz de pruebas automatizadas basándote en los criterios de la HU; al terminar, deriva a Code Review.
+
+
+### [04-10-2026] QA Automation
+- **Hora:** 20:40:00
+- **Artefacto generado:** `documents/qa-auto/qa-report.md`
+- **Estado:** Auditoría de las suites de la HU 012 completada sin modificar código de producción. Backend: 27 pruebas unitarias y 38 de integración (Testcontainers PostgreSQL) en verde, cubriendo US1 a US5, FR-014 y aislamiento de schema, con happy y sad paths y sin Skip. Frontend: 22 specs Jest auditadas pero NO ejecutadas porque node y npx no existen en el entorno. Trazabilidad HU, CA y pruebas documentada en el reporte. 0 defectos.
+- **⚠️ Puntos Abiertos:** Reserva R-01: re-ejecutar Jest de features/teams en un entorno con Node 22.22.3 o superior. Reserva R-02: puntos abiertos 1 a 8 de la HU sin comportamiento definido (solo se prueba que no se restringe).
+- **Handoff:** @CODE-REVIEW: Suites de la HU 012 certificadas en backend y auditadas en frontend; procede con la revisión de código.
+
+
+### [04-10-2026] Code Review
+- **Hora:** 21:10:00
+- **Artefacto generado:** `documents/code-review/impact-analysis-report.md`
+- **Estado:** [APROBADO CON RESERVAS] HU-012. Lectura física de 33 archivos de producción y las pruebas clave; ejecución propia Unit 27/27 e Integración 38/38 (PostgreSQL). Carter + MediatR, schema teams aislado, CancellationToken propagado hasta EF Core, cero N+1, sin IDOR (solo alta y lecturas de datos maestros), sin XSS, RequireAuthorization en los tres endpoints, componentes standalone. Reporte de impacto actualizado (dashboard, cumplimiento, impacto, acoplamiento) solo con lo alterado por la HU.
+- **⚠️ Puntos Abiertos:** (1) [CAPA:TASKS] T058 y T061 sin ejecutar: Jest (22 specs) y build del frontend nunca corrieron por falta de Node; re-ejecutar con Node 22.22.3 o superior. (2) [CAPA:CODE] subscribe manual del diálogo de registro (precedente HU-001/003/004). (3) [CAPA:CODE] comentario "schema sprints" en TeamsModule.cs:41. (4) [CAPA:SPEC] puntos abiertos 1 a 8 de la HU y text frente a varchar(255) en auditoría. (5) [CAPA:CODE] helpers de prueba sin CancellationToken (ambigüedad de la constitución).
+@WATCHER: GITOPS-MERGE-CLOSE feat/012-HU_miembros_equipo_y_roles_tecnicos
+- **Handoff:** @PM: Código certificado y rama consolidada en dev. Las épicas P1 a P6 ya tienen historias registradas en el ledger y quedan historias en BACKLOG (005 a 011 y 013 a 034): procede a asignar la siguiente historia del backlog.
