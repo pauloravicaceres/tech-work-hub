@@ -1,11 +1,89 @@
 # QA Report — Calidad y Trazabilidad Viva
 
-> Última actualización: 04-10-2026 · Iteración: **HU-012 Miembros del Equipo y Roles Técnicos** · Agente: QA-AUTO
-> Áreas no afectadas por esta iteración: _Sin cambios en esta iteración_ (HU-004, HU-003, HU-002 y HU-001 se conservan sin modificar).
+> Última actualización: 05-10-2026 · Iteración: **HU-015 Relación entre Personas, Roles y Elementos de Trabajo** · Agente: QA-AUTO
+> Áreas no afectadas por esta iteración: _Sin cambios en esta iteración_ (HU-012, HU-004, HU-003, HU-002 y HU-001 se conservan sin modificar).
 
 ---
 
-# ▶ Iteración actual: HU-012 (`specs/012-HU_miembros_equipo_y_roles_tecnicos`)
+# ▶ Iteración actual: HU-015 (`specs/015-HU_relacion_personas_roles_elementos`)
+
+Barrera Fork-Join satisfecha (DEV-BACK y DEV-FRONT finalizaron). QA-AUTO auditó las suites entregadas, sin `Skip`/`xit`/`describe.skip`, y completó el hueco T019/T020 (Backlog unit). No se modificó código de producción.
+
+## 1. AI QA Review Dashboard (HU-015)
+
+```
+┌──────────────── HU-015 · DICTAMEN: [APROBADO] ────────────────────────────────────────┐
+│ Capa                                   Ejecutados  Pasados  Fallados  Bloqueados     │
+│ Backend · Unit Teams                       57         57       0         0           │
+│ Backend · Unit Backlog (+8 QA-AUTO)        70         70       0         0           │
+│ Backend · Integration Teams (PG)           70         70       0         0           │
+│ Backend · Integration Backlog (PG)         34         34       0         0           │
+│ Frontend · Jest features/teams             58         58       0         0           │
+│ Regresión · Sprints U/I + Identity I   86+89+19      194       0         0           │
+│ Regresión · Jest completo (16 suites)     141        141       0         0           │
+│ Cobertura funcional de CA: US1 2/2 · US2 2/2 · US3 1/1 · US4 3/3 · US5 2/2           │
+│ Nivel de riesgo: BAJO                                                                 │
+└───────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+Comandos: `dotnet test tests/{Unit,Integration}/{Teams,Backlog}` (Testcontainers PostgreSQL, `xunit.parallelizeAssembly=false`), `npx jest --ci --runInBand --forceExit --no-coverage`.
+
+## 2. Requirements Traceability (HU-015)
+
+```mermaid
+flowchart LR
+  HU15[HU-015 Personas, Roles y Elementos]
+  HU15 --> US1[US1 Asignar 201/200 idempotente + auditoría] --> TC1[AssignMemberToItemCommandHandlerTests + ItemAssignmentDomainTests + AssignMemberToItemTests + AssignMemberToItemConcurrencyTests + ItemAssignmentsMigrationTests + BacklogItemLookupTests + team-api.service.spec + assign-assignee-dialog.spec]
+  HU15 --> US2[US2 Consultar personas de un elemento] --> TC2[ListItemAssigneesQueryHandlerTests + ListItemAssigneesTests + item-assignees-view.spec]
+  HU15 --> US3[US3 Consultar elementos de un miembro] --> TC3[ListMemberItemsQueryHandlerTests + ListMemberItemsTests + member-items-view.spec]
+  HU15 --> US4[US4 Rechazo 400/404] --> TC4[AssignMemberToItemValidatorTests + AssignMemberToItemValidationTests]
+  HU15 --> US5[US5 401/500] --> TC5[ItemAssignmentsAuthTests + AssignMemberToItemFailureTests]
+  HU15 --> FR13[FR-013 sin regresión] --> TC6[ItemAssignmentsNoRegressionTests + suites HU-001/003/004/012]
+  HU15 --> FR14[FR-014 aislamiento schema] --> TC7[ItemAssignmentsMigrationTests + BacklogItemLookupTests]
+  HU15 --> LST[GET /api/backlog-items] --> TC8[ListBacklogItemsQueryHandlerTests + ListBacklogItemsTests]
+```
+
+## 3. Failure Impact Diagram (HU-015)
+
+0 fallos críticos detectados. (Los logs de error en `AssignMemberToItemFailureTests` son el fallo de persistencia simulado esperado y el test pasa.)
+
+## 4. State Transition / User Journey (HU-015)
+
+```mermaid
+stateDiagram-v2
+  [*] --> SinResponsables
+  SinResponsables --> ConResponsable: POST assignees 201
+  ConResponsable --> ConResponsable: POST mismo par 200 (idempotente)
+  ConResponsable --> VariosResponsables: POST otro miembro 201
+  SinResponsables --> SinResponsables: 400 / 404 / 401 / 500 (nada persistido)
+  ConResponsable --> ConResponsable: 400 / 404 / 401 / 500 (sin cambios)
+  VariosResponsables --> VariosResponsables: GET assignees / GET member items 200 (solo lectura)
+```
+
+## 5. Test Coverage & Hotspots (HU-015)
+
+| Módulo | Pruebas | Cobertura de CA | Hotspot de defectos |
+|---|---|---|---|
+| Teams · ItemAssignments (API) | 127 unit+integración | 100 % | Ninguno |
+| Backlog · Lookup / ListBacklogItems | 8 unit (QA-AUTO) + integración | 100 % | Ninguno |
+| Frontend · features/teams | 58 | 100 % | Ninguno |
+
+## Pruebas propias (QA-AUTO)
+
+`tests/Unit/Backlog/BacklogItemLookupTests.cs` (5) y `ListBacklogItemsQueryHandlerTests.cs` (3): cubren T019/T020, ausentes en la entrega. Adversariales: Guid vacío, ids inexistentes, colección vacía, desempate por `Id`, contrato sin estimaciones/estado/Sprint. Se añadió `Microsoft.EntityFrameworkCore.InMemory` a `Backlog.UnitTests.csproj` (solo pruebas).
+
+## Defectos (etiquetado por capa)
+
+Ninguno.
+
+## Reservas (no bloqueantes)
+
+- `spec.md` aún dice "no documentado" para la asignación duplicada (Edge Case y FR-015); es vinculante el 200 idempotente (ADR-004). Pendiente del analista de negocio.
+- T063 (quickstart manual) y `npm run build` no ejecutados por QA-AUTO.
+
+---
+
+# ▶ Iteración previa: HU-012 (`specs/012-HU_miembros_equipo_y_roles_tecnicos`)
 
 Barrera Fork-Join satisfecha (DEV-BACK y DEV-FRONT finalizaron). QA-AUTO auditó las suites entregadas (`tests/Unit/Teams`, `tests/Integration/Teams` con Testcontainers PostgreSQL y specs Jest de `features/teams`), sin `Skip`/`xit`. No se modificó código de producción.
 
