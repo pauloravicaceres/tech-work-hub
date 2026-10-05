@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "HU-035 Despliegue sobre el sistema existente",
+    "output": "hu035_despliegue.html",
+    "quality_profile": "showcase",
+    "locale": "en"
+  },
+  "components": [
+    {
+      "id": "browser",
+      "type": "frontend",
+      "label": "Navegador",
+      "sublabel": "SPA Angular 22 con shell",
+      "pos": [
+        40,
+        220
+      ],
+      "size": [
+        170,
+        60
+      ]
+    },
+    {
+      "id": "api",
+      "type": "backend",
+      "label": "Api (Docker Linux)",
+      "sublabel": "Modulith .NET sin cambios",
+      "pos": [
+        420,
+        220
+      ],
+      "size": [
+        190,
+        60
+      ]
+    },
+    {
+      "id": "kc",
+      "type": "security",
+      "label": "Keycloak 24",
+      "sublabel": "contenedor identity",
+      "pos": [
+        800,
+        60
+      ],
+      "size": [
+        170,
+        60
+      ]
+    },
+    {
+      "id": "pg",
+      "type": "database",
+      "label": "PostgreSQL",
+      "sublabel": "sin migraciones",
+      "pos": [
+        800,
+        380
+      ],
+      "size": [
+        170,
+        60
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "docker-compose (host existente)",
+      "wraps": [
+        "api",
+        "kc",
+        "pg"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "b-a",
+      "from": "browser",
+      "to": "api",
+      "label": "HTTPS + Bearer",
+      "variant": "emphasis"
+    },
+    {
+      "id": "b-k",
+      "from": "browser",
+      "to": "kc",
+      "label": "OIDC",
+      "variant": "security"
+    },
+    {
+      "id": "a-p",
+      "from": "api",
+      "to": "pg",
+      "label": "Npgsql sin cambios",
+      "variant": "dashed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Solo frontend",
+      "items": [
+        "El shell se sirve con la SPA",
+        "Sin llamadas de red nuevas"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Sin infraestructura nueva",
+      "items": [
+        "Sin paquetes npm ni contenedores",
+        "Sin migraciones"
+      ]
+    },
+    {
+      "dot": "orange",
+      "title": "Riesgo",
+      "items": [
+        "logout es capacidad nueva mínima",
+        "Confirmar con el humano"
+      ]
+    }
+  ]
+}

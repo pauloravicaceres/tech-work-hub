@@ -3,7 +3,7 @@
 ## 1. Información General y Objetivo
 - **Sistema:** TechWorkHub
 - **Versión:** 1.0.0
-- **Fecha de última actualización:** 2026-10-05 (HU-015)
+- **Fecha de última actualización:** 2026-10-05 (HU-035)
 - **Equipo:** Frontend / SpecKit
 - **Objetivo:** Plataforma modular basada en Angular 22 Zoneless con Signals para la gestión de proyectos y backlog multitipo.
 
@@ -427,3 +427,48 @@ sequenceDiagram
 - **Alcance de uso:** solo grid (`grid grid-cols-12 gap-4`, `col-span-*`), espaciado y flex, nunca para estilizar controles. Escala de espaciado de Tailwind (1 = 0.25rem): `mb-3` de PrimeFlex equivale a `mb-4`.
 - **Migración:** las 11 plantillas `.html` existentes se migraron de forma mecánica (`col-12 md:col-6 lg:col-4` → `col-span-12 md:col-span-6 lg:col-span-4`, `justify-content-end` → `justify-end`, `align-items-center` → `items-center`, `text-secondary` → `text-muted-color`, `surface-100` → `bg-surface-100`). La reestructuración visual (layout, breadcrumbs, tipografía) queda para la HU 035.
 - **Verificación:** `ng build`, `jest` (141 tests) y `npm run lint:primeng` en verde; el CSS generado contiene las utilidades usadas. El orden de capas CSS pendiente de validación visual en navegador.
+
+### HU-035 — Esqueleto de aplicación (layout) y tipografía global (2026-10-05)
+- **Alcance:** solo presentación. Sin cambios en backend, API, contratos de datos ni en `features/**`.
+- **Contexto:** cada pantalla se renderizaba sola, sin barra superior, navegación ni pie, y sin tipografía base.
+- **Decisión (ADR-003/004/005/006/008/009/010 del Tech Design):** el shell es una ruta padre sin segmento de URL (`LayoutComponent`, `canActivateChild: [authGuard]`) y las rutas existentes pasan a ser hijas con los mismos `path`, `data`, `providers` y `loadComponent`. La raíz redirige a `backlog/nuevo` antes del padre. `**` es la última hija y muestra `NotFoundComponent` sin redirigir.
+
+```mermaid
+flowchart TD
+    Router["Router"] -- "'' → redirect" --> Back["/backlog/nuevo"]
+    Router --> Shell["LayoutComponent (canActivateChild: authGuard)"]
+    Shell --> Header["header: p-menubar (≡, nombre app, perfil + Cerrar sesión)"]
+    Shell --> Nav["nav: p-menu NAV_ITEMS (aside ≥1024px | p-drawer <1024px)"]
+    Shell --> Main["main.max-w-7xl.mx-auto.p-6 → router-outlet"]
+    Shell --> Footer["footer"]
+    Main --> B["backlog/nuevo"]
+    Main --> S["sprints, sprints/nuevo, sprints/:id/elementos, sprints/:id"]
+    Main --> E["equipos, equipos/roles, equipos/responsables, equipos/responsables/miembro"]
+    Main --> NF["** → NotFoundComponent (p-message info)"]
+```
+
+- **Estado del shell (signals, sin persistencia):** `ViewportService.isWide` (`matchMedia('(min-width: 1024px)')`, listener limpiado con `DestroyRef`, `true` si no hay `matchMedia`); `navOpen = linkedSignal(isWide)` se reinicia al cruzar el umbral; `activeModule = computed` sobre el primer segmento de la URL (`NavigationEnd` + `toSignal`); `AuthService.userName` (`name` ⇒ `preferred_username` ⇒ `null`) y `logout()` aditivos.
+
+```mermaid
+sequenceDiagram
+    actor U as Usuario
+    participant L as LayoutComponent
+    participant V as ViewportService
+    participant D as p-drawer
+    U->>L: Pulsa ≡
+    alt isWide() = true
+        L->>L: navOpen alterna → aside visible/oculto
+    else isWide() = false
+        L->>D: navOpen = true (modal, Escape y máscara cierran)
+        D-->>L: onShow → foco en la primera entrada
+        U->>D: Elige una entrada
+        D-->>L: closeNav() → onHide → foco vuelve a ≡
+    end
+    V-->>L: cruza 1024 px → navOpen se reinicia a isWide
+```
+
+- **Archivos nuevos:** `core/layout/{layout.component.ts|html|spec.ts, layout.texts.ts, layout-nav.ts|spec.ts, viewport.service.ts|spec.ts, not-found/not-found.component.ts|html|spec.ts}`, `app.routes.spec.ts`. **Modificados:** `app.routes.ts`, `core/auth/auth.service.ts|spec.ts`, `styles.css` (única regla `body { margin: 0; font-family: var(--font-sans); }`), `scripts/lint-primeng.mjs` (reglas globales: una sola `font-family` y un solo margen de `body`, sin `::ng-deep`, `!important`, `ed-grid`, `primeng/dropdown`, `primeng/calendar`), `src/setup-jest.ts` (stub de `matchMedia` para jsdom).
+- **Decisiones de implementación:** el control `≡` es un `<button pButton>` nativo (así `aria-label` y `aria-expanded` llegan al botón real, no al host de `p-button`); los textos viven solo en `LAYOUT_TEXTS`; la entrada activa se resalta con `styleClass: 'font-semibold'` además del `routerLinkActive` de `p-menu`; las utilidades Tailwind de tamaño (`max-w-7xl`, `p-6`, `w-64`, `min-h-screen`) quedan confinadas al shell (mandato RT-02).
+- **Contrato de extensión (FR-015):** una pantalla nueva se agrega como hija del shell en `app.routes.ts` y, si es un módulo, como una entrada más de `NAV_ITEMS`; no declara `max-w-*`, `mx-auto` ni padding de página.
+- **Verificación:** `npm test` 180/180 en verde (21 suites), `npm run build` correcto, `npm run lint:primeng` sin violaciones (y probado que una segunda `font-family` o un `::ng-deep` lo hacen fallar). **Pendiente (requiere app, backend y Keycloak en ejecución):** verificación manual a 768/1920 px (T021, T031), las 6 capturas de `specs/035-HU_refactorizacion_esqueleto_ui/evidence/` (T029) y la gestión real de foco del `p-drawer` (la implementación fuerza foco con `onShow`/`onHide`, sin prueba automatizada).
+- **Puntos abiertos:** umbral de 1024 px sin confirmación del humano (un único valor en `ViewportService`); la regex del lint no distingue `font-family` dentro de cadenas.

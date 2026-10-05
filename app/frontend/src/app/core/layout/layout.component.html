@@ -1,0 +1,66 @@
+<div class="min-h-screen flex flex-col">
+  <header>
+    <p-menubar>
+      <ng-template #start>
+        <div class="flex items-center gap-2">
+          <button
+            #toggleButton
+            pButton
+            type="button"
+            severity="secondary"
+            [text]="true"
+            [attr.aria-label]="texts.toggleNavAriaLabel"
+            [attr.aria-expanded]="navOpen()"
+            (click)="toggleNav()"
+          >
+            <i class="pi pi-bars"></i>
+          </button>
+          <span class="font-semibold text-lg">{{ texts.appName }}</span>
+        </div>
+      </ng-template>
+      <ng-template #end>
+        <div class="flex items-center gap-2">
+          <i class="pi pi-user"></i>
+          <span>{{ userName() ?? texts.profileFallback }}</span>
+          <p-button
+            icon="pi pi-chevron-down"
+            severity="secondary"
+            [text]="true"
+            [ariaLabel]="texts.profileMenuAriaLabel"
+            (onClick)="profileMenu.toggle($event)"
+          />
+          <p-menu #profileMenu [model]="profileItems" [popup]="true" appendTo="body" />
+        </div>
+      </ng-template>
+    </p-menubar>
+  </header>
+
+  <div class="flex flex-1">
+    @if (viewport.isWide() && navOpen()) {
+      <aside class="w-64 shrink-0">
+        <nav class="h-full" [attr.aria-label]="texts.navAriaLabel">
+          <p-menu [model]="navItems()" styleClass="w-full h-full" />
+        </nav>
+      </aside>
+    }
+
+    <div class="flex-1 min-w-0">
+      <main class="max-w-7xl mx-auto p-6">
+        @if (logoutFailed()) {
+          <p-message severity="error">{{ texts.logoutError }}</p-message>
+        }
+        <router-outlet />
+      </main>
+    </div>
+  </div>
+
+  <footer class="p-4 text-center text-muted-color">{{ texts.footer }}</footer>
+</div>
+
+@if (!viewport.isWide()) {
+  <p-drawer [(visible)]="navOpen" [modal]="true" [dismissible]="true" (onShow)="onDrawerShow()" (onHide)="onDrawerHide()">
+    <nav #drawerNav [attr.aria-label]="texts.navAriaLabel" (click)="closeNav()">
+      <p-menu [model]="navItems()" styleClass="w-full" />
+    </nav>
+  </p-drawer>
+}
