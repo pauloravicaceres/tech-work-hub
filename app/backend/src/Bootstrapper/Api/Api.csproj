@@ -17,6 +17,7 @@
     <ProjectReference Include="..\..\Modules\Backlog\Backlog.csproj" />
     <ProjectReference Include="..\..\Modules\Application\Application.csproj" />
     <ProjectReference Include="..\..\Modules\Sprints\Sprints.csproj" />
+    <ProjectReference Include="..\..\Modules\Teams\Teams.csproj" />
   </ItemGroup>
 
 </Project>

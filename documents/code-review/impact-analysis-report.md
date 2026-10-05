@@ -1,15 +1,42 @@
 # 🏗️ Reporte de Impacto y Code Review Vivo (`impact-analysis-report.md`)
 
-**HU vigente:** 004-HU_asignacion_elementos_sprint · **Rama:** `feat/004-HU_asignacion_elementos_sprint`
-**Fecha:** 04-10-2026 · **Dictamen (1.ª revisión de código HU-004, tras retrabajo SDD 1/2):** ✅ **[APROBADO CON RESERVAS]**
-**HUs anteriores (cerradas):** 003-HU_gestion_sprint_dos_semanas ([APROBADO CON RESERVAS]), 002-HU_pruebas_integracion_keycloak_y_catalogo_application ([APROBADO CON RESERVAS]) y 001-HU_registro_elementos_backlog_multitipo (6.ª iteración [APROBADO CON RESERVAS]); sus secciones se conservan abajo como histórico.
+**HU vigente:** 012-HU_miembros_equipo_y_roles_tecnicos · **Rama:** `feat/012-HU_miembros_equipo_y_roles_tecnicos`
+**Fecha:** 04-10-2026 · **Dictamen (1.ª revisión de código HU-012):** ✅ **[APROBADO CON RESERVAS]**
+**HUs anteriores (cerradas):** 004-HU_asignacion_elementos_sprint ([APROBADO CON RESERVAS]), 003-HU_gestion_sprint_dos_semanas ([APROBADO CON RESERVAS]), 002-HU_pruebas_integracion_keycloak_y_catalogo_application ([APROBADO CON RESERVAS]) y 001-HU_registro_elementos_backlog_multitipo (6.ª iteración [APROBADO CON RESERVAS]); sus secciones se conservan abajo como histórico.
 
-> Renderizado selectivo: solo se documentan los componentes alterados por la HU-004 (`Modules/Sprints/{Contracts,Domain/SprintItems,Features/SprintItems,Data}`, migración `AddSprintItems`, `BacklogModuleApi` + `Backlog.csproj` + `BacklogModule.cs`, `ConflictException` y la rama 409 de `CustomExceptionHandler`, `features/sprints` del frontend con la ruta `sprints/:id/elementos` y el botón de `sprint-detail`). `Modules/Application`, `Sprint`/`SprintRules`/`InitialSprintsSchema`, `BacklogItem`/`BacklogDbContext`, `core/auth` y `features/backlog`: *Sin impacto en este PR/HU* (`git diff --stat` vacío sobre esas rutas).
+> Renderizado selectivo: solo se documentan los componentes alterados por la HU-012: módulo nuevo `Modules/Teams` (Domain, Data + migración `InitialTeamsSchema`, Features `TeamMembers` y `TechnicalRoles`, `TeamsModule`), registro en `Api.csproj`/`Program.cs`, y `features/teams` del frontend con la ruta `equipos` en `app.routes.ts`. `Modules/Backlog`, `Modules/Sprints`, `Modules/Application`, `BuildingBlocks/Shared`, `core/auth`, `features/backlog` y `features/sprints`: *Sin impacto en este PR/HU* (`Shared` solo se consume).
 ---
 
 ## 1. AI Code Review Dashboard
 
-### 1.00 HU-004 — Asignación de elementos del Backlog a un Sprint (vigente)
+### 1.000 HU-012 — Miembros del equipo y roles técnicos (vigente)
+
+```text
+╔══════════════════════════════════════════════════════════════╗
+║  AI CODE REVIEW DASHBOARD — HU 012   [APROBADO CON RESERVAS]║
+╠══════════════════════════════════════════════════════════════╣
+║  Archivos analizados (lectura física) ........... 33         ║
+║  Violaciones arquitectónicas .................... 0          ║
+║  Problemas de seguridad ......................... 0          ║
+║  Fugas de rendimiento (CancellationToken / N+1) . 0 / 0      ║
+║  Hallazgos zero-tolerance (stubs/hardcode) ...... 0          ║
+║  Deuda técnica encontrada ....................... 4          ║
+║  Cobertura de tests faltante .... Jest (22) sin ejecutar     ║
+╚══════════════════════════════════════════════════════════════╝
+```
+
+Ejecución propia (Code Review): **Unit 27/27** e **Integración 38/38** (Testcontainers PostgreSQL) en verde. Frontend: **no ejecutable** (el equipo no tiene Node ni `node_modules`); auditado por lectura física.
+
+| Ref. | Capa | Estado | Detalle | Responsable |
+|---|---|---|---|---|
+| R1 | [CAPA:TASKS] | 🟠 Abierto | `tasks.md` T058 (`npm test` + `npm run build`) y T061 (recorrido de los 10 escenarios del quickstart) sin `[X]`: el frontend nunca se compiló ni se probó con Jest (22 specs). Re-ejecutar en un entorno con Node >= 22.22.3 antes de promover. | @QA-AUTO / humano |
+| R2 | [CAPA:CODE] | 🟡 Reserva | `register-member-dialog.component.ts` (constructor) mantiene un `.subscribe()` manual (`submit$` con `exhaustMap` + `takeUntilDestroyed`). Es un comando con efecto lateral, no estado derivable; mismo patrón aceptado en HU-001/003/004. Las lecturas sí usan `toSignal`. | @DEV-FRONT |
+| R3 | [CAPA:CODE] | 🟡 Menor | `TeamsModule.cs:41` — el `<summary>` de `MigrateTeamsModuleAsync` dice "schema `sprints`" (copia de Sprints); el schema real es `teams`. Solo comentario. | @DEV-BACK |
+| R4 | [CAPA:SPEC] | 🟡 Informativa | `CreatedBy`/`LastModifiedBy` quedan `text` (migración, `data-model.md`, T014) frente a `varchar(255)` de `db_012` (discrepancia ya señalada por QT). Los puntos abiertos 1-8 de la HU (unicidad, longitud, ciclo de vida) siguen sin definir: el código no los restringe y las pruebas lo documentan. | humano / PM |
+| R5 | [CAPA:CODE] | 🟡 Reserva | Helpers de prueba `async` sin `CancellationToken` (`PostgresFixture.cs:24-26`, `RegisterTeamMemberFailureTests.cs:26-42`): ambigüedad ya registrada en HU-001/002 (la constitución no aclara si aplica a código de prueba); pendiente de enmienda con `/speckit-constitution`. | @QA-AUTO |
+| R6 | — | 🟡 Proceso | Código de la HU sin commitear al momento de la revisión (lo consolida el watcher al fusionar). | Watcher |
+
+### 1.00 HU-004 — Asignación de elementos del Backlog a un Sprint (histórico)
 
 ```text
 ╔══════════════════════════════════════════════════════════════╗
@@ -298,7 +325,28 @@ Evidencia: `documents/qa-auto/qa-report.md` (cuarta ejecución, T043) más lectu
 
 ## 2. Architecture Compliance & Traceability
 
-### 2.00 HU-004 — Flujo real implementado (solo lo alterado, vigente)
+### 2.000 HU-012 — Flujo real implementado (solo lo alterado, vigente)
+
+```mermaid
+flowchart LR
+  subgraph FE[Frontend Angular 22 standalone]
+    P[TeamPageComponent<br/>/equipos y /equipos/roles] --> D[RegisterMemberDialogComponent]
+    P --> S[TeamApiService]
+    D --> S
+  end
+  S -->|GET/POST /api/team-members<br/>GET /api/technical-roles| E[Carter ICarterModule<br/>RequireAuthorization]
+  subgraph BE[Modules/Teams - schema teams]
+    E -->|ISender.Send + CancellationToken| V[ValidationBehavior + FluentValidation]
+    V --> H[Handlers MediatR<br/>Register / List / ListRoles]
+    H --> DM[TeamMember.Create<br/>invariantes de dominio]
+    H --> DB[(ITeamsDbContext -> TeamsDbContext<br/>teams.TeamMembers, teams.TechnicalRoles)]
+  end
+  I[AuditableEntityInterceptor + ICurrentUser<br/>Shared] -.->|CreatedBy desde el claim| DB
+```
+
+**Desviaciones de arquitectura: ninguna.** Sin salto de capa: endpoint → MediatR → handler → `ITeamsDbContext`; la lógica de negocio vive en handlers y dominio; ninguna consulta cruza de schema (FK local `RESTRICT` dentro de `teams`); sin `[ApiController]`, sin AutoMapper, sin `NgModules`, sin `innerHTML`/`DomSanitizer`.
+
+### 2.00 HU-004 — Flujo real implementado (solo lo alterado, histórico)
 
 ```mermaid
 flowchart LR
@@ -423,7 +471,43 @@ flowchart LR
 
 ## 3. Change Impact Diagram
 
-### 3.00 HU-004 — Impacto de los cambios y cobertura (vigente)
+### 3.000 HU-012 — Impacto de los cambios y cobertura (vigente)
+
+```mermaid
+flowchart LR
+  classDef ok fill:#d4f4dd,stroke:#2e7d32,color:#000
+  classDef warn fill:#fff3cd,stroke:#b58900,color:#000
+  classDef none fill:#eeeeee,stroke:#999,color:#000
+  EP1[RegisterTeamMemberEndpoint]:::ok --> H1[RegisterTeamMemberCommandHandler]:::ok
+  EP2[ListTeamMembersEndpoint]:::ok --> H2[ListTeamMembersQueryHandler]:::ok
+  EP3[ListTechnicalRolesEndpoint]:::ok --> H3[ListTechnicalRolesQueryHandler]:::ok
+  H1 --> TM[TeamMember dominio]:::ok
+  H1 --> CTX[TeamsDbContext + migración InitialTeamsSchema]:::ok
+  H2 --> CTX
+  H3 --> CTX
+  T1[Unit 27/27: handlers, validador, dominio]:::ok -.cubre.-> H1
+  T1 -.-> H2
+  T1 -.-> H3
+  T1 -.-> TM
+  T2[Integración 38/38 PostgreSQL: 201/400/401/500, auth, migración, sin regresión]:::ok -.cubre.-> EP1
+  T2 -.-> EP2
+  T2 -.-> EP3
+  T2 -.-> CTX
+  API[Api.csproj + Program.cs]:::ok --> EP1
+  FP[TeamPageComponent]:::warn --> FS[TeamApiService]:::warn
+  FD[RegisterMemberDialogComponent]:::warn --> FS
+  FS --> EP1
+  FS --> EP2
+  FS --> EP3
+  T3[Jest 22 specs: escritos, NO ejecutados]:::warn -.sin evidencia.-> FP
+  T3 -.-> FD
+  T3 -.-> FS
+  X[Backlog / Sprints / Application / Shared]:::none
+```
+
+Verde: cubierto y ejecutado. Ámbar: pruebas escritas pero **no ejecutadas** (frontend, R1). Gris: sin impacto.
+
+### 3.00 HU-004 — Impacto de los cambios y cobertura (histórico)
 
 ```mermaid
 flowchart TD
@@ -613,7 +697,22 @@ Componentes de #16..#19 sin cobertura: 4 de 4. Resto de la HU (cierre de DEF-01.
 
 ## 4. Dependency / Coupling Graph
 
-### 4.00 HU-004 (vigente)
+### 4.000 HU-012 (vigente)
+
+```mermaid
+flowchart LR
+  Api[Bootstrapper Api] --> Teams[Modules/Teams]
+  Teams --> Shared[BuildingBlocks/Shared]
+  Teams -. sin referencia .-x Backlog
+  Teams -. sin referencia .-x Sprints
+  Teams -. sin referencia .-x Application
+  TF[features/teams] --> Auth[core/auth AuthService]
+  TF --> PN[PrimeNG 22]
+```
+
+Acoplamiento: `Teams` depende solo de `Shared` (sin ciclos ni referencias a otros módulos; verificado en `Teams.csproj`). **Deuda técnica temprana:** (1) rol enviado por **nombre** sensible a mayúsculas en lugar de por Id (contrato propuesto); (2) sin unicidad/longitud de nombre ni idempotencia (puntos abiertos 1-8); (3) `TechnicalRole` hereda `Aggregate` completo aunque es de solo lectura; (4) cadena `Database` compartida con schema propio (patrón de la constitución, sin deuda adicional).
+
+### 4.00 HU-004 (histórico)
 
 ```mermaid
 flowchart LR
@@ -689,6 +788,15 @@ flowchart LR
 ---
 
 ## Veredicto
+
+```text
+[APROBADO CON RESERVAS] - HU-012, 1.ª revisión de código (04-10-2026):
+- Lectura física completada: 33 archivos auditados (24 backend de Teams, 6 frontend, 3 de integración: Api.csproj, Program.cs y app.routes.ts) más las pruebas clave; ejecución propia Unit 27/27 e Integración 38/38 (PostgreSQL). Jest no ejecutable (sin Node).
+- Lex Superior y VSA: ICarterModule + MediatR, schema teams aislado, FK local, sin salto de capa, sin AutoMapper ni [ApiController], componentes standalone.
+- SecOps y rendimiento: CancellationToken propagado hasta EF Core, cero N+1 (sin bucles en producción), sin IDOR (solo alta y lecturas de datos maestros; la auditoría sale del claim y no del cuerpo, probado), sin XSS, RequireAuthorization en los tres endpoints, 500 sin trazas.
+- Pruebas QA: no tautológicas (efectos en BD verificados, token propagado, 401/400/500 reales).
+- Reservas no bloqueantes: R1 (T058/T061 y Jest/build frontend sin ejecutar), R2 (subscribe del diálogo, precedente HU-001/003/004), R3 (comentario "sprints" en TeamsModule), R4 (puntos abiertos 1-8 y text vs varchar), R5 (helpers de prueba sin token), R6 (sin commitear).
+```
 
 ```text
 [APROBADO CON RESERVAS] - HU-004, 1.ª revisión de código tras retrabajo SDD 1/2 (04-10-2026):

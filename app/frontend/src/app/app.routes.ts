@@ -45,6 +45,27 @@ export const routes: Routes = [
       },
     ],
   },
+  {
+    // HU-012: la pestaña activa se deriva de `data.tab`; ambas rutas montan la misma página.
+    path: 'equipos',
+    canActivate: [authGuard],
+    providers: [MessageService],
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        data: { tab: 'miembros' },
+        loadComponent: () =>
+          import('./features/teams/components/team-page/team-page.component').then((m) => m.TeamPageComponent),
+      },
+      {
+        path: 'roles',
+        data: { tab: 'roles' },
+        loadComponent: () =>
+          import('./features/teams/components/team-page/team-page.component').then((m) => m.TeamPageComponent),
+      },
+    ],
+  },
   { path: '', pathMatch: 'full', redirectTo: 'backlog/nuevo' },
   { path: '**', redirectTo: 'backlog/nuevo' },
 ];

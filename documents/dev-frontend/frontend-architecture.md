@@ -3,7 +3,7 @@
 ## 1. Información General y Objetivo
 - **Sistema:** TechWorkHub
 - **Versión:** 1.0.0
-- **Fecha de última actualización:** 2026-10-04 (HU-004)
+- **Fecha de última actualización:** 2026-10-04 (HU-012)
 - **Equipo:** Frontend / SpecKit
 - **Objetivo:** Plataforma modular basada en Angular 22 Zoneless con Signals para la gestión de proyectos y backlog multitipo.
 
@@ -304,3 +304,52 @@ flowchart LR
 
 - **Verificación:** Jest `src/app/features/sprints` 52/52 en verde (6 suites); `ngc -p tsconfig.app.json --noEmit` sin errores.
 - **Nota:** T060 nombra `sprint-detail.component.html`, pero las estimaciones se renderizan en `sprint-assigned-items.component.html`; allí se aplicó el cambio.
+
+### HU-012 — Miembros del Equipo y Roles Técnicos (speckit-implement, 2026-10-04, tareas frontend T006, T023–T025, T029, T033, T037, T039, T042, T044, T047, T050, T051, T054, T056)
+Se añadió la feature `features/teams/` (consultar miembros, registrar un miembro y consultar el catálogo de roles). El único archivo existente alterado es `app.routes.ts`; no se tocó `core/auth`, `features/backlog` ni `features/sprints`.
+
+- **Archivos nuevos (`app/frontend/src/app/features/teams/`):**
+  - `models/team.models.ts`: `TeamMember {id, name, role}`, `TechnicalRole {id, name}`, `RegisterTeamMemberRequest {name, role}` y `ProblemDetails`.
+  - `services/team-api.service.ts`: `TeamApiService` (`listMembers` → `GET /api/team-members`, `listRoles` → `GET /api/technical-roles`, `registerMember` → `POST /api/team-members`).
+  - `components/team-page/`: `TeamPageComponent` (`p-breadcrumb`, `p-tabs`, `p-table`, `p-toast`, estado vacío, error con `Reintentar`, diálogo 401). Un único `state` (`toSignal` sobre `combineLatest([route.data, reload$])`) consulta solo la pestaña activa.
+  - `components/register-member-dialog/`: `RegisterMemberDialogComponent` (`FormGroup` tipado, `p-select` alimentado por `listRoles()`, `isSubmitting`, errores 400 por campo/`detail`, 500 genérico, 401 emitido al padre).
+- **Modificado:** `app.routes.ts` — ruta padre `equipos` con `authGuard` y `MessageService`; hijas `''` (`data.tab = 'miembros'`) y `roles` (`data.tab = 'roles'`), ambas con `TeamPageComponent`.
+- **Decisiones:** el cliente no valida reglas de negocio (UX D-05): envía lo tecleado y muestra los mensajes del servidor. Tras registrar se vuelve a consultar la lista (D-07). El diálogo se monta al abrirlo (`@if`), por lo que el catálogo se consulta en cada apertura y tras un 400 por rol inválido. Sin columna de acciones ni paginación (D-03, D-04).
+
+```mermaid
+flowchart TD
+    Guard{{"authGuard"}} --> Equipos["/equipos (MessageService)"]
+    Equipos --> Miembros["'' data.tab=miembros → TeamPageComponent"]
+    Equipos --> Roles["roles data.tab=roles → TeamPageComponent"]
+    Miembros -- "GET /api/team-members" --> API[("Módulo Teams")]
+    Roles -- "GET /api/technical-roles" --> API
+    Miembros -- "Registrar miembro" --> Dlg["RegisterMemberDialogComponent"]
+    Dlg -- "GET /api/technical-roles" --> API
+    Dlg -- "POST /api/team-members" --> API
+    Dlg -- "registered → toast + recarga" --> Miembros
+```
+
+```mermaid
+sequenceDiagram
+    actor U as Usuario
+    participant D as RegisterMemberDialogComponent
+    participant P as TeamPageComponent
+    participant API as /api/team-members
+
+    U->>D: Escribe nombre, elige rol y pulsa Registrar
+    D->>API: POST { name, role }
+    alt 201
+        API-->>D: { id, name, role }
+        D-->>P: registered(member) y cierra
+        P->>API: GET (lista fresca) y toast con datos del servidor
+    else 400
+        API-->>D: ProblemDetails (errors.name / errors.role / detail)
+        D-->>U: Mensajes bajo el campo, conserva valores; si rol inválido refresca catálogo
+    else 401
+        D-->>P: unauthorized() → diálogo de reautenticación
+    else 500
+        D-->>U: Mensaje genérico sin cuerpo de respuesta, botón rehabilitado
+    end
+```
+
+- **Verificación:** no ejecutada. El entorno de esta sesión no tiene Node/npm en el PATH, por lo que `npm test` y `npm run build` (T058) y el recorrido del quickstart (T061) quedan pendientes.

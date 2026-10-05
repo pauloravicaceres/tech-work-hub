@@ -523,6 +523,88 @@ flowchart LR
 
 **Verificación:** `SprintItemsEstimationFidelityTests` 2/2 en verde. Nuevas pruebas: `BacklogModuleApiTests` (2.5 sin redondear y QA nulo) y `ListSprintItemsTests` (JSON con `devPoints` 2.5 y `qaPoints` null). `Sprints.UnitTests` 86, `Sprints.IntegrationTests` 89, `Backlog.UnitTests` 62, `Backlog.IntegrationTests` 31, todas correctas.
 
+## 13. HU-012 — Módulo `Teams`: miembros del equipo y roles técnicos (renderizado selectivo)
+
+Fuente: `specs/012-HU_miembros_equipo_y_roles_tecnicos/` (`plan.md`, `data-model.md`, `contracts/teams-api.openapi.yaml`, `tasks.md`). Alcance de esta pasada: solo backend; las tareas de frontend (T006, T023–T025, T029, T033, T037, T039, T042, T044, T047, T050, T051, T054, T056, T058) no se ejecutaron.
+
+### 13.1 Componentes nuevos
+
+Módulo nuevo `Modules/Teams` (schema `teams`). Fuera de él solo se tocaron `TechWorkHub.sln`, `Api.csproj` y `Program.cs` (registro del módulo y migración al arrancar). Sin eventos de dominio, Outbox, caché ni consultas hacia otros schemas.
+
+```mermaid
+flowchart LR
+    subgraph TM[Modules/Teams]
+        EP1[RegisterTeamMemberEndpoint POST] --> H1[RegisterTeamMemberCommandHandler + Validator]
+        EP2[ListTeamMembersEndpoint GET] --> H2[ListTeamMembersQueryHandler]
+        EP3[ListTechnicalRolesEndpoint GET] --> H3[ListTechnicalRolesQueryHandler]
+        H1 --> M[TeamMember aggregate]
+        H1 --> DB[(teams.TeamMembers)]
+        H1 -->|resuelve rol por nombre| R[(teams.TechnicalRoles)]
+        H2 -->|JOIN local| DB
+        H2 --> R
+        H3 --> R
+    end
+    SH[Shared: AuditableEntityInterceptor, ValidationBehavior, CustomExceptionHandler]
+    H1 --> SH
+```
+
+### 13.2 Modelo de datos (migración `InitialTeamsSchema`)
+
+```mermaid
+erDiagram
+    TechnicalRoles ||--o{ TeamMembers : "FK RESTRICT"
+    TechnicalRoles {
+        uuid Id PK
+        text Name UK "UX_TechnicalRoles_Name"
+    }
+    TeamMembers {
+        uuid Id PK
+        text Name "sin limite ni unicidad"
+        uuid TechnicalRoleId FK "IX_TeamMembers_TechnicalRoleId"
+        timestamptz CreatedAt
+        text CreatedBy
+        timestamptz LastModified
+        text LastModifiedBy
+    }
+```
+
+El catálogo se siembra con `HasData` (`Desarrollo` y `QA`, GUID fijos en `TechnicalRoleSeed`); no existe alta, edición ni baja de roles.
+
+### 13.3 Registro de un miembro
+
+```mermaid
+sequenceDiagram
+    participant C as Cliente
+    participant E as RegisterTeamMemberEndpoint
+    participant V as ValidationBehavior
+    participant H as Handler
+    participant DB as TeamsDbContext
+    C->>E: POST /api/team-members {name, role}
+    E->>V: Send(command)
+    V-->>C: 400 errors.name / errors.role si faltan o son solo espacios
+    V->>H: Handle
+    H->>H: ICurrentUser.UserId (sin claim: 401)
+    H->>DB: TechnicalRoles.FirstOrDefault(Name == role)
+    DB-->>H: rol o nulo
+    H-->>C: 400 errors.role "El rol indicado no es válido." si es nulo
+    H->>DB: Add(TeamMember.Create) + SaveChanges(ct) (CreatedAt/CreatedBy por interceptor)
+    H-->>C: 201 {id, name, role}, Location /api/team-members
+```
+
+### 13.4 Endpoints
+
+| Método y ruta | Respuesta | Notas |
+|---|---|---|
+| `POST /api/team-members` | 201 `{ id, name, role }` | `role` es el NOMBRE del rol (sensible a mayúsculas); 400 si rol inexistente o nombre/rol vacíos; 401; 500 |
+| `GET /api/team-members` | 200 `[{ id, name, role }]` | Orden `CreatedAt`, `Id`; `[]` si no hay miembros |
+| `GET /api/technical-roles` | 200 `[{ id, name }]` | Orden por `Name` |
+
+Todos exigen JWT. **Desviación respecto de `tasks.md` (T031/T036):** el 400 por rol inexistente viaja como `errors.role = ["El rol indicado no es válido."]` (formato único de `CustomExceptionHandler`, que no se puede modificar por FR-014), no como `detail`. El frontend debe leer `errors.role`.
+
+### 13.5 Verificación
+
+`Teams.UnitTests` 27 y `Teams.IntegrationTests` 38 (PostgreSQL 16 real por Testcontainers) en verde: migración solo en `teams`, semilla, `UX_TechnicalRoles_Name` (23505), FK (23503), 201/400/401/500, auditoría desde el claim `sub`, no regresión en `backlog` y `sprints`, y consultas con 100 miembros en < 2 s.
+
 ## 9. Puntos abiertos
 
 - HU-004: frontend (T002, T041–T049, T051) y recorrido manual del quickstart (T052) no se ejecutaron en esta pasada, por alcance solo backend.
@@ -533,3 +615,5 @@ flowchart LR
 - Los scripts `apply-migrations` no se ejecutaron: `dotnet-ef` no está instalado en este entorno, así que la generación del bundle no está verificada (sí lo está la migración sobre PostgreSQL).
 - `auth-server-url` base es un marcador: debe fijarse por entorno antes de desplegar.
 - T017 (quickstart por cURL), T018, T025 y T032 siguen abiertas a la espera de evidencia de QA (T043). T039 y T032 son de interfaz, fuera de este alcance.
+
+- HU-012: el frontend (página `/equipos`, diálogo de alta, pestaña de roles, rutas e i18n; T006, T023–T025, T029, T033, T037, T039, T042, T044, T047, T050, T051, T054, T056, T058) y el recorrido del quickstart (T061) no se ejecutaron en esta pasada, por alcance solo backend. `scripts/apply-migrations.sh|.ps1` no incluyen el módulo `Teams` (fuera de las rutas permitidas por FR-014); en desarrollo y pruebas lo cubre `Database:MigrateOnStartup`.
