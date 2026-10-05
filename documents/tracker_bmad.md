@@ -1270,3 +1270,9 @@ You can reply with the option letter (e.g., "A"), accept the recommendation by s
 - **⚠️ Puntos Abiertos:** (1) [CAPA:SPEC] spec.md aún dice "no documentado" para asignación duplicada; vinculante 200 idempotente (ADR-004). (2) [CAPA:CODE] .subscribe manual con takeUntilDestroyed en assign-assignee-dialog.component.ts:136, mismo precedente que HU-012. (3) [CAPA:TASKS] T063 quickstart manual sin ejecutar.
 @WATCHER: GITOPS-MERGE-CLOSE feat/015-HU_relacion_personas_roles_elementos
 - **Handoff:** @PM: Código certificado y rama consolidada en dev. Procede con las épicas pendientes del plan MVP: P1 (historias 005 a 011), P2 (013 y 014), P3, P4, P5 y P6 sin historia registrada ni implementada.
+
+### [05-10-2026] HUMANO
+- **Hora:** 08:00:00
+- **Estado:** APPROVE
+- **Handoff:** @WATCHER: GITOPS-BRANCH-CREATE feat/035-HU_refactorizacion_esqueleto_ui
+@BA: Ejecuta la directiva de negocio de la deuda técnica 035-HU_refactorizacion_esqueleto_ui descrita en app/skeleton.md (léela completa y cumple sus tareas: fila 035 en specs/README.md y el FSaaDB documents/business-analyst/035-HU_refactorizacion_esqueleto_ui.md con el contenido exacto del bloque markdown). Esta HU va antes de las pantallas pendientes del plan MVP, y el handoff previo al PM queda en espera hasta que la 035 cierre.
