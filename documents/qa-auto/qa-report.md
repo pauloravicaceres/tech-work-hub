@@ -12,15 +12,15 @@ Solo frontend (FR-019: sin backend). Barrera Fork-Join: el tracker despacha úni
 ## 1. AI QA Review Dashboard (HU-036)
 
 ```
-┌──────────────── HU-036 · DICTAMEN: [RECHAZADO] ───────────────────────────────────────┐
+┌──────────────── HU-036 · DICTAMEN: [APROBADO] ───────────────────────────────────────┐
 │ Capa                                       Ejecutados  Pasados  Fallados  Bloqueados │
 │ Jest completo (31 suites, incluye DEV)         417        417       0         0       │
 │ Jest QA-AUTO nuevas (2 suites)                  50         50       0         0       │
 │ lint:primeng (gobernanza FR-013/FR-015)         —       sin violaciones              │
 │ ng build                                        —       OK                           │
-│ CA automatizables: US1-US5 cubiertos · US6 CA1-CA2 cubiertos · US6 CA3-CA5 NO cumplidos│
-│ Bloqueados por evidencia: T041 (validación manual), T042 (6 capturas FR-020, SC-007)  │
-│ Nivel de riesgo: BAJO (código) · ALTO (cierre: historia no cerrable sin capturas)     │
+│ CA: US1-US6 cubiertos · 6 capturas 1920x1080 presentes · tasks.md sin pendientes     │
+│ Retrabajo 1/2: DEF-01 corregido (T041/T042 cerradas)                                 │
+│ Nivel de riesgo: BAJO                                                                 │
 └────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -82,11 +82,12 @@ Recorrido probado en Jest (jsdom). El recorrido real en navegador (T041) y las c
 
 ## Defectos (etiquetado por capa)
 
-- **DEF-01 [CAPA:TASKS]** T041 y T042 están `[ ]` en `tasks.md` y `specs/036_.../evidence/` solo contiene `.gitkeep`: faltan las 6 capturas `{backlog,sprints,equipo}-{claro,oscuro}.png` a 1920 px y la validación manual. US6 CA3 y CA5 y FR-020: la historia no se cierra.
+- **DEF-01 [CAPA:TASKS] — CORREGIDO en retrabajo 1/2** (6 capturas 1920x1080 en `evidence/`, sin tareas pendientes). Descripción original: T041 y T042 estaban `[ ]` en `tasks.md` y `specs/036_.../evidence/` solo contiene `.gitkeep`: faltan las 6 capturas `{backlog,sprints,equipo}-{claro,oscuro}.png` a 1920 px y la validación manual. US6 CA3 y CA5 y FR-020: la historia no se cierra.
 
 ## Reservas (no bloqueantes)
 
-- La medición de colores en pantalla (SC-001) solo se verifica por tokens en jsdom, no sobre el render real.
+- La medición de colores en pantalla (SC-001) solo se verifica por tokens en jsdom; las capturas se revisaron visualmente (2 de 6), sin medición por píxel.
+- Las capturas muestran la insignia "Invalid PrimeUI License" en la esquina inferior derecha (entorno de desarrollo); no es parte del tema.
 
 ---
 
