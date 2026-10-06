@@ -94,8 +94,8 @@ El diseño de interfaces (`ux_*.md`) DEBE calcar la **distribución estructural 
   - **Controles Flotantes:** Posicionamiento de botones de acción principales (flotantes o anclados) en la zona superior derecha del contenedor de datos.
 
 * **🚫 ESTILOS PROHIBIDOS (OMITIR):**
-  - Ignorar la paleta de colores corporativos, tipografías específicas, logotipos de marca y overrides de CSS personalizados.
-  - El "look and feel" final recaerá 100% sobre el tema neutral por defecto de PrimeNG. El agente `@UX` debe ensamblar los wireframes usando nombres de componentes estándar (ej. `<p-table>`, `<p-menubar>`, `<p-drawer>`) sin inventar clases CSS propias (las utilidades de Tailwind CSS permitidas están acotadas en el Patrón Obligatorio de Formularios).
+  - Ignorar la paleta de colores corporativos de la plantilla `./app/template-primeng/`, tipografías específicas, logotipos de marca y overrides de CSS personalizados. **Única excepción:** el Theme Visual propio de la aplicación definido en la sección "🎨 Theme Visual" (HU-036), que es la fuente única y cerrada de colores, radios y modo oscuro.
+  - El "look and feel" final recaerá 100% sobre PrimeNG con el preset Aura personalizado por el Theme Visual (antes de que se fusione la HU-036, sobre el tema neutral Aura sin personalizar). El agente `@UX` debe ensamblar los wireframes usando nombres de componentes estándar (ej. `<p-table>`, `<p-menubar>`, `<p-drawer>`) sin inventar clases CSS propias (las utilidades de Tailwind CSS permitidas están acotadas en el Patrón Obligatorio de Formularios y en el Theme Visual).
 
 
 
@@ -103,6 +103,34 @@ El diseño de interfaces (`ux_*.md`) DEBE calcar la **distribución estructural 
 * **Montaje:** el shell (`app/frontend/src/app/core/layout/`) es la ruta padre sin segmento de URL con `canActivateChild: [authGuard]`; toda pantalla autenticada, presente o futura, DEBE declararse como ruta hija. La ruta comodín `**` vive dentro del shell y no redirige.
 * **Tipografía global:** exactamente UNA declaración de `font-family` y de margen de `body`, en `app/frontend/src/styles.css`; sin fuentes externas. Se garantiza con `npm run lint:primeng`.
 * **Tailwind en el shell:** además de grid, espaciado y flex, se permiten utilidades de tamaño (`max-w-7xl`, `w-64`, `min-h-screen`, `flex-1`, `min-w-0`) SOLO en `LayoutComponent`, para el contenedor de contenido (1280 px, `p-6`). Fuera del shell sigue vigente la restricción original.
+
+### 🎨 Theme Visual (HU-036, enmienda 05-10-2026)
+Esta enmienda es una **excepción acotada** a la prohibición de paleta y overrides de CSS de "Skeleton vs. Theme". Rige únicamente en los términos siguientes; todo lo no listado sigue prohibido. Rige desde la fusión de la HU-036 y gobierna a todas las HUs posteriores.
+
+* **Referencia visual:** `specs/evidences/claro.png` y `specs/evidences/oscuro.png`. Se toman SOLO la paleta, los radios y la jerarquía de superficies. Quedan prohibidos copiar logotipos o nombres de marca ("preline"), la tipografía de la maqueta, la barra de vista previa (selector "Themes", "Get access", conmutador de dispositivo) y los elementos de la maqueta que ninguna HU pida (selector de workspace, sección "Apps", submenús anidados). El esqueleto estructural sigue regido por "Skeleton vs. Theme" y por el Shell de Aplicación (HU-035).
+* **Fuente única de tokens:** `app/frontend/src/app/core/theme/app-theme.ts`, que exporta el preset `definePreset(Aura, …)` consumido por `providePrimeNG` en `app.config.ts`. Ningún otro archivo de `app/frontend/src` declara colores. `src/styles.css` solo añade `@custom-variant dark` (y la declaración tipográfica única de HU-035).
+* **Paleta (valores medidos de las maquetas; escala `gray` y `cyan` de Tailwind v4):**
+
+| Rol | Claro | Oscuro | Token PrimeNG |
+|---|---|---|---|
+| Color primario (botón primario, foco, elemento de acento) | `#0092b8` (cyan-600) | `#00b8db` (cyan-500) | `primary.color` |
+| Texto de enlace sobre superficie clara ⚠️ | `#007595` (cyan-700) | `#00b8db` (cyan-500) | `primary.color` en texto |
+| Fondo de la página | `#f9fafb` (gray-50) | `#101828` (gray-900) | `surface.50` / `surface.900` |
+| Tarjeta, sidebar, topbar, footer | `#ffffff` | `#1e2939` (gray-800) | `surface.0` / `surface.800` |
+| Borde y separador | `#e5e7eb` (gray-200) | `#364153` (gray-700) | `surface.200` / `surface.700` |
+| Elemento de navegación activo | `#e5e7eb` (gray-200) | `#364153` (gray-700) | `surface.200` / `surface.700` |
+| Texto principal | `#1e2939` (gray-800) | `#e5e7eb` (gray-200) | `text.color` |
+| Texto secundario | `#6a7282` (gray-500) | `#99a1af` (gray-400) | `text.mutedColor` |
+| Peligro (botón de peligro, error) | `#fb2c36` (red-500) | `#fb2c36` (red-500) | severidad `danger` (paleta `red`, `red.500`) |
+
+  La escala `surface` del preset es `gray` en ambos modos. ⚠️ Los valores de enlace en modo claro (`#007595`) y el contraste (siguiente punto) son propuesta del BA para cumplir WCAG AA y requieren aprobación humana.
+* **Radios:** tarjetas y contenedores `0.75rem`; controles y botones `0.5rem`; se fijan en `border.radius` del preset, nunca con utilidades por componente ⚠️ [PROPUESTO: medida visual aproximada de las maquetas].
+* **Contraste (WCAG 2.1 AA):** texto normal ≥ 4.5:1 y componentes de interfaz ≥ 3:1 en ambos modos. **Excepciones aceptadas por paridad con la maqueta** (a ratificar por el humano): etiqueta blanca sobre botón primario `#0092b8` (3.62:1) y texto de marcador de posición `#99a1af` (2.60:1).
+* **Modo claro/oscuro:** `darkModeSelector: '.app-dark'`, con la clase sobre `<html>`; Tailwind v4: `@custom-variant dark (&:where(.app-dark, .app-dark *));`. Valor inicial: preferencia del sistema (`prefers-color-scheme`); la elección manual del usuario se guarda en `localStorage` (clave `app-theme-mode`, valores `light` | `dark`) y prevalece sobre el sistema ⚠️ [PROPUESTO]. El conmutador vive en el topbar del shell.
+* **Uso de color en componentes:** únicamente mediante tokens semánticos de `tailwindcss-primeui` (`bg-surface-*`, `text-surface-*`, `border-surface-*`, `bg-primary`, `text-primary`, `text-muted-color`) con variantes `dark:`, y SOLO en `LayoutComponent` y sus subcomponentes. Páginas y formularios no llevan utilidades de color ni de radio: heredan el tema de los componentes PrimeNG.
+* **Prohibido (sin excepción):** literales de color (`#hex`, `rgb()`, `hsl()`, `oklch()`) fuera de `app-theme.ts`; clases de paleta de Tailwind (`bg-cyan-600`, `text-gray-500`, etc.); estilos de color inline; `::ng-deep`; `!important`; `.scss` de componente con color, borde o sombra; sombras personalizadas ⚠️ [PROPUESTO: las maquetas no definen una sombra medible]; fuentes externas.
+* **Verificación obligatoria:** `npm run lint:primeng` incorpora, desde la HU-036, reglas contra literales de color y clases de paleta fuera de los archivos permitidos; la HU-036 incluye además pruebas de que el cambio de modo conmuta la clase `app-dark` y persiste la elección.
+* **Gobernanza:** cualquier cambio de paleta, radios o modo oscuro exige una nueva enmienda de esta sección; ninguna HU puede alterarlos por su cuenta.
 
 ### 🧩 Patrón Obligatorio de Formularios PrimeNG 22 (Form Pattern)
 Aplica a TODO formulario o diálogo con campos en `app/frontend`, sin excepción. Verificado contra `primeng@22.1.2` instalado. Los agentes que implementen frontend (`dev-frontend`, `speckit-implement`) DEBEN seguirlo literalmente; no se reconstruye de memoria.
