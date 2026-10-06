@@ -1,6 +1,10 @@
-import { NAV_ITEMS, resolveActiveModule } from './layout-nav';
+import { ACTIVE_NAV_CLASS, NAV_ITEMS, resolveActiveModule } from './layout-nav';
 
 describe('layout-nav', () => {
+  it('ACTIVE_NAV_CLASS_DebeUsarSoloTokensDeSuperficieConVarianteOscura', () => {
+    expect(ACTIVE_NAV_CLASS.split(' ').sort()).toEqual(['bg-surface-200', 'dark:bg-surface-700', 'font-semibold']);
+  });
+
   it('NAV_ITEMS_DebeExponerExactamenteTresModulos', () => {
     expect(NAV_ITEMS.map((i) => [i.id, i.routerLink])).toEqual([
       ['backlog', '/backlog/nuevo'],

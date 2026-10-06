@@ -1767,3 +1767,53 @@ Puedes responder con la letra de la opción (por ejemplo, "A"), aceptar la recom
 - **Estado:** APPROVE
 - **Feedback:** Opción B.
 - **Handoff:** @QT: El humano APROBÓ la Opción B. Queda autorizado a aplicar en .specify/memory/constitution.md, sección Theme Visual, punto Contraste, EXACTAMENTE el texto propuesto en la sección 4 (punto 2) de documents/qa-tech/feedback_tech_036_theming_claro_oscuro_ui.md, sin reformularlo ni ampliarlo. Cita como respaldo: aprobación H-01 y H-04 opción A (06-10-2026) para las excepciones E-01 a E-09, y esta aprobación humana (06-10-2026) para las utilidades text-color y sr-only. Esta autorización cubre solo esa edición; no modifiques nada más de la Constitución ni de specs/README.md. Tras aplicarla, ejecuta la re-auditoría y, si no quedan hallazgos, apruébala y compila el tech-design.
+
+### [06-10-2026] QA Tech
+- **Hora:** 10:58:00
+- **Artefacto generado:** `documents/qa-tech/tech-design_036_theming_claro_oscuro_ui.md`
+- **Estado:** Re-auditoría 3 de la HU 036 con dictamen APROBADO (0 hallazgos críticos, 8 advertencias vinculantes y 2 sugerencias en la sección 7.4). Tasks.md y contracts/lint-gobernanza.md verificados en disco con el diseño corregido. Por autorización humana expresa (Opción B, respaldo H-01 y H-04 opción A del 06-10-2026) se aplicó en constitution.md, Theme Visual, punto Contraste, el texto exacto propuesto: ratificación de E-01 a E-09 y de las utilidades text-color y sr-only. Sin más cambios en la Constitución. Compilado el tech-design con 14 ADR (12 del solutions-architect, 2 del data-architect, sin API) y 3 diagramas archify más Mermaid (9/9 checks). HU solo frontend.
+- **⚠️ Puntos Abiertos:** specs/README.md no se modificó por restricción expresa de la autorización humana; el paso de la HU 036 a READY-FOR-DEV queda pendiente de instrucción. Verificación manual obligatoria en Fase D: barra a 768 px, ausencia de destello con modo oscuro guardado y diálogos y toast en ambos modos.
+- **Handoff:** @DEV-FRONT: La arquitectura técnica ha sido validada. Inicia la implementación del Frontend.
+
+### [06-10-2026] WATCHER
+- **Hora:** 11:25:17
+- **Mensaje:** ⚡ [SDD Auto-Runner] Ejecutando implementación Backend (/speckit.implement)...
+
+### [06-10-2026] Senior Backend Developer
+- **Hora:** 11:26:04
+- **Artefacto generado:** `documents/dev-backend/backend-architecture.md`
+- **Estado:** Implementación backend finalizada exitosamente mediante SDD SpecKit.
+- **Handoff:** @DEV-FRONT: Inicia implementación frontend.
+
+### [06-10-2026] WATCHER
+- **Hora:** 11:26:04
+- **Mensaje:** ⚡ [SDD Auto-Runner] Ejecutando implementación Frontend (/speckit.implement)...
+
+### [06-10-2026] WATCHER
+- **Hora:** 11:34:18
+- **Mensaje:** 🚨 ERROR en /speckit-implement (código 1): You've hit your session limit · resets 2:30pm (America/Lima)
+- 
+### [06-10-2026] HUMANO
+- **Hora:** 14:35:00
+- **Estado:** APPROVE
+- **Handoff:** @DEV-FRONT: La arquitectura técnica ha sido validada. Reanuda la implementación del Frontend, que se interrumpió por límite de sesión; continúa desde las tareas pendientes de tasks.md.
+### [06-10-2026] WATCHER
+- **Hora:** 15:01:37
+- **Mensaje:** ⚡ [SDD Auto-Runner] Ejecutando implementación Backend (/speckit.implement)...
+
+### [06-10-2026] WATCHER
+- **Hora:** 15:02:30
+- **Mensaje:** @WATCHER: 🚨 ERROR: SpecKit omitió la documentación viva de Backend en 'documents/dev-backend/backend-architecture.md'. Salida de Claude:  no alteraron ninguna de sus secciones, así que no lo modifiqué. - **Pruebas:** no ejecuté pruebas de backend, porque no cambió nada ahí. - **Tracker y Git:** no escribí en `tracker_bmad.md`, no emití handoffs y no usé comandos de Git.  Las tareas de HU-036 siguen pendientes para el agente frontend.
+
+### [06-10-2026] HUMANO
+- **Hora:** 15:07:45
+- **Estado:** APPROVE
+- **Handoff:** @DEV-FRONT: La arquitectura técnica ha sido validada. Reanuda la implementación del Frontend: T040 de tasks.md fue reformulada para que el watcher omita el backend (esta HU no lo modifica); continúa desde las tareas pendientes.
+
+### [06-10-2026] WATCHER
+- **Hora:** 15:07:45
+- **Mensaje:** ⏭️ [SDD Auto-Runner] Backend sin tareas pendientes en tasks.md; se omite y se continúa con Frontend.
+
+### [06-10-2026] WATCHER
+- **Hora:** 15:07:45
+- **Mensaje:** ⚡ [SDD Auto-Runner] Ejecutando implementación Frontend (/speckit.implement)...

@@ -1,7 +1,7 @@
 # 🏗️ ARQUITECTURA BACKEND VIVA
 
 - **Sistema:** TechWorkHub (Modulith .NET 8, PostgreSQL)
-- **Última actualización:** 2026-10-05 (HU-035 sin cambios de backend, arquitectura vigente; ver sección 15. Último cambio funcional: HU-015, sección 14)
+- **Última actualización:** 2026-10-06 (HU-036 sin cambios de backend, arquitectura vigente; ver sección 16. Antes: HU-035, sección 15. Último cambio funcional: HU-015, sección 14)
 - **HU vigente:** 015 – Relación entre Personas, Roles y Elementos de Trabajo, sobre 012 – Miembros del Equipo y Roles Técnicos, sobre 004 – Asignación de Elementos del Backlog a un Sprint, sobre 003 – Gestión de Sprint de Dos Semanas (Crear y Consultar), sobre 001 – Registro de Elementos en Backlog Multitipo y 002 – Pruebas de Integración contra Keycloak Real
 - **Fuente de verdad:** `specs/003-HU_gestion_sprint_dos_semanas/` (`plan.md`, `data-model.md`, `contracts/sprints-api.openapi.yaml`, `tasks.md`), `documents/qa-tech/tech-design_003_gestion_sprint_dos_semanas.md`, `specs/002-pruebas-integracion-keycloak-catalogo/` y `specs/001-registro-backlog-multitipo/`
 
@@ -711,7 +711,23 @@ flowchart LR
 
 Verificación: no se ejecutaron ni modificaron pruebas de backend; `app/backend/README.md` sigue vigente y no requirió cambios.
 
+## 16. HU-036 — Theming claro/oscuro de la UI (sin cambios de backend)
+
+Fuente: `specs/036-HU_theming_claro_oscuro_ui/` (`tasks.md`, `plan.md`, `contracts/`). Las 45 tareas (T001–T045) afectan solo a `app/frontend/` (preset de tema, `ThemeService`, conmutador del shell, script anti-parpadeo en `index.html`, `lint:primeng`). `tasks.md` prohíbe expresamente tocar `app/backend/`, por lo que con alcance solo backend **no hay tareas que ejecutar** y no se modificó código.
+
+**Arquitectura backend vigente, sin cambios:** módulos `Backlog`, `Application`, `Sprints` y `Teams`, `Shared`, esquemas, migraciones, contratos HTTP y pruebas descritos en las secciones 1–14 siguen siendo válidos. No se añadieron endpoints, tablas, lógica de dominio ni integraciones. La preferencia de tema vive solo en `localStorage` del navegador; no se persiste en el servidor.
+
+```mermaid
+flowchart LR
+    FE[Frontend Angular: tema claro/oscuro, conmutador - HU-036] -->|mismos contratos HTTP + JWT| API[Bootstrapper/Api sin cambios]
+    API --> PG[(PostgreSQL sin cambios)]
+```
+
+Verificación: no se ejecutaron ni modificaron pruebas de backend; `app/backend/README.md` sigue vigente y no requirió cambios.
+
 ## 9. Puntos abiertos
+
+- HU-036: el theming (T001–T045) corresponde al agente frontend; el backend no requiere trabajo.
 
 - HU-035: el esqueleto de UI (T001–T032) corresponde al agente frontend; el backend no requiere trabajo.
 
