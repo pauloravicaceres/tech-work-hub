@@ -43,7 +43,7 @@
             </tr>
           </ng-template>
           <ng-template #body let-assignee>
-            <tr [class.bg-surface-100]="assignee.id === highlightedMemberId()">
+            <tr [class.p-datatable-row-selected]="assignee.id === highlightedMemberId()">
               <td>{{ assignee.id }}</td>
               <td>{{ assignee.name }}</td>
               <td>{{ assignee.role }}</td>

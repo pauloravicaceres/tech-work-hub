@@ -1,35 +1,32 @@
 # Clasificación de retrabajo (iteración 1, origen: QA Automation)
 
-Corregí primero los documentos y después añadí las tareas, sin tocar código, `documents/tracker_bmad.md` ni handoffs.
+## Convergence Findings
 
-## Documentos corregidos
-- **`spec.md` (DEF-02, capa SPEC):**
-  - FR-015 queda reemplazado.
-  - FR-017 define el 409: el elemento ya asignado, la unicidad por índice y la concurrencia.
-  - FR-018 define las estimaciones decimales con `null`, sin redondeo.
-  - US3 gana los escenarios 4 y 5 (409 y concurrencia).
-  - Se retiraron los casos borde "no documentado" y se ajustaron los Assumptions y la entidad.
-- **Artefactos del plan (DEF-01):**
-  - `contracts/backlog-module-api.md` y `data-model.md` pasan a `decimal?`.
-  - `sprint-items-api.openapi.yaml` pasa a `number` nullable.
-  - El resumen de `plan.md` ya no dice que `spec.md` queda pendiente.
-- **Constitución:** no hay ambigüedad que enmendar. Ningún hallazgo la viola.
-- **No encontré el W-01** al buscarlo en el documento del SA (`documents/solutions-architect/004-HU_asignacion_elementos_sprint.md`), así que no lo verifiqué. Me basé en tu informe y en que `BacklogItem` ya usa `decimal?`.
+| ID | Gap Type | Severity | Source | Evidence | Remaining Work |
+|----|----------|----------|--------|----------|----------------|
+| DEF-01 | missing | HIGH | FR-020, SC-007, US6/AC3, US6/AC5 | T041 y T042 siguen `[ ]`. `evidence/` solo contiene `.gitkeep`. | Validación manual y 6 capturas a 1920 px |
 
-## `tasks.md`
-- **Reabiertas por no cumplirse:** T005, T015, T036 y T041.
-- **Nueva Phase 9 (T055–T062):** son las 8 tareas de la tabla.
-- **Sin tarea de corrección:** T051 y T052 siguen abiertas. Las bloquea el entorno (Node v22.20.0 frente a Angular CLI ≥ 22.22.3), no el código. Tampoco abrí tarea para Identity.IntegrationTests, que falla por Keycloak/Docker y es ajeno a la HU-004.
+Los demás hallazgos del informe de `/speckit-analyze` (C3, A1, D1, K1) no requieren acción o dependen de una enmienda de la constitución.
+
+**Métricas:**
+- Requisitos revisados: 20 FR y 7 SC.
+- Constitución: sin violaciones.
+- Hallazgos: 1 de tipo `missing`, severidad HIGH.
+- Capas: ningún hallazgo SPEC ni PLAN, así que `spec.md` y `plan.md` quedan intactos.
+- T041 y T042 ya estaban desmarcados, así que no hubo tareas que desmarcar.
+
+## Para enmendar con `/speckit-constitution`
+
+No lo reinterpreto. Hay que ratificar `#007595` (modo claro), el borde ADR-012 y los radios `0.75rem` y `0.5rem` (A1, I4, U1).
+
+## Resultado
+
+Añadí la **Fase 10: Convergence** al final de `tasks.md` con la tarea **T046**. No toqué `tracker_bmad.md` y no emití handoffs. El comando de verificación no mostró salida útil, así que no pude confirmar el contenido final de `tasks.md` tras escribir.
 
 | Hallazgo | Capa | Tarea |
-|---|---|---|
-| DEF-01: contrato `BacklogItemSummary` en `int` | TASKS | T055 (servidor) |
-| DEF-01: `ToWholePoints` redondea 2.5 y convierte QA nulo en 0 | TASKS | T056 (servidor) |
-| DEF-01: `SprintItemResponse` en `int` y revalidación de las 2 pruebas rojas | TASKS | T057 (servidor) |
-| DEF-01: sin prueba de contrato con 2.5 y nulo | TASKS | T058 (servidor) |
-| DEF-01: modelo TS sin nulo | TASKS | T059 (interfaz) |
-| DEF-01: sin guion para nulo en la vista | TASKS | T060 (interfaz) |
-| DEF-02: pruebas del 409 sin trazabilidad a FR-017 | SPEC | T061 (servidor) |
-| DEF-02: quickstart y cobertura sin FR-017 y FR-018, y nuevo `/speckit-analyze` | SPEC | T062 (servidor) |
+|----------|------|-------|
+| DEF-01 | TASKS | T046 `[fix:TASKS:DEF-01]` (interfaz) |
 
-**Siguiente paso:** `/speckit-implement` sobre T055–T062.
+T046 pide validar `quickstart.md` §3–§5 y guardar las 6 capturas en `evidence/`. Después marcar T041 y T042.
+
+Sigue pendiente `/speckit-implement` en un entorno con la pila levantada: backend, Keycloak y `npm start`. Sin las capturas el caso no pasa a Code Review.

@@ -50,3 +50,13 @@ git diff --stat -- app/backend app/template-primeng specs/evidences
 ```
 
 **Esperado**: vacío. En `app/frontend/src/app/features/**` solo cambian las dos líneas de ADR-010.
+
+## Puntos abiertos
+
+No bloquean la implementación; requieren decisión humana (research R-10):
+
+1. Ratificar en la Constitución las excepciones de contraste E-03..E-09 y el color de enlace `#007595` (hoy solo figuran E-01 y E-02).
+2. Confirmar el borde de campo de formulario ≥ 3:1 (ADR-012), que se aparta del wireframe.
+3. Confirmar las utilidades `text-color` y `sr-only`, no listadas en la enmienda "Theme Visual (HU-036)".
+4. Confirmar el fondo de campo en modo oscuro `#1e2939`.
+5. Pendientes de entorno: verificación manual (T041) y las 6 capturas de evidencia (T042) exigen app, backend y Keycloak en ejecución.

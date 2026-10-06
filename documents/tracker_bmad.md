@@ -1817,3 +1817,60 @@ Puedes responder con la letra de la opción (por ejemplo, "A"), aceptar la recom
 ### [06-10-2026] WATCHER
 - **Hora:** 15:07:45
 - **Mensaje:** ⚡ [SDD Auto-Runner] Ejecutando implementación Frontend (/speckit.implement)...
+
+### [06-10-2026] HUMANO
+- **Hora:** 16:36:21
+- **Estado:** APPROVE
+- **Handoff:** @DEV-FRONT: La arquitectura técnica ha sido validada. Reanuda la implementación del Frontend: el proceso anterior se interrumpió al reiniciar el watcher; continúa desde las tareas pendientes de tasks.md (0 de 45 marcadas; hay código parcial ya confirmado en la rama feat/036-HU_theming_claro_oscuro_ui).
+
+### [06-10-2026] WATCHER
+- **Hora:** 16:36:23
+- **Mensaje:** ⏭️ [SDD Auto-Runner] Backend sin tareas pendientes en tasks.md; se omite y se continúa con Frontend.
+
+### [06-10-2026] WATCHER
+- **Hora:** 16:36:23
+- **Mensaje:** ⚡ [SDD Auto-Runner] Ejecutando implementación Frontend (/speckit.implement)...
+
+### [06-10-2026] Senior Frontend Developer
+- **Hora:** 16:41:14
+- **Artefacto generado:** `documents/dev-frontend/frontend-architecture.md`
+- **Estado:** Implementación frontend finalizada exitosamente mediante SDD SpecKit.
+- **Handoff:** @QA-AUTO: La Fase D (Implementación) ha finalizado exitosamente mediante motor SDD. Inicia el diseño de la matriz de pruebas automatizadas basándote en los criterios de la HU; al terminar, deriva a Code Review.
+
+
+### [06-10-2026] QA Automation
+- **Hora:** 16:47:30
+- **Artefacto generado:** `documents/qa-auto/qa-report.md`
+- **Estado:** [RECHAZADO] Pruebas HU-036 en verde: Jest 417/417 (50 nuevas QA en `app/frontend/src/app/core/theme/theme.qa.spec.ts` y `app/frontend/src/app/core/layout/layout.theme.qa.spec.ts`), lint:primeng sin violaciones, ng build OK. Commit local test(theme) [TASK-036-QA-01]. DEF-01 [CAPA:TASKS] T041 y T042 siguen sin marcar en tasks.md y `specs/036-HU_theming_claro_oscuro_ui/evidence/` solo tiene .gitkeep: faltan las 6 capturas a 1920 px (FR-020, US6 CA3 y CA5, SC-007) y la validación manual del quickstart.
+- **⚠️ Puntos Abiertos:** Ninguno.
+- **Handoff:** @DEV-FRONT: Ejecuta T041 y T042 (validación manual y 6 capturas backlog/sprints/equipo en claro y oscuro a 1920 px en la carpeta evidence) y devuelve el turno a QA para revalidar; sin ellas no pasa a Code Review.
+
+### [06-10-2026] WATCHER
+- **Hora:** 16:46:44
+- **Mensaje:** 🔁 [SDD Retrabajo] Iteración 1/2 (origen: QA Automation). Reconciliando spec, plan y tasks (/speckit-converge)...
+
+### [06-10-2026] WATCHER
+- **Hora:** 16:48:22
+- **Mensaje:** ⚡ [SDD Auto-Runner] Ejecutando implementación Frontend (/speckit.implement)...
+
+### [06-10-2026] Senior Frontend Developer
+- **Hora:** 16:54:27
+- **Artefacto generado:** `documents/dev-frontend/frontend-architecture.md`
+- **Estado:** Implementación frontend finalizada exitosamente mediante SDD SpecKit.
+- **Handoff:** @QA-AUTO: Retrabajo 1/2 aplicado sobre los hallazgos de QA Automation. Revalida la HU. Ejecuta y valida las pruebas y, al aprobar, deriva a Code Review.
+
+
+### [06-10-2026] QA Automation
+- **Hora:** 16:56:11
+- **Artefacto generado:** `documents/qa-auto/qa-report.md`
+- **Estado:** [APROBADO] Revalidación tras retrabajo 1/2: Jest 417/417, lint:primeng sin violaciones, ng build OK, tasks.md sin pendientes y 6 capturas 1920x1080 en evidence. DEF-01 corregido. Commit local test(theme) [TASK-036-QA-02].
+- **⚠️ Puntos Abiertos:** Ninguno.
+- **Handoff:** @CODE-REVIEW: HU-036 aprobada por QA Automation; revisa el código de theming (core/theme, core/layout) y las pruebas QA.
+
+### [06-10-2026] Code Review
+- **Hora:** 17:02:10
+- **Artefacto generado:** `documents/code-review/impact-analysis-report.md`
+- **Estado:** [APROBADO] - Lectura física completada: 9 archivos de producción (theme.service.ts, app-theme.ts, contrast.ts, theme-token-resolver.ts, layout.component.ts/html, layout-nav.ts, app.config.ts, index.html) más 2 plantillas de features y 2 specs QA. Lex Superior y VSA verificados: standalone, OnPush, signals, sin effect(), sin NgModule, colores literales solo en app-theme.ts. SecOps: sin innerHTML ni bypassSecurityTrust, almacenamiento en try/catch, backend sin cambios. Pruebas ejecutadas por Code Review: Jest 31 suites 417/417, lint:primeng sin violaciones, ng build OK; specs QA no tautológicas; 6 capturas presentes. Reserva no bloqueante [CAPA:CODE] layout.component.html:47 borde del aside sin utilidad de ancho.
+- **⚠️ Puntos Abiertos:** Ninguno bloqueante; quedan por ratificar en la Constitución E-03..E-09, #007595, borde de campo y fondo de campo oscuro (T045).
+@WATCHER: GITOPS-MERGE-CLOSE feat/036-HU_theming_claro_oscuro_ui
+- **Handoff:** @PM: Código certificado y rama consolidada en dev. Revisa el plan del PM contra el ledger: las épicas P1 a P6 tienen historias propuestas pendientes; asigna la siguiente historia del backlog.

@@ -121,6 +121,12 @@ describe('ItemAssigneesViewComponent', () => {
     http.expectOne(ASSIGNEES_URL).flush(ASSIGNEES);
     expect(component.state()).toEqual({ status: 'ready', assignees: ASSIGNEES });
     expect(component.highlightedMemberId()).toBe(ASSIGNEES[1].id);
+    fixture.detectChanges();
+    const rows = Array.from((fixture.nativeElement as HTMLElement).querySelectorAll('tbody tr'));
+    const highlighted = rows.filter((row) => row.classList.contains('p-datatable-row-selected'));
+    expect(highlighted).toHaveLength(1);
+    expect(highlighted[0].textContent).toContain('Luis Rojas');
+    expect(rows.some((row) => row.classList.contains('bg-surface-100'))).toBe(false);
   });
 
   it('onAssigned_ConOtroElemento_DebeSeleccionarloYConsultarSusResponsables', () => {
