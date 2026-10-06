@@ -9,7 +9,8 @@ import { Menubar } from 'primeng/menubar';
 import { Message } from 'primeng/message';
 import { filter, map } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
-import { NAV_ITEMS, resolveActiveModule } from './layout-nav';
+import { ThemeService } from '../theme/theme.service';
+import { ACTIVE_NAV_CLASS, NAV_ITEMS, resolveActiveModule } from './layout-nav';
 import { LAYOUT_TEXTS } from './layout.texts';
 import { ViewportService } from './viewport.service';
 
@@ -40,8 +41,12 @@ export class LayoutComponent {
 
   /** Entradas del menú con la del módulo activo resaltada. */
   protected readonly navItems = computed<MenuItem[]>(() =>
-    NAV_ITEMS.map((item) => ({ ...item, styleClass: item.id === this.activeModule() ? 'font-semibold' : undefined })),
+    NAV_ITEMS.map((item) => ({ ...item, styleClass: item.id === this.activeModule() ? ACTIVE_NAV_CLASS : undefined })),
   );
+
+  protected readonly theme = inject(ThemeService);
+  /** Anuncio para lectores de pantalla; vacío hasta que el usuario activa el conmutador. */
+  protected readonly themeAnnouncement = signal('');
 
   /** Se reinicia a `isWide` al cruzar el umbral de ancho; sin persistencia (ADR-005). */
   protected readonly navOpen = linkedSignal(() => this.viewport.isWide());
@@ -62,6 +67,11 @@ export class LayoutComponent {
     } catch {
       this.logoutFailed.set(true);
     }
+  }
+
+  protected onThemeToggle(): void {
+    this.theme.toggle();
+    this.themeAnnouncement.set(this.theme.mode() === 'dark' ? LAYOUT_TEXTS.theme.announcedDark : LAYOUT_TEXTS.theme.announcedLight);
   }
 
   protected toggleNav(): void {

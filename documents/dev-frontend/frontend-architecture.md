@@ -472,3 +472,54 @@ sequenceDiagram
 - **Contrato de extensión (FR-015):** una pantalla nueva se agrega como hija del shell en `app.routes.ts` y, si es un módulo, como una entrada más de `NAV_ITEMS`; no declara `max-w-*`, `mx-auto` ni padding de página.
 - **Verificación:** `npm test` 180/180 en verde (21 suites), `npm run build` correcto, `npm run lint:primeng` sin violaciones (y probado que una segunda `font-family` o un `::ng-deep` lo hacen fallar). **Pendiente (requiere app, backend y Keycloak en ejecución):** verificación manual a 768/1920 px (T021, T031), las 6 capturas de `specs/035-HU_refactorizacion_esqueleto_ui/evidence/` (T029) y la gestión real de foco del `p-drawer` (la implementación fuerza foco con `onShow`/`onHide`, sin prueba automatizada).
 - **Puntos abiertos:** umbral de 1024 px sin confirmación del humano (un único valor en `ViewportService`); la regex del lint no distingue `font-family` dentro de cadenas.
+
+### HU-036 — Theming claro/oscuro (speckit-implement, 2026-10-06)
+- **Alcance:** solo presentación (`app/frontend`). Sin cambios en backend, rutas ni `core/auth`. Esta ejecución cerró la limpieza ADR-010 (T037–T039) sobre el trabajo de tema ya presente (T001–T036); la arquitectura de tema descrita abajo es la vigente.
+- **Decisión (ADR-001..012 del Tech Design):** `appThemePreset` (`definePreset(Aura, …)`) en `core/theme/app-theme.ts` es la única fuente de colores y radios; declara escalas `cyan`/`red`/`surface` explícitas (valores de Tailwind v4, no los de Aura). `providePrimeNG` usa `darkModeSelector: '.app-dark'` y conserva `cssLayer`. `styles.css` añade solo `@custom-variant dark`.
+
+```mermaid
+flowchart TD
+    HTML["index.html: script síncrono + meta color-scheme"] -- "app-dark + colorScheme antes del primer pintado" --> Root["html"]
+    Init["provideAppInitializer(ThemeService) antes de AuthService"] --> TS["ThemeService"]
+    TS -- "apply()" --> Root
+    LS[("localStorage app-theme-mode")] <--> TS
+    MM["matchMedia prefers-color-scheme"] --> TS
+    Preset["appThemePreset (app-theme.ts)"] --> PNG["providePrimeNG darkModeSelector .app-dark"]
+    Root --> PNG
+    Root --> TW["Tailwind variant dark: (.app-dark)"]
+    Layout["LayoutComponent: p-button conmutador + role=status sr-only"] -- "toggle()" --> TS
+```
+
+```mermaid
+sequenceDiagram
+    actor U as Usuario
+    participant L as LayoutComponent
+    participant T as ThemeService
+    participant D as html
+    U->>L: Activa el conmutador (#end del menubar)
+    L->>T: toggle()
+    T->>T: choice = modo contrario; setItem en try/catch
+    T->>D: classList.toggle('app-dark') + style.colorScheme (síncrono)
+    L->>L: themeAnnouncement = announcedDark | announcedLight
+```
+
+- **Estado (signals):** `choice` (`'light'|'dark'|null`), `systemDark`, `mode = computed(choice ?? sistema)`. Valor inválido o almacenamiento inaccesible ⇒ modo del sistema, sin error. El listener de `matchMedia` se libera con `DestroyRef` y se ignora con elección válida.
+- **Shell:** superficies solo con tokens semánticos y `dark:` (`bg-surface-50 dark:bg-surface-900`, pie y `aside` en `surface-0/800`); entrada activa con `ACTIVE_NAV_CLASS` (`font-semibold bg-surface-200 dark:bg-surface-700`); `main` sigue `max-w-7xl mx-auto p-6`. Textos en `LAYOUT_TEXTS.theme`.
+- **Gobernanza:** `scripts/lint-primeng.mjs` añade `LINT_ROOT` y reglas 1–5 (literales de color, clases de paleta, color inline, CSS/SCSS con color/borde/sombra, utilidades de color/radio fuera de `core/layout`); `lint-gobernanza.spec.ts` las prueba con directorios temporales.
+- **Limpieza ADR-010 (esta ejecución):** `item-assignees-view.component.html` resalta la fila con `[class.p-datatable-row-selected]` (antes `bg-surface-100`); `create-backlog-item.component.html` retira `text-muted-color` del `<small>`. `item-assignees-view.component.spec.ts` asevera la clase y la ausencia de `bg-surface-100`.
+- **Archivos de tema:** `core/theme/{app-theme.ts, theme-token-resolver.ts, contrast.ts, theme.service.ts}` y specs `app-theme`, `app-theme-contrast`, `contrast`, `theme.service`, `index-html`, `lint-gobernanza`.
+- **Verificación:** `npm test` 367/367 (29 suites), `npm run build` correcto, `npm run lint:primeng` sin violaciones; sin cambios en `app/backend`, `app/template-primeng` ni `specs/evidences`. **Pendiente (requiere app, backend y Keycloak en ejecución):** verificación manual de quickstart §3–§5 (T041) y las 6 capturas a 1920 px en `specs/036-HU_theming_claro_oscuro_ui/evidence/` (T042).
+- **Puntos abiertos (humano):** ratificar E-03..E-09 y `#007595` en la Constitución; borde de campo ≥ 3:1 (ADR-012); utilidades `text-color` y `sr-only`; fondo de campo oscuro `#1e2939`.
+
+## 7. Validación manual HU-036 (T041/T042/T046)
+
+Sin cambios de código ni de arquitectura: la arquitectura descrita arriba sigue vigente. Se ejecutó la validación manual del theming claro/oscuro contra la app real y se guardaron las 6 capturas a 1920×1080 en `specs/036-HU_theming_claro_oscuro_ui/evidence/`.
+
+```mermaid
+flowchart LR
+  A[Conmutador en shell] --> B[AppTheme: clase app-dark en html]
+  B --> C[(localStorage app-theme-mode)]
+  C -->|valor inválido o ausente| D[preferencia del sistema]
+```
+
+Resultados verificados: cambio sin recarga ni pérdida de datos del formulario; persistencia tras recarga y navegación; valor inválido en `app-theme-mode` cae al modo del sistema sin errores; barra superior sin desborde a 768 px.

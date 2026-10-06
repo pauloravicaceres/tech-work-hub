@@ -169,4 +169,106 @@ describe('LayoutComponent', () => {
     expect(root.querySelectorAll('.max-w-7xl').length).toBe(1);
     expect(contenedor?.querySelector('router-outlet')).not.toBeNull();
   });
+
+  // HU-036 — superficies del shell con tokens semánticos y variante `dark:`.
+  describe('superficies del tema (HU-036)', () => {
+    const clases = (el: Element | null) => (el?.className ?? '').trim().split(/\s+/);
+
+    it('LaRaizPintaFondoDePaginaYTextoConTokens', async () => {
+      const { root } = await render();
+
+      const raiz = root.querySelector('div.min-h-screen');
+      expect(clases(raiz)).toEqual(
+        expect.arrayContaining(['bg-surface-50', 'dark:bg-surface-900', 'text-color']),
+      );
+    });
+
+    it('ElPieYElAsideUsanSuperficieDeTarjetaYBorde', async () => {
+      const { q } = await render();
+
+      expect(clases(q('footer'))).toEqual(
+        expect.arrayContaining(['p-4', 'text-center', 'bg-surface-0', 'dark:bg-surface-800', 'border-t', 'border-surface-200', 'dark:border-surface-700', 'text-muted-color']),
+      );
+      expect(clases(q('aside'))).toEqual(
+        expect.arrayContaining(['bg-surface-0', 'dark:bg-surface-800', 'border-surface-200', 'dark:border-surface-700']),
+      );
+    });
+
+    it('SoloLaEntradaDelModuloActualLlevaElFondoActivo', async () => {
+      const { root } = await render('/sprints');
+
+      const activas = Array.from(root.querySelectorAll('nav li[role="menuitem"]')).filter((li) =>
+        li.classList.contains('bg-surface-200'),
+      );
+      expect(activas.length).toBe(1);
+      expect(activas[0].textContent).toContain(LAYOUT_TEXTS.nav.sprints);
+      expect(clases(activas[0])).toEqual(expect.arrayContaining(['font-semibold', 'dark:bg-surface-700']));
+    });
+  });
+
+  // HU-036 — conmutador claro/oscuro en la barra superior.
+  describe('conmutador de tema (HU-036)', () => {
+    beforeEach(() => {
+      localStorage.clear();
+      document.documentElement.classList.remove('app-dark');
+    });
+
+    const boton = (root: HTMLElement) =>
+      root.querySelector<HTMLButtonElement>(
+        `header button[aria-label="${LAYOUT_TEXTS.theme.toDark}"], header button[aria-label="${LAYOUT_TEXTS.theme.toLight}"]`,
+      );
+
+    it('MuestraLunaConEtiquetaAModoOscuroEnModoClaroSinAriaPressed', async () => {
+      const { root } = await render();
+
+      const b = boton(root);
+      expect(b?.getAttribute('aria-label')).toBe(LAYOUT_TEXTS.theme.toDark);
+      expect(b?.querySelector('.pi-moon')).not.toBeNull();
+      expect(b?.hasAttribute('aria-pressed')).toBe(false);
+    });
+
+    it('SeUbicaAntesDelBloqueDePerfil', async () => {
+      const { root } = await render();
+
+      const b = boton(root) as HTMLElement;
+      const perfil = root.querySelector('header .pi-user') as HTMLElement;
+      expect(b.compareDocumentPosition(perfil) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    });
+
+    it('LaRegionDeEstadoIniciaVaciaYAnunciaSoloTrasActivar', async () => {
+      const { harness, root } = await render();
+      const region = root.querySelector<HTMLElement>('[role="status"].sr-only');
+      expect(region?.textContent?.trim()).toBe('');
+
+      boton(root)?.click();
+      harness.detectChanges();
+
+      expect(region?.textContent).toContain(LAYOUT_TEXTS.theme.announcedDark);
+      expect(boton(root)?.getAttribute('aria-label')).toBe(LAYOUT_TEXTS.theme.toLight);
+      expect(boton(root)?.querySelector('.pi-sun')).not.toBeNull();
+      expect(document.documentElement.classList.contains('app-dark')).toBe(true);
+
+      boton(root)?.click();
+      harness.detectChanges();
+
+      expect(region?.textContent).toContain(LAYOUT_TEXTS.theme.announcedLight);
+      expect(document.documentElement.classList.contains('app-dark')).toBe(false);
+    });
+
+    it('ActivarloNoRemontaElOutletNiBorraLoEscrito', async () => {
+      const { harness, root } = await render();
+      const main = root.querySelector('main') as HTMLElement;
+      const outlet = main.querySelector('router-outlet');
+      const input = document.createElement('input');
+      input.value = 'borrador';
+      main.appendChild(input);
+
+      boton(root)?.click();
+      harness.detectChanges();
+
+      expect(root.querySelector('main')).toBe(main);
+      expect(main.querySelector('router-outlet')).toBe(outlet);
+      expect(main.querySelector('input')?.value).toBe('borrador');
+    });
+  });
 });

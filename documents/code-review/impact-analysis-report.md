@@ -1,15 +1,49 @@
 # 🏗️ Reporte de Impacto y Code Review Vivo (`impact-analysis-report.md`)
 
-**HU vigente:** 035-HU_refactorizacion_esqueleto_ui · **Rama:** `feat/035-HU_refactorizacion_esqueleto_ui`
-**Fecha:** 05-10-2026 · **Dictamen (1.ª revisión de código HU-035):** ✅ **[APROBADO]** con deuda aceptada por el humano (05-10-2026): capturas restantes de T029, T021 y T031 exentas; código y suites conformes.
-**HUs anteriores:** 015 ([APROBADO] con reservas), 012, 004, 003, 002 y 001; sus secciones se conservan abajo como histórico.
+**HU vigente:** 036-HU_theming_claro_oscuro_ui · **Rama:** `feat/036-HU_theming_claro_oscuro_ui`
+**Fecha:** 06-10-2026 · **Dictamen (HU-036):** ✅ **[APROBADO]** (1 reserva cosmética no bloqueante).
+**HUs anteriores:** 035 ([APROBADO] con deuda), 015, 012, 004, 003, 002 y 001; sus secciones se conservan abajo como histórico.
 
 > Renderizado selectivo: solo se documenta lo alterado por la HU-035 (solo frontend, FR-012): `core/layout/*` (nuevo), `app.routes.ts`, `core/auth/auth.service.ts` (aditivo), `styles.css`, `scripts/lint-primeng.mjs`. `app/backend`, `features/**`, `app/template-primeng`: *Sin impacto en este PR/HU* (`git diff --stat` vacío).
 ---
 
 ## 1. AI Code Review Dashboard
 
-### 1.00000 HU-035 — Refactorización del esqueleto UI (vigente)
+### 1.000000 HU-036 — Theming claro/oscuro (vigente)
+
+```text
+┌──────────────── CODE REVIEW HU-036 · [APROBADO] ──────────────────────────┐
+│ Archivos analizados (lectura física)     : 9 prod (core/theme, layout,     │
+│                                            app.config, index.html, 2 html) │
+│                                            + 2 specs QA + tasks.md         │
+│ Violaciones arquitectónicas              : 0                              │
+│ Problemas de seguridad/calidad           : 0 bloqueantes · 1 reserva      │
+│ Deuda técnica                            : baja (puntos R-10 por ratificar)│
+│ Cobertura de tests faltante              : 0 (Jest 417/417 · 6 capturas)  │
+└───────────────────────────────────────────────────────────────────────────┘
+```
+
+| Regla | Resultado |
+|---|---|
+| Standalone + OnPush + signals (`signal`, `computed`); sin NgModule, zone.js ni `.subscribe` manual | ✅ |
+| `ThemeService`: modo sin `effect()`, `apply()` síncrono; `matchMedia` liberado con `DestroyRef` | ✅ |
+| Almacenamiento: `getItem`/`setItem` en `try/catch`, valor inválido ignorado sin borrarse | ✅ |
+| XSS: sin `innerHTML` ni `bypassSecurityTrust*`; script de `index.html` clásico, sin `eval` ni colores | ✅ |
+| Colores literales solo en `core/theme/app-theme.ts`; sin `::ng-deep`/`!important`/TODO/FIXME | ✅ |
+| Backend/BD/IDOR/CancellationToken/N+1: no aplica (`git diff --stat` de backend, `template-primeng`, `specs/evidences` vacío) | ✅ |
+| `features/**`: solo T037 (`p-datatable-row-selected`) y T038 (retira `text-muted-color`) | ✅ |
+| Jest ejecutado por Code Review: 31 suites, 417/417 | ✅ |
+| `npm run lint:primeng` y `npm run build` ejecutados por Code Review | ✅ sin violaciones / build OK |
+| QA: `theme.qa.spec.ts` y `layout.theme.qa.spec.ts` adversariales (valores inválidos, almacenamiento bloqueado, sistema vs. elección, contraste E-01..E-09, gobernanza sobre código real); no tautológicos | ✅ |
+| FR-020/SC-007: 6 capturas en `specs/036-.../evidence/` y T041/T042/T046 marcadas | ✅ |
+
+#### Reserva (no bloqueante)
+1. `[CAPA:CODE]` `layout.component.html:47`: el `<aside>` declara `border-surface-200 dark:border-surface-700` sin utilidad de ancho de borde, por lo que el color no se aplica. Cosmético; corregir en una HU de UI futura.
+
+#### Puntos abiertos heredados (T045, no bloquean)
+Ratificar E-03..E-09, `#007595`, borde de campo ≥ 3:1 (ADR-012) y fondo de campo oscuro `#1e2939` en la Constitución (`/speckit-constitution`).
+
+### 1.00000 HU-035 — Refactorización del esqueleto UI (histórico)
 
 ```text
 ┌──────────────── CODE REVIEW HU-035 · [APROBADO c/ deuda] ─────────────────┐
@@ -391,7 +425,24 @@ Evidencia: `documents/qa-auto/qa-report.md` (cuarta ejecución, T043) más lectu
 
 ## 2. Architecture Compliance & Traceability
 
-### 2.00000 HU-035 — Flujo real implementado (solo lo alterado, vigente)
+### 2.000000 HU-036 — Flujo real implementado (solo lo alterado, vigente)
+
+```mermaid
+flowchart LR
+  IH[index.html · script anti-parpadeo] --> DOM[html.app-dark + color-scheme]
+  AC[app.config.ts · initializer + darkModeSelector] --> TS[ThemeService]
+  AC --> PRE[appThemePreset · app-theme.ts]
+  L[LayoutComponent · conmutador] --> TS
+  TS --> LS[(localStorage app-theme-mode)]
+  TS --> MM[matchMedia prefers-color-scheme]
+  TS --> DOM
+  PRE --> PNG[PrimeNG tokens claro/oscuro]
+  DOM --> PNG
+```
+
+Sin saltos de capa: el shell solo consume `ThemeService` (core); los colores salen únicamente del preset y `features/**` solo cambió en dos plantillas (ADR-010).
+
+### 2.00000 HU-035 — Flujo real implementado (solo lo alterado, histórico)
 
 ```mermaid
 flowchart LR
@@ -574,7 +625,36 @@ flowchart LR
 
 ## 3. Change Impact Diagram
 
-### 3.00000 HU-035 — Impacto de los cambios y cobertura (vigente)
+### 3.000000 HU-036 — Impacto de los cambios y cobertura (vigente)
+
+```mermaid
+flowchart LR
+  subgraph Cambios
+    A[app-theme.ts preset]:::ok
+    B[contrast.ts]:::ok
+    C[ThemeService]:::ok
+    D[LayoutComponent + layout-nav + texts]:::ok
+    E[index.html anti-parpadeo]:::ok
+    F[app.config.ts]:::ok
+    G[lint-primeng.mjs]:::ok
+    H[item-assignees-view + create-backlog-item html]:::ok
+    I[Evidencia 6 capturas]:::ok
+  end
+  A --- T1[app-theme.spec + app-theme-contrast.spec]
+  B --- T2[contrast.spec + theme.qa.spec]
+  C --- T3[theme.service.spec + theme.qa.spec]
+  D --- T4[layout.component.spec + layout-nav.spec + layout.theme.qa.spec]
+  E --- T5[index-html.spec]
+  G --- T6[lint-gobernanza.spec + lint:primeng]
+  H --- T7[item-assignees-view.spec]
+  F -.- T8[cubierto indirectamente por ThemeService y build]
+  I --- T9[evidence/*.png]
+  classDef ok fill:#d4edda,stroke:#28a745
+```
+
+Todo componente alterado tiene pruebas; `app.config.ts` queda cubierto de forma indirecta (build y specs del servicio).
+
+### 3.00000 HU-035 — Impacto de los cambios y cobertura (histórico)
 
 ```mermaid
 flowchart LR
@@ -856,7 +936,24 @@ Componentes de #16..#19 sin cobertura: 4 de 4. Resto de la HU (cierre de DEF-01.
 
 ## 4. Dependency / Coupling Graph
 
-### 4.00000 HU-035 (vigente)
+### 4.000000 HU-036 (vigente)
+
+```mermaid
+flowchart LR
+  LC[LayoutComponent] --> TS[ThemeService]
+  LC --> LT[LAYOUT_TEXTS]
+  LC --> LN[layout-nav]
+  AC[app.config.ts] --> TS
+  AC --> PRE[app-theme.ts]
+  PRE -.-> AUR[@primeuix/themes Aura]
+  TR[theme-token-resolver · solo specs] --> PRE
+  TR --> CT[contrast.ts]
+  TS -.-> BR[localStorage · matchMedia]
+```
+
+Sin ciclos. `theme-token-resolver` y `contrast` solo los usan las specs; el único acoplamiento a infraestructura externa de `ThemeService` es el navegador.
+
+### 4.00000 HU-035 (histórico)
 
 ```mermaid
 flowchart LR

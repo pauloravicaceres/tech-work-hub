@@ -1,11 +1,97 @@
 # QA Report — Calidad y Trazabilidad Viva
 
-> Última actualización: 05-10-2026 · Iteración: **HU-035 Refactorización de Esqueleto UI** · Agente: QA-AUTO
+> Última actualización: 06-10-2026 · Iteración: **HU-036 Theming claro/oscuro** · Agente: QA-AUTO
 > Áreas no afectadas por esta iteración: _Sin cambios en esta iteración_ (backend, HU-015, HU-012, HU-004, HU-003, HU-002 y HU-001 se conservan sin modificar).
 
 ---
 
-# ▶ Iteración actual: HU-035 (`specs/035-HU_refactorizacion_esqueleto_ui`)
+# ▶ Iteración actual: HU-036 (`specs/036-HU_theming_claro_oscuro_ui`)
+
+Solo frontend (FR-019: sin backend). Barrera Fork-Join: el tracker despacha únicamente a DEV-FRONT (backend omitido por el watcher: sin tareas). Sin `skip`/`xit`. No se modificó código de producción.
+
+## 1. AI QA Review Dashboard (HU-036)
+
+```
+┌──────────────── HU-036 · DICTAMEN: [APROBADO] ───────────────────────────────────────┐
+│ Capa                                       Ejecutados  Pasados  Fallados  Bloqueados │
+│ Jest completo (31 suites, incluye DEV)         417        417       0         0       │
+│ Jest QA-AUTO nuevas (2 suites)                  50         50       0         0       │
+│ lint:primeng (gobernanza FR-013/FR-015)         —       sin violaciones              │
+│ ng build                                        —       OK                           │
+│ CA: US1-US6 cubiertos · 6 capturas 1920x1080 presentes · tasks.md sin pendientes     │
+│ Retrabajo 1/2: DEF-01 corregido (T041/T042 cerradas)                                 │
+│ Nivel de riesgo: BAJO                                                                 │
+└────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+Comandos: `npx jest --ci --runInBand --forceExit --no-coverage`, `node scripts/lint-primeng.mjs`, `npx ng build`.
+
+## 2. Requirements Traceability (HU-036)
+
+```mermaid
+flowchart LR
+  HU36[HU-036 Theming claro/oscuro]
+  HU36 --> US1[US1 Paleta clara FR-001,003-006] --> TC1[app-theme.spec · app-theme-contrast.spec · layout.qa: fondo activo por módulo]
+  HU36 --> US2[US2 Conmutador FR-007,008] --> TC2[layout.theme.qa.spec: botón nativo, ruta profunda sin cambio de URL, ancho estrecho · layout.component.spec: sin remontar outlet]
+  HU36 --> US3[US3 Persistencia FR-009..011] --> TC3[theme.qa.spec: 10 valores inválidos, recarga, sistema vs elección, setItem bloqueado · theme.service.spec · index-html.spec]
+  HU36 --> US4[US4 Contraste FR-012] --> TC4[theme.qa.spec: E-01..E-09 desde hex de la spec + 9 pares ≥4.5:1 · app-theme-contrast.spec]
+  HU36 --> US5[US5 Gobernanza FR-013..016] --> TC5[theme.qa.spec: escaneo del src real sin hex, rgb(), clases de paleta, estilos en línea, rounded, ng-deep · lint-gobernanza.spec]
+  HU36 --> US6[US6 Sin regresión y cierre FR-017,020] --> TC6[Jest 417/417 + lint + build OK · capturas ✖ T042 · validación manual ✖ T041]
+```
+
+## 3. Failure Impact Diagram (HU-036)
+
+```mermaid
+flowchart LR
+  DEF1[DEF-01 T041/T042 sin ejecutar] --> EV[specs/036.../evidence vacío: 0 de 6 capturas]
+  EV --> CA[US6 CA3 y CA5 · FR-020 · SC-007]
+  CA --> NEG[Cierre de la HU bloqueado]
+```
+
+0 fallos de pruebas; 1 defecto de cierre (DEF-01).
+
+## 4. State Transition / User Journey (HU-036)
+
+```mermaid
+stateDiagram-v2
+  [*] --> SinEleccion
+  SinEleccion --> Claro: sistema claro
+  SinEleccion --> Oscuro: sistema oscuro
+  SinEleccion --> Claro: valor inválido o getItem lanza
+  Claro --> Oscuro: toggle (persiste; si setItem falla, solo sesión)
+  Oscuro --> Claro: toggle
+  Claro --> Claro: cambio de sistema ignorado (elección manual)
+  Oscuro --> Oscuro: cambio de sistema ignorado (elección manual)
+  SinEleccion --> SinEleccion: cambio de sistema se sigue
+```
+
+Recorrido probado en Jest (jsdom). El recorrido real en navegador (T041) y las capturas (T042) no se ejecutaron.
+
+## 5. Test Coverage & Hotspots (HU-036)
+
+| Módulo | Cobertura de CA | Hotspot |
+|---|---|---|
+| `core/theme` (servicio, preset, contraste, gobernanza) | Alta (happy + 10 sad de almacenamiento, E-01..E-09) | Ninguno |
+| `core/layout` (conmutador, resaltado activo) | Alta | Ninguno |
+| Evidencia visual (capturas, medición en pantalla) | **Nula** | **DEF-01** |
+
+## Pruebas propias (QA-AUTO, HU-036)
+
+- `app/frontend/src/app/core/theme/theme.qa.spec.ts` (ThemeService adversarial, contraste desde la spec, gobernanza sobre el `src/` real).
+- `app/frontend/src/app/core/layout/layout.theme.qa.spec.ts` (conmutador en el layout).
+
+## Defectos (etiquetado por capa)
+
+- **DEF-01 [CAPA:TASKS] — CORREGIDO en retrabajo 1/2** (6 capturas 1920x1080 en `evidence/`, sin tareas pendientes). Descripción original: T041 y T042 estaban `[ ]` en `tasks.md` y `specs/036_.../evidence/` solo contiene `.gitkeep`: faltan las 6 capturas `{backlog,sprints,equipo}-{claro,oscuro}.png` a 1920 px y la validación manual. US6 CA3 y CA5 y FR-020: la historia no se cierra.
+
+## Reservas (no bloqueantes)
+
+- La medición de colores en pantalla (SC-001) solo se verifica por tokens en jsdom; las capturas se revisaron visualmente (2 de 6), sin medición por píxel.
+- Las capturas muestran la insignia "Invalid PrimeUI License" en la esquina inferior derecha (entorno de desarrollo); no es parte del tema.
+
+---
+
+# Iteración previa: HU-035 (`specs/035-HU_refactorizacion_esqueleto_ui`)
 
 Solo frontend (FR-012: sin backend, API ni BD). Barrera Fork-Join: el tracker registra cierre de DEV-BACK (sin cambios de servidor) y de DEV-FRONT. Sin `skip`/`xit`/`describe.skip`. No se modificó código de producción.
 

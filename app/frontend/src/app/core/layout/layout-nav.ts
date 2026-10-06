@@ -10,6 +10,9 @@ export const NAV_ITEMS: MenuItem[] = [
   { id: 'equipos', label: LAYOUT_TEXTS.nav.equipos, icon: 'pi pi-users', routerLink: '/equipos', routerLinkActiveOptions: { exact: false } },
 ];
 
+/** Clases de la entrada activa: negrita y fondo de superficie propio de cada modo (HU-036). */
+export const ACTIVE_NAV_CLASS = 'font-semibold bg-surface-200 dark:bg-surface-700';
+
 const MODULES: readonly NavModuleId[] = ['backlog', 'sprints', 'equipos'];
 
 /** Módulo activo según el primer segmento de la URL; `null` si no corresponde a ninguno. */

@@ -53,6 +53,7 @@ Para mantener el determinismo del *Ledger*, los agentes mutadores y lectores uti
 | 033 | [P6] Dashboard Ejecutivo del Líder Técnico | 033-HU_dashboard_trabajo_no_planificado | ⚠️ [PROPUESTO] Trabajo planificado versus no planificado, actividades pendientes y en progreso, incidentes abiertos y atendidos y tiempo invertido en incidentes. Depende de P4. | BACKLOG | — |
 | 034 | [P6] Dashboard Ejecutivo del Líder Técnico | 034-HU_dashboard_compromisos_pendientes | ⚠️ [PROPUESTO] Compromisos pendientes de reuniones. Depende de 028. | BACKLOG | — |
 | 035 | Deuda Técnica / UI Core | 035-HU_refactorizacion_esqueleto_ui | Layout de aplicación y estructura de páginas y formularios alineados al Skeleton de la Constitución, con PrimeNG 22 nativo | ACTIVE | feat/035-HU_refactorizacion_esqueleto_ui |
+| 036 | Deuda Técnica / UI Core | 036-HU_theming_claro_oscuro_ui | Theme visual de la aplicación (paleta, radios y modo claro/oscuro con conmutador) calcado de las evidencias; estándar visual inmutable para las HUs futuras | BACKLOG | feat/036-HU_theming_claro_oscuro_ui |
 
 ---
 

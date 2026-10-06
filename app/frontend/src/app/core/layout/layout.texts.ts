@@ -11,6 +11,12 @@ export const LAYOUT_TEXTS = {
   profileFallback: 'Usuario',
   profileMenuAriaLabel: 'Menú de perfil',
   logout: 'Cerrar sesión',
+  theme: {
+    toDark: 'Cambiar a modo oscuro',
+    toLight: 'Cambiar a modo claro',
+    announcedDark: 'Modo oscuro activado',
+    announcedLight: 'Modo claro activado',
+  },
   logoutError: 'No se pudo cerrar la sesión. Intente de nuevo.',
   footer: 'TechWorkHub · Gestión de proyectos y backlog',
   notFound: {
