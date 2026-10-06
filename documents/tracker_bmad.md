@@ -1530,3 +1530,347 @@ You can reply with the option letter (e.g., "A"), accept the recommendation by s
 @WATCHER: GITOPS-MERGE-CLOSE feat/035-HU_refactorizacion_esqueleto_ui
 - **Handoff:** @PM: Código certificado y rama consolidada en dev. Procede con las épicas pendientes del plan MVP: P1 (historias 005 a 011), P2 (013 y 014), P3, P4, P5 y P6 sin historia registrada ni implementada.
 
+### [06-10-2026] HUMANO
+- **Hora:** 09:43:15
+- **Estado:** APPROVE
+- **Handoff:** @WATCHER: GITOPS-BRANCH-CREATE feat/036-HU_theming_claro_oscuro_ui
+@BA: Ejecuta la directiva de negocio de la deuda técnica 036-HU_theming_claro_oscuro_ui descrita en app/theme.md (léela completa y cumple sus tareas: fila 036 en specs/README.md y el FSaaDB documents/business-analyst/036-HU_theming_claro_oscuro_ui.md con el contenido exacto del bloque markdown). Esta HU va antes de las pantallas pendientes del plan MVP, y el handoff previo al PM queda en espera hasta que la 036 cierre.
+
+### [06-10-2026] Business Analyst
+- **Hora:** 09:49:00
+- **Artefacto generado:** `documents/business-analyst/036-HU_theming_claro_oscuro_ui.md`
+- **Estado:** HU 036 creada con el contenido exacto del bloque de app/theme.md y fila 036 (BACKLOG, rama feat/036-HU_theming_claro_oscuro_ui) registrada en specs/README.md. Sin otras filas ni cambios de alcance.
+- **⚠️ Puntos Abiertos:** Seis puntos abiertos de la sección 9 de la HU pendientes de confirmación humana: color de enlace claro #007595, excepciones de contraste, radios, persistencia y primera visita, variante del botón de peligro, numeración.
+- **Handoff:** @QA: La Historia de Usuario de deuda técnica Theming de la Aplicación en modo claro y oscuro está lista en el archivo 036-HU_theming_claro_oscuro_ui.md. Por favor, procede con la auditoría documental contra la directiva app/theme.md y la enmienda Theme Visual de la Constitución para asegurar que la historia cumple con los requerimientos originales.
+
+### [06-10-2026] QA Documental
+- **Hora:** 09:51:07
+- **Artefacto generado:** `documents/qa-documental/feedback_qa_036_theming_claro_oscuro_ui.md`
+- **Estado:** HU 036 RECHAZADA. Se encontraron 5 hallazgos: 2 bloqueantes y 3 mayores. H-01: CA-03 contradice CA-01.2 y la tabla de tokens (peligro 3.81:1, secundario sobre navegación activa 3.91:1, bordes 1.24:1). H-02: CA-06 exige coincidir con la maqueta en el rol de enlace, que difiere por diseño. H-03: radio 0.5rem sin etiquetar en CA-01.1. H-04: etiqueta del botón primario oscuro sin definir (2.37:1). H-05: atomicidad dudosa por la gobernanza lint. Reporte verificado por lectura física.
+- **⚠️ Puntos Abiertos:** H-01, H-02 y H-04 requieren decisión humana, porque los valores y las excepciones de contraste provienen de la Constitución. H-05 requiere justificar la atomicidad o particionar.
+- **Handoff:** @BA: La Historia de Usuario 036-HU_theming_claro_oscuro_ui.md fue RECHAZADA por QA; subsana los hallazgos H-01 a H-05 del reporte documents/qa-documental/feedback_qa_036_theming_claro_oscuro_ui.md, consultando al humano los que dependen de la Constitución, y delega de nuevo la auditoría al QA.
+
+### [06-10-2026] Business Analyst
+- **Hora:** 09:52:00
+- **Artefacto generado:** `documents/business-analyst/036-HU_theming_claro_oscuro_ui.md`
+- **Estado:** H-03 subsanado (CA-01.1 etiquetado ⚠️ [PROPUESTO] por el radio 0.5rem; no hay otros valores aproximados sin etiqueta). H-01, H-02, H-04 y H-05 no se editan: sus valores y excepciones provienen de la Constitución y de app/theme.md, que prohíben reformular, así que requieren decisión humana.
+- **⚠️ Puntos Abiertos:** H-01 (pares bajo umbral: peligro 3.81:1 y 3.85:1, secundario sobre nav activa 3.91:1 y 3.96:1, bordes 1.24:1 y 1.42:1), H-02 (rol enlace claro vs maqueta), H-04 (etiqueta del botón primario oscuro, 2.37:1), H-05 (atomicidad de la gobernanza lint).
+- **Handoff:** @HUMANO: Necesito tu decisión sobre H-01, H-02, H-04 y H-05 para corregir la HU 036 y devolverla al agente de QA documental; responde cada pregunta con la opción elegida.
+  1. H-01: ¿Cómo se resuelven los pares bajo el umbral de contraste? Opción A (recomendada): se amplían las excepciones tipificadas de CA-03 y RT-08 para incluir el texto de peligro (3.81:1 y 3.85:1), el texto secundario sobre la navegación activa (3.91:1 y 3.96:1) y los bordes decorativos (1.24:1 y 1.42:1), enumerando los pares medidos en cada modo. Opción B: se oscurece el rojo y el gris secundario, lo que requiere enmendar la Constitución. Opción C: se elimina el texto rojo de CA-01.2 y se usa solo borde.
+  2. H-02: ¿Contra qué se compara el rol 9 (enlace claro) en CA-06? Opción A (recomendada): CA-06 compara 8 roles con la maqueta y el rol 9 contra el valor #007595 de la tabla de tokens, como desviación declarada. Opción B: se adopta #0092b8 de la maqueta y el enlace pasa a ser una excepción de contraste (3.62:1).
+  3. H-04: ¿Qué color lleva la etiqueta del botón primario en modo oscuro (#00b8db)? Opción A (recomendada): etiqueta blanca por paridad con el modo claro, con una tercera excepción de contraste (2.37:1). Opción B: etiqueta oscura #101828, que cumple el umbral, y se enmienda la Constitución. Opción C: se registra como ❓ No documentado y se difiere.
+  4. H-05: ¿Se mantiene una sola HU o se parte la gobernanza automática (CA-04, CA-04.1, RT-07) en otra HU? Opción A: una sola HU, y esta respuesta queda como la decisión humana registrada, justificando que sin las reglas el tema no es verificable ni inmutable para las HUs futuras. Opción B: se parte la gobernanza en una HU derivada que registra el product-manager, como en la HU 03
+
+### [06-10-2026] HUMANO
+- **Hora:** 10:05:00
+- **Estado:** APPROVE
+- **Feedback:** H-01: A. H-02: A. H-04: A. H-05: A.
+- **Handoff:** @BA: El humano APROBÓ tus consultas con la opción A en las cuatro. H-01: amplía las excepciones tipificadas de CA-03 y RT-08 con el texto de peligro (3.81:1 y 3.85:1), el texto secundario sobre la navegación activa (3.91:1 y 3.96:1) y los bordes decorativos (1.24:1 y 1.42:1), enumerando los pares medidos en cada modo. H-02: CA-06 compara 8 roles con la maqueta y el rol 9 (enlace claro) contra #007595 de la tabla de tokens, como desviación declarada. H-04: etiqueta blanca en el botón primario oscuro, con una tercera excepción de contraste (2.37:1). H-05: se mantiene una sola HU; registra esta respuesta como decisión humana justificando que sin las reglas de lint el tema no es verificable ni inmutable para las HUs futuras. Verifica que la lista de excepciones de la Constitución sea coherente con las ampliadas, y señálame cualquier discrepancia en lugar de editar la Constitución. Corrige la HU 036 y devuélvela a @QA para la auditoría documental.
+### [06-10-2026] Business Analyst
+- **Hora:** 10:06:00
+- **Artefacto generado:** `documents/business-analyst/036-HU_theming_claro_oscuro_ui.md`
+- **Estado:** H-01 a H-05 subsanados según la decisión humana (opción A en las cuatro). H-01: tabla de excepciones de contraste E-01 a E-09 con los pares exactos por modo, referenciada desde CA-03, CA-03.1 y RT-08. H-02: CA-06 compara los roles 1 a 8 con la maqueta y el rol 9 contra la tabla de tokens, como desviación declarada. H-03: CA-01.1 etiquetado como PROPUESTO. H-04: etiqueta blanca en el botón primario oscuro (CA-02) y excepción E-03 (2.37:1). H-05: una sola HU, decisión humana registrada en la sección 1 con la justificación de la gobernanza lint.
+- **⚠️ Puntos Abiertos:** Discrepancia con la Constitución, no editada por el BA: la sección Contraste de la enmienda Theme Visual (línea 128 de .specify/memory/constitution.md) lista solo dos excepciones (E-01 y E-02), y la HU enumera nueve (E-03 a E-09 ampliadas por decisión humana). Falta ratificarlas en la Constitución. Además, los seis puntos abiertos previos de la sección 9 de la HU siguen vigentes.
+- **Handoff:** @QA: La Historia de Usuario de deuda técnica Theming de la Aplicación en modo claro y oscuro fue corregida en el archivo 036-HU_theming_claro_oscuro_ui.md tras subsanar los hallazgos H-01 a H-05 con la decisión humana registrada. Por favor, procede con la auditoría documental contra la directiva app/theme.md y la enmienda Theme Visual de la Constitución, considerando que la discrepancia con la lista de excepciones de la Constitución queda señalada como punto abierto.
+
+
+### [06-10-2026] QA Documental
+- **Hora:** 09:58:27
+- **Artefacto generado:** `documents/qa-documental/feedback_qa_036_theming_claro_oscuro_ui.md`
+- **Estado:** HU 036 RECHAZADA en segunda ronda. H-01 a H-05 quedaron subsanados conforme a la decisión humana. Hay 1 hallazgo nuevo (H-06, mayor): la excepción E-02 declara 2.60:1 para ambos modos, pero ese ratio solo existe sobre fondo blanco; en modo oscuro es al menos 3.96:1 y RT-08 fallaría por construcción. Reporte verificado por lectura física.
+- **⚠️ Puntos Abiertos:** Condición de arrastre, no es hallazgo: la Constitución lista 2 excepciones de contraste y la HU enumera 9 (E-03 a E-09 aprobadas por el humano); requiere ratificación humana en la Constitución antes del cierre de la HU.
+- **Handoff:** @BA: La Historia de Usuario 036-HU_theming_claro_oscuro_ui.md fue RECHAZADA por QA con un solo hallazgo, H-06 (excepción E-02 con ratio de modo claro declarado para ambos modos), descrito en documents/qa-documental/feedback_qa_036_theming_claro_oscuro_ui.md; subsánalo, solicitando al humano cualquier dato ausente, y delega de nuevo la auditoría al QA.
+
+### [06-10-2026] Business Analyst
+- **Hora:** 10:15:00
+- **Artefacto generado:** `documents/business-analyst/036-HU_theming_claro_oscuro_ui.md`
+- **Estado:** H-06 subsanado. E-02 ahora aplica solo al modo claro con par y ratio determinables (`#99a1af` sobre `#ffffff`, 2.60:1; el fondo blanco se marca PROPUESTO porque la fuente no lo nombra). El par de modo oscuro se tipifica como ❓ No documentado, sin excepción asignada y sujeto a la regla general de 4.5:1, y CA-03 queda coherente con ello. Se añadió el punto abierto 8 a la sección 9.
+- **⚠️ Puntos Abiertos:** Dato ausente que debe aportar el humano: el fondo del campo de formulario en modo oscuro. Con el marcador `#99a1af` el contraste calculado es 5.63:1 sobre `#1e2939` (cumple, sin excepción) y 3.96:1 sobre `#364153` (requeriría una nueva excepción). Siguen vigentes la discrepancia con la lista de excepciones de la Constitución y los puntos abiertos previos de la sección 9.
+- **Handoff:** @QA: La Historia de Usuario de deuda técnica Theming de la Aplicación en modo claro y oscuro fue corregida en el archivo 036-HU_theming_claro_oscuro_ui.md tras subsanar el hallazgo H-06, con el par oscuro del marcador de posición tipificado como no documentado y registrado como punto abierto para el humano. Por favor, procede con la auditoría documental contra la directiva app/theme.md y la enmienda Theme Visual de la Constitución.
+
+
+### [06-10-2026] QA Documental
+- **Hora:** 09:59:39
+- **Artefacto generado:** `documents/qa-documental/aprobado_qa_036_theming_claro_oscuro_ui.md`
+- **Estado:** HU 036 APROBADA en tercera ronda. H-06 quedó subsanado: E-02 aplica solo a modo claro y el par oscuro del marcador de posición se tipificó como no documentado, sujeto a la regla general de 4.5:1. Las 6 dimensiones cumplen y la HU declara Requiere interfaz Sí. Certificado verificado por lectura física.
+- **⚠️ Puntos Abiertos:** Decisiones humanas pendientes, ya declaradas en la HU: (1) ratificar en la Constitución las excepciones de contraste E-03 a E-09, porque la Constitución lista solo 2 y prevalece sobre la HU; (2) definir el fondo del campo de formulario en modo oscuro (punto abierto 8); más los puntos abiertos 1, 3, 4, 5 y 6 de la sección 9.
+- **Handoff:** @UX: La Historia de Usuario 036-HU_theming_claro_oscuro_ui.md ha sido aprobada por QA. Por favor, procede a diseñar los wireframes y estados visuales.
+
+### [06-10-2026] WATCHER
+- **Hora:** 09:59:41
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Ejecutando análisis funcional (/speckit.specify)...
+
+### [06-10-2026] WATCHER
+- **Hora:** 10:01:43
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Verificando ambigüedades (/speckit.clarify)...
+
+### [06-10-2026] WATCHER
+- **Hora:** 10:02:12
+- **Mensaje:** ⚠️ [HITL] Ambigüedad detectada por Spec Kit.
+- **Handoff:** @HUMANO: El motor de análisis funcional encontró ambigüedades o vacíos en la Historia de Usuario. Por favor, revisa la matriz y responde la pregunta a continuación para que la IA pueda cerrar el análisis.
+
+**Question:** Al abrir o recargar la aplicación, ¿el modo correcto debe verse desde el primer cuadro (sin parpadeo del modo equivocado) o se tolera un parpadeo breve mientras carga?
+
+Por qué importa: define si el modo se aplica antes de que arranque la aplicación (más trabajo, y una prueba de aceptación visual) o después (más simple, con un destello visible en modo oscuro).
+
+**Recommended:** Option A. Un destello claro con el modo oscuro elegido es el defecto visual más notorio de un tema, y la historia mide "de inmediato" y 0 errores visibles.
+
+| Option | Description |
+|--------|-------------|
+| A | Sin parpadeo: el modo se aplica antes del primer pintado y se verifica con una prueba. |
+| B | Se tolera un parpadeo breve al cargar; solo el conmutador debe ser inmediato. |
+| Short | Otra respuesta corta (<=5 palabras) |
+
+Puedes responder con la letra de la opción (por ejemplo, "A"), aceptar la recomendación diciendo "yes" o "recommended", o dar tu propia respuesta corta.
+
+
+### [06-10-2026] HUMANO
+- **Hora:** 10:02:43
+- **Estado:** APPROVE
+- **Feedback:** A
+
+
+### [06-10-2026] WATCHER
+- **Hora:** 10:02:44
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Inyectando respuesta humana a Spec Kit: A
+
+### [06-10-2026] WATCHER
+- **Hora:** 10:03:11
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Resolución aplicada exitosamente.
+- **Handoff:** @UX: La ambigüedad ha sido resuelta por el Humano y la especificación SDD ha concluido con éxito. Procede con tu diseño.
+
+
+### [06-10-2026] Designer UX
+- **Hora:** 10:06:30
+- **Artefacto generado:** `documents/designer-ux/ux_036_theming_claro_oscuro_ui.md`
+- **Estado:** Diseño visual de la HU 036 completado y verificado en disco: 13 estados ASCII con mapeo 1 a 1 de los escenarios de spec.md (modo claro, modo oscuro, conmutador, teclado, persistencia sin parpadeo, primera visita, almacenamiento inválido, contraste, pantallas existentes). Escenarios sin superficie visual (compuertas de proceso y gobernanza de código) documentados como tales. Modo Brownfield: capa de tema sobre el shell HU-035.
+- **⚠️ Puntos Abiertos:** Informativo: fondo del campo en modo oscuro asumido #1e2939 (punto abierto 8 de la HU) y ratificación en la Constitución de E-03 a E-09 y del color de enlace; ninguno bloquea el diseño.
+- **Handoff:** @SA: El diseño visual de la HU [036-HU_theming_claro_oscuro_ui] ha concluido exitosamente en [documents/designer-ux/ux_036_theming_claro_oscuro_ui.md]. Procede con el tech-design y arquitectura.
+
+
+### [06-10-2026] Solutions Architect
+- **Hora:** 10:14:30
+- **Artefacto generado:** `documents/solutions-architect/036-HU_theming_claro_oscuro_ui.md`
+- **Estado:** Tech design completado y verificado en disco: 12 puntos de la plantilla y 12 ADRs en formato MADR (3 heredados de la constitución, 9 nuevos con alternativas). Solo frontend, sin backend ni base de datos. Preset definePreset(Aura) con valores explícitos de Tailwind v4 en app-theme.ts como única fuente de colores, ThemeService con signals y escritura síncrona de la clase app-dark, script mínimo en el head de index.html para aplicar el modo antes del primer pintado (resolución humana Opción A), conmutador p-button con etiqueta accesible y región de anuncio, compuertas de gobernanza en lint:primeng con prueba de violación inyectada, prueba de contraste con tabla de pares independiente y limpieza de 2 estilos propios de color hallados en la auditoría. Tareas Task-THEME reconciliadas. Sin cuestionario: la constitución cubre el stack.
+- **⚠️ Puntos Abiertos:** Informativos, no bloqueantes: la constitución solo lista las excepciones E-01 y E-02 y prevalece sobre la HU, por lo que E-03 a E-09 y el enlace #007595 requieren enmienda humana antes del dictamen de QA-Tech; Aura trae paletas cyan, gray y red de otra generación de Tailwind, por eso el preset declara los valores explícitos; el borde de los campos usa 3:1 y se aparta del #e5e7eb anotado en el wireframe del UX (ADR-012); fondo del campo oscuro asumido #1e2939; los bordes perimetrales de p-menubar y p-menu y el uso de sr-only requieren confirmación visual y humana.
+- **Handoff:** @WATCHER: SDD-FREEZE 036-HU_theming_claro_oscuro_ui.md
+
+### [06-10-2026] WATCHER
+- **Hora:** 10:14:09
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Estructurando plan de arquitectura técnica (/speckit.plan)...
+
+### [06-10-2026] WATCHER
+- **Hora:** 10:17:35
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Desglosando tareas de implementación (/speckit.tasks)...
+
+### [06-10-2026] WATCHER
+- **Hora:** 10:20:28
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Ejecutando auditoría técnica (/speckit.analyze)...
+
+@DA: El plan técnico y las tareas han sido congeladas. Procede con el diseño de persistencia basándote en los nuevos archivos.
+
+
+### [06-10-2026] Data Architect
+- **Hora:** 10:23:40
+- **Artefacto generado:** `documents/data-architect/db_036_theming_claro_oscuro_ui.md`
+- **Estado:** Diseño de persistencia de la HU 036 completado y verificado en disco (5 secciones de la plantilla, 2 ADRs MADR). Dictamen: solo frontend, sin tablas, columnas, schemas ni migraciones nuevas en PostgreSQL (FR-019, Constitución §3 heredada). Única persistencia: preferencia por navegador en localStorage con clave app-theme-mode (valores light o dark; inválido o inaccesible equivale a sin elección), registrada en ADR-02 con alternativas (tabla de preferencias, atributo Keycloak, cookie). Auditoría UI y Spec Kit hacia Data con cero campos huérfanos sobre los 13 estados del diseño UX y las tareas T001 a T045.
+- **⚠️ Puntos Abiertos:** Informativo: la Constitución marca la clave localStorage como propuesta, por lo que ADR-02 consta como Aceptado y no heredado; si el humano exigiera preferencia por cuenta, habría que reabrirlo con tabla de preferencias y contrato de API nuevos.
+- **Handoff:** @QT: El modelo de datos de la HU 036 fue dictaminado sin cambios de persistencia relacional (solo frontend, FR-019; la elección de tema vive en localStorage) a partir de spec.md y tasks.md. Al no requerir capa de API, procede directamente con la auditoría y compilación del Tech Design Document (TDD).
+
+
+### [06-10-2026] QA Tech
+- **Hora:** 10:28:00
+- **Artefacto generado:** `documents/qa-tech/feedback_tech_036_theming_claro_oscuro_ui.md`
+- **Estado:** Auditoría adversarial de la HU 036 completada con dictamen RECHAZADO (modo Brownfield, solo frontend, sin api_*.md). 2 hallazgos críticos: (1) la regla 3 de lint-gobernanza prohíbe `.style.` con "color" y por lo tanto rechaza `style.colorScheme`, que exigen ThemeService e index.html, así que el DoD con lint en verde es inalcanzable; (2) las excepciones de contraste E-03 a E-09 no están en la Constitución (solo E-01 y E-02) y no hay enmienda física, pese a la aprobación humana del 06-10-2026 (H-01 y H-04, opción A). 4 advertencias y 2 sugerencias. No se compiló el tech-design ni se tocó constitution.md ni specs/README.md.
+- **⚠️ Puntos Abiertos:** El hallazgo 2 no lo puede subsanar el solutions-architect: requiere que el humano ratifique en la Constitución (Theme Visual, Contraste) las excepciones E-01 a E-09 y las utilidades `text-color` y `sr-only`; el texto propuesto está en la sección 4 del reporte de feedback.
+- **Handoff:** @SA: Se ha emitido feedback adversarial crítico en documents/qa-tech/feedback_tech_036_theming_claro_oscuro_ui.md. Por favor, subsana las inconsistencias señaladas para proceder con la re-auditoría.
+
+
+### [06-10-2026] Solutions Architect
+- **Hora:** 10:28:58
+- **Artefacto generado:** `documents/solutions-architect/036-HU_theming_claro_oscuro_ui.md`
+- **Estado:** Subsanación del feedback adversarial de QA-Tech aplicada y verificada en disco. Hallazgo crítico 1: la regla 3 de ADR-009 se redefine sobre propiedades concretas (color, background*, border*, outline*, box-shadow, text-shadow, fill, stroke, accent-color, caret-color) y deja fuera color-scheme, que es lo único que ThemeService y el script de index.html escriben; la regla 1 exige límite de palabra en las funciones de color; se añaden casos que no deben fallar y casos que sí deben fallar a la spec de gobernanza. Advertencias: ADR-012 incluido de forma explícita en Task-THEME-01 (claro) y Task-THEME-04 (oscuro); la aserción de código real con 0 violaciones sale de la spec de gobernanza y pasa a la verificación final tras la limpieza de ADR-010; alternativas de ADR-009 y ADR-011 reemplazadas por alternativas viables (ESLint y Stylelint, prueba Jest estática, script de contraste en CI sobre tokens compilados); lista consolidada de elementos pendientes de enmienda en la sección 11. Sugerencias: prueba de coincidencia script y servicio con valor inválido; prueba de inventario de tokens heredados de Aura contra las escalas v4.
+- **⚠️ Puntos Abiertos:** Hallazgo crítico 2 fuera de la jurisdicción del SA: la constitución solo lista E-01 y E-02 y no existe enmienda física para E-03 a E-09, el enlace #007595, text-color ni sr-only; el humano debe ratificarlos en la sección Theme Visual de la constitución (texto sugerido en la sección 11 del tech design). Spec Kit debe regenerar tasks.md y contracts/lint-gobernanza.md con los cambios indicados.
+- **Handoff:** @WATCHER: SDD-FREEZE 036-HU_theming_claro_oscuro_ui.md
+
+### [06-10-2026] WATCHER
+- **Hora:** 10:28:58
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Estructurando plan de arquitectura técnica (/speckit.plan)...
+
+### [06-10-2026] WATCHER
+- **Hora:** 10:29:22
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Desglosando tareas de implementación (/speckit.tasks)...
+
+### [06-10-2026] WATCHER
+- **Hora:** 10:29:51
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Ejecutando auditoría técnica (/speckit.analyze)...
+
+@DA: El plan técnico y las tareas han sido congeladas. Procede con el diseño de persistencia basándote en los nuevos archivos.
+
+
+### [06-10-2026] Data Architect
+- **Hora:** 10:31:28
+- **Artefacto generado:** `documents/data-architect/db_036_theming_claro_oscuro_ui.md`
+- **Estado:** Revalidación tras la subsanación del solutions-architect y el nuevo congelamiento SDD. Se contrastaron data-model.md, plan.md y tasks.md (45 tareas) con el diseño de persistencia vigente: la persistencia no cambió (sin base de datos ni backend, única clave localStorage app-theme-mode con valores light o dark, tolerancia a valor inválido o almacenamiento bloqueado). La redefinición de la regla 3 del lint no afecta al modelo de datos. El artefacto db_036 permanece vigente sin modificaciones y verificado en disco.
+- **⚠️ Puntos Abiertos:** Ninguno en persistencia. Informativo: la ratificación humana de E-03 a E-09, del enlace #007595 y de las utilidades text-color y sr-only en la Constitución sigue pendiente y es ajena al modelo de datos.
+- **Handoff:** @QT: El modelo de datos de la HU 036 fue revalidado sin cambios tras el nuevo congelamiento (solo frontend, FR-019; la elección de tema vive en localStorage) a partir de spec.md y tasks.md. Al no requerir capa de API, procede con la re-auditoría y compilación del Tech Design Document (TDD).
+
+
+### [06-10-2026] QA Tech
+- **Hora:** 10:36:00
+- **Artefacto generado:** `documents/qa-tech/feedback_tech_036_theming_claro_oscuro_ui.md`
+- **Estado:** Re-auditoría 1 de la HU 036 con dictamen RECHAZADO. El documento del solutions-architect subsanó la regla 3 y la regla 1 del lint, ADR-012 y las alternativas débiles. Persisten 2 críticos: (1) contracts/lint-gobernanza.md y tasks.md no fueron regenerados y siguen reproduciendo la regla 3 original (rechaza style.colorScheme), la aserción de código real en T034 y sin ADR-012 en T008 y T018; (2) la Constitución sigue listando solo E-01 y E-02, sin enmienda física para E-03 a E-09, text-color ni sr-only. No se compiló el tech-design ni se tocó constitution.md ni specs/README.md.
+- **⚠️ Puntos Abiertos:** El humano debe ratificar en la Constitución (Theme Visual, Contraste) las excepciones E-01 a E-09 y las utilidades text-color y sr-only; texto propuesto en la sección 4 del reporte. Sin esa enmienda la re-auditoría no puede aprobarse.
+- **Handoff:** @SA: Se ha emitido feedback adversarial crítico en documents/qa-tech/feedback_tech_036_theming_claro_oscuro_ui.md. Por favor, subsana las inconsistencias señaladas para proceder con la re-auditoría.
+
+
+### [06-10-2026] Solutions Architect
+- **Hora:** 10:32:57
+- **Artefacto generado:** `specs/036-HU_theming_claro_oscuro_ui/tasks.md`
+- **Estado:** Re-auditoría 1 atendida y verificada en disco. El hallazgo crítico sobre artefactos SDD desfasados se subsana editando directamente los archivos que consume el desarrollador, porque el congelamiento anterior no los regeneró: contracts/lint-gobernanza.md (regla 1 con límite de palabra, regla 3 por propiedades concretas con color-scheme exento, casos que no deben fallar y que deben fallar, código real fuera de la spec) y tasks.md (T008 y T018 con formField.borderColor y hoverBorderColor de ADR-012, T033 como red de seguridad, T034 sin la aserción de código real y con los casos de colorScheme, T035 con las reglas 1 y 3 corregidas, T043 con la comprobación de código real, T045 con text-color). El documento documents/solutions-architect/036-HU_theming_claro_oscuro_ui.md no requirió cambios nuevos.
+- **⚠️ Puntos Abiertos:** Sigue pendiente la enmienda física del humano en la constitución, sección Theme Visual, punto Contraste: ratificar E-01 a E-09, el enlace #007595 y las utilidades text-color y sr-only; el SA no puede editar la constitución y el texto sugerido está en la sección 11 del tech design. Spec Kit no debe revertir las ediciones manuales de tasks.md y contracts.
+- **Handoff:** @WATCHER: SDD-FREEZE 036-HU_theming_claro_oscuro_ui.md
+
+### [06-10-2026] WATCHER
+- **Hora:** 10:32:58
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Estructurando plan de arquitectura técnica (/speckit.plan)...
+
+### [06-10-2026] WATCHER
+- **Hora:** 10:33:21
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Desglosando tareas de implementación (/speckit.tasks)...
+
+### [06-10-2026] WATCHER
+- **Hora:** 10:33:55
+- **Mensaje:** ⚙️ [SDD Auto-Runner] Ejecutando auditoría técnica (/speckit.analyze)...
+
+@DA: El plan técnico y las tareas han sido congeladas. Procede con el diseño de persistencia basándote en los nuevos archivos.
+
+
+### [06-10-2026] Data Architect
+- **Hora:** 10:35:20
+- **Artefacto generado:** `documents/data-architect/db_036_theming_claro_oscuro_ui.md`
+- **Estado:** Segunda revalidación tras el congelamiento posterior a la re-auditoría 1. Solo cambiaron tasks.md y contracts/lint-gobernanza.md; data-model.md y plan.md no se modificaron. Las 45 tareas siguen sin tocar app/backend ni definir tablas, y la única persistencia continúa siendo la clave localStorage app-theme-mode (light o dark). El artefacto db_036 permanece vigente sin modificaciones.
+- **⚠️ Puntos Abiertos:** Ninguno en persistencia. Informativo: sigue pendiente la enmienda humana de la Constitución (E-03 a E-09, enlace #007595, text-color y sr-only), ajena al modelo de datos.
+- **Handoff:** @QT: El modelo de datos de la HU 036 fue revalidado por segunda vez sin cambios (solo frontend, FR-019; la elección de tema vive en localStorage) a partir de spec.md y tasks.md. Al no requerir capa de API, procede con la re-auditoría y compilación del Tech Design Document (TDD).
+
+
+### [06-10-2026] QA Tech
+- **Hora:** 10:41:00
+- **Artefacto generado:** `documents/qa-tech/feedback_tech_036_theming_claro_oscuro_ui.md`
+- **Estado:** Re-auditoría 2 de la HU 036 con dictamen RECHAZADO por un único bloqueo. Verificado en disco que tasks.md y contracts/lint-gobernanza.md ya reflejan el diseño corregido (regla 3 por propiedades con colorScheme exento, regla 1 con límite de palabra, ADR-012 en T008 y T018, T034 con casos positivos y negativos, aserción de código real en T043). Persiste el crítico de Lex Superior: la Constitución (línea 128) sigue listando solo E-01 y E-02, sin enmienda física para E-03 a E-09, text-color ni sr-only. El solutions-architect no puede subsanarlo. No se compiló el tech-design ni se tocó constitution.md ni specs/README.md.
+- **⚠️ Puntos Abiertos:** Única acción pendiente, de jurisdicción humana. Con la enmienda presente, la siguiente re-auditoría compila y aprueba sin más cambios de diseño.
+- **Handoff:** @HUMANO: Necesito tu decisión sobre la enmienda de la Constitución para poder aprobar la HU 036; responde con el número de opción.
+  1. ¿Quién formaliza la ratificación de las excepciones de contraste E-01 a E-09 y de las utilidades text-color y sr-only en la sección Theme Visual, punto Contraste, de .specify/memory/constitution.md? Opción A: la editas tú y vuelves a delegar la auditoría a QA Tech. Opción B (recomendada): autorizas a QA Tech a aplicar el texto propuesto en la sección 4 del reporte documents/qa-tech/feedback_tech_036_theming_claro_oscuro_ui.md, citando tu aprobación H-01 y H-04 opción A del 06-10-2026, y a aprobar de inmediato.
+
+### [06-10-2026] HUMANO
+- **Hora:** 11:00:00
+- **Estado:** APPROVE
+- **Feedback:** Opción B.
+- **Handoff:** @QT: El humano APROBÓ la Opción B. Queda autorizado a aplicar en .specify/memory/constitution.md, sección Theme Visual, punto Contraste, EXACTAMENTE el texto propuesto en la sección 4 (punto 2) de documents/qa-tech/feedback_tech_036_theming_claro_oscuro_ui.md, sin reformularlo ni ampliarlo. Cita como respaldo: aprobación H-01 y H-04 opción A (06-10-2026) para las excepciones E-01 a E-09, y esta aprobación humana (06-10-2026) para las utilidades text-color y sr-only. Esta autorización cubre solo esa edición; no modifiques nada más de la Constitución ni de specs/README.md. Tras aplicarla, ejecuta la re-auditoría y, si no quedan hallazgos, apruébala y compila el tech-design.
+
+### [06-10-2026] QA Tech
+- **Hora:** 10:58:00
+- **Artefacto generado:** `documents/qa-tech/tech-design_036_theming_claro_oscuro_ui.md`
+- **Estado:** Re-auditoría 3 de la HU 036 con dictamen APROBADO (0 hallazgos críticos, 8 advertencias vinculantes y 2 sugerencias en la sección 7.4). Tasks.md y contracts/lint-gobernanza.md verificados en disco con el diseño corregido. Por autorización humana expresa (Opción B, respaldo H-01 y H-04 opción A del 06-10-2026) se aplicó en constitution.md, Theme Visual, punto Contraste, el texto exacto propuesto: ratificación de E-01 a E-09 y de las utilidades text-color y sr-only. Sin más cambios en la Constitución. Compilado el tech-design con 14 ADR (12 del solutions-architect, 2 del data-architect, sin API) y 3 diagramas archify más Mermaid (9/9 checks). HU solo frontend.
+- **⚠️ Puntos Abiertos:** specs/README.md no se modificó por restricción expresa de la autorización humana; el paso de la HU 036 a READY-FOR-DEV queda pendiente de instrucción. Verificación manual obligatoria en Fase D: barra a 768 px, ausencia de destello con modo oscuro guardado y diálogos y toast en ambos modos.
+- **Handoff:** @DEV-FRONT: La arquitectura técnica ha sido validada. Inicia la implementación del Frontend.
+
+### [06-10-2026] WATCHER
+- **Hora:** 11:25:17
+- **Mensaje:** ⚡ [SDD Auto-Runner] Ejecutando implementación Backend (/speckit.implement)...
+
+### [06-10-2026] Senior Backend Developer
+- **Hora:** 11:26:04
+- **Artefacto generado:** `documents/dev-backend/backend-architecture.md`
+- **Estado:** Implementación backend finalizada exitosamente mediante SDD SpecKit.
+- **Handoff:** @DEV-FRONT: Inicia implementación frontend.
+
+### [06-10-2026] WATCHER
+- **Hora:** 11:26:04
+- **Mensaje:** ⚡ [SDD Auto-Runner] Ejecutando implementación Frontend (/speckit.implement)...
+
+### [06-10-2026] WATCHER
+- **Hora:** 11:34:18
+- **Mensaje:** 🚨 ERROR en /speckit-implement (código 1): You've hit your session limit · resets 2:30pm (America/Lima)
+- 
+### [06-10-2026] HUMANO
+- **Hora:** 14:35:00
+- **Estado:** APPROVE
+- **Handoff:** @DEV-FRONT: La arquitectura técnica ha sido validada. Reanuda la implementación del Frontend, que se interrumpió por límite de sesión; continúa desde las tareas pendientes de tasks.md.
+### [06-10-2026] WATCHER
+- **Hora:** 15:01:37
+- **Mensaje:** ⚡ [SDD Auto-Runner] Ejecutando implementación Backend (/speckit.implement)...
+
+### [06-10-2026] WATCHER
+- **Hora:** 15:02:30
+- **Mensaje:** @WATCHER: 🚨 ERROR: SpecKit omitió la documentación viva de Backend en 'documents/dev-backend/backend-architecture.md'. Salida de Claude:  no alteraron ninguna de sus secciones, así que no lo modifiqué. - **Pruebas:** no ejecuté pruebas de backend, porque no cambió nada ahí. - **Tracker y Git:** no escribí en `tracker_bmad.md`, no emití handoffs y no usé comandos de Git.  Las tareas de HU-036 siguen pendientes para el agente frontend.
+
+### [06-10-2026] HUMANO
+- **Hora:** 15:07:45
+- **Estado:** APPROVE
+- **Handoff:** @DEV-FRONT: La arquitectura técnica ha sido validada. Reanuda la implementación del Frontend: T040 de tasks.md fue reformulada para que el watcher omita el backend (esta HU no lo modifica); continúa desde las tareas pendientes.
+
+### [06-10-2026] WATCHER
+- **Hora:** 15:07:45
+- **Mensaje:** ⏭️ [SDD Auto-Runner] Backend sin tareas pendientes en tasks.md; se omite y se continúa con Frontend.
+
+### [06-10-2026] WATCHER
+- **Hora:** 15:07:45
+- **Mensaje:** ⚡ [SDD Auto-Runner] Ejecutando implementación Frontend (/speckit.implement)...
+
+### [06-10-2026] HUMANO
+- **Hora:** 16:36:21
+- **Estado:** APPROVE
+- **Handoff:** @DEV-FRONT: La arquitectura técnica ha sido validada. Reanuda la implementación del Frontend: el proceso anterior se interrumpió al reiniciar el watcher; continúa desde las tareas pendientes de tasks.md (0 de 45 marcadas; hay código parcial ya confirmado en la rama feat/036-HU_theming_claro_oscuro_ui).
+
+### [06-10-2026] WATCHER
+- **Hora:** 16:36:23
+- **Mensaje:** ⏭️ [SDD Auto-Runner] Backend sin tareas pendientes en tasks.md; se omite y se continúa con Frontend.
+
+### [06-10-2026] WATCHER
+- **Hora:** 16:36:23
+- **Mensaje:** ⚡ [SDD Auto-Runner] Ejecutando implementación Frontend (/speckit.implement)...
+
+### [06-10-2026] Senior Frontend Developer
+- **Hora:** 16:41:14
+- **Artefacto generado:** `documents/dev-frontend/frontend-architecture.md`
+- **Estado:** Implementación frontend finalizada exitosamente mediante SDD SpecKit.
+- **Handoff:** @QA-AUTO: La Fase D (Implementación) ha finalizado exitosamente mediante motor SDD. Inicia el diseño de la matriz de pruebas automatizadas basándote en los criterios de la HU; al terminar, deriva a Code Review.
+
+
+### [06-10-2026] QA Automation
+- **Hora:** 16:47:30
+- **Artefacto generado:** `documents/qa-auto/qa-report.md`
+- **Estado:** [RECHAZADO] Pruebas HU-036 en verde: Jest 417/417 (50 nuevas QA en `app/frontend/src/app/core/theme/theme.qa.spec.ts` y `app/frontend/src/app/core/layout/layout.theme.qa.spec.ts`), lint:primeng sin violaciones, ng build OK. Commit local test(theme) [TASK-036-QA-01]. DEF-01 [CAPA:TASKS] T041 y T042 siguen sin marcar en tasks.md y `specs/036-HU_theming_claro_oscuro_ui/evidence/` solo tiene .gitkeep: faltan las 6 capturas a 1920 px (FR-020, US6 CA3 y CA5, SC-007) y la validación manual del quickstart.
+- **⚠️ Puntos Abiertos:** Ninguno.
+- **Handoff:** @DEV-FRONT: Ejecuta T041 y T042 (validación manual y 6 capturas backlog/sprints/equipo en claro y oscuro a 1920 px en la carpeta evidence) y devuelve el turno a QA para revalidar; sin ellas no pasa a Code Review.
+
+### [06-10-2026] WATCHER
+- **Hora:** 16:46:44
+- **Mensaje:** 🔁 [SDD Retrabajo] Iteración 1/2 (origen: QA Automation). Reconciliando spec, plan y tasks (/speckit-converge)...
+
+### [06-10-2026] WATCHER
+- **Hora:** 16:48:22
+- **Mensaje:** ⚡ [SDD Auto-Runner] Ejecutando implementación Frontend (/speckit.implement)...
+
+### [06-10-2026] Senior Frontend Developer
+- **Hora:** 16:54:27
+- **Artefacto generado:** `documents/dev-frontend/frontend-architecture.md`
+- **Estado:** Implementación frontend finalizada exitosamente mediante SDD SpecKit.
+- **Handoff:** @QA-AUTO: Retrabajo 1/2 aplicado sobre los hallazgos de QA Automation. Revalida la HU. Ejecuta y valida las pruebas y, al aprobar, deriva a Code Review.
+
+
+### [06-10-2026] QA Automation
+- **Hora:** 16:56:11
+- **Artefacto generado:** `documents/qa-auto/qa-report.md`
+- **Estado:** [APROBADO] Revalidación tras retrabajo 1/2: Jest 417/417, lint:primeng sin violaciones, ng build OK, tasks.md sin pendientes y 6 capturas 1920x1080 en evidence. DEF-01 corregido. Commit local test(theme) [TASK-036-QA-02].
+- **⚠️ Puntos Abiertos:** Ninguno.
+- **Handoff:** @CODE-REVIEW: HU-036 aprobada por QA Automation; revisa el código de theming (core/theme, core/layout) y las pruebas QA.
+
+### [06-10-2026] Code Review
+- **Hora:** 17:02:10
+- **Artefacto generado:** `documents/code-review/impact-analysis-report.md`
+- **Estado:** [APROBADO] - Lectura física completada: 9 archivos de producción (theme.service.ts, app-theme.ts, contrast.ts, theme-token-resolver.ts, layout.component.ts/html, layout-nav.ts, app.config.ts, index.html) más 2 plantillas de features y 2 specs QA. Lex Superior y VSA verificados: standalone, OnPush, signals, sin effect(), sin NgModule, colores literales solo en app-theme.ts. SecOps: sin innerHTML ni bypassSecurityTrust, almacenamiento en try/catch, backend sin cambios. Pruebas ejecutadas por Code Review: Jest 31 suites 417/417, lint:primeng sin violaciones, ng build OK; specs QA no tautológicas; 6 capturas presentes. Reserva no bloqueante [CAPA:CODE] layout.component.html:47 borde del aside sin utilidad de ancho.
+- **⚠️ Puntos Abiertos:** Ninguno bloqueante; quedan por ratificar en la Constitución E-03..E-09, #007595, borde de campo y fondo de campo oscuro (T045).
+@WATCHER: GITOPS-MERGE-CLOSE feat/036-HU_theming_claro_oscuro_ui
+- **Handoff:** @PM: Código certificado y rama consolidada en dev. Revisa el plan del PM contra el ledger: las épicas P1 a P6 tienen historias propuestas pendientes; asigna la siguiente historia del backlog.
