@@ -73,4 +73,4 @@ src/app/
 Todas se muestran dentro del esqueleto (`LayoutComponent`) y requieren sesión (`authGuard`). `/` redirige a `/backlog/nuevo`; cualquier otra ruta mantiene el esqueleto y muestra `NotFoundComponent` (sin redirección).
 
 ## Documentación
-Arquitectura detallada, diagramas y ADRs: [`documents/dev-frontend/frontend-architecture.md`](../../documents/dev-frontend/frontend-architecture.md).
+Arquitectura detallada, diagramas y ADRs: [`docs/dev-frontend/frontend-architecture.md`](../../docs/dev-frontend/frontend-architecture.md).

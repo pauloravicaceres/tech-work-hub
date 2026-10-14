@@ -72,7 +72,7 @@ def seleccionar_carpetas():
 
 def main():
     raiz_proyecto = Path(__file__).resolve().parent.parent
-    documents_dir = raiz_proyecto / "documents"
+    documents_dir = raiz_proyecto / "docs"
     specs_dir = raiz_proyecto / "specs"
     
     carpetas_a_limpiar = seleccionar_carpetas()

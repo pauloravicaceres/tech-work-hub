@@ -49,11 +49,11 @@ app/backend/
 | `GET /api/team-members/{memberId}/items` | Teams | Elementos relacionados con un miembro: `id, title, type` (HU-015) |
 | `GET /api/backlog-items` | Backlog | Lista de elementos `id, title, type` para el selector de asignación (HU-015) |
 
-Todos exigen JWT. Contrato de Sprints: `specs/003-HU_gestion_sprint_dos_semanas/contracts/sprints-api.openapi.yaml`; asignación de elementos: `specs/004-HU_asignacion_elementos_sprint/contracts/sprint-items-api.openapi.yaml`. Detalle de HU-004: sección 12 de `documents/dev-backend/backend-architecture.md`. Contrato de Teams: `specs/012-HU_miembros_equipo_y_roles_tecnicos/contracts/teams-api.openapi.yaml`; detalle de HU-012: sección 13 del mismo documento. Contrato de HU-015: `specs/015-HU_relacion_personas_roles_elementos/contracts/item-assignments-api.openapi.yaml`; detalle: sección 14 del mismo documento.
+Todos exigen JWT. Contrato de Sprints: `specs/003-HU_gestion_sprint_dos_semanas/contracts/sprints-api.openapi.yaml`; asignación de elementos: `specs/004-HU_asignacion_elementos_sprint/contracts/sprint-items-api.openapi.yaml`. Detalle de HU-004: sección 12 de `docs/dev-backend/backend-architecture.md`. Contrato de Teams: `specs/012-HU_miembros_equipo_y_roles_tecnicos/contracts/teams-api.openapi.yaml`; detalle de HU-012: sección 13 del mismo documento. Contrato de HU-015: `specs/015-HU_relacion_personas_roles_elementos/contracts/item-assignments-api.openapi.yaml`; detalle: sección 14 del mismo documento.
 
 `tests/Integration/Identity` no usa simulados: importa los realms de `Realm/*.json` en un Keycloak de Testcontainers, pide tokens reales (password grant) y hospeda el `Program` real. La única relajación de configuración es `Keycloak:ssl-required=none` (el Keycloak del contenedor es HTTP); `verify-token-audience`, `realm` y `resource` quedan como en producción y una prueba de guardia lo comprueba.
 
-Documentación viva: `documents/dev-backend/backend-architecture.md`.
+Documentación viva: `docs/dev-backend/backend-architecture.md`.
 
 ## Cómo Compilar y Ejecutar
 

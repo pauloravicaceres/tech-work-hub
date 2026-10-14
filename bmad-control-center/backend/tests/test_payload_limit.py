@@ -9,7 +9,7 @@ import api.artifacts as artifacts_module
 @pytest.fixture
 def payload_limit_client(tmp_path):
     """Fixture providing isolated workspace with oversized and binary documents."""
-    documents_dir = tmp_path / "documents"
+    documents_dir = tmp_path / "docs"
     documents_dir.mkdir()
 
     # 1. Create an oversized text file (5.5 MB)
@@ -45,7 +45,7 @@ class TestPayloadLimitAndMediaType:
     def test_get_artifacts_content_with_oversized_file_returns_413_payload_too_large(self, payload_limit_client):
         client, _ = payload_limit_client
 
-        response = client.get("/api/v1/artifacts/content?path=documents/large_execution.log")
+        response = client.get("/api/v1/artifacts/content?path=docs/large_execution.log")
 
         assert response.status_code == 413
         data = response.json()
@@ -55,7 +55,7 @@ class TestPayloadLimitAndMediaType:
     def test_get_artifacts_content_with_bin_extension_returns_415_unsupported_media_type(self, payload_limit_client):
         client, _ = payload_limit_client
 
-        response = client.get("/api/v1/artifacts/content?path=documents/raw_recording.bin")
+        response = client.get("/api/v1/artifacts/content?path=docs/raw_recording.bin")
 
         assert response.status_code == 415
         data = response.json()
@@ -65,7 +65,7 @@ class TestPayloadLimitAndMediaType:
     def test_get_artifacts_content_with_png_extension_returns_415(self, payload_limit_client):
         client, _ = payload_limit_client
 
-        response = client.get("/api/v1/artifacts/content?path=documents/screenshot.png")
+        response = client.get("/api/v1/artifacts/content?path=docs/screenshot.png")
 
         assert response.status_code == 415
         data = response.json()
@@ -74,7 +74,7 @@ class TestPayloadLimitAndMediaType:
     def test_get_artifacts_content_with_pdf_extension_returns_415(self, payload_limit_client):
         client, _ = payload_limit_client
 
-        response = client.get("/api/v1/artifacts/content?path=documents/document.pdf")
+        response = client.get("/api/v1/artifacts/content?path=docs/document.pdf")
 
         assert response.status_code == 415
         data = response.json()
@@ -83,7 +83,7 @@ class TestPayloadLimitAndMediaType:
     def test_get_artifacts_content_with_normal_size_succeeds(self, payload_limit_client):
         client, _ = payload_limit_client
 
-        response = client.get("/api/v1/artifacts/content?path=documents/normal.md")
+        response = client.get("/api/v1/artifacts/content?path=docs/normal.md")
 
         assert response.status_code == 200
         data = response.json()

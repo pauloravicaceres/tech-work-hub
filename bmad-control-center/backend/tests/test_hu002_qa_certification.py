@@ -13,9 +13,9 @@ import api.workflow as workflow_module
 def qa_isolated_environment(tmp_path):
     """
     Fixture QA que crea un espacio de trabajo hermético con los tres directorios autorizados
-    (documents/, specs/, .specify/) para certificar de forma adversarial la HU-002.
+    (docs/, specs/, .specify/) para certificar de forma adversarial la HU-002.
     """
-    documents_dir = tmp_path / "documents"
+    documents_dir = tmp_path / "docs"
     specs_dir = tmp_path / "specs"
     specify_dir = tmp_path / ".specify"
 
@@ -68,7 +68,7 @@ def qa_isolated_environment(tmp_path):
 
 ### [30-09-2026] Business Analyst
 - **Hora:** 23:14:00
-- **Artefacto generado:** `documents/business-analyst/002-HU_monitoreo.md`
+- **Artefacto generado:** `docs/business-analyst/002-HU_monitoreo.md`
 - **Estado:** BDD completado
 - **⚠️ Puntos Abiertos:** Ninguno
 - **Handoff:** @QA: Auditoría documental
@@ -112,7 +112,7 @@ class TestHU002WorkflowCertification:
 
     def test_GetWorkflowStatus_CuandoTrackerNoExiste_DebeRetornarEstadoIdleCon8EtapasPendientes(self, tmp_path):
         # Arrange
-        non_existent_tracker = tmp_path / "documents" / "inexistente.md"
+        non_existent_tracker = tmp_path / "docs" / "inexistente.md"
         workflow_module.workflow_service = WorkflowService(tracker_path=non_existent_tracker)
         client = TestClient(app)
 
@@ -162,7 +162,7 @@ class TestHU002ArtifactTreeAndEmptyStateCertification:
         assert root["type"] == "DIRECTORY"
         # Verificar raíces autorizadas presentes
         root_names = [child["name"] for child in root["children"]]
-        assert "documents" in root_names
+        assert "docs" in root_names
         assert "specs" in root_names
         assert ".specify" in root_names
 
@@ -176,7 +176,7 @@ class TestHU002ArtifactTreeAndEmptyStateCertification:
         # Assert
         assert response.status_code == 200
         payload = response.json()
-        documents_folder = next(c for c in payload["root_node"]["children"] if c["name"] == "documents")
+        documents_folder = next(c for c in payload["root_node"]["children"] if c["name"] == "docs")
         sa_node = next(c for c in documents_folder["children"] if c["name"] == "solutions-architect")
 
         assert sa_node["is_empty"] is True
@@ -190,7 +190,7 @@ class TestHU002ArtifactContentAndSecurityCertification:
     def test_GetArtifactContent_ConMarkdownYDiagramaMermaid_DebeRetornarContenidoCompletoYTipoMarkdown(self, qa_isolated_environment):
         # Arrange
         client, _ = qa_isolated_environment
-        doc_path = "documents/business-analyst/002-HU_monitoreo.md"
+        doc_path = "docs/business-analyst/002-HU_monitoreo.md"
 
         # Act
         response = client.get(f"/api/v1/artifacts/content?path={doc_path}")
@@ -198,7 +198,7 @@ class TestHU002ArtifactContentAndSecurityCertification:
         # Assert
         assert response.status_code == 200
         payload = response.json()
-        assert payload["relative_path"] == "documents/business-analyst/002-HU_monitoreo.md"
+        assert payload["relative_path"] == "docs/business-analyst/002-HU_monitoreo.md"
         assert payload["filename"] == "002-HU_monitoreo.md"
         assert payload["detected_format"] == "MARKDOWN"
         assert payload["encoding"] == "utf-8"
@@ -209,7 +209,7 @@ class TestHU002ArtifactContentAndSecurityCertification:
     def test_GetArtifactContent_ConArchivoInexistente_DebeRetornarHttp404NotFoundYDetalleRfc7807(self, qa_isolated_environment):
         # Arrange
         client, _ = qa_isolated_environment
-        ghost_path = "documents/business-analyst/inexistente.md"
+        ghost_path = "docs/business-analyst/inexistente.md"
 
         # Act
         response = client.get(f"/api/v1/artifacts/content?path={ghost_path}")
@@ -223,7 +223,7 @@ class TestHU002ArtifactContentAndSecurityCertification:
     def test_GetArtifactContent_ConEscapePuntosParentDirectory_DebeRetornarHttp403Forbidden(self, qa_isolated_environment):
         # Arrange
         client, _ = qa_isolated_environment
-        attack_vector = "documents/../../etc/passwd"
+        attack_vector = "docs/../../etc/passwd"
 
         # Act
         response = client.get(f"/api/v1/artifacts/content?path={attack_vector}")
@@ -236,7 +236,7 @@ class TestHU002ArtifactContentAndSecurityCertification:
     def test_GetArtifactContent_ConEscapeProfundoYDiagonalInversaWindows_DebeRetornarHttp403Forbidden(self, qa_isolated_environment):
         # Arrange
         client, _ = qa_isolated_environment
-        windows_vector = r"documents\..\..\..\Windows\System32\cmd.exe"
+        windows_vector = r"docs\..\..\..\Windows\System32\cmd.exe"
 
         # Act
         response = client.get(f"/api/v1/artifacts/content?path={windows_vector}")
@@ -249,7 +249,7 @@ class TestHU002ArtifactContentAndSecurityCertification:
     def test_GetArtifactContent_ConCodificacionUrlDeTraversal_DebeRetornarHttp403Forbidden(self, qa_isolated_environment):
         # Arrange
         client, _ = qa_isolated_environment
-        encoded_vector = "documents/%2e%2e/%2e%2e/secret.txt"
+        encoded_vector = "docs/%2e%2e/%2e%2e/secret.txt"
 
         # Act
         response = client.get(f"/api/v1/artifacts/content?path={encoded_vector}")
@@ -276,7 +276,7 @@ class TestHU002ArtifactContentAndSecurityCertification:
     def test_GetArtifactContent_ConArchivoSuperiorA5MB_DebeRetornarHttp413PayloadTooLarge(self, qa_isolated_environment):
         # Arrange
         client, _ = qa_isolated_environment
-        oversized_path = "documents/data-architect/huge_payload.sql"
+        oversized_path = "docs/data-architect/huge_payload.sql"
 
         # Act
         response = client.get(f"/api/v1/artifacts/content?path={oversized_path}")
@@ -290,7 +290,7 @@ class TestHU002ArtifactContentAndSecurityCertification:
     def test_GetArtifactContent_ConArchivoBinarioPng_DebeRetornarHttp415UnsupportedMediaType(self, qa_isolated_environment):
         # Arrange
         client, _ = qa_isolated_environment
-        binary_path = "documents/designer-ux/wireframe.png"
+        binary_path = "docs/designer-ux/wireframe.png"
 
         # Act
         response = client.get(f"/api/v1/artifacts/content?path={binary_path}")
@@ -326,7 +326,7 @@ class TestHU002WebSocketCommunicationCertification:
         with client.websocket_connect("/ws/v1/events") as websocket:
             websocket.send_text(json.dumps({
                 "event": "SUBSCRIBE_ARTIFACT",
-                "path": "documents/business-analyst/002-HU_monitoreo.md"
+                "path": "docs/business-analyst/002-HU_monitoreo.md"
             }))
             # Latido PING de confirmación
             websocket.send_text(json.dumps({"event": "PING"}))
