@@ -32,7 +32,7 @@ Para mantener el determinismo del *Ledger*, los agentes mutadores y lectores uti
 | 012 | [P2] Gestión de Equipos y Roles Técnicos | 012-miembros-equipo-y-roles-tecnicos | ⚠️ [PROPUESTO] Gestión de miembros del equipo y roles técnicos como datos maestros. Sin dependencia de puntos abiertos. | ACTIVE | feat/012-miembros-equipo-y-roles-tecnicos |
 | 013 | [P2] Gestión de Equipos y Roles Técnicos | 013-capacidades-y-asignaciones | ⚠️ [PROPUESTO] Capacidades y asignaciones de las personas. Bloqueada por ❓ modelo de cálculo de capacidad individual y por rol; depende de 012. | BACKLOG | — |
 | 014 | [P2] Gestión de Equipos y Roles Técnicos | 014-actividades-y-carga-por-persona | ⚠️ [PROPUESTO] Actividades y carga de trabajo por persona. Depende de 012 y de actividades de P4. | BACKLOG | — |
-| 015 | [P2] Gestión de Equipos y Roles Técnicos | 015-relacion-personas-roles-elementos | ⚠️ [PROPUESTO] Relación entre personas, roles y elementos de trabajo. Depende de 012 y de P1. | READY-FOR-DEV | feat/015-relacion-personas-roles-elementos |
+| 015 | [P2] Gestión de Equipos y Roles Técnicos | 015-relacion-personas-roles-elementos | ⚠️ [PROPUESTO] Relación entre personas, roles y elementos de trabajo. Depende de 012 y de P1. | ACTIVE | feat/015-relacion-personas-roles-elementos |
 | 016 | [P3] Catálogo y Documentación de Aplicaciones | 016-ficha-general-aplicacion | ⚠️ [PROPUESTO] Información general, responsables, equipo relacionado y tecnologías de cada aplicación. Sin dependencia de puntos abiertos; el catálogo base ya existe por HU-002. | BACKLOG | — |
 | 017 | [P3] Catálogo y Documentación de Aplicaciones | 017-ambientes-componentes-integraciones | ⚠️ [PROPUESTO] Ambientes, componentes e integraciones de la aplicación. Depende de 016. | BACKLOG | — |
 | 018 | [P3] Catálogo y Documentación de Aplicaciones | 018-referencias-repositorios-y-documentacion | ⚠️ [PROPUESTO] Referencias a repositorios y documentación de la aplicación. Bloqueada por ❓ almacenamiento físico vs. referencias externas y ❓ visibilidad/edición; depende de 016. | BACKLOG | — |
@@ -53,7 +53,7 @@ Para mantener el determinismo del *Ledger*, los agentes mutadores y lectores uti
 | 033 | [P6] Dashboard Ejecutivo del Líder Técnico | 033-dashboard-trabajo-no-planificado | ⚠️ [PROPUESTO] Trabajo planificado versus no planificado, actividades pendientes y en progreso, incidentes abiertos y atendidos y tiempo invertido en incidentes. Depende de P4. | BACKLOG | — |
 | 034 | [P6] Dashboard Ejecutivo del Líder Técnico | 034-dashboard-compromisos-pendientes | ⚠️ [PROPUESTO] Compromisos pendientes de reuniones. Depende de 028. | BACKLOG | — |
 | 035 | Deuda Técnica / UI Core | 035-refactorizacion-esqueleto-ui | Layout de aplicación y estructura de páginas y formularios alineados al Skeleton de la Constitución, con PrimeNG 22 nativo | ACTIVE | feat/035-refactorizacion-esqueleto-ui |
-| 036 | Deuda Técnica / UI Core | 036-theming-claro-oscuro-ui | Theme visual de la aplicación (paleta, radios y modo claro/oscuro con conmutador) calcado de las evidencias; estándar visual inmutable para las HUs futuras | BACKLOG | feat/036-theming-claro-oscuro-ui |
+| 036 | Deuda Técnica / UI Core | 036-theming-claro-oscuro-ui | Theme visual de la aplicación (paleta, radios y modo claro/oscuro con conmutador) calcado de las evidencias; estándar visual inmutable para las HUs futuras | ACTIVE | feat/036-theming-claro-oscuro-ui |
 
 ---
 
