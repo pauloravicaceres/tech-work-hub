@@ -4,6 +4,28 @@
     "created_at": "2026-10-03 07:14:22",
     "context": "D:\\Paulo\\Proyectos\\tech-work-hub\\.specify\\memory\\constitution.md",
     "tracker": "D:\\Paulo\\Proyectos\\tech-work-hub\\docs\\tracker_bmad.md",
+    "providers": {
+        "default": {
+            "provider": "agy",
+            "model": "gemini-3.8-flash",
+            "effort": "low"
+        },
+        "speckit": {
+            "provider": "agy",
+            "model": "gemini-3.8-flash",
+            "effort": "medium"
+        },
+        "dev-backend": {
+            "provider": "agy",
+            "model": "gemini-3.8-flash",
+            "effort": "medium"
+        },
+        "dev-frontend": {
+            "provider": "agy",
+            "model": "gemini-3.8-flash",
+            "effort": "medium"
+        }
+    },
     "routes_bmad": {
         "business-storyteller": "D:\\Paulo\\Proyectos\\tech-work-hub\\docs\\business-storyteller",
         "product-analyst": "D:\\Paulo\\Proyectos\\tech-work-hub\\docs\\product-analyst",

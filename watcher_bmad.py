@@ -26,6 +26,11 @@ if sys.platform.startswith('win'):
 # RUTAS Y DIRECTORIOS DINÁMICOS
 # ==========================================
 DIRECTORIO_RAIZ = Path(__file__).resolve().parent
+if str(DIRECTORIO_RAIZ) not in sys.path:
+    sys.path.insert(0, str(DIRECTORIO_RAIZ))
+
+from utils.providers import ProviderFactory
+
 TRACKER_PATH = str(DIRECTORIO_RAIZ / "docs" / "tracker_bmad.md")
 
 last_implement_trigger = 0
@@ -55,19 +60,83 @@ def sincronizar_skills_speckit():
         if skill_dir.is_dir():
             shutil.copytree(skill_dir, destino / skill_dir.name, dirs_exist_ok=True)
 
-def ejecutar_speckit(skill, argumentos="", directiva=None, entorno=None):
+def obtener_config_proveedor(nombre_clave: str = "default") -> dict:
     """
-    Ejecuta una skill de Spec Kit con Claude Code en modo headless.
-    - directiva: archivo con el "alma" del agente; se añade al system prompt (Claude no lee
-      .specify/memory/active_agent_directive.md por sí solo).
+    Obtiene la configuración de proveedor, modelo y esfuerzo para un agente o fase
+    desde config_bmad.json. Soporta tanto formato string ("claude") como dict ({ "provider": "...", "model": "...", "effort": "..." }).
+    """
+    config_file = DIRECTORIO_RAIZ / "config_bmad.json"
+    default_cfg = {"provider": "claude", "model": "claude-sonnet-5-5", "effort": "low"}
+    if not config_file.exists():
+        return default_cfg
+
+    try:
+        with open(config_file, encoding="utf-8") as f:
+            cfg = json.load(f)
+        providers = cfg.get("providers", {})
+    except Exception:
+        return default_cfg
+
+    # Resolver fallback default
+    base_default = providers.get("default", "claude")
+    if isinstance(base_default, str):
+        default_cfg["provider"] = base_default
+    elif isinstance(base_default, dict):
+        default_cfg["provider"] = base_default.get("provider", "claude")
+        if "model" in base_default:
+            default_cfg["model"] = base_default["model"]
+        if "effort" in base_default:
+            default_cfg["effort"] = base_default["effort"]
+
+    target = providers.get(nombre_clave)
+    if not target:
+        return default_cfg
+
+    if isinstance(target, str):
+        return {
+            "provider": target,
+            "model": default_cfg.get("model"),
+            "effort": default_cfg.get("effort"),
+        }
+    elif isinstance(target, dict):
+        return {
+            "provider": target.get("provider", default_cfg["provider"]),
+            "model": target.get("model", default_cfg.get("model")),
+            "effort": target.get("effort", default_cfg.get("effort")),
+        }
+    return default_cfg
+
+def ejecutar_speckit(skill, argumentos="", directiva=None, entorno=None, provider_name=None, model=None, effort=None):
+    """
+    Ejecuta una skill de Spec Kit con el proveedor LLM en modo headless (Strategy Pattern).
+    - directiva: archivo con el "alma" del agente; se añade al system prompt.
+    - provider_name: nombre del proveedor ('claude', 'agy', 'codex', etc.). Si no se pasa, toma la config de 'speckit'.
+    - model: modelo a utilizar.
+    - effort: nivel de esfuerzo de razonamiento.
     Captura la salida; si falla, deja el motivo en el tracker (antes el error se perdía en DEVNULL).
     """
+    if not provider_name:
+        cfg = obtener_config_proveedor("speckit")
+        provider_name = cfg["provider"]
+        model = model or cfg.get("model")
+        effort = effort or cfg.get("effort")
+
     nombre = f"/speckit-{skill}"
-    prompt = nombre + (f" {argumentos}" if argumentos else "")
-    cmd = ["claude", "-p", "--dangerously-skip-permissions"]
+    provider = ProviderFactory.get_provider(provider_name)
+    cmd = provider.get_headless_cmd(model=model, effort=effort)
+    prompt_texto = nombre + (f" {argumentos}" if argumentos else "")
     if directiva and Path(directiva).exists():
-        cmd += ["--append-system-prompt-file", str(directiva)]
-    cmd.append(prompt)
+        prompt_flag = getattr(provider, "get_prompt_flag", lambda: "--append-system-prompt-file")()
+        if prompt_flag:
+            cmd += [prompt_flag, str(directiva)]
+        else:
+            try:
+                with open(directiva, encoding="utf-8") as df:
+                    contenido_dir = df.read().strip()
+                prompt_texto = f"[DIRECTIVA DEL AGENTE]\n{contenido_dir}\n\n[INSTRUCCIÓN]\n{prompt_texto}"
+            except Exception:
+                pass
+    cmd.append(prompt_texto)
     try:
         res = subprocess.run(
             cmd, cwd=DIRECTORIO_RAIZ, capture_output=True, text=True,
@@ -75,7 +144,7 @@ def ejecutar_speckit(skill, argumentos="", directiva=None, entorno=None):
             env={**os.environ, **entorno} if entorno else None,
         )
     except FileNotFoundError:
-        res = subprocess.CompletedProcess([], 127, "", "No se encontró el ejecutable 'claude' en el PATH.")
+        res = subprocess.CompletedProcess([], 127, "", f"No se encontró el ejecutable '{cmd[0]}' en el PATH.")
     if res.returncode != 0:
         detalle = (res.stderr.strip() or res.stdout.strip())[-500:].replace("\n", " ")
         write_watcher_log(f"🚨 ERROR en {nombre} (código {res.returncode}): {detalle}")
@@ -824,13 +893,16 @@ def ejecutar_sdd_fase_implementacion(retrabajo=None):
         memory_dir.mkdir(parents=True, exist_ok=True)
         active_directive_path = memory_dir / "active_agent_directive.md"
         
-        # Determinar el tipo de proyecto
+        # Determinar el tipo de proyecto y proveedores preferidos
         project_type = "fullstack"
         config_full_path = DIRECTORIO_RAIZ / "config_bmad.json"
         if config_full_path.exists():
             with open(config_full_path, encoding="utf-8") as f:
                 config = json.load(f)
             project_type = config.get("project_type", "fullstack").lower()
+
+        cfg_backend = obtener_config_proveedor("dev-backend")
+        cfg_frontend = obtener_config_proveedor("dev-frontend")
             
         involucra_backend = project_type in ["fullstack", "headless"]
         involucra_frontend = project_type in ["fullstack", "ui"]
@@ -885,8 +957,11 @@ Lee obligatoriamente la plantilla maestra en dev-backend/templates/backend-archi
             
             ts_inicio_back = time.time()
             try:
-                print("🏃 [SpecKit] Ejecutando implementación de Backend...")
-                write_watcher_log("⚡ [SDD Auto-Runner] Ejecutando implementación Backend (/speckit.implement)...")
+                prov_b = cfg_backend["provider"]
+                mod_b = cfg_backend.get("model", "default")
+                eff_b = cfg_backend.get("effort", "low")
+                print(f"🏃 [SpecKit] Ejecutando implementación de Backend ({prov_b}:{mod_b} - {eff_b})...")
+                write_watcher_log(f"⚡ [SDD Auto-Runner] Ejecutando implementación Backend (/speckit.implement) con {prov_b} ({mod_b})...")
                 
                 doc_back_path = DIRECTORIO_RAIZ / "docs" / "dev-backend" / "backend-architecture.md"
                 doc_back_path.parent.mkdir(parents=True, exist_ok=True)
@@ -895,6 +970,9 @@ Lee obligatoriamente la plantilla maestra en dev-backend/templates/backend-archi
                     instruccion_doc_viva("docs/dev-backend/backend-architecture.md", alcance="backend",
                                          ruta_readme=ruta_readme_codigo("backend")) + arg_retrabajo("backend"),
                     directiva=active_directive_path,
+                    provider_name=prov_b,
+                    model=cfg_backend.get("model"),
+                    effort=cfg_backend.get("effort"),
                 )
                 if res_back.returncode != 0:
                     print("❌ [SpecKit] Falló la ejecución del subproceso para Backend.")
@@ -903,7 +981,7 @@ Lee obligatoriamente la plantilla maestra en dev-backend/templates/backend-archi
                 # POST-CHECK DE VALIDACIÓN: Backend Architecture Doc
                 if not doc_back_path.exists() or doc_back_path.stat().st_mtime < (ts_inicio_back - 2):
                     salida = (res_back.stdout or "").strip()[-300:].replace("\n", " ")
-                    msg_err = f"@WATCHER: 🚨 ERROR: SpecKit omitió la documentación viva de Backend en 'docs/dev-backend/backend-architecture.md'. Salida de Claude: {salida}"
+                    msg_err = f"@WATCHER: 🚨 ERROR: SpecKit omitió la documentación viva de Backend en 'docs/dev-backend/backend-architecture.md'. Salida de {prov_b}: {salida}"
                     print(f"❌ {msg_err}")
                     write_watcher_log(msg_err)
                     return False
@@ -953,8 +1031,11 @@ Lee obligatoriamente la plantilla maestra en dev-frontend/templates/frontend-arc
             
             ts_inicio_front = time.time()
             try:
-                print("🏃 [SpecKit] Ejecutando implementación de Frontend...")
-                write_watcher_log("⚡ [SDD Auto-Runner] Ejecutando implementación Frontend (/speckit.implement)...")
+                prov_f = cfg_frontend["provider"]
+                mod_f = cfg_frontend.get("model", "default")
+                eff_f = cfg_frontend.get("effort", "low")
+                print(f"🏃 [SpecKit] Ejecutando implementación de Frontend ({prov_f}:{mod_f} - {eff_f})...")
+                write_watcher_log(f"⚡ [SDD Auto-Runner] Ejecutando implementación Frontend (/speckit.implement) con {prov_f} ({mod_f})...")
                 
                 doc_front_path = DIRECTORIO_RAIZ / "docs" / "dev-frontend" / "frontend-architecture.md"
                 doc_front_path.parent.mkdir(parents=True, exist_ok=True)
@@ -963,6 +1044,9 @@ Lee obligatoriamente la plantilla maestra en dev-frontend/templates/frontend-arc
                     instruccion_doc_viva("docs/dev-frontend/frontend-architecture.md", alcance="frontend",
                                          ruta_readme=ruta_readme_codigo("frontend")) + arg_retrabajo("frontend"),
                     directiva=active_directive_path,
+                    provider_name=prov_f,
+                    model=cfg_frontend.get("model"),
+                    effort=cfg_frontend.get("effort"),
                 )
                 if res_front.returncode != 0:
                     print("❌ [SpecKit] Falló la ejecución del subproceso para Frontend.")
@@ -971,7 +1055,7 @@ Lee obligatoriamente la plantilla maestra en dev-frontend/templates/frontend-arc
                 # POST-CHECK DE VALIDACIÓN: Frontend Architecture Doc
                 if not doc_front_path.exists() or doc_front_path.stat().st_mtime < (ts_inicio_front - 2):
                     salida = (res_front.stdout or "").strip()[-300:].replace("\n", " ")
-                    msg_err = f"@WATCHER: 🚨 ERROR: SpecKit omitió la documentación viva de Frontend en 'docs/dev-frontend/frontend-architecture.md'. Salida de Claude: {salida}"
+                    msg_err = f"@WATCHER: 🚨 ERROR: SpecKit omitió la documentación viva de Frontend en 'docs/dev-frontend/frontend-architecture.md'. Salida de {prov_f}: {salida}"
                     print(f"❌ {msg_err}")
                     write_watcher_log(msg_err)
                     return False

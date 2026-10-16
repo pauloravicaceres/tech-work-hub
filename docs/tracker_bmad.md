@@ -1874,3 +1874,23 @@ Puedes responder con la letra de la opción (por ejemplo, "A"), aceptar la recom
 - **⚠️ Puntos Abiertos:** Ninguno bloqueante; quedan por ratificar en la Constitución E-03..E-09, #007595, borde de campo y fondo de campo oscuro (T045).
 @WATCHER: GITOPS-MERGE-CLOSE feat/036-HU_theming_claro_oscuro_ui
 - **Handoff:** @PM: Código certificado y rama consolidada en dev. Procede con las épicas pendientes del plan MVP: P1 (historias 005 a 011), P2 (013 y 014), P3, P4, P5 y P6 sin historia registrada ni implementada.
+
+### [16-10-2026] Product Manager
+- **Hora:** 01:38:45
+- **Artefacto generado:** `docs/product-manager/mvp-tech-work-hub.md`
+- **Estado:** Auditoría de ledger completada: todas las historias candidatas de P1 a P6 ya se encuentran descompuestas y registradas en BACKLOG en specs/README.md. Las historias restantes de P1 y P2 presentan bloqueos conceptuales por puntos abiertos (❓). Se evalúa la ruta crítica y se formulan opciones estructuradas para decisión del humano antes de abrir rama o delegar.
+- **⚠️ Puntos Abiertos:** ❓ Catálogo de estados y reglas de transición para P1 (005-011); ❓ Modelo de cálculo de capacidad individual y por rol para P2 (013-014); ❓ Definición de almacenamiento físico vs. referencias en P3 (018-019).
+- **Handoff:** @HUMANO: El ledger specs/README.md se encuentra conciliado y con todas las historias candidatas (001 a 036) debidamente registradas. Dado que las historias pendientes de P1 (005 a 011) y P2 (013 a 014) dependen de puntos abiertos (❓), se presentan las siguientes opciones estratégicas para autorizar el avance hacia el business-analyst:
+1. **[Recomendada] P3 — Ficha General de Aplicación (`016-ficha-general-aplicacion`):** Pertenece a la épica inmediata P3 (Catálogo y Documentación de Aplicaciones). No presenta puntos abiertos ni bloqueantes; el catálogo base de aplicaciones ya existe en el backend desde HU-002 (`ApplicationModuleApi` y `GET /api/applications`). Permite avanzar la ruta crítica funcional sin asumir reglas no consensuadas.
+2. **P1 — Flujo de Estados del Backlog (`005-flujo-estados-backlog`):** Continuar en el núcleo transaccional P1, requiriendo que el humano o el business-analyst defina el catálogo formal de estados del backlog multitipo y sus transiciones permitidas.
+3. **P4 — Registro de Actividades Operativas (`021-registro-actividades-operativas`):** Avanzar con el trabajo no planificado de P4, aprovechando que los responsables ya están soportados por los miembros y roles de P2 (`012` y `015` en ACTIVE).
+Por favor, responde indicando el número de opción seleccionada para crear la rama GitOps y delegar al business-analyst.
+
+### [16-10-2026] Product Manager
+- **Hora:** 01:43:15
+- **Artefacto generado:** `specs/README.md`
+- **Estado:** Opción 1 autorizada por HITL. Se promovió la HU 016-ficha-general-aplicacion a IN-PROGRESS en el ledger con la rama feat/016-ficha-general-aplicacion asignada. Se comanda la creación de rama GitOps y se delega el turno al Business Analyst.
+- **⚠️ Puntos Abiertos:** Ninguno bloqueante para la ficha general; las subcapacidades de diagramas y adjuntos (018, 019) permanecen en backlog.
+@WATCHER: GITOPS-BRANCH-CREATE feat/016-ficha-general-aplicacion
+- **Handoff:** @BA: Iniciar el análisis de negocio y redacción de la Historia de Usuario seleccionada: 016-ficha-general-aplicacion (Épica P3 - Catálogo y Documentación de Aplicaciones).
+
