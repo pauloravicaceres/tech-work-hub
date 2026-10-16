@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
 start_agents.py
 Despliega la flota completa de 15 agentes de BMAD organizada en 3 pestañas temáticas en Herdr:
@@ -27,33 +27,65 @@ if sys.platform == "win32":
 # 1. CONFIGURACIÓN ESTRATÉGICA (FinOps / LLMOps)
 # ==========================================
 WORKSPACE_DIR = Path(__file__).resolve().parent.parent
+if str(WORKSPACE_DIR) not in sys.path:
+    sys.path.insert(0, str(WORKSPACE_DIR))
+
+from utils.providers import ProviderFactory
 
 TABS_CONFIG = {
     "Negocio y Producto": [
         # Fila 1
-        {"name": "business-storyteller", "model": "claude-sonnet-5-5", "effort": "low"},
-        {"name": "product-manager",     "model": "claude-sonnet-5-5", "effort": "low", "target": "business-storyteller", "direction": "right"},
-        {"name": "business-analyst",    "model": "claude-sonnet-5-5", "effort": "medium", "target": "product-manager", "direction": "right"},
+        {"name": "business-storyteller", "provider": "agy", "model": "gemini-3.8-flash", "effort": "low"},
+        {"name": "product-manager",     "provider": "agy", "model": "gemini-3.8-flash", "effort": "low", "target": "business-storyteller", "direction": "right"},
+        {"name": "business-analyst",    "provider": "agy", "model": "gemini-3.8-flash", "effort": "low", "target": "product-manager", "direction": "right"},
 
         # Fila 2
-        {"name": "product-analyst",     "model": "claude-sonnet-5-5", "effort": "low", "target": "business-storyteller", "direction": "down"},
-        {"name": "qa-documental",       "model": "claude-sonnet-5-5", "effort": "low", "target": "product-manager", "direction": "down"},
-        {"name": "designer-ux",         "model": "claude-sonnet-5-5", "effort": "low", "target": "business-analyst", "direction": "down"},
+        {"name": "product-analyst",     "provider": "agy", "model": "gemini-3.8-flash", "effort": "low", "target": "business-storyteller", "direction": "down"},
+        {"name": "qa-documental",       "provider": "agy", "model": "gemini-3.8-flash", "effort": "low", "target": "product-manager", "direction": "down"},
+        {"name": "designer-ux",         "provider": "agy", "model": "gemini-3.8-flash", "effort": "medium", "target": "business-analyst", "direction": "down"},
     ],
     "Arquitectura e Ingeniería": [
-        {"name": "solutions-architect", "model": "claude-sonnet-5-5", "effort": "medium"},
-        {"name": "data-architect",      "model": "claude-sonnet-5-5", "effort": "medium", "target": "solutions-architect", "direction": "right"},
-        {"name": "api-architect",       "model": "claude-sonnet-5-5", "effort": "medium", "target": "solutions-architect", "direction": "down"},
-        {"name": "qa-tech",             "model": "claude-sonnet-5-5", "effort": "medium", "target": "data-architect", "direction": "down"},
+        {"name": "solutions-architect", "provider": "agy", "model": "gemini-3.8-flash", "effort": "medium"},
+        {"name": "data-architect",      "provider": "agy", "model": "gemini-3.8-flash", "effort": "medium", "target": "solutions-architect", "direction": "right"},
+        {"name": "api-architect",       "provider": "agy", "model": "gemini-3.8-flash", "effort": "medium", "target": "solutions-architect", "direction": "down"},
+        {"name": "qa-tech",             "provider": "agy", "model": "gemini-3.8-flash", "effort": "medium", "target": "data-architect", "direction": "down"},
     ],
     "Desarrollo y Despliegue": [
         # Fase D automatizada: @DEV-BACK y @DEV-FRONT son asimilados por SpecKit.
-        # Solo mantenemos a los auditores e infraestructura.
-        {"name": "qa-auto",      "model": "claude-sonnet-5-5", "effort": "low"},
-        {"name": "code-review",  "model": "claude-sonnet-5-5", "effort": "low", "target": "qa-auto", "direction": "right"},
-        {"name": "devops",       "model": "claude-sonnet-5-5", "effort": "low", "target": "code-review", "direction": "right"},
+        # Solo mantenemos a los auditores e infraestructura con soporte multi-proveedor demostrado.
+        {"name": "qa-auto",      "provider": "agy",    "model": "gemini-3.8-flash", "effort": "low"},
+        {"name": "code-review",  "provider": "agy",    "model": "gemini-3.8-flash", "effort": "low", "target": 'qa-auto', 'direction': 'right'},
+        {"name": "devops",       "provider": "agy",    "model": "gemini-3.8-flash", "effort": "low",  "target": 'code-review', 'direction': 'right'},
     ]
 }
+
+# TABS_CONFIG = {
+#     "Negocio y Producto": [
+#         # Fila 1
+#         {"name": "business-storyteller", "provider": "claude", "model": "claude-sonnet-5-5", "effort": "low"},
+#         {"name": "product-manager",     "provider": "agy", "model": "gemini-3.8-flash", "effort": "low", "target": "business-storyteller", "direction": "right"},
+#         {"name": "business-analyst",    "provider": "codex", "model": "GTP-6-Luna", "effort": "low", "target": "product-manager", "direction": "right"},
+
+#         # Fila 2
+#         {"name": "product-analyst",     "provider": "claude", "model": "claude-sonnet-5-5", "effort": "low", "target": "business-storyteller", "direction": "down"},
+#         {"name": "qa-documental",       "provider": "agy", "model": "gemini-3.8-flash", "effort": "low", "target": "product-manager", "direction": "down"},
+#         {"name": "designer-ux",         "provider": "codex", "model": "GTP-6-Luna", "effort": "medium", "target": "business-analyst", "direction": "down"},
+#     ],
+#     "Arquitectura e Ingeniería": [
+#         {"name": "solutions-architect", "provider": "claude", "model": "claude-sonnet-5-5", "effort": "medium"},
+#         {"name": "data-architect",      "provider": "claude", "model": "claude-sonnet-5-5", "effort": "medium", "target": "solutions-architect", "direction": "right"},
+#         {"name": "api-architect",       "provider": "claude", "model": "claude-sonnet-5-5", "effort": "medium", "target": "solutions-architect", "direction": "down"},
+#         {"name": "qa-tech",             "provider": "claude", "model": "claude-sonnet-5-5", "effort": "medium", "target": "data-architect", "direction": "down"},
+#     ],
+#     "Desarrollo y Despliegue": [
+#         # Fase D automatizada: @DEV-BACK y @DEV-FRONT son asimilados por SpecKit.
+#         # Solo mantenemos a los auditores e infraestructura con soporte multi-proveedor demostrado.
+#         {"name": "qa-auto",      "provider": "claude", "model": "claude-sonnet-5-5", "effort": "low"},
+#         {"name": "code-review",  "provider": "agy",    "model": "gemini-3.8-flash", "effort": "low", "target": "qa-auto", "direction": "right"},
+#         {"name": "devops",       "provider": "codex",  "model": "o3", "effort": "low", "target": "code-review", "direction": "right"},
+#     ]
+# }
+
 
 # ==========================================
 # 2. FUNCIONES DE APOYO Y HERDR CLI
@@ -155,28 +187,17 @@ def configurar_agente_en_panel(pane_id, nombre_agente, config_agente):
 
     time.sleep(1)
 
-    # 2. Iniciar el agente con agy, inyectando perfil y modelo directamente al arranque
-    # cmd_start = [
-    #     "herdr", "agent", "start", nombre_agente,
-    #     "--kind", "agy",
-    #     "--pane", pane_id,
-    #     "--", 
-    #     "--dangerously-skip-permissions",
-    #     "--add-dir", str(WORKSPACE_DIR),
-    #     "--model", modelo_final,
-    #     "--agent", f"{nombre_agente}/AGENTS.md" 
-    # ]
-    # 2. Iniciar el agente con claude, inyectando perfil y modelo directamente al arranque
+    # 2. Iniciar el agente mediante el proveedor configurado (Strategy pattern)
+    nombre_proveedor = config_agente.get("provider", "claude")
+    provider = ProviderFactory.get_provider(nombre_proveedor)
+    dir_agente = WORKSPACE_DIR / nombre_agente
+
     cmd_start = [
         "herdr", "agent", "start", nombre_agente,
-        "--kind", "claude",
+        "--kind", nombre_proveedor,
         "--pane", pane_id,
-        "--", 
-        "--dangerously-skip-permissions",
-        "--add-dir", str(WORKSPACE_DIR / nombre_agente),
-        "--model", modelo_final,
-        "--effort", esfuerzo,
-    ]
+        "--"
+    ] + provider.get_herdr_start_args(dir_agente, modelo_final, esfuerzo)
     
     res_start = subprocess.run(
         cmd_start,
@@ -186,7 +207,7 @@ def configurar_agente_en_panel(pane_id, nombre_agente, config_agente):
         errors="replace"
     )
     if res_start.returncode == 0:
-        print(f"      🤖 Agente inicializado con modelo {modelo_final} (esfuerzo: {esfuerzo}).")
+        print(f"      🤖 Agente inicializado ({nombre_proveedor}) con modelo {modelo_final} (esfuerzo: {esfuerzo}).")
     else:
         err = res_start.stderr.strip() or res_start.stdout.strip()
         print(f"      ⚠️ Advertencia al arrancar agente {nombre_agente}: {err}")
