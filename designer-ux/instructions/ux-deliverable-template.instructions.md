@@ -1,19 +1,19 @@
 ---
-description: 'Usar para estructurar la salida física del archivo ux_[ID]_[nombre_corto].md en la carpeta designer-ux. Define las secciones obligatorias y las plantillas de delegación en el tracker.'
+description: 'Usar para estructurar la salida física del archivo ux-NNN-nombre-de-la-historia.md en la carpeta designer-ux. Define las secciones obligatorias y las plantillas de delegación en el tracker.'
 applyTo: '**'
 ---
 
 # Plantilla Determinista del Entregable UX
 
-> Estructura canónica obligatoria para el archivo `ux_[ID]_[nombre_corto].md` en BMAD.
+> Estructura canónica obligatoria para el archivo `ux-NNN-nombre-de-la-historia.md` en BMAD.
 
 ---
 
 ## Convención de Nombres de Archivo
 ```
-ux_[ID]_[nombre_corto].md
+ux-NNN-nombre-de-la-historia.md
 ```
-- Se deriva directamente del nombre del archivo de la Historia de Usuario aprobada (ej. de `012-HU_motor_reservas.md` se genera obligatoriamente `ux_012_motor_reservas.md`: sin `HU_` y con guion bajo tras el correlativo).
+- Se deriva directamente del nombre del archivo de la Historia de Usuario aprobada: prefijo `ux`, un guion y el nombre de la HU sin `.md`, copiado tal cual (ej. de `012-motor-reservas.md` se genera obligatoriamente `ux-012-motor-reservas.md`). Todo el nombre va en kebab-case (minúsculas ASCII sin tildes, palabras separadas por un único guion medio (`-`); prohibidos guiones bajos, espacios, mayúsculas, guiones consecutivos y guiones al inicio o al final) y debe cumplir `^ux-\d{3}-[a-z0-9]+(-[a-z0-9]+)*\.md$`.
 
 ---
 
@@ -71,7 +71,7 @@ ux_[ID]_[nombre_corto].md
 Usa `read_file` para obtener el texto del tracker, añade un salto de línea, y luego usa `write_file` para pegar únicamente la orden de delegación sin destruir el historial.
 
 **Imprime siempre exactamente esto (el traspaso es incondicional al `@SA:` y no depende de cuántas épicas o HU falten; elegir la siguiente historia es del PM):**
-`@SA: El diseño visual de la HU [NNN-HU_nombre] ha concluido exitosamente en [Archivo]. Procede con el tech-design y arquitectura.`
+`@SA: El diseño visual de la HU [NNN-nombre] ha concluido exitosamente en [Archivo]. Procede con el tech-design y arquitectura.`
 
 ```
 

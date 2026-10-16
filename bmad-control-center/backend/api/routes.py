@@ -3,6 +3,8 @@ import re
 from typing import Optional
 from fastapi import APIRouter, HTTPException
 
+import hu_naming
+
 from models.schemas import DecisionPayload
 from services.tracker_service import TrackerService
 from services.connection_manager import manager
@@ -97,24 +99,40 @@ async def make_decision(gate_id: str, payload: DecisionPayload):
             art = last_block.get("generated_artifact") or ""
             filename = art.split("/")[-1] if art else "artefacto.md"
             
+            # Validación determinista de nombres de artefacto / HU
+            if author in ["Business Analyst", "BA"]:
+                if art:
+                    try:
+                        hu_naming.validar_nombre_hu(filename)
+                    except hu_naming.NombreHUInvalido as e:
+                        raise HTTPException(status_code=422, detail=str(e))
+            elif author in ["Business Storyteller", "BS", "Product Analyst", "PA", "Product Manager", "PM", "QA Documental", "QA", "Designer UX", "UX", "Solutions Architect", "SA", "QA-Tech Senior", "QA-Tech", "QT"]:
+                if art:
+                    try:
+                        hu_naming.validar_nombre_artefacto(filename)
+                    except hu_naming.NombreArtefactoInvalido as e:
+                        raise HTTPException(status_code=422, detail=str(e))
+
             if author in ["Product Analyst", "PA"]:
                 handoff_text = f"@PM: El Product Brief ha sido auditado y aprobado formalmente en el archivo {filename}. Procede con el análisis estratégico y la creación del Backlog del MVP."
             elif author in ["Business Storyteller", "BS"]:
                 handoff_text = f"@PA: La idea de usuario ha sido auditada y aprobada por negocio en el archivo {filename}. Procede con la creación del PRODUCT BRIEF."
             elif author in ["Product Manager", "PM"]:
-                import re
                 handoff_str = last_block.get("handoff_directive") or ""
                 # Determinar si es cierre de inicio de épica o cierre final
                 if "100% concluido" in handoff_str or "no hay más épicas" in handoff_str.lower():
                     handoff_text = "@HUMANO: Proyecto completado exitosamente. No hay más acciones requeridas por el enjambre."
                 else:
                     epic = payload.epic_id.strip() if payload.epic_id and payload.epic_id.strip() else None
+                    try:
+                        epic = (hu_naming.validar_identificador_hu(epic) if epic
+                                else hu_naming.extraer_identificador_delegado(handoff_str))
+                    except hu_naming.NombreHUInvalido as e:
+                        raise HTTPException(status_code=422, detail=str(e))
                     if not epic:
-                        match = re.search(r"delegar es\s+(\d{3}-HU_[\w_]+)", handoff_str)
-                        if match:
-                            epic = match.group(1)
-                        else:
-                            epic = "001-HU_epic_generica"
+                        raise HTTPException(status_code=422, detail=(
+                            "No se encontró el identificador de la HU a delegar. Indícalo en epic_id con el formato "
+                            f"{hu_naming.FORMATO_HU[:-3]} (ej. {hu_naming.EJEMPLO_HU[:-3]})."))
                     handoff_text = f"@WATCHER: GITOPS-BRANCH-CREATE feat/{epic}\n@BA: El MVP y Backlog han sido aprobados en el archivo {filename}. La rama feat/{epic} ha sido creada. Procede con el análisis de negocio y redacción de Historias de Usuario para la épica {epic}. Usa el identificador universal estricto para crear el archivo físico en docs/business-analyst."
             elif author in ["Business Analyst", "BA"]:
                 handoff_text = f"@QA: La Historia de Usuario ha sido revisada en el archivo {filename}. Procede con la auditoría documental."

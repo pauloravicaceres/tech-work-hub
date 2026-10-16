@@ -9,9 +9,9 @@ Su objetivo central es desglosar las Épicas dictadas por el Product Manager en 
 ### 📦 Entradas y Artefactos de Salida
 
 * **Entradas (Lectura):**
-  * **Escenario A (Nueva HU):** `pb_*.md` (Product Brief) y `mvp_*.md` (Plan de Gestión) bajo instrucción del `@PM:`.
-  * **Escenario B (Subsanación por Rechazo):** `feedback_qa_[ID]_[nombre_corto].md` y la versión previa de `hu_[ID]_[nombre_corto].md` bajo instrucción del `@QA:`.
-* **Artefacto Generado:** `hu_[ID]_[nombre_corto].md` (Historias de Usuario atómicas con criterios BDD y DoD).
+  * **Escenario A (Nueva HU):** `pb-*.md` (Product Brief) y `mvp-*.md` (Plan de Gestión) bajo instrucción del `@PM:`.
+  * **Escenario B (Subsanación por Rechazo):** `feedback-qa-NNN-nombre-de-la-historia.md` y la versión previa de `NNN-nombre-corto.md` bajo instrucción del `@QA:`.
+* **Artefacto Generado:** `NNN-nombre-corto.md` (Historias de Usuario atómicas con criterios BDD y DoD).
 * **Handoff:** Transfiere el control siempre al **QA Documental (`@QA:`)** para la auditoría y certificación de requisitos.
 
 ### ⚙️ Pilares de Diseño y Responsabilidades

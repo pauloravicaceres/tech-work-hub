@@ -105,7 +105,7 @@ class TestWorkflowApi:
         tracker_text = """
 ### [30-09-2026] SecOps
 - **Hora:** 23:47:30
-- **Artefacto generado:** `docs/qa-tech/tech-design_002.md`
+- **Artefacto generado:** `docs/qa-tech/tech-design-002.md`
 - **Estado:** Auditoría Adversarial Exitosa
 - **⚠️ Puntos Abiertos:** Ninguno
 - **Handoff:** @HUMANO: Fin

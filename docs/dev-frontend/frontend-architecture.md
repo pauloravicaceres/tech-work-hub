@@ -145,7 +145,7 @@ sequenceDiagram
 - **Verificación:** Jest 31/31 en verde (interceptor, guard, `AuthService`, más las pruebas previas); `ngc -p tsconfig.app.json --noEmit` sin errores. `ng build` no se ejecutó (Node 22.20.0 < 22.22.3 exigido por el CLI). La URL/realm/clientId de Keycloak son valores por defecto de desarrollo (`KEYCLOAK_CONFIG`); el cliente `techworkhub-web` debe existir como cliente público en el realm.
 
 ### Revisión de vigencia (speckit-implement, 2026-10-03, feature 002)
-La feature 002 (`specs/002-pruebas-integracion-keycloak-catalogo`) es exclusivamente un proyecto de pruebas de integración de backend (`app/backend/tests/Integration/Identity/`); su `tasks.md` no contiene tareas de frontend. **No se modificó ningún archivo de `app/frontend/`**, por lo que rutas, componentes, flujos de estado y llamadas a la API documentados arriba siguen vigentes.
+La feature 002 (`specs/002-pruebas-integracion-keycloak-y-catalogo-application`) es exclusivamente un proyecto de pruebas de integración de backend (`app/backend/tests/Integration/Identity/`); su `tasks.md` no contiene tareas de frontend. **No se modificó ningún archivo de `app/frontend/`**, por lo que rutas, componentes, flujos de estado y llamadas a la API documentados arriba siguen vigentes.
 
 Relación con el cliente (sin cambios de código): las pruebas validan en el servidor el contrato que consume `BacklogApiService`.
 
@@ -470,7 +470,7 @@ sequenceDiagram
 - **Archivos nuevos:** `core/layout/{layout.component.ts|html|spec.ts, layout.texts.ts, layout-nav.ts|spec.ts, viewport.service.ts|spec.ts, not-found/not-found.component.ts|html|spec.ts}`, `app.routes.spec.ts`. **Modificados:** `app.routes.ts`, `core/auth/auth.service.ts|spec.ts`, `styles.css` (única regla `body { margin: 0; font-family: var(--font-sans); }`), `scripts/lint-primeng.mjs` (reglas globales: una sola `font-family` y un solo margen de `body`, sin `::ng-deep`, `!important`, `ed-grid`, `primeng/dropdown`, `primeng/calendar`), `src/setup-jest.ts` (stub de `matchMedia` para jsdom).
 - **Decisiones de implementación:** el control `≡` es un `<button pButton>` nativo (así `aria-label` y `aria-expanded` llegan al botón real, no al host de `p-button`); los textos viven solo en `LAYOUT_TEXTS`; la entrada activa se resalta con `styleClass: 'font-semibold'` además del `routerLinkActive` de `p-menu`; las utilidades Tailwind de tamaño (`max-w-7xl`, `p-6`, `w-64`, `min-h-screen`) quedan confinadas al shell (mandato RT-02).
 - **Contrato de extensión (FR-015):** una pantalla nueva se agrega como hija del shell en `app.routes.ts` y, si es un módulo, como una entrada más de `NAV_ITEMS`; no declara `max-w-*`, `mx-auto` ni padding de página.
-- **Verificación:** `npm test` 180/180 en verde (21 suites), `npm run build` correcto, `npm run lint:primeng` sin violaciones (y probado que una segunda `font-family` o un `::ng-deep` lo hacen fallar). **Pendiente (requiere app, backend y Keycloak en ejecución):** verificación manual a 768/1920 px (T021, T031), las 6 capturas de `specs/035-HU_refactorizacion_esqueleto_ui/evidence/` (T029) y la gestión real de foco del `p-drawer` (la implementación fuerza foco con `onShow`/`onHide`, sin prueba automatizada).
+- **Verificación:** `npm test` 180/180 en verde (21 suites), `npm run build` correcto, `npm run lint:primeng` sin violaciones (y probado que una segunda `font-family` o un `::ng-deep` lo hacen fallar). **Pendiente (requiere app, backend y Keycloak en ejecución):** verificación manual a 768/1920 px (T021, T031), las 6 capturas de `specs/035-refactorizacion-esqueleto-ui/evidence/` (T029) y la gestión real de foco del `p-drawer` (la implementación fuerza foco con `onShow`/`onHide`, sin prueba automatizada).
 - **Puntos abiertos:** umbral de 1024 px sin confirmación del humano (un único valor en `ViewportService`); la regex del lint no distingue `font-family` dentro de cadenas.
 
 ### HU-036 — Theming claro/oscuro (speckit-implement, 2026-10-06)
@@ -508,12 +508,12 @@ sequenceDiagram
 - **Gobernanza:** `scripts/lint-primeng.mjs` añade `LINT_ROOT` y reglas 1–5 (literales de color, clases de paleta, color inline, CSS/SCSS con color/borde/sombra, utilidades de color/radio fuera de `core/layout`); `lint-gobernanza.spec.ts` las prueba con directorios temporales.
 - **Limpieza ADR-010 (esta ejecución):** `item-assignees-view.component.html` resalta la fila con `[class.p-datatable-row-selected]` (antes `bg-surface-100`); `create-backlog-item.component.html` retira `text-muted-color` del `<small>`. `item-assignees-view.component.spec.ts` asevera la clase y la ausencia de `bg-surface-100`.
 - **Archivos de tema:** `core/theme/{app-theme.ts, theme-token-resolver.ts, contrast.ts, theme.service.ts}` y specs `app-theme`, `app-theme-contrast`, `contrast`, `theme.service`, `index-html`, `lint-gobernanza`.
-- **Verificación:** `npm test` 367/367 (29 suites), `npm run build` correcto, `npm run lint:primeng` sin violaciones; sin cambios en `app/backend`, `app/template-primeng` ni `specs/evidences`. **Pendiente (requiere app, backend y Keycloak en ejecución):** verificación manual de quickstart §3–§5 (T041) y las 6 capturas a 1920 px en `specs/036-HU_theming_claro_oscuro_ui/evidence/` (T042).
+- **Verificación:** `npm test` 367/367 (29 suites), `npm run build` correcto, `npm run lint:primeng` sin violaciones; sin cambios en `app/backend`, `app/template-primeng` ni `specs/evidences`. **Pendiente (requiere app, backend y Keycloak en ejecución):** verificación manual de quickstart §3–§5 (T041) y las 6 capturas a 1920 px en `specs/036-theming-claro-oscuro-ui/evidence/` (T042).
 - **Puntos abiertos (humano):** ratificar E-03..E-09 y `#007595` en la Constitución; borde de campo ≥ 3:1 (ADR-012); utilidades `text-color` y `sr-only`; fondo de campo oscuro `#1e2939`.
 
 ## 7. Validación manual HU-036 (T041/T042/T046)
 
-Sin cambios de código ni de arquitectura: la arquitectura descrita arriba sigue vigente. Se ejecutó la validación manual del theming claro/oscuro contra la app real y se guardaron las 6 capturas a 1920×1080 en `specs/036-HU_theming_claro_oscuro_ui/evidence/`.
+Sin cambios de código ni de arquitectura: la arquitectura descrita arriba sigue vigente. Se ejecutó la validación manual del theming claro/oscuro contra la app real y se guardaron las 6 capturas a 1920×1080 en `specs/036-theming-claro-oscuro-ui/evidence/`.
 
 ```mermaid
 flowchart LR

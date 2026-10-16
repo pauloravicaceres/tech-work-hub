@@ -9,11 +9,11 @@ Su responsabilidad exclusiva es el estado de los datos "en reposo". Opera bajo e
 ### 📦 Entradas y Artefactos de Salida
 
 * **Entradas (Lectura):**
-  * `pb_*.md` (Product Brief en `product-analyst` para restricciones y reglas de negocio).
-  * `hu_*.md` (Historias de Usuario aprobadas en `business-analyst` con Criterios Gherkin).
+  * `pb-*.md` (Product Brief en `product-analyst` para restricciones y reglas de negocio).
+  * `NNN-*.md` (Historias de Usuario aprobadas en `business-analyst` con Criterios Gherkin).
   * `.specify/memory/constitution.md` (opcional: reglas y motor de persistencia del sistema heredado).
   * Directivas del `@SA:` o `@HUMANO:` leídas desde el `tracker_bmad.md`.
-* **Artefacto Generado:** `db_[nombre_corto].md` (El documento maestro de persistencia: MER en Mermaid, Diccionario de Datos y ADRs).
+* **Artefacto Generado:** `db-NNN-nombre-de-la-historia.md` (El documento maestro de persistencia: MER en Mermaid, Diccionario de Datos y ADRs).
 * **Handoff (Enrutamiento Inteligente):**
   * **Si el proyecto requiere comunicación externa (APIs / Web / Mobile):** Transfiere el control al **API Architect (`@API:`)** para diseñar los contratos de red y endpoints.
   * **Si el proyecto es puramente de procesamiento / ETL / Batch:** Ejecuta el *Bypass* de red y delega directamente al **QA Técnico (`@QT:`)**.
@@ -32,7 +32,7 @@ Su responsabilidad exclusiva es el estado de los datos "en reposo". Opera bajo e
   * En modo Brownfield, las decisiones heredadas se registran con estado `Aceptado (heredado)` sin requerir alternativas consideradas.
 
 * **4. Trazabilidad Estricta UI -> Persistencia (Cero Campos Huérfanos)**
-  * Cruza obligatoriamente los wireframes de `docs/designer-ux/ux_*.md` contra el MER para garantizar que todo dato visible o calculado tenga su columna y tipo en la base de datos.
+  * Cruza obligatoriamente los wireframes de `docs/designer-ux/ux-*.md` contra el MER para garantizar que todo dato visible o calculado tenga su columna y tipo en la base de datos.
   * Si el proyecto opera mediante el Bypass Headless (sin diseño UX), salta limpiamente esta verificación.
 
 * **5. Prevención de Riesgos y Escalabilidad**

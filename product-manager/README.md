@@ -8,8 +8,8 @@ Su misión principal es leer la visión estratégica integral (Product Brief) tr
 
 ### 📦 Entradas y Artefactos de Salida
 
-* **Entradas (Lectura):** Activación inicial por validación HITL (`python utils/approve_step.py`), `pb_*.md` (Product Brief aprobado) o instrucción `@PM:` proveniente de la finalización de una épica por el **Designer UX (`@UX:`)** o **QA Documental (`@QA:`)**.
-* **Artefacto Generado:** `mvp_[nombre_corto].md` (El Plan de Gestión y Backlog priorizado por ruta crítica).
+* **Entradas (Lectura):** Activación inicial por validación HITL (`python utils/approve_step.py`), `pb-*.md` (Product Brief aprobado) o instrucción `@PM:` proveniente de la finalización de una épica por el **Designer UX (`@UX:`)** o **QA Documental (`@QA:`)**.
+* **Artefacto Generado:** `mvp-[nombre-corto].md` (El Plan de Gestión y Backlog priorizado por ruta crítica).
 * **Handoff y Orquestación:**
   * **Cierre de Plan Estratégico:** Al estructurar el MVP, tiene estrictamente prohibido delegar el turno directamente al Business Analyst. En su lugar, activa una pausa de aprobación humana obligatoria en el tracker (`@HUMANO: El Plan Estratégico del MVP ha sido definido...`).
   * **Iteración de Épica:** En ciclos iterativos posteriores (cuando otra épica termina su flujo completo), el PM selecciona automáticamente la siguiente épica del backlog y delega de manera directa al **Business Analyst (`@BA:`)** (inyectando él mismo el comando GitOps sin pedir aprobación humana).
@@ -21,10 +21,10 @@ Su misión principal es leer la visión estratégica integral (Product Brief) tr
   * Delimita con claridad matemática qué módulos se construirán en esta iteración y qué queda explícitamente fuera del alcance.
 
 * **2. Estructuración de Épicas y Nomenclatura Oficial**
-  * Asigna los identificadores canónicos (ej. `EPIC-01`, `EPIC-02`) y define los "nombres cortos" de cada funcionalidad. Estos códigos dictan la convención estricta que deberán seguir el Business Analyst (`hu_01_*.md`) y el Designer UX (`ux_01_*.md`).
+  * Asigna los identificadores canónicos (ej. `EPIC-01`, `EPIC-02`) y define los "nombres cortos" de cada funcionalidad. Estos códigos dictan la convención estricta que deberán seguir el Business Analyst (`NNN-*.md`) y el Designer UX (`ux-NNN-*.md`).
 
 * **3. Máquina de Estados y Resiliencia ante Caídas**
-  * En cada ciclo, inspecciona el `tracker_bmad.md` y su propio `mvp_*.md`:
+  * En cada ciclo, inspecciona el `tracker_bmad.md` y su propio `mvp-*.md`:
     * Si el archivo MVP no existe, ejecuta el *Inicio en Frío*, genera el plan y despacha la Épica P1 al BA.
     * Si el MVP ya existe, ejecuta la *Recuperación de Estado*: verifica si la última épica delegada quedó en limbo (tarea huérfana) para re-delegarla, o si ya fue concluida por QA/UX para avanzar con la siguiente épica pendiente.
 

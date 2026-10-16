@@ -87,7 +87,7 @@ Abre una terminal en la raíz de tu proyecto y ejecuta:
 ```bash
 python3.14 watcher_bmad.py
 ```
-*(El Watcher compilará las skills en `AGENTS.md`, realizará State Hydration para recuperar operaciones inconclusas, y quedará escuchando indefinidamente. Las ramas aisladas `feat/HU_...` se crearán automáticamente durante el ciclo de vida del tracker).*
+*(El Watcher compilará las skills en `AGENTS.md`, realizará State Hydration para recuperar operaciones inconclusas, y quedará escuchando indefinidamente. Las ramas aisladas `feat/XXX-...` se crearán automáticamente durante el ciclo de vida del tracker).*
 
 ### Paso 7: Levantar la Interfaz de Agentes (Herdr)
 Abre una **segunda terminal** en la raíz del proyecto. Aquí encenderemos a los 15 agentes divididos en 3 pestañas temáticas.

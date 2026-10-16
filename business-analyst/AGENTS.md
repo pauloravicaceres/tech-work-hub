@@ -36,7 +36,7 @@ Antes de redactar nuevas Historias de Usuario, es **obligatorio** que leas `spec
 ---
 
 ### ⚠️ REGLA CRÍTICA: IDENTIFICADOR UNIVERSAL ESTRICTO
-Tienes estrictamente prohibido alterar, resumir o cambiar el formato del identificador de la Historia de Usuario que te fue delegado. El nombre del archivo físico (.md) que generes en tu carpeta local o en la carpeta `specs/` DEBE ser exactamente `[IDENTIFICADOR_UNIVERSAL].md` (ej. si recibes `001-HU_tarjeta_identidad_digital`, el archivo DEBE llamarse `001-HU_tarjeta_identidad_digital.md`). Prohibido usar versiones truncadas como `001-tarjeta-identidad.md`. Este identificador asegura la trazabilidad 1:1 con el Ledger y las ramas GitOps.
+Tienes estrictamente prohibido alterar, resumir o cambiar el formato del identificador de la Historia de Usuario que te fue delegado. El nombre del archivo físico (.md) que generes en tu carpeta local o en la carpeta `specs/` DEBE ser exactamente `[IDENTIFICADOR_UNIVERSAL].md` (ej. si recibes `001-tarjeta-identidad-digital`, el archivo DEBE llamarse `001-tarjeta-identidad-digital.md`). Prohibido usar versiones truncadas como `001-tarjeta-identidad.md` o el formato antiguo `001-HU_tarjeta_identidad_digital.md`. Este identificador asegura la trazabilidad 1:1 con el Ledger y las ramas GitOps.
 
 
 ## ==========================================
@@ -121,7 +121,7 @@ applyTo: '**'
 
 ## Codificación de Archivos
 
-Todos los archivos de salida generados por el agente BA (`hu_*.md`) deben ser **UTF-8 sin BOM**. Al usar `write_file` vía MCP, verificar que el resultado no indique advertencias de codificación.
+Todos los archivos de salida generados por el agente BA (`NNN-*.md`) deben ser **UTF-8 sin BOM**. Al usar `write_file` vía MCP, verificar que el resultado no indique advertencias de codificación.
 
 ## Reglas de Fidelidad a la Fuente
 
@@ -158,10 +158,10 @@ Toda HU de Stakeholders generada por el agente BA usa esta estructura. Enfatiza 
 
 ## Convención de Nombres de Archivo y Ruta
 ```
-docs/business-analyst/HUs-stakeholders/XXX-HU_[nombre_corto].md
+docs/business-analyst/HUs-stakeholders/XXX-[nombre-corto].md
 ```
-- `XXX`: Identificador secuencial de 3 dígitos provisto exactamente por el `@PM` en el Handoff. El nombre debe ser EXACTAMENTE el mismo que el archivo técnico para asegurar simetría, preservando el prefijo numérico ordenado (ej. `002-HU_login.md`).
-- `nombre_corto`: snake_case, máximo 4 palabras, agnóstico al dominio.
+- `XXX`: Identificador secuencial de 3 dígitos provisto exactamente por el `@PM` en el Handoff. El nombre debe ser EXACTAMENTE el mismo que el archivo técnico para asegurar simetría, preservando el prefijo numérico ordenado (ej. `002-login.md`).
+- `nombre-corto`: kebab-case (minúsculas ASCII sin tildes, palabras separadas por un único guion medio; sin guiones bajos, espacios ni prefijo `HU`), máximo 4 palabras, agnóstico al dominio. El nombre completo del archivo debe cumplir `^\d{3}-[a-z0-9]+(-[a-z0-9]+)*\.md$` (ej. `001-registro-de-clientes.md`); el Watcher rechaza cualquier otro formato.
 
 ## Esqueleto Completo (rellenar desde el Product Brief; nunca inventar)
 
@@ -236,7 +236,7 @@ tags: [qa, auditoria, bdd, gherkin, business-analyst]
 Garantizar que la Historia de Usuario generada cumpla estrictamente con la plantilla base (secciones, Criterios de Aceptación, trazabilidad) antes de realizar el handoff (delegación) al agente QA Documental.
 
 ## Input
-- El borrador de la Historia de Usuario recién generado (`hu_[ID]_[nombre_corto].md`).
+- El borrador de la Historia de Usuario recién generado (`NNN-nombre-corto.md`).
 - El contexto actual del agente (Product Brief o requerimiento original).
 
 ## Workflow
@@ -244,7 +244,7 @@ Garantizar que la Historia de Usuario generada cumpla estrictamente con la plant
 Ejecuta el siguiente flujo de validación paso a paso de forma interna. Si algún paso falla, detén el proceso y corrige el archivo inmediatamente.
 
 1. **Validar Estructura y Nomenclatura:**
-   - Verifica que el nombre del archivo use `snake_case`, tenga máximo 4 palabras descriptivas y NO incluya el nombre del proyecto.
+   - Verifica que el nombre del archivo cumpla `NNN-nombre-en-kebab-case.md` (`^\d{3}-[a-z0-9]+(-[a-z0-9]+)*\.md$`: sin prefijo `HU`, sin guiones bajos, sin espacios ni mayúsculas), tenga máximo 4 palabras descriptivas y NO incluya el nombre del proyecto.
    - Confirma la existencia exacta de las 5 secciones obligatorias (`1. HISTORIA DE USUARIO`, `2. CRITERIOS DE ACEPTACIÓN`, `3. DIAGRAMAS`, `4. DEFINITION OF DONE`, `5. ORDEN DE DELEGACIÓN`).
 
 2. **Validar Criterios de Aceptación (BDD):**
@@ -265,7 +265,7 @@ Ejecuta el siguiente flujo de validación paso a paso de forma interna. Si algú
    - Asegura que el mensaje `@QA: ...` en la sección 5 esté escrito en una ÚNICA línea de texto continuo, sin saltos de línea (para que el Watcher Python no falle).
 
 ## Notas
-- **Modo Auto-Corrección:** Si detectas fallos durante el Workflow, no pidas permiso. Sobreescribe tu propio archivo `hu_*.md` con las correcciones antes de registrar el token en el tracker.
+- **Modo Auto-Corrección:** Si detectas fallos durante el Workflow, no pidas permiso. Sobreescribe tu propio archivo `NNN-*.md` con las correcciones antes de registrar el token en el tracker.
 - Nunca escribas en el `tracker_bmad.md` hasta que el Workflow se complete con 100% de éxito.
 
 
@@ -295,13 +295,14 @@ Debes anexar al final del archivo EXACTAMENTE este bloque Markdown, reemplazando
 ```markdown
 ### [DD-MM-YYYY] {Nombre de tu Agente, ej. Product Analyst}
 - **Hora:** {HH:MM:SS, ej. 14:30:27}
-- **Artefacto generado:** `{Ruta relativa del archivo, ej. docs/product-analyst/pb_amely_spa.md}`
+- **Artefacto generado:** `{Ruta relativa del archivo, ej. docs/product-analyst/pb-amely-spa.md}`
 - **Estado:** {Resumen de la tarea realizada y validaciones completadas}
 - **⚠️ Puntos Abiertos:** {Detallar ambigüedades técnicas, decisiones pendientes o discrepancias. Si todo está 100% definido y cerrado, escribir "Ninguno"}.
 - **Handoff:** {Etiqueta obligatoria, ej. @HUMANO: o @QA:} {Mensaje claro de delegación en una sola línea}
 ```
 
 ## Workflow & Reglas de Escritura
+- **Nombres kebab-case (obligatorio):** Todo artefacto que generes en `docs/` (documentos, informes, feedbacks, diseños técnicos, diagramas) se nombra en kebab-case: minúsculas ASCII sin tildes y palabras separadas por un único guion medio, sin guiones bajos, espacios ni mayúsculas, conservando la extensión original (nombre base `^[a-z0-9]+(-[a-z0-9]+)*$`). Los artefactos de una HU usan su prefijo funcional y el nombre de la HU sin `.md`: `ux-012-motor-reservas.md`, `db-012-…`, `api-012-…`, `tech-design-012-…`, `feedback-tech-012-…`, `aprobado-qa-012-…`, `feedback-qa-012-…`, `diagrams/hu-012-componentes.html`. Los nombres fijos (`tracker_bmad.md`, `AGENTS.md`, `README.md`, `spec.md`, `tasks.md`) no se cambian. El nombre citado en **Artefacto generado** se valida con `hu_naming.validar_nombre_artefacto`: el Watcher reporta los inválidos y `utils/approve_step.py` rechaza su aprobación. Nunca se renombran automáticamente.
 - **Append, no Overwrite:** Nunca borres ni sobreescribas el historial previo del tracker. Siempre anexa tu reporte al final del documento.
 - **Espaciado:** Asegúrate de dejar al menos una línea en blanco (salto de línea) antes de abrir tu encabezado ### para mantener el documento legible.
 - **Determinismo del Handoff:** La línea del viñeta - **Handoff:** no debe contener saltos de línea internos. Debe ser una cadena de texto continuo para que la expresión regular del orquestador la capture correctamente.
@@ -332,7 +333,7 @@ tags: [export, pdf, reporting, python, herramientas]
 Convertir los entregables finales aprobados (Product Briefs, Historias de Usuario, Reportes) de su formato nativo Markdown a un documento PDF profesional y presentable, utilizando el motor de conversión interno.
 
 ## Input
-- **Ruta del archivo Markdown original:** (ej. `docs/product-analyst/pb_amely_spa.md`)
+- **Ruta del archivo Markdown original:** (ej. `docs/product-analyst/pb-amely-spa.md`)
 - **Ruta de destino del PDF (opcional):** Si no se provee, se guardará en la misma carpeta con la extensión `.pdf`.
 
 ## Workflow
@@ -380,10 +381,10 @@ Toda HU Técnica generada por el agente BA usa esta estructura aséptica y deter
 
 ## Convención de Nombres de Archivo y Ruta
 ```
-docs/business-analyst/XXX-HU_[nombre_corto].md
+docs/business-analyst/XXX-[nombre-corto].md
 ```
 - `XXX`: Identificador secuencial de 3 dígitos (ej. `001`, `002`) provisto exactamente por el `@PM` en el Handoff. Queda estrictamente PROHIBIDO que el BA invente un nombre genérico; debe respetar el prefijo numérico de la orden recibida.
-- `nombre_corto`: snake_case, máximo 4 palabras, agnóstico al dominio.
+- `nombre-corto`: kebab-case (minúsculas ASCII sin tildes, palabras separadas por un único guion medio; sin guiones bajos, espacios ni prefijo `HU`), máximo 4 palabras, agnóstico al dominio. El nombre completo del archivo debe cumplir `^\d{3}-[a-z0-9]+(-[a-z0-9]+)*\.md$` (ej. `001-registro-de-clientes.md`); el Watcher rechaza cualquier otro formato.
 
 ## Esqueleto Completo (rellenar desde el Product Brief; nunca inventar)
 
@@ -398,7 +399,7 @@ docs/business-analyst/XXX-HU_[nombre_corto].md
 - **Prioridad:** {{Alta | Media | Baja}}
 - **Tags:** [{{TAG_1}}, {{TAG_2}}, {{TAG_3}}]
 - **Requiere interfaz:** {{Sí | No}}
-- **Consumo SDD:** `/speckit.specify docs/business-analyst/{{XXX}}-HU_{{nombre_corto}}.md`
+- **Consumo SDD:** `/speckit.specify docs/business-analyst/{{XXX}}-{{nombre-corto}}.md`
 
 ---
 
@@ -490,7 +491,7 @@ sequenceDiagram
 ## 7. ORDEN DE DELEGACIÓN PARA EL QA
 *(Generar como una sola línea de texto continuo, sin saltos de línea internos)*
 
-@QA: La Historia de Usuario Técnica {{TITULO_HU}} está lista en el archivo {{XXX}}-HU_{{nombre_corto}}.md (y su versión de stakeholders en docs/business-analyst/HUs-stakeholders/{{XXX}}-HU_{{nombre_corto}}.md). Por favor, procede con la auditoría documental contra el Product Brief para asegurar que la historia cumple con los requerimientos originales.
+@QA: La Historia de Usuario Técnica {{TITULO_HU}} está lista en el archivo {{XXX}}-{{nombre-corto}}.md (y su versión de stakeholders en docs/business-analyst/HUs-stakeholders/{{XXX}}-{{nombre-corto}}.md). Por favor, procede con la auditoría documental contra el Product Brief para asegurar que la historia cumple con los requerimientos originales.
 ```
 
 ### ⚠️ Directiva para Proyectos Headless / Procesamiento de Datos
@@ -522,7 +523,7 @@ tags: [qa, auditoria, bdd, gherkin, business-analyst]
 Garantizar que la Historia de Usuario generada cumpla estrictamente con la plantilla base (secciones, Criterios de Aceptación, trazabilidad) antes de realizar el handoff (delegación) al agente QA Documental.
 
 ## Input
-- El borrador de la Historia de Usuario recién generado (`hu_[ID]_[nombre_corto].md`).
+- El borrador de la Historia de Usuario recién generado (`NNN-nombre-corto.md`).
 - El contexto actual del agente (Product Brief o requerimiento original).
 
 ## Workflow
@@ -530,7 +531,7 @@ Garantizar que la Historia de Usuario generada cumpla estrictamente con la plant
 Ejecuta el siguiente flujo de validación paso a paso de forma interna. Si algún paso falla, detén el proceso y corrige el archivo inmediatamente.
 
 1. **Validar Estructura y Nomenclatura:**
-   - Verifica que el nombre del archivo use `snake_case`, tenga máximo 4 palabras descriptivas y NO incluya el nombre del proyecto.
+   - Verifica que el nombre del archivo cumpla `NNN-nombre-en-kebab-case.md` (`^\d{3}-[a-z0-9]+(-[a-z0-9]+)*\.md$`: sin prefijo `HU`, sin guiones bajos, sin espacios ni mayúsculas), tenga máximo 4 palabras descriptivas y NO incluya el nombre del proyecto.
    - Confirma la existencia exacta de las 5 secciones obligatorias (`1. HISTORIA DE USUARIO`, `2. CRITERIOS DE ACEPTACIÓN`, `3. DIAGRAMAS`, `4. DEFINITION OF DONE`, `5. ORDEN DE DELEGACIÓN`).
 
 2. **Validar Criterios de Aceptación (BDD):**
@@ -551,7 +552,7 @@ Ejecuta el siguiente flujo de validación paso a paso de forma interna. Si algú
    - Asegura que el mensaje `@QA: ...` en la sección 5 esté escrito en una ÚNICA línea de texto continuo, sin saltos de línea (para que el Watcher Python no falle).
 
 ## Notas
-- **Modo Auto-Corrección:** Si detectas fallos durante el Workflow, no pidas permiso. Sobreescribe tu propio archivo `hu_*.md` con las correcciones antes de registrar el token en el tracker.
+- **Modo Auto-Corrección:** Si detectas fallos durante el Workflow, no pidas permiso. Sobreescribe tu propio archivo `NNN-*.md` con las correcciones antes de registrar el token en el tracker.
 - Nunca escribas en el `tracker_bmad.md` hasta que el Workflow se complete con 100% de éxito.
 
 
@@ -581,13 +582,14 @@ Debes anexar al final del archivo EXACTAMENTE este bloque Markdown, reemplazando
 ```markdown
 ### [DD-MM-YYYY] {Nombre de tu Agente, ej. Product Analyst}
 - **Hora:** {HH:MM:SS, ej. 14:30:27}
-- **Artefacto generado:** `{Ruta relativa del archivo, ej. docs/product-analyst/pb_amely_spa.md}`
+- **Artefacto generado:** `{Ruta relativa del archivo, ej. docs/product-analyst/pb-amely-spa.md}`
 - **Estado:** {Resumen de la tarea realizada y validaciones completadas}
 - **⚠️ Puntos Abiertos:** {Detallar ambigüedades técnicas, decisiones pendientes o discrepancias. Si todo está 100% definido y cerrado, escribir "Ninguno"}.
 - **Handoff:** {Etiqueta obligatoria, ej. @HUMANO: o @QA:} {Mensaje claro de delegación en una sola línea}
 ```
 
 ## Workflow & Reglas de Escritura
+- **Nombres kebab-case (obligatorio):** Todo artefacto que generes en `docs/` (documentos, informes, feedbacks, diseños técnicos, diagramas) se nombra en kebab-case: minúsculas ASCII sin tildes y palabras separadas por un único guion medio, sin guiones bajos, espacios ni mayúsculas, conservando la extensión original (nombre base `^[a-z0-9]+(-[a-z0-9]+)*$`). Los artefactos de una HU usan su prefijo funcional y el nombre de la HU sin `.md`: `ux-012-motor-reservas.md`, `db-012-…`, `api-012-…`, `tech-design-012-…`, `feedback-tech-012-…`, `aprobado-qa-012-…`, `feedback-qa-012-…`, `diagrams/hu-012-componentes.html`. Los nombres fijos (`tracker_bmad.md`, `AGENTS.md`, `README.md`, `spec.md`, `tasks.md`) no se cambian. El nombre citado en **Artefacto generado** se valida con `hu_naming.validar_nombre_artefacto`: el Watcher reporta los inválidos y `utils/approve_step.py` rechaza su aprobación. Nunca se renombran automáticamente.
 - **Append, no Overwrite:** Nunca borres ni sobreescribas el historial previo del tracker. Siempre anexa tu reporte al final del documento.
 - **Espaciado:** Asegúrate de dejar al menos una línea en blanco (salto de línea) antes de abrir tu encabezado ### para mantener el documento legible.
 - **Determinismo del Handoff:** La línea del viñeta - **Handoff:** no debe contener saltos de línea internos. Debe ser una cadena de texto continuo para que la expresión regular del orquestador la capture correctamente.
@@ -618,7 +620,7 @@ tags: [export, pdf, reporting, python, herramientas]
 Convertir los entregables finales aprobados (Product Briefs, Historias de Usuario, Reportes) de su formato nativo Markdown a un documento PDF profesional y presentable, utilizando el motor de conversión interno.
 
 ## Input
-- **Ruta del archivo Markdown original:** (ej. `docs/product-analyst/pb_amely_spa.md`)
+- **Ruta del archivo Markdown original:** (ej. `docs/product-analyst/pb-amely-spa.md`)
 - **Ruta de destino del PDF (opcional):** Si no se provee, se guardará en la misma carpeta con la extensión `.pdf`.
 
 ## Workflow

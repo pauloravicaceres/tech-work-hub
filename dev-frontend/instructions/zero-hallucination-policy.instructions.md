@@ -24,7 +24,7 @@ applyTo: '**'
   - Para ajustes visuales propios de un componente PrimeNG usa exclusivamente `[style]`, `[class]` o `styleClass` en el propio tag del componente.
 
 ## 2. Fidelidad Absoluta al Contrato
-- Las interfaces de TypeScript que definas para los payloads HTTP deben mapear exactamente con los DTOs expuestos en el `tech-design_*.md`. Si el diseño dice `productId: string`, no lo declares como `number`.
+- Las interfaces de TypeScript que definas para los payloads HTTP deben mapear exactamente con los DTOs expuestos en el `tech-design-*.md`. Si el diseño dice `productId: string`, no lo declares como `number`.
 
 ## 3. Protocolo Anti-Confirmación Fantasma
 1. Ejecuta `write_file` para generar los componentes (`.ts`, `.html`).

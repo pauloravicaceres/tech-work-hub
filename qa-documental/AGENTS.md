@@ -47,12 +47,12 @@ Determinas con criterio quirúrgico e imparcial si la especificación es matemá
 flowchart TD
     A["Tracker: Instrucción QA"] --> B["read_file: RUTA_CONFIGURACION"]
     B --> C["Extraer rutas: CARPETA_ENTRADA_PB y CARPETA_ENTRADA_HU"]
-    C --> D["read_file: Product Brief pb_*.md"]
-    C --> E["read_file: Historia de Usuario hu_*.md"]
+    C --> D["read_file: Product Brief pb-*.md"]
+    C --> E["read_file: Historia de Usuario NNN-*.md"]
     D & E --> F["Ejecutar Rúbrica: qa-validation-standards"]
     F --> G{"¿Cumple 100% de estándares?"}
-    G -->|NO: Brechas o Alucinación| H["Generar Reporte RECHAZADO: feedback_qa_*.md"]
-    G -->|SÍ: Hermética y Trazable| I["Generar Certificado APROBADO: aprobado_qa_*.md"]
+    G -->|NO: Brechas o Alucinación| H["Generar Reporte RECHAZADO: feedback-qa-*.md"]
+    G -->|SÍ: Hermética y Trazable| I["Generar Certificado APROBADO: aprobado-qa-*.md"]
     H --> J["write_file: Guardar en qa-documental/"]
     I --> J
     J --> K["read_file: Verificar persistencia física del reporte"]
@@ -72,9 +72,9 @@ flowchart TD
 | Paso | Herramienta | Acción requerida |
 |---|---|---|
 | 1 | `read_file` | Leer `RUTA_CONFIGURACION` (`config_bmad.json`) |
-| 2 | `read_file` | Leer el archivo Product Brief (`pb_*.md`) en `CARPETA_ENTRADA_PB` |
-| 3 | `read_file` | Leer la Historia de Usuario (`hu_*.md`) en `CARPETA_ENTRADA_HU` |
-| 4 | `write_file` | Guardar el reporte (`aprobado_qa_*.md` o `feedback_qa_*.md`) en `CARPETA_SALIDA` |
+| 2 | `read_file` | Leer el archivo Product Brief (`pb-*.md`) en `CARPETA_ENTRADA_PB` |
+| 3 | `read_file` | Leer la Historia de Usuario (`NNN-*.md`) en `CARPETA_ENTRADA_HU` |
+| 4 | `write_file` | Guardar el reporte (`aprobado-qa-*.md` o `feedback-qa-*.md`) en `CARPETA_SALIDA` |
 | 5 | `read_file` | **Verificar lectura del reporte recién escrito** (comprobación post-escritura obligatoria) |
 | 6 | `read_file` | Leer el contenido completo actual de `tracker_bmad.md` |
 | 7 | `write_file` | Reescribir el tracker anexando la orden `@BA:` , `@UX:` o `@SA:` al final |
@@ -108,7 +108,7 @@ applyTo: '**'
 > Su propósito es neutralizar el sesgo de complacencia (sycophancy) y las asunciones no fundadas.
 
 ## 1. Principio Fundamental: Validación por Contraste Estricto
-Tu única fuente de la verdad funcional es el **Product Brief (`pb_*.md`)**.
+Tu única fuente de la verdad funcional es el **Product Brief (`pb-*.md`)**.
 - Toda regla de negocio, actor, canal, restricción o comportamiento presente en la Historia de Usuario (HU) **debe existir explícitamente en el Product Brief** o haber sido derivado lógicamente y marcado de forma obligatoria con la etiqueta `⚠️ [PROPUESTO]`.
 - Si el BA introdujo un canal (ej. SMS, correo), una regla de cálculo, una validación o una entidad no declarada en el Product Brief sin marcarla como supuesta, se clasifica como **Alucinación de Alcance (Scope Creep)** y es motivo de **RECHAZO INMEDIATO**.
 
@@ -138,7 +138,7 @@ Nunca informes al usuario ni al tracker que un reporte fue completado basándote
 
 ## QA REPORT TEMPLATE
 ---
-description: 'Usar para estructurar el reporte de salida del QA Documental. Define las dos únicas plantillas permitidas: Certificado de Aprobación (aprobado_qa_*.md) y Reporte de Observaciones (feedback_qa_*.md).'
+description: 'Usar para estructurar el reporte de salida del QA Documental. Define las dos únicas plantillas permitidas: Certificado de Aprobación (aprobado-qa-*.md) y Reporte de Observaciones (feedback-qa-*.md).'
 applyTo: '**'
 ---
 
@@ -155,8 +155,10 @@ El nombre del archivo de salida se construye tomando como base el nombre exacto 
 
 | Dictamen | Patrón de Nombre | Ejemplo de Entrada | Nombre del Archivo QA |
 |---|---|---|---|
-| **Aprobado** | `aprobado_qa_[ID]_[nombre_corto].md` | `hu_01_motor_reservas.md` | `aprobado_qa_01_motor_reservas.md` |
-| **Rechazado** | `feedback_qa_[ID]_[nombre_corto].md` | `hu_01_motor_reservas.md` | `feedback_qa_01_motor_reservas.md` |
+| **Aprobado** | `aprobado-qa-NNN-nombre-de-la-historia.md` | `001-motor-reservas.md` | `aprobado-qa-001-motor-reservas.md` |
+| **Rechazado** | `feedback-qa-NNN-nombre-de-la-historia.md` | `001-motor-reservas.md` | `feedback-qa-001-motor-reservas.md` |
+
+Todo el nombre va en kebab-case (minúsculas ASCII sin tildes, palabras separadas por un único guion medio (`-`); prohibidos guiones bajos, espacios, mayúsculas, guiones consecutivos y guiones al inicio o al final) y debe cumplir `^(aprobado|feedback)-qa-\d{3}-[a-z0-9]+(-[a-z0-9]+)*\.md$`.
 
 ---
 
@@ -235,7 +237,7 @@ La especificación de requerimientos contenida en el archivo `{{NOMBRE_ARCHIVO_H
 *(Analiza la naturaleza del proyecto leyendo el Product Brief y elige ÚNICAMENTE la instrucción que corresponda anexar al tracker_bmad.md)*
 
 > ⚠️ **REGLA ESTRICTA DE GITOPS Y SDD AUTO-RUNNER:**
-> Es OBLIGATORIO utilizar la variable `{{NOMBRE_ARCHIVO_HU}}` asegurando que incluya la extensión `.md` (ej. `hu_01_login.md`). ESTÁ ESTRICTAMENTE PROHIBIDO usar nombres naturales como "Login" u omitir la extensión. El motor orquestador (Watcher) utiliza una expresión regular sobre esta línea para desencadenar el SDD Auto-Runner; si fallas en el formato, romperás la autonomía del ecosistema.
+> Es OBLIGATORIO utilizar la variable `{{NOMBRE_ARCHIVO_HU}}` asegurando que incluya la extensión `.md` (ej. `001-login.md`, formato `NNN-nombre-en-kebab-case.md`). ESTÁ ESTRICTAMENTE PROHIBIDO usar nombres naturales como "Login" u omitir la extensión. El motor orquestador (Watcher) utiliza una expresión regular sobre esta línea para desencadenar el SDD Auto-Runner; si fallas en el formato, romperás la autonomía del ecosistema.
 
 > **La ruta real la decide el Watcher** (interruptor `ux_phase` de `config_bmad.json` y campo `Requiere interfaz` de la HU), por lo que el token que escribas aquí es informativo. Verifica que la HU declare `Requiere interfaz: Sí|No` y que sea coherente con su contenido; si falta o la contradice, regístralo como hallazgo.
 
@@ -364,13 +366,14 @@ Debes anexar al final del archivo EXACTAMENTE este bloque Markdown, reemplazando
 ```markdown
 ### [DD-MM-YYYY] {Nombre de tu Agente, ej. Product Analyst}
 - **Hora:** {HH:MM:SS, ej. 14:30:27}
-- **Artefacto generado:** `{Ruta relativa del archivo, ej. docs/product-analyst/pb_amely_spa.md}`
+- **Artefacto generado:** `{Ruta relativa del archivo, ej. docs/product-analyst/pb-amely-spa.md}`
 - **Estado:** {Resumen de la tarea realizada y validaciones completadas}
 - **⚠️ Puntos Abiertos:** {Detallar ambigüedades técnicas, decisiones pendientes o discrepancias. Si todo está 100% definido y cerrado, escribir "Ninguno"}.
 - **Handoff:** {Etiqueta obligatoria, ej. @HUMANO: o @QA:} {Mensaje claro de delegación en una sola línea}
 ```
 
 ## Workflow & Reglas de Escritura
+- **Nombres kebab-case (obligatorio):** Todo artefacto que generes en `docs/` (documentos, informes, feedbacks, diseños técnicos, diagramas) se nombra en kebab-case: minúsculas ASCII sin tildes y palabras separadas por un único guion medio, sin guiones bajos, espacios ni mayúsculas, conservando la extensión original (nombre base `^[a-z0-9]+(-[a-z0-9]+)*$`). Los artefactos de una HU usan su prefijo funcional y el nombre de la HU sin `.md`: `ux-012-motor-reservas.md`, `db-012-…`, `api-012-…`, `tech-design-012-…`, `feedback-tech-012-…`, `aprobado-qa-012-…`, `feedback-qa-012-…`, `diagrams/hu-012-componentes.html`. Los nombres fijos (`tracker_bmad.md`, `AGENTS.md`, `README.md`, `spec.md`, `tasks.md`) no se cambian. El nombre citado en **Artefacto generado** se valida con `hu_naming.validar_nombre_artefacto`: el Watcher reporta los inválidos y `utils/approve_step.py` rechaza su aprobación. Nunca se renombran automáticamente.
 - **Append, no Overwrite:** Nunca borres ni sobreescribas el historial previo del tracker. Siempre anexa tu reporte al final del documento.
 - **Espaciado:** Asegúrate de dejar al menos una línea en blanco (salto de línea) antes de abrir tu encabezado ### para mantener el documento legible.
 - **Determinismo del Handoff:** La línea del viñeta - **Handoff:** no debe contener saltos de línea internos. Debe ser una cadena de texto continuo para que la expresión regular del orquestador la capture correctamente.

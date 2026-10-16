@@ -9,11 +9,11 @@ Su responsabilidad exclusiva es el estado de los datos "en movimiento". Asume la
 ### 📦 Entradas y Artefactos de Salida
 
 * **Entradas (Lectura):**
-  * `db_*.md` (Modelo Entidad-Relación y diccionario de datos generado por el Data Architect en `data-architect`).
-  * `hu_*.md` (Historias de Usuario aprobadas en `business-analyst` con Criterios Gherkin).
+  * `db-*.md` (Modelo Entidad-Relación y diccionario de datos generado por el Data Architect en `data-architect`).
+  * `NNN-*.md` (Historias de Usuario aprobadas en `business-analyst` con Criterios Gherkin).
   * `.specify/memory/constitution.md` (opcional: protocolos de comunicación y servicios del sistema legado).
   * Directivas del `@DA:` leídas desde el `tracker_bmad.md`.
-* **Artefacto Generado:** `api_[nombre_corto].md` (El documento maestro de contratos, rutas, endpoints, esquemas JSON y códigos HTTP).
+* **Artefacto Generado:** `api-NNN-nombre-de-la-historia.md` (El documento maestro de contratos, rutas, endpoints, esquemas JSON y códigos HTTP).
 * **Handoff:** Transfiere el control mediante el tracker al **QA Técnico (`@QT:`)** para la auditoría cruzada de coherencia y compilación del Tech Design Document (TDD).
 
 ### ⚙️ Pilares de Diseño y Responsabilidades

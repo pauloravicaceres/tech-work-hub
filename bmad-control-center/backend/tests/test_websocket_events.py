@@ -30,7 +30,7 @@ class TestWebSocketEvents:
                 "active_stage": "UX",
                 "overall_status": "IN_PROGRESS",
                 "active_agent_role": "Designer UX",
-                "active_artifact_in_progress": "docs/designer-ux/ux_003.md",
+                "active_artifact_in_progress": "docs/designer-ux/ux-003.md",
                 "latest_handoff": {
                     "from_agent": "QA Documental",
                     "target_agent": "UX",

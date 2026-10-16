@@ -10,13 +10,13 @@ Tu misión es generar una Historia de Usuario (Deuda Técnica) para obligar a lo
 **1. Actualización del Product Ledger (`specs/README.md`):**
    - N°: `035`
    - Épica Origen: `Deuda Técnica / UI Core`
-   - Nombre spec / HU: `035-HU_refactorizacion_esqueleto_ui`
+   - Nombre spec / HU: `035-refactorizacion-esqueleto-ui`
    - Qué aporta: `Layout de aplicación y estructura de páginas y formularios alineados al Skeleton de la Constitución, con PrimeNG 22 nativo`
    - Estado: `BACKLOG`
-   - Rama: `feat/035-HU_refactorizacion_esqueleto_ui`
+   - Rama: `feat/035-refactorizacion-esqueleto-ui`
 
 **2. Creación del FSaaDB (Documento en `documents/business-analyst/`):**
-   - Crea físicamente el archivo `.md` correspondiente (`documents/business-analyst/035-HU_refactorizacion_esqueleto_ui.md`).
+   - Crea físicamente el archivo `.md` correspondiente (`documents/business-analyst/035-refactorizacion-esqueleto-ui.md`).
    - Dentro del archivo, inyecta EXACTAMENTE el siguiente contenido:
 
 ```markdown

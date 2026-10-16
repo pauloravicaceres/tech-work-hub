@@ -10,7 +10,7 @@
 El ecosistema BMAD opera bajo un modelo automatizado de integración continua local donde el orquestador **`watcher_bmad.py` es el único controlador autorizado del repositorio (VCS)**. 
 
 ### Principios Fundamentales
-1. **Aislamiento por Defecto:** El desarrollo de cada Historia de Usuario (HU) ocurre estrictamente en ramas aisladas generadas automáticamente bajo la nomenclatura `feat/HU_[nombre_corto]`.
+1. **Aislamiento por Defecto:** El desarrollo de cada Historia de Usuario (HU) ocurre estrictamente en ramas aisladas generadas automáticamente bajo la nomenclatura `feat/XXX-[nombre-corto]`.
 2. **Zero-Trust Agéntico:** Ningún agente LLM (Product Manager, QA, Business Analyst, etc.) tiene permitido ejecutar comandos transaccionales contra Git de forma directa. Toda manipulación se solicita de manera declarativa en el Bus de Datos (`tracker_bmad.md`) utilizando macros del sistema (ej. `@WATCHER: GITOPS-BRANCH-CREATE`).
 3. **Product State Ledger:** El estado transaccional del proyecto se gobierna mediante el mapa inmutable en `specs/README.md`. Cuando el Tech Design de una característica recibe aprobación (QA-Tech) y cambia su estado a `READY-FOR-DEV`, el Watcher es invocado automáticamente para fusionar y cerrar la rama de la característica hacia la rama base (`dev` o `main`).
 
@@ -21,12 +21,12 @@ La resolución de conflictos de control de versiones (VCS) es de **jurisdicción
 Esto significa que el humano solo debe resolver el conflicto en Git manualmente (fusionando o haciendo rebase hacia la rama base) y luego **reiniciar el orquestador sin manipular el historial del tracker**. El orquestador, por diseño, asumirá que la rama problemática ha sido procesada exitosamente y continuará su operación normal de forma resiliente.
 
 ### Identificador Secuencial Universal (SSOT)
-Para asegurar una trazabilidad absoluta entre el modelo de negocio, el control de versiones y los artefactos físicos (crítico en escenarios Brownfield), el ecosistema emplea la convención estricta `XXX-HU_[nombre_corto]`, donde `XXX` es un correlativo numérico de 3 dígitos (ej. `001`, `002`).
+Para asegurar una trazabilidad absoluta entre el modelo de negocio, el control de versiones y los artefactos físicos (crítico en escenarios Brownfield), el ecosistema emplea la convención estricta `XXX-[nombre-corto]` (kebab-case), donde `XXX` es un correlativo numérico de 3 dígitos (ej. `001`, `002`).
 Esta nomenclatura nace obligatoriamente en el **Product State Ledger** (`specs/README.md`) calculado por el `@PM`, y debe permear simétricamente en:
-1. El nombre de la rama GitOps (`feat/XXX-HU_[nombre]`).
-2. El nombre del archivo físico de la Historia de Usuario en el disco (`docs/business-analyst/XXX-HU_[nombre].md`).
+1. El nombre de la rama GitOps (`feat/XXX-[nombre]`).
+2. El nombre del archivo físico de la Historia de Usuario en el disco (`docs/business-analyst/XXX-[nombre].md`).
 3. Los Hand-offs y registros en el Tracker.
-4. La carpeta de especificación de Spec Kit (`specs/XXX-HU_[nombre]/`): el Watcher la fija de forma explícita (`SPECIFY_FEATURE_DIRECTORY`) al ejecutar `/speckit-specify`, de modo que Spec Kit no genere su propio nombre ni su propio correlativo, y verifica al terminar que `.specify/feature.json` apunte a ella; si no, detiene la fase.
+4. La carpeta de especificación de Spec Kit (`specs/XXX-[nombre]/`): el Watcher la fija de forma explícita (`SPECIFY_FEATURE_DIRECTORY`) al ejecutar `/speckit-specify`, de modo que Spec Kit no genere su propio nombre ni su propio correlativo, y verifica al terminar que `.specify/feature.json` apunte a ella; si no, detiene la fase.
 
 ---
 
@@ -44,17 +44,17 @@ El ecosistema BMAD v2.0 opera bajo un modelo de **Vertical Slicing Estricto** pa
 
 El ecosistema BMAD v2.0 impone una trazabilidad matemática exacta (1:1) entre el Product State Ledger, el control de versiones y el sistema de archivos físico mediante el uso de un **Identificador Universal Estricto**.
 
-1. **Formato Inmutable:** Todas las historias de usuario deben adoptar la nomenclatura `XXX-HU_nombre_en_snake_case` (ej. `001-HU_tarjeta_identidad_digital`).
+1. **Formato Inmutable:** Todas las historias de usuario deben adoptar la nomenclatura `XXX-nombre-en-kebab-case` (ej. `001-tarjeta-identidad-digital`, archivo `001-tarjeta-identidad-digital.md`). El nombre del archivo debe cumplir `^\d{3}-[a-z0-9]+(-[a-z0-9]+)*\.md$`: tres dígitos, un guion y palabras en minúsculas ASCII separadas por un único guion; sin prefijo `HU`, sin guiones bajos, sin espacios ni mayúsculas. El Watcher rechaza cualquier otro formato y nunca renombra archivos.
 2. **Columnas del Ledger:** La tabla del Ledger (`specs/README.md`) utiliza oficialmente la estructura: `| N° | Épica Origen | Nombre spec / HU | Qué aporta | Estado | Rama |`.
 3. **Uso Obligatorio Transversal:** Este identificador exacto y sin truncar se utiliza obligatoriamente para:
-   - Registrar la funcionalidad en la columna `Nombre spec / HU` y en la columna `Rama` (`feat/001-HU_...`) del Ledger.
-   - Orquestar la bifurcación GitOps (`@WATCHER: GITOPS-BRANCH-CREATE feat/XXX-HU_...`).
+   - Registrar la funcionalidad en la columna `Nombre spec / HU` y en la columna `Rama` (`feat/001-...`) del Ledger.
+   - Orquestar la bifurcación GitOps (`@WATCHER: GITOPS-BRANCH-CREATE feat/XXX-...`).
    - Nombrar los archivos físicos `.md` generados por los agentes (`@BA`, `@BS`, `@SA`, etc.). Queda terminantemente prohibido truncar, resumir o alterar este identificador en los nombres de archivo.
 
 ---
 
 ## 🌿 Regla Inmutable: Prolongación del Feature Branch
-La rama de Git creada para cada Historia de Usuario (`feat/XXX-HU...`) opera bajo el principio de **"Feature Branch Prolongada"**. Esta rama de trabajo es un contenedor de ciclo de vida completo:
+La rama de Git creada para cada Historia de Usuario (`feat/XXX-...`) opera bajo el principio de **"Feature Branch Prolongada"**. Esta rama de trabajo es un contenedor de ciclo de vida completo:
 1. **Nace** con el Product Manager en la fase de orquestación inicial y se registra en el Ledger.
 2. **Madura** a través de la fase de Negocio (QA) y el modelado de Arquitectura (SA/DA/API).
 3. **Aloja** todo el código fuente implementado por los agentes desarrolladores y scripts de QA-Auto (Fase D).
@@ -67,7 +67,7 @@ Para mantener un orden estricto y evitar archivos dispersos en la raíz del proy
 1. **Backend:** Todo el código fuente, pruebas, configuraciones y binarios correspondientes al lado del servidor (API, persistencia, lógica de negocio) DEBEN generarse y residir exclusivamente dentro de la carpeta `app/backend/`.
 2. **Frontend:** Todo el código fuente, componentes UI, assets y configuraciones del cliente (SPA, interfaces) DEBEN generarse y residir exclusivamente dentro de la carpeta `app/frontend/`.
 
-> **Directiva de Handoff:** Cuando los agentes planificadores (`@SA`, `@QT`, Spec-Kit) generen el `plan.md`, `tasks.md` o el `tech-design_*.md`, las rutas físicas propuestas para cada archivo deben estar obligatoriamente prefijadas con `app/backend/` o `app/frontend/` según corresponda. Ningún archivo de código de producción debe crearse en la raíz del repositorio.
+> **Directiva de Handoff:** Cuando los agentes planificadores (`@SA`, `@QT`, Spec-Kit) generen el `plan.md`, `tasks.md` o el `tech-design-*.md`, las rutas físicas propuestas para cada archivo deben estar obligatoriamente prefijadas con `app/backend/` o `app/frontend/` según corresponda. Ningún archivo de código de producción debe crearse en la raíz del repositorio.
 
 
 # 🏛️ Contexto Base de Arquitectura: Modulith .NET & Angular 22
@@ -84,7 +84,7 @@ Para mantener un orden estricto y evitar archivos dispersos en la raíz del proy
 * **Utilidades CSS:** Tailwind CSS v4 + plugin `tailwindcss-primeui` (https://primeng.org/tailwind), solo para grid, espaciado y flex. Reemplaza a PrimeFlex, que ya no forma parte del stack.
 
 ### 📐 Directiva Estricta de Maquetación (Skeleton vs. Theme)
-El diseño de interfaces (`ux_*.md`) DEBE calcar la **distribución estructural (Skeleton)** de la plantilla base, pero tiene ESTRICTAMENTE PROHIBIDO heredar su **capa visual corporativa (Theme)**. 
+El diseño de interfaces (`ux-*.md`) DEBE calcar la **distribución estructural (Skeleton)** de la plantilla base, pero tiene ESTRICTAMENTE PROHIBIDO heredar su **capa visual corporativa (Theme)**. 
 
 * **✅ ESTRUCTURA OBLIGATORIA (CALCAR):**
   - **Layout Principal:** Topbar superior (Header con perfil/acciones a la derecha), Sidebar izquierdo colapsable para navegación y Footer inferior.
@@ -163,7 +163,7 @@ Aplica a TODO formulario o diálogo con campos en `app/frontend`, sin excepción
 6. Verificación automática obligatoria antes del handoff: `npm run lint:primeng` en `app/frontend` (falla ante cualquier patrón prohibido).
 ### 📂 Ubicación Física (Para Exploración)
 * La plantilla base se encuentra en el directorio: `./app/template-primeng/` (referencia SOLO de estructura/Skeleton; su código usa convenciones antiguas de PrimeNG y NO debe copiarse en sintaxis de formularios).
-* **Directiva para el @SA y @QT:** Utilicen la herramienta `list_dir` sobre esa carpeta para auditar la estructura de carpetas estándar de Angular (ej. `/components`, `/services`, `/guards`) y asegurar que los nuevos `tech_guidelines.md` respeten esa nomenclatura estructural exacta.
+* **Directiva para el @SA y @QT:** Utilicen la herramienta `list_dir` sobre esa carpeta para auditar la estructura de carpetas estándar de Angular (ej. `/components`, `/services`, `/guards`) y asegurar que los nuevos `tech-guidelines.md` respeten esa nomenclatura estructural exacta.
 
 ---
 
@@ -353,7 +353,7 @@ En flujos de negocio donde una operación de escritura en base de datos debe pub
 
 | Rol Agéntico | Mandatos Absolutos (Lex Superior) | Prohibiciones Taxativas (Auto-Rechazo) |
 |---|---|---|
-| **Solutions Architect (`@SA`)** | - Catalogar en `tech_guidelines.md` todas las decisiones como `Aceptado (heredado)` basándose en este archivo.<br>- Diseñar sobre .NET 8/10 Modulith, PostgreSQL multi-schema, Carter, MediatR, MassTransit, Mapster, FluentValidation, Redis y Keycloak. | - Proponer microservicios físicos desacoplados de entrada.<br>- Proponer SQL Server, MongoDB u otros motores sin Cláusula de Excepción.<br>- Proponer AutoMapper, Controllers clásicos o arquitecturas hexagonales divergentes. |
+| **Solutions Architect (`@SA`)** | - Catalogar en `tech-guidelines.md` todas las decisiones como `Aceptado (heredado)` basándose en este archivo.<br>- Diseñar sobre .NET 8/10 Modulith, PostgreSQL multi-schema, Carter, MediatR, MassTransit, Mapster, FluentValidation, Redis y Keycloak. | - Proponer microservicios físicos desacoplados de entrada.<br>- Proponer SQL Server, MongoDB u otros motores sin Cláusula de Excepción.<br>- Proponer AutoMapper, Controllers clásicos o arquitecturas hexagonales divergentes. |
 | **Data Architect (`@DA`)** | - Diseñar un `DbContext` independiente por cada módulo.<br>- Asignar a cada módulo un **schema de PostgreSQL separado**.<br>- Heredar entidades de `Entity<TId>` o `Aggregate<TId>`.<br>- Usar obligatoriamente `AuditableEntityInterceptor` y `DispatchDomainEventsInterceptor`.<br>- Modelar tabla `OutboxMessage` en flujos de publicación crítica. | - **PROHIBIDO cualquier JOIN o consulta cross-schema entre tablas de módulos distintos.**<br>- Proponer SQL Server o T-SQL.<br>- Re-inventar columnas o triggers manuales para auditoría.<br>- Omitir el schema en las definiciones de tablas. |
 | **API Architect (`@API`)** | - Definir endpoints exclusivamente con **Carter Minimal APIs** (`ICarterModule`).<br>- Organizar el código bajo **Vertical Slice Architecture (VSA)** en Feature Folders.<br>- Co-localizar Endpoint, Handler, Command/Query y Validador en la misma carpeta.<br>- Usar **Mapster** para transformación de DTOs.<br>- Inyectar **FluentValidation** para validar comandos.<br>- Usar MassTransit para eventos cross-módulo. | - Diseñar Controllers tradicionales de ASP.NET Core (`[ApiController]`).<br>- Crear carpetas horizontales de capas clásicas (`/Controllers`, `/Services`, `/Repositories`).<br>- Usar AutoMapper o mapeos manuales repetitivos.<br>- Omitir validación de comandos o colocar validadores fuera de la carpeta de la feature. |
 | **QA Tech (`@QT`)** | - Actuar como guardián adversarial de esta Constitución.<br>- Auditar que el TDD cumpla al 100% con VSA, Carter, MediatR, Mapster, PostgreSQL con schemas aislados e interceptores de Shared.<br>- Marcar con severidad 🔴 **CRÍTICO: Complacencia Ilegal (Sycophancy Breach)** cualquier violación y rechazar el diseño devolviendo el turno al responsable. | - Aprobar tech designs complacientes con peticiones del usuario que contradigan este archivo sin Cláusula de Excepción.<br>- Pasar por alto queries cross-schema o controllers clásicos. |

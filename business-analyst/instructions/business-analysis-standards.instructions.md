@@ -41,7 +41,7 @@ applyTo: '**'
 
 ## Codificación de Archivos
 
-Todos los archivos de salida generados por el agente BA (`hu_*.md`) deben ser **UTF-8 sin BOM**. Al usar `write_file` vía MCP, verificar que el resultado no indique advertencias de codificación.
+Todos los archivos de salida generados por el agente BA (`NNN-*.md`) deben ser **UTF-8 sin BOM**. Al usar `write_file` vía MCP, verificar que el resultado no indique advertencias de codificación.
 
 ## Reglas de Fidelidad a la Fuente
 

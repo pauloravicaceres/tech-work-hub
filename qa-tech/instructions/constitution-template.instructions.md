@@ -10,12 +10,12 @@ Como Auditor Técnico (QA-Tech), tu responsabilidad final tras aprobar una arqui
 ## 🔄 LÓGICA DE EJECUCIÓN (GREENFIELD VS BROWNFIELD)
 
 ### ESCENARIO A: GREENFIELD (El archivo NO existe)
-Si el orquestador reporta que el archivo no existe, debes redactarlo desde cero. Extrae las invariantes del `tech-design_*.md` recién aprobado y formatea el contenido EXACTAMENTE con la estructura de la **Plantilla SDD Spec Kit** detallada más abajo.
+Si el orquestador reporta que el archivo no existe, debes redactarlo desde cero. Extrae las invariantes del `tech-design-*.md` recién aprobado y formatea el contenido EXACTAMENTE con la estructura de la **Plantilla SDD Spec Kit** detallada más abajo.
 
 ### ESCENARIO B: BROWNFIELD (El archivo YA existe)
 Tienes **ESTRICTAMENTE PROHIBIDO** sobrescribir el archivo borrando su contenido fundacional.
 1. Lee el archivo existente.
-2. Evalúa si el `tech-design_*.md` actual introduce cambios estructurales (nuevas bases de datos, nuevos patrones arquitectónicos, nuevos ADRs globales).
+2. Evalúa si el `tech-design-*.md` actual introduce cambios estructurales (nuevas bases de datos, nuevos patrones arquitectónicos, nuevos ADRs globales).
 3. Si hay cambios estructurales: Inyéctalos cuidadosamente en las secciones correspondientes de la plantilla existente (ej. añadiendo una fila a la tabla de ADRs o un nuevo Core Principle).
 4. Actualiza la fecha en `**Last Amended**`.
 5. Si no hay cambios estructurales (solo es un CRUD o feature menor): **ABORTA** la escritura. No modifiques el archivo.

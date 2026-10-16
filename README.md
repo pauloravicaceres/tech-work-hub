@@ -83,11 +83,11 @@ Sin embargo, si necesitas realizar micro-ajustes rápidos, refactorizaciones men
 ```mermaid
 flowchart TD
     Idea["💡 Idea Cruda del Stakeholder"] --> BS["1. Business Storyteller (BS)<br><i>Discovery y Optimización</i>"]
-    BS -->|"idea_*.md"| PA["2. Product Analyst (PA)<br><i>Product Brief (PRD)</i>"]
-    PA -->|"pb_*.md"| HITL["👤 Pausa Obligatoria HITL<br><i>(approve_step.py -> @PM:)</i>"]
+    BS -->|"idea-*.md"| PA["2. Product Analyst (PA)<br><i>Product Brief (PRD)</i>"]
+    PA -->|"pb-*.md"| HITL["👤 Pausa Obligatoria HITL<br><i>(approve_step.py -> @PM:)</i>"]
     HITL -->|"Aprobado por Humano"| PM["3. Product Manager (PM)<br><i>MVP y Backlog de Épicas</i>"]
-    PM -->|"mvp_*.md"| BA["4. Business Analyst (BA)<br><i>Dual-Output (Técnica & Stakeholders)</i>"]
-    BA -->|"hu_*.md"| QA{"5. QA Documental (QA)<br><i>Auditoría de Requisitos</i>"}
+    PM -->|"mvp-*.md"| BA["4. Business Analyst (BA)<br><i>Dual-Output (Técnica & Stakeholders)</i>"]
+    BA -->|"NNN-*.md"| QA{"5. QA Documental (QA)<br><i>Auditoría de Requisitos</i>"}
     QA -->|"Rechazo / Feedback"| BA
     
     %% Puente SDD Gatekeeper
@@ -103,12 +103,12 @@ flowchart TD
     UX -->|"MVP Concluido"| SA["7. Solutions Architect (SA)<br><i>Stack, Gobernanza & ADRs (plan.md)</i>"]
     ROUTE -->|"Headless"| SA
     
-    SA -->|"tech_guidelines.md"| DA["8. Data Architect (DA)<br><i>MER y Persistencia (spec.md)</i>"]
+    SA -->|"tech-guidelines.md"| DA["8. Data Architect (DA)<br><i>MER y Persistencia (spec.md)</i>"]
     DA -->|"Requiere APIs"| API["9. API Architect (API)<br><i>Contratos REST/GraphQL</i>"]
-    API -->|"api_*.md"| QT["10. QA-Tech (QT)<br><i>Auditoría Cruzada TDD</i>"]
+    API -->|"api-*.md"| QT["10. QA-Tech (QT)<br><i>Auditoría Cruzada TDD</i>"]
     DA -->|"Headless sin APIs"| QT
     
-    QT -->|"tech-design_*.md"| IMP["⚡ /speckit.implement<br><i>(Gatillo Fase D)</i>"]
+    QT -->|"tech-design-*.md"| IMP["⚡ /speckit.implement<br><i>(Gatillo Fase D)</i>"]
     
     subgraph FASE_D ["🤖 Fase D: Ingeniería Headless (execute_command + Git)"]
         direction TB
@@ -140,8 +140,8 @@ flowchart TD
     subgraph JerarquiaNormativa ["Pirámide de Jerarquía Normativa (Lex Superior)"]
         direction TB
         L1["🏛️ Nivel 1 (Constitución Inviolable):<br><b>.specify/memory/constitution.md</b><br><i>(Stack, Motores DB, Patrones Base)</i>"]
-        L2["📐 Nivel 2 (Directiva de Solución):<br><b>tech_guidelines.md</b><br><i>(ADRs MADR subordinados al Nivel 1)</i>"]
-        L3["💾 Nivel 3 (Diseño de Persistencia y Red):<br><b>db_*.md / api_*.md</b><br><i>(Modelado MER y Contratos REST/GraphQL)</i>"]
+        L2["📐 Nivel 2 (Directiva de Solución):<br><b>tech-guidelines.md</b><br><i>(ADRs MADR subordinados al Nivel 1)</i>"]
+        L3["💾 Nivel 3 (Diseño de Persistencia y Red):<br><b>db-*.md / api-*.md</b><br><i>(Modelado MER y Contratos REST/GraphQL)</i>"]
         L4["💬 Nivel 4 (Peticiones Transitorias):<br><b>docs/tracker_bmad.md</b><br><i>(Instrucciones en caliente)</i>"]
     end
     
@@ -184,19 +184,40 @@ El ecosistema BMAD v2.0 opera bajo un modelo de **Vertical Slicing Estricto** pa
 
 El ecosistema BMAD v2.0 impone una trazabilidad matemática exacta (1:1) entre el Product State Ledger, el control de versiones y el sistema de archivos físico mediante el uso de un **Identificador Universal Estricto**.
 
-1. **Formato Inmutable:** Todas las historias de usuario deben adoptar la nomenclatura `XXX-HU_nombre_en_snake_case` (ej. `001-HU_tarjeta_identidad_digital`).
+1. **Formato Inmutable:** Todas las historias de usuario deben adoptar la nomenclatura `XXX-nombre-en-kebab-case` (ej. `001-tarjeta-identidad-digital`, archivo `001-tarjeta-identidad-digital.md`). El nombre del archivo debe cumplir `^\d{3}-[a-z0-9]+(-[a-z0-9]+)*\.md$`: tres dígitos, un guion y palabras en minúsculas ASCII separadas por un único guion; sin prefijo `HU`, sin guiones bajos, sin espacios ni mayúsculas. El Watcher rechaza cualquier otro formato y nunca renombra archivos.
 2. **Columnas del Ledger:** La tabla del Ledger (`specs/README.md`) utiliza oficialmente la estructura: `| N° | Épica Origen | Nombre spec / HU | Qué aporta | Estado | Rama |`.
 3. **Uso Obligatorio Transversal:** Este identificador exacto y sin truncar se utiliza obligatoriamente para:
-   - Registrar la funcionalidad en la columna `Nombre spec / HU` y en la columna `Rama` (`feat/001-HU_...`) del Ledger.
-   - Orquestar la bifurcación GitOps (`@WATCHER: GITOPS-BRANCH-CREATE feat/XXX-HU_...`).
+   - Registrar la funcionalidad en la columna `Nombre spec / HU` y en la columna `Rama` (`feat/001-...`) del Ledger.
+   - Orquestar la bifurcación GitOps (`@WATCHER: GITOPS-BRANCH-CREATE feat/XXX-...`).
    - Nombrar los archivos físicos `.md` generados por los agentes (`@BA`, `@BS`, `@SA`, etc.). Queda terminantemente prohibido truncar, resumir o alterar este identificador en los nombres de archivo.
+4. **Estandarización Global de Artefactos de Agentes (Kebab-Case Estricto):**
+   TODOS los archivos y artefactos generados por agentes en `docs/` deben cumplir la convención kebab-case en minúsculas ASCII (`[a-z0-9]+(-[a-z0-9]+)*`) conservando sus extensiones originales (`.md`, `.json`, `.yaml`, etc.), prefijos funcionales y el identificador de HU cuando aplique. Se prohíbe el uso de snake_case, mayúsculas, espacios, tildes o guiones consecutivos.
+
+| Agente / Rol | Carpeta Destino | Convención de Nombre | Prefijo / Identificador | Ejemplo |
+| :--- | :--- | :--- | :--- | :--- |
+| **Business Storyteller** (`@BS`) | `docs/business-storyteller/` | `idea-[nombre-corto].md` | Prefijo `idea-` | `idea-tech-work-hub.md` |
+| **Product Analyst** (`@PA`) | `docs/product-analyst/` | `pb-[nombre-corto].md` | Prefijo `pb-` (Product Brief) | `pb-tech-work-hub.md` |
+| **Product Manager** (`@PM`) | `docs/product-manager/` | `mvp-[nombre-corto].md` | Prefijo `mvp-` (MVP Specs) | `mvp-tech-work-hub.md` |
+| **Business Analyst** (`@BA`) | `docs/business-analyst/` | `NNN-[nombre-de-la-historia].md` | `^\d{3}-[a-z0-9]+(-[a-z0-9]+)*\.md$` (sin prefijos HU ni BA) | `001-registro-elementos-backlog-multitipo.md` |
+| **Business Analyst (Stakeholders)** | `docs/business-analyst/HUs-stakeholders/` | `NNN-[nombre-de-la-historia].md` | Mismo identificador kebab-case que la HU técnica | `001-registro-elementos-backlog-multitipo.md` |
+| **Solutions Architect** (`@SA`) | `docs/solutions-architect/` | `tech-guidelines.md` (global) o `NNN-[nombre].md` (HU) | Nombre reservado o ID HU kebab-case | `tech-guidelines.md`, `001-registro-elementos-backlog-multitipo.md` |
+| **API Architect** (`@API`) | `docs/api-architect/` | `api-NNN-[nombre-de-la-historia].md` | Prefijo `api-` + ID HU | `api-001-registro-elementos-backlog-multitipo.md` |
+| **Data Architect** (`@DATA`) | `docs/data-architect/` | `db-NNN-[nombre-de-la-historia].md` | Prefijo `db-` + ID HU | `db-001-registro-elementos-backlog-multitipo.md` |
+| **Designer UX** (`@UX`) | `docs/designer-ux/` | `ux-NNN-[nombre-de-la-historia].md` | Prefijo `ux-` + ID HU | `ux-001-registro-elementos-backlog-multitipo.md` |
+| **QA Tech** (`@QT`) — Diseño | `docs/qa-tech/` | `tech-design-NNN-[nombre-de-la-historia].md` | Prefijo `tech-design-` + ID HU | `tech-design-001-registro-elementos-backlog-multitipo.md` |
+| **QA Tech** (`@QT`) — Feedback | `docs/qa-tech/` | `feedback-tech-NNN-[nombre-de-la-historia].md` | Prefijo `feedback-tech-` + ID HU | `feedback-tech-001-registro-elementos-backlog-multitipo.md` |
+| **QA Tech — Diagramas** | `docs/qa-tech/diagrams/` | `hu-NNN-[vista].[ext]` | Prefijo `hu-` + ID HU + sufijo de vista y extensión original (`.component.json`, `.html`, etc.) | `hu-001-arquitectura-componentes.component.json` |
+| **QA Auto** (`@QA-AUTO`) | `docs/qa-auto/` | `qa-report.md` | Reporte de automatización de pruebas | `qa-report.md` |
+| **QA Documental** (`@QA`) | `docs/qa-documental/` | `aprobado-qa-NNN-[nombre].md` o `feedback-qa-NNN-[nombre].md` | Prefijos `aprobado-qa-` / `feedback-qa-` + ID HU | `aprobado-qa-001-registro-elementos-backlog-multitipo.md` |
+| **Code Review** (`@CODE-REVIEW`) | `docs/code-review/` | `impact-analysis-report.md` | Reporte de análisis de impacto | `impact-analysis-report.md` |
+| **Devs** (Backend / Frontend / DevOps) | `docs/dev-*/` | `[capa]-architecture.md` | Arquitectura viva por capa | `backend-architecture.md`, `frontend-architecture.md` |
 
 ---
 
 ## 🚪 El Motor: "Doble Compuerta SDD" (Two-Stage Gatekeeper)
 El orquestador BMAD implementa un "Two-Stage Gatekeeper" para fraccionar la ejecución automática del puente **Spec Kit**. Esto evita la alucinación técnica y asegura que el modelo tecnológico propuesto por el orquestador obedezca a los arquitectos.
 
-*   **Compuerta 1 (Negocio):** Al recibir la aprobación del `@QA` (QA Documental), el Watcher intercepta la ejecución para lanzar de forma independiente `/speckit.specify` y `/speckit.clarify`. El Watcher fija de forma explícita la carpeta de la especificación (`specs/XXX-HU_nombre`, igual al identificador universal) y detiene la fase si Spec Kit no la respeta. Esto detalla funcionalmente el comportamiento sin inferir el stack.
+*   **Compuerta 1 (Negocio):** Al recibir la aprobación del `@QA` (QA Documental), el Watcher intercepta la ejecución para lanzar de forma independiente `/speckit.specify` y `/speckit.clarify`. El Watcher fija de forma explícita la carpeta de la especificación (`specs/XXX-nombre`, igual al identificador universal) y detiene la fase si Spec Kit no la respeta. Esto detalla funcionalmente el comportamiento sin inferir el stack.
 *   **Compuerta 2 (Arquitectura):** Tras el diseño de gobernanza del `@SA` (Solutions Architect), este agente emite la macro `@WATCHER: SDD-FREEZE`. El orquestador pausa el flujo nuevamente y ejecuta `/speckit.plan`, `/speckit.tasks` y `/speckit.analyze`. En esta fase, Spec-Kit asimila las guidelines inyectadas por el Arquitecto para generar un plan técnico realista y congelarlo (`[SPEC-FREEZE]`).
 *   **Compuerta 3 (Implementación):** Tras el Tech Design aprobado por `@QT`, el Watcher ejecuta la Fase D con `/speckit-implement` (backend y luego frontend, cada uno acotado a su alcance y con *Soul Mounting*), exige la documentación viva de arquitectura y el README del código de cada capa (`app/backend/README.md` y `app/frontend/README.md`: se crea si falta y se actualiza solo en lo que cambió; rutas configurables con `code_dirs` en `config_bmad.json`) y hace handoff a `@QA-AUTO`, que a su vez deriva a `@CODE-REVIEW`.
 *   **Compuerta 4 (Retrabajo):** Si `@CODE-REVIEW` o `@QA-AUTO` rechazan la implementación, el Watcher no despacha a un agente: ejecuta el ciclo de convergencia (`/speckit-analyze` → `/speckit-converge` → `/speckit-implement` acotado a las tareas `[fix:*]`) y devuelve el turno a `@QA-AUTO` y luego a `@CODE-REVIEW`, con tope de 2 iteraciones antes de escalar a `@HUMANO:`. Ver *Ciclo de Retrabajo SDD*.

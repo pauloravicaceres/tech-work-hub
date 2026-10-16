@@ -3,7 +3,7 @@
 - **Sistema:** TechWorkHub (Modulith .NET 8, PostgreSQL)
 - **Última actualización:** 2026-10-06 (HU-036 sin cambios de backend, arquitectura vigente; ver sección 16. Antes: HU-035, sección 15. Último cambio funcional: HU-015, sección 14)
 - **HU vigente:** 015 – Relación entre Personas, Roles y Elementos de Trabajo, sobre 012 – Miembros del Equipo y Roles Técnicos, sobre 004 – Asignación de Elementos del Backlog a un Sprint, sobre 003 – Gestión de Sprint de Dos Semanas (Crear y Consultar), sobre 001 – Registro de Elementos en Backlog Multitipo y 002 – Pruebas de Integración contra Keycloak Real
-- **Fuente de verdad:** `specs/003-HU_gestion_sprint_dos_semanas/` (`plan.md`, `data-model.md`, `contracts/sprints-api.openapi.yaml`, `tasks.md`), `documents/qa-tech/tech-design_003_gestion_sprint_dos_semanas.md`, `specs/002-pruebas-integracion-keycloak-catalogo/` y `specs/001-registro-backlog-multitipo/`
+- **Fuente de verdad:** `specs/003-gestion-sprint-dos-semanas/` (`plan.md`, `data-model.md`, `contracts/sprints-api.openapi.yaml`, `tasks.md`), `documents/qa-tech/tech-design-003-gestion-sprint-dos-semanas.md`, `specs/002-pruebas-integracion-keycloak-y-catalogo-application/` y `specs/001-registro-elementos-backlog-multitipo/`
 
 > Renderizado selectivo: solo se documenta lo alterado en esta iteración (host, `Shared`, módulos `Backlog`/`Application`, persistencia, pipeline, errores). Lo no tocado queda como "sin cambios".
 
@@ -417,7 +417,7 @@ sequenceDiagram
 
 ## 12. HU-004 — Asignación de elementos del Backlog a un Sprint (renderizado selectivo)
 
-Fuente: `specs/004-HU_asignacion_elementos_sprint/` (`plan.md`, `data-model.md`, `contracts/`, `tasks.md`). Alcance de esta pasada: solo backend; las tareas de frontend (T002, T041–T049, T051) no se ejecutaron.
+Fuente: `specs/004-asignacion-elementos-sprint/` (`plan.md`, `data-model.md`, `contracts/`, `tasks.md`). Alcance de esta pasada: solo backend; las tareas de frontend (T002, T041–T049, T051) no se ejecutaron.
 
 **Reconciliación vinculante:** un elemento pertenece a **un solo Sprint**. Repetir la asignación (mismo u otro Sprint) responde **409 Conflict** por el índice único `UX_SprintItems_ItemId`; FR-015 de `spec.md` queda sin efecto.
 
@@ -525,7 +525,7 @@ flowchart LR
 
 ## 13. HU-012 — Módulo `Teams`: miembros del equipo y roles técnicos (renderizado selectivo)
 
-Fuente: `specs/012-HU_miembros_equipo_y_roles_tecnicos/` (`plan.md`, `data-model.md`, `contracts/teams-api.openapi.yaml`, `tasks.md`). Alcance de esta pasada: solo backend; las tareas de frontend (T006, T023–T025, T029, T033, T037, T039, T042, T044, T047, T050, T051, T054, T056, T058) no se ejecutaron.
+Fuente: `specs/012-miembros-equipo-y-roles-tecnicos/` (`plan.md`, `data-model.md`, `contracts/teams-api.openapi.yaml`, `tasks.md`). Alcance de esta pasada: solo backend; las tareas de frontend (T006, T023–T025, T029, T033, T037, T039, T042, T044, T047, T050, T051, T054, T056, T058) no se ejecutaron.
 
 ### 13.1 Componentes nuevos
 
@@ -607,7 +607,7 @@ Todos exigen JWT. **Desviación respecto de `tasks.md` (T031/T036):** el 400 por
 
 ## 14. HU-015 — Relación entre personas, roles y elementos de trabajo (renderizado selectivo)
 
-Fuente: `specs/015-HU_relacion_personas_roles_elementos/` (`plan.md`, `data-model.md`, `contracts/item-assignments-api.openapi.yaml`, `tasks.md`). Alcance de esta pasada: solo backend; las tareas de frontend (T004, T015, T021, T022, T031, T032, T037, T045, T048–T050, T053, T056–T058, T062) y el recorrido manual del quickstart (T063) no se ejecutaron. Sin cambios en `Shared`, `Application`, `Sprints`, `BacklogItem`, `BacklogDbContext`, `TeamMember`, `TechnicalRole` ni en la migración `InitialTeamsSchema`.
+Fuente: `specs/015-relacion-personas-roles-elementos/` (`plan.md`, `data-model.md`, `contracts/item-assignments-api.openapi.yaml`, `tasks.md`). Alcance de esta pasada: solo backend; las tareas de frontend (T004, T015, T021, T022, T031, T032, T037, T045, T048–T050, T053, T056–T058, T062) y el recorrido manual del quickstart (T063) no se ejecutaron. Sin cambios en `Shared`, `Application`, `Sprints`, `BacklogItem`, `BacklogDbContext`, `TeamMember`, `TechnicalRole` ni en la migración `InitialTeamsSchema`.
 
 **Decisión vinculante (ADR-004 del SA):** repetir el par `(itemId, memberId)` es **idempotente**: 200 con la relación existente, sin nueva fila. No hay 409. Pendiente del BA reconciliar `spec.md` (Edge Case y FR-015).
 
@@ -699,7 +699,7 @@ Otro `DbUpdateException` (distinta restricción o código) se relanza y termina 
 
 ## 15. HU-035 — Refactorización de esqueleto UI (sin cambios de backend)
 
-Fuente: `specs/035-HU_refactorizacion_esqueleto_ui/` (`tasks.md`, `plan.md`, `contracts/ui-shell-contract.md`). Las 32 tareas (T001–T032) afectan solo a `app/frontend/` (layout de aplicación, rutas, tipografía global, lint). `tasks.md` prohíbe expresamente tocar `app/backend/**`, por lo que con alcance solo backend **no hay tareas que ejecutar**.
+Fuente: `specs/035-refactorizacion-esqueleto-ui/` (`tasks.md`, `plan.md`, `contracts/ui-shell-contract.md`). Las 32 tareas (T001–T032) afectan solo a `app/frontend/` (layout de aplicación, rutas, tipografía global, lint). `tasks.md` prohíbe expresamente tocar `app/backend/**`, por lo que con alcance solo backend **no hay tareas que ejecutar**.
 
 **Arquitectura backend vigente, sin cambios:** módulos `Backlog`, `Application`, `Sprints` y `Teams`, `Shared`, esquemas de datos, migraciones, contratos HTTP y pruebas descritos en las secciones 1–14 siguen siendo válidos. No se añadieron endpoints, tablas, lógica de dominio ni integraciones.
 
@@ -713,7 +713,7 @@ Verificación: no se ejecutaron ni modificaron pruebas de backend; `app/backend/
 
 ## 16. HU-036 — Theming claro/oscuro de la UI (sin cambios de backend)
 
-Fuente: `specs/036-HU_theming_claro_oscuro_ui/` (`tasks.md`, `plan.md`, `contracts/`). Las 45 tareas (T001–T045) afectan solo a `app/frontend/` (preset de tema, `ThemeService`, conmutador del shell, script anti-parpadeo en `index.html`, `lint:primeng`). `tasks.md` prohíbe expresamente tocar `app/backend/`, por lo que con alcance solo backend **no hay tareas que ejecutar** y no se modificó código.
+Fuente: `specs/036-theming-claro-oscuro-ui/` (`tasks.md`, `plan.md`, `contracts/`). Las 45 tareas (T001–T045) afectan solo a `app/frontend/` (preset de tema, `ThemeService`, conmutador del shell, script anti-parpadeo en `index.html`, `lint:primeng`). `tasks.md` prohíbe expresamente tocar `app/backend/`, por lo que con alcance solo backend **no hay tareas que ejecutar** y no se modificó código.
 
 **Arquitectura backend vigente, sin cambios:** módulos `Backlog`, `Application`, `Sprints` y `Teams`, `Shared`, esquemas, migraciones, contratos HTTP y pruebas descritos en las secciones 1–14 siguen siendo válidos. No se añadieron endpoints, tablas, lógica de dominio ni integraciones. La preferencia de tema vive solo en `localStorage` del navegador; no se persiste en el servidor.
 

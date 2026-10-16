@@ -1,6 +1,6 @@
 # 🏗️ Reporte de Impacto y Code Review Vivo (`impact-analysis-report.md`)
 
-**HU vigente:** 036-HU_theming_claro_oscuro_ui · **Rama:** `feat/036-HU_theming_claro_oscuro_ui`
+**HU vigente:** 036-theming-claro-oscuro-ui · **Rama:** `feat/036-theming-claro-oscuro-ui`
 **Fecha:** 06-10-2026 · **Dictamen (HU-036):** ✅ **[APROBADO]** (1 reserva cosmética no bloqueante).
 **HUs anteriores:** 035 ([APROBADO] con deuda), 015, 012, 004, 003, 002 y 001; sus secciones se conservan abajo como histórico.
 
@@ -132,7 +132,7 @@ Ejecución propia (Code Review): **Unit 27/27** e **Integración 38/38** (Testco
 | R1 | [CAPA:TASKS] | 🟠 Abierto | `tasks.md` T058 (`npm test` + `npm run build`) y T061 (recorrido de los 10 escenarios del quickstart) sin `[X]`: el frontend nunca se compiló ni se probó con Jest (22 specs). Re-ejecutar en un entorno con Node >= 22.22.3 antes de promover. | @QA-AUTO / humano |
 | R2 | [CAPA:CODE] | 🟡 Reserva | `register-member-dialog.component.ts` (constructor) mantiene un `.subscribe()` manual (`submit$` con `exhaustMap` + `takeUntilDestroyed`). Es un comando con efecto lateral, no estado derivable; mismo patrón aceptado en HU-001/003/004. Las lecturas sí usan `toSignal`. | @DEV-FRONT |
 | R3 | [CAPA:CODE] | 🟡 Menor | `TeamsModule.cs:41` — el `<summary>` de `MigrateTeamsModuleAsync` dice "schema `sprints`" (copia de Sprints); el schema real es `teams`. Solo comentario. | @DEV-BACK |
-| R4 | [CAPA:SPEC] | 🟡 Informativa | `CreatedBy`/`LastModifiedBy` quedan `text` (migración, `data-model.md`, T014) frente a `varchar(255)` de `db_012` (discrepancia ya señalada por QT). Los puntos abiertos 1-8 de la HU (unicidad, longitud, ciclo de vida) siguen sin definir: el código no los restringe y las pruebas lo documentan. | humano / PM |
+| R4 | [CAPA:SPEC] | 🟡 Informativa | `CreatedBy`/`LastModifiedBy` quedan `text` (migración, `data-model.md`, T014) frente a `varchar(255)` de `db-012` (discrepancia ya señalada por QT). Los puntos abiertos 1-8 de la HU (unicidad, longitud, ciclo de vida) siguen sin definir: el código no los restringe y las pruebas lo documentan. | humano / PM |
 | R5 | [CAPA:CODE] | 🟡 Reserva | Helpers de prueba `async` sin `CancellationToken` (`PostgresFixture.cs:24-26`, `RegisterTeamMemberFailureTests.cs:26-42`): ambigüedad ya registrada en HU-001/002 (la constitución no aclara si aplica a código de prueba); pendiente de enmienda con `/speckit-constitution`. | @QA-AUTO |
 | R6 | — | 🟡 Proceso | Código de la HU sin commitear al momento de la revisión (lo consolida el watcher al fusionar). | Watcher |
 

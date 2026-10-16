@@ -47,7 +47,7 @@ def registrar_respuesta():
 - **Estado:** Respuestas al cuestionario estratégico:
 {estado_formateado}
 - **⚠️ Puntos Abiertos:** Ninguno.
-- **Handoff:** @SA: Las definiciones estratégicas han sido resueltas. Procede a compilar el documento tech_guidelines.md utilizando estas reglas y avanza el flujo arquitectónico.
+- **Handoff:** @SA: Las definiciones estratégicas han sido resueltas. Procede a compilar el documento tech-guidelines.md utilizando estas reglas y avanza el flujo arquitectónico.
 """
 
     # Validar si el tracker existe para anexarlo de forma segura

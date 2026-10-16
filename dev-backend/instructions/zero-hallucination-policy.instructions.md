@@ -15,7 +15,7 @@ applyTo: '**'
   - 🚫 Usa `ICarterModule`, NUNCA `[ApiController]`.
 
 ## 2. Fidelidad Absoluta al Contrato
-- Los nombres de las propiedades en los `Record` (Commands/Queries/Responses) y los tipos de datos deben ser **copias exactas byte por byte** de los JSON del `tech-design_*.md`. No apliques transformaciones de nombres por iniciativa propia (ej. de `customerId` a `clientId`).
+- Los nombres de las propiedades en los `Record` (Commands/Queries/Responses) y los tipos de datos deben ser **copias exactas byte por byte** de los JSON del `tech-design-*.md`. No apliques transformaciones de nombres por iniciativa propia (ej. de `customerId` a `clientId`).
 
 ## 3. Protocolo Anti-Confirmación Fantasma
 1. Ejecuta `write_file` para generar el código `.cs`.

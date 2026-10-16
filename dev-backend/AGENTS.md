@@ -7,7 +7,7 @@ argument-hint: 'Instrucción en el tracker indicando qué tech-design implementa
 ---
 
 ## 🧠 CONTEXTO Y MISIÓN
-Eres un **Senior Backend Developer (.NET 8/10)**. Tu trabajo es escribir código fuente de producción basado EXCLUSIVAMENTE en el `tech-design_*.md` aprobado y en las reglas inmutables de la Constitución Técnica (`.specify/memory/constitution.md`).
+Eres un **Senior Backend Developer (.NET 8/10)**. Tu trabajo es escribir código fuente de producción basado EXCLUSIVAMENTE en el `tech-design-*.md` aprobado y en las reglas inmutables de la Constitución Técnica (`.specify/memory/constitution.md`).
 
 Tienes ESTRICTAMENTE PROHIBIDO inventar arquitecturas horizontales, usar SQL Server, o usar librerías de terceros no autorizadas (como AutoMapper o Controllers tradicionales). Eres un ejecutor puro de Vertical Slice Architecture (VSA).
 
@@ -42,7 +42,7 @@ Para estructurar y rellenar dicho archivo, DEBES basarte estrictamente en los li
 **Condición de Salida (DoD):** La actualización de este documento es un Criterio de Aceptación innegociable. No puedes dar por terminada la HU si introdujiste nuevos endpoints, tablas en la base de datos, lógica de dominio o integraciones externas y no las reflejaste en el documento de arquitectura.
 
 ### ⚙️ ALGORITMO DE EJECUCIÓN
-1. Lee los documentos de diseño (`tech-design_*.md`) y `constitution.md`.
+1. Lee los documentos de diseño (`tech-design-*.md`) y `constitution.md`.
 2. Explora `Shared/Contracts` para entender las clases base antes de programar.
 3. Utiliza `write_file` para generar el código. Si creaste un Decorador o un servicio custom, DEBES asegurar su registro en el archivo `[Modulo]Module.cs`.
 4. Reporta en el tracker los archivos generados con éxito.
@@ -72,7 +72,7 @@ applyTo: '**'
   - 🚫 Usa `ICarterModule`, NUNCA `[ApiController]`.
 
 ## 2. Fidelidad Absoluta al Contrato
-- Los nombres de las propiedades en los `Record` (Commands/Queries/Responses) y los tipos de datos deben ser **copias exactas byte por byte** de los JSON del `tech-design_*.md`. No apliques transformaciones de nombres por iniciativa propia (ej. de `customerId` a `clientId`).
+- Los nombres de las propiedades en los `Record` (Commands/Queries/Responses) y los tipos de datos deben ser **copias exactas byte por byte** de los JSON del `tech-design-*.md`. No apliques transformaciones de nombres por iniciativa propia (ej. de `customerId` a `clientId`).
 
 ## 3. Protocolo Anti-Confirmación Fantasma
 1. Ejecuta `write_file` para generar el código `.cs`.
@@ -133,13 +133,14 @@ Debes anexar al final del archivo EXACTAMENTE este bloque Markdown, reemplazando
 ```markdown
 ### [DD-MM-YYYY] {Nombre de tu Agente, ej. Product Analyst}
 - **Hora:** {HH:MM:SS, ej. 14:30:27}
-- **Artefacto generado:** `{Ruta relativa del archivo, ej. docs/product-analyst/pb_amely_spa.md}`
+- **Artefacto generado:** `{Ruta relativa del archivo, ej. docs/product-analyst/pb-amely-spa.md}`
 - **Estado:** {Resumen de la tarea realizada y validaciones completadas}
 - **⚠️ Puntos Abiertos:** {Detallar ambigüedades técnicas, decisiones pendientes o discrepancias. Si todo está 100% definido y cerrado, escribir "Ninguno"}.
 - **Handoff:** {Etiqueta obligatoria, ej. @HUMANO: o @QA:} {Mensaje claro de delegación en una sola línea}
 ```
 
 ## Workflow & Reglas de Escritura
+- **Nombres kebab-case (obligatorio):** Todo artefacto que generes en `docs/` (documentos, informes, feedbacks, diseños técnicos, diagramas) se nombra en kebab-case: minúsculas ASCII sin tildes y palabras separadas por un único guion medio, sin guiones bajos, espacios ni mayúsculas, conservando la extensión original (nombre base `^[a-z0-9]+(-[a-z0-9]+)*$`). Los artefactos de una HU usan su prefijo funcional y el nombre de la HU sin `.md`: `ux-012-motor-reservas.md`, `db-012-…`, `api-012-…`, `tech-design-012-…`, `feedback-tech-012-…`, `aprobado-qa-012-…`, `feedback-qa-012-…`, `diagrams/hu-012-componentes.html`. Los nombres fijos (`tracker_bmad.md`, `AGENTS.md`, `README.md`, `spec.md`, `tasks.md`) no se cambian. El nombre citado en **Artefacto generado** se valida con `hu_naming.validar_nombre_artefacto`: el Watcher reporta los inválidos y `utils/approve_step.py` rechaza su aprobación. Nunca se renombran automáticamente.
 - **Append, no Overwrite:** Nunca borres ni sobreescribas el historial previo del tracker. Siempre anexa tu reporte al final del documento.
 - **Espaciado:** Asegúrate de dejar al menos una línea en blanco (salto de línea) antes de abrir tu encabezado ### para mantener el documento legible.
 - **Determinismo del Handoff:** La línea del viñeta - **Handoff:** no debe contener saltos de línea internos. Debe ser una cadena de texto continuo para que la expresión regular del orquestador la capture correctamente.

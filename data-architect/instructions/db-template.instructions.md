@@ -1,12 +1,13 @@
 ---
-description: 'Plantilla determinista para el artefacto generado por el Data Architect (db_[nombre_corto].md). Incluye MER, diccionario de datos, trazabilidad UI-Data / Spec Kit y registro de decisiones (ADR) en formato MADR.'
+description: 'Plantilla determinista para el artefacto generado por el Data Architect (db-NNN-nombre-de-la-historia.md). Incluye MER, diccionario de datos, trazabilidad UI-Data / Spec Kit y registro de decisiones (ADR) en formato MADR.'
 applyTo: '**'
 ---
 
 # Plantilla de Base de Datos y Decisiones (MER + ADR) — SDD Bridge
 
 ## Convención de Nombres de Archivo
-`db_[nombre_corto].md` (ej. `db_motor_reservas.md`)
+`db-NNN-nombre-de-la-historia.md` (ej. `db-012-motor-reservas.md`)
+- `NNN-nombre-de-la-historia` es el nombre del archivo de la HU sin `.md`, copiado tal cual (ej. de `012-motor-reservas.md` se genera obligatoriamente `db-012-motor-reservas.md`). Todo el nombre va en kebab-case (minúsculas ASCII sin tildes, palabras separadas por un único guion medio (`-`); prohibidos guiones bajos, espacios, mayúsculas, guiones consecutivos y guiones al inicio o al final) y debe cumplir `^db-\d{3}-[a-z0-9]+(-[a-z0-9]+)*\.md$`.
 
 ## Estructura Canónica Obligatoria
 
@@ -14,8 +15,8 @@ applyTo: '**'
 # DISEÑO DE PERSISTENCIA (MER): {{TITULO_EPICA}}
 
 - **Especificación SDD Base:** `spec.md` y `tasks.md` (Spec Kit)
-- **Historias de Usuario Base:** {{Nombres de los archivos hu_*.md procesados}}
-- **Diseño Visual UX Auditado:** {{Nombre de ux_*.md auditado o "N/A - Bypass Headless"}}
+- **Historias de Usuario Base:** {{Nombres de los archivos NNN-*.md procesados}}
+- **Diseño Visual UX Auditado:** {{Nombre de ux-*.md auditado o "N/A - Bypass Headless"}}
 - **Fecha de Diseño:** {{FECHA_ACTUAL}}
 - **Data Architect:** Agente DA Senior BMAD
 
@@ -82,9 +83,9 @@ erDiagram
 ---
 
 ### ⚠️ DIRECTIVA OBLIGATORIA DE TRAZABILIDAD UI / SPEC KIT -> DATA
-1. **Inspección Visual y Contractual de Datos:** El Data Architect audita `spec.md`, `tasks.md` y `docs/designer-ux/ux_*.md` (si existe diseño visual) antes de cerrar el MER.
+1. **Inspección Visual y Contractual de Datos:** El Data Architect audita `spec.md`, `tasks.md` y `docs/designer-ux/ux-*.md` (si existe diseño visual) antes de cerrar el MER.
 2. **Cero Campos Huérfanos:** Cada elemento de interfaz o entidad de contrato que requiera persistencia o cálculo debe tener su columna y tipo correspondiente en el Diccionario de Datos.
-3. **Excepción Headless:** Si el proyecto proviene de un Bypass Headless (sin `ux_*.md`), el modelo se deriva exclusivamente de los contratos de `spec.md`, `tasks.md` y `hu_*.md`.
+3. **Excepción Headless:** Si el proyecto proviene de un Bypass Headless (sin `ux-*.md`), el modelo se deriva exclusivamente de los contratos de `spec.md`, `tasks.md` y `NNN-*.md`.
 
 ---
 

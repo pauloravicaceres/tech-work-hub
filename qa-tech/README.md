@@ -9,14 +9,14 @@ A diferencia del QA Documental que valida el valor de negocio, el QA-Tech opera 
 ### 📦 Entradas y Artefactos de Salida
 
 * **Entradas (Lectura):**
-  * `tech_guidelines.md` (Gobernanza del Solutions Architect en `solutions-architect`).
-  * `db_*.md` (Modelo Entidad-Relación y diccionario del Data Architect en `data-architect`).
-  * `api_*.md` (Contratos de integración y endpoints del API Architect en `api-architect`).
-  * `ux_*.md` (Diseño de interfaces del UX Designer en `designer-ux`, si existe).
+  * `tech-guidelines.md` (Gobernanza del Solutions Architect en `solutions-architect`).
+  * `db-*.md` (Modelo Entidad-Relación y diccionario del Data Architect en `data-architect`).
+  * `api-*.md` (Contratos de integración y endpoints del API Architect en `api-architect`).
+  * `ux-*.md` (Diseño de interfaces del UX Designer en `designer-ux`, si existe).
   * `.specify/memory/constitution.md` (opcional: directrices y restricciones de arquitectura preexistente).
   * Directivas del `@API:` o `@DA:` en el `tracker_bmad.md`.
-* **Salida de Rechazo:** `feedback_tech_[nombre_corto].md` (Reporte de auditoría adversarial clasificado por severidad que devuelve el turno a `@DA:`, `@API:` o `@SA:`).
-* **Salida de Aprobación:** `tech-design_[nombre_corto].md` (El TDD compilado que integra la arquitectura consolidada, el MER, la API, la matriz consolidada de ADRs MADR y los diagramas generados).
+* **Salida de Rechazo:** `feedback-tech-NNN-nombre-de-la-historia.md` (Reporte de auditoría adversarial clasificado por severidad que devuelve el turno a `@DA:`, `@API:` o `@SA:`).
+* **Salida de Aprobación:** `tech-design-NNN-nombre-de-la-historia.md` (El TDD compilado que integra la arquitectura consolidada, el MER, la API, la matriz consolidada de ADRs MADR y los diagramas generados).
 * **Handoff:**
   * **Si la arquitectura es Aprobada:** Transfiere el control formalmente al **`@HUMANO:`** para la aprobación ejecutiva de la arquitectura previa al inicio del desarrollo.
   * **Si la arquitectura es Rechazada (🔴 Crítico):** Devuelve el turno al agente responsable (**`@DA:`** para cambios en tablas o trazabilidad UX, **`@API:`** para cambios en endpoints o **`@SA:`** para gobernanza y stack).
@@ -25,7 +25,7 @@ A diferencia del QA Documental que valida el valor de negocio, el QA-Tech opera 
 
 * **1. Auditoría Cruzada Estructural y Cero Campos Huérfanos (DB vs. API vs. UX)**
   * Rastrea la trazabilidad bidireccional entre la base de datos y la red: verifica que ningún endpoint interactúe con tablas o columnas inexistentes en el MER.
-  * Audita la trazabilidad UI -> Data: cruza los wireframes de `ux_*.md` contra el MER para asegurar que ningún campo visual carezca de persistencia.
+  * Audita la trazabilidad UI -> Data: cruza los wireframes de `ux-*.md` contra el MER para asegurar que ningún campo visual carezca de persistencia.
   * Valida la coherencia de tipos de datos y comprueba que los escenarios de error Gherkin cuenten con su código HTTP correspondiente.
 
 * **2. Detector de Mentiras en ADRs (Auditoría Adversarial)**
@@ -49,7 +49,7 @@ A diferencia del QA Documental que valida el valor de negocio, el QA-Tech opera 
 El agente **QA-Tech** puede configurarse de dos maneras distintas para transicionar hacia la Fase de Construcción, dependiendo del grado de automatización que prefieras para el framework:
 
 #### Opción 1: Gatillo Directo de Fase D (Automático) - *[Por defecto]*
-Esta es la configuración de máxima autonomía. Cuando el QA-Tech aprueba el `tech-design_*.md`, deduce automáticamente el alcance de la historia (UI y/o API) y despacha directamente a los desarrolladores Herdr (`@DEV-BACK:` y/o `@DEV-FRONT:`).
+Esta es la configuración de máxima autonomía. Cuando el QA-Tech aprueba el `tech-design-*.md`, deduce automáticamente el alcance de la historia (UI y/o API) y despacha directamente a los desarrolladores Herdr (`@DEV-BACK:` y/o `@DEV-FRONT:`).
 *   **¿Cómo activarlo?** Asegúrate de que en `qa-tech.agent.md` la sección final se llame `⚡ GATILLO DIRECTO DE FASE D (AUTOMÁTICO)` y el Paso 7 del MCP diga: `Reescribir el tracker despachando directamente a @DEV-BACK y/o @DEV-FRONT...`
 *   **Ventaja:** Elimina la Compuerta 3 (HITL), logrando que la historia de usuario se desarrolle de principio a fin de manera asíncrona (usando la Barrera Fork-Join).
 

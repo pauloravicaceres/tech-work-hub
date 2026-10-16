@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": { "title": "HU-002 Despliegue efímero de la suite", "output": "hu-002-despliegue.html", "quality_profile": "showcase", "locale": "en" },
+  "components": [
+    { "id": "ci", "type": "external", "label": "Equipo / CI", "sublabel": "dotnet test", "pos": [40, 220], "size": [140, 60] },
+    { "id": "proc", "type": "backend", "label": "Proceso de prueba", "sublabel": "xUnit + Program real", "pos": [300, 220], "size": [170, 60] },
+    { "id": "realm", "type": "external", "label": "Realm JSON", "sublabel": "versionado", "pos": [300, 60], "size": [170, 60] },
+    { "id": "kcc", "type": "security", "label": "Keycloak 24", "sublabel": "contenedor efímero", "pos": [640, 80], "size": [160, 60] },
+    { "id": "pgc", "type": "database", "label": "postgres:16-alpine", "sublabel": "contenedor efímero", "pos": [640, 360], "size": [160, 60] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "Docker daemon (Testcontainers)", "wraps": ["kcc", "pgc"] }
+  ],
+  "connections": [
+    { "id": "ci-proc", "from": "ci", "to": "proc", "label": "un comando", "variant": "emphasis" },
+    { "id": "realm-kc", "from": "realm", "to": "kcc", "label": "import realm", "variant": "dashed" },
+    { "id": "proc-kc", "from": "proc", "to": "kcc", "label": "HTTP puerto dinámico", "variant": "security" },
+    { "id": "proc-pg", "from": "proc", "to": "pgc", "label": "Npgsql puerto dinámico" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "Ciclo de vida", "items": ["Un contenedor por suite", "Destruidos al terminar"] },
+    { "dot": "emerald", "title": "Repetible", "items": ["Sin estado residual", "Falla explícito sin Docker"] },
+    { "dot": "rose", "title": "Excepción", "items": ["ssl-required solo en el host de prueba", "Condicionado al spike T008"] }
+  ]
+}

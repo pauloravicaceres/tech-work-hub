@@ -1,20 +1,20 @@
-@PA: He dejado la idea validada en `documents/business-storyteller/idea_TechWorkHub.md`. Por favor procede con el análisis y generación del Product Brief.
+@PA: He dejado la idea validada en `documents/business-storyteller/idea-tech-work-hub.md`. Por favor procede con el análisis y generación del Product Brief.
 
 ### [03-10-2026] Product Analyst
 - **Hora:** 08:08:15
-- **Artefacto generado:** `documents/product-analyst/pb_tech_work_hub.md`
+- **Artefacto generado:** `documents/product-analyst/pb-tech-work-hub.md`
 - **Estado:** Product Brief completado con éxito con las 8 secciones canónicas, subordinación a la Constitución Técnica Global (Modo Brownfield) y auditoría pb-validator aprobada al 100%.
 - **⚠️ Puntos Abiertos:** Definición del flujo de estados para incidentes, especificación de límites/formatos de adjuntos y alcance de estimación diferenciada por rol en ítems de backlog distintos a HU.
-- **Handoff:** @HUMANO: El Product Brief pb_tech_work_hub.md está listo para revisión en documents/product-analyst/. Por favor valida el alcance y ejecuta python utils/approve_step.py para autorizar formalmente la transición hacia el product-manager.
+- **Handoff:** @HUMANO: El Product Brief pb-tech-work-hub.md está listo para revisión en documents/product-analyst/. Por favor valida el alcance y ejecuta python utils/approve_step.py para autorizar formalmente la transición hacia el product-manager.
 
 ### [03-10-2026] HUMANO
 - **Hora:** 09:13:41
 - **Estado:** APPROVE
-- **Handoff:** @PM: El Product Brief ha sido auditado y aprobado formalmente en el archivo pb_tech_work_hub.md. Procede con el análisis estratégico y la creación del Backlog del MVP.
+- **Handoff:** @PM: El Product Brief ha sido auditado y aprobado formalmente en el archivo pb-tech-work-hub.md. Procede con el análisis estratégico y la creación del Backlog del MVP.
 
 ### [03-10-2026] Product Manager
 - **Hora:** 09:17:15
-- **Artefacto generado:** `documents/product-manager/mvp_tech_work_hub.md`
+- **Artefacto generado:** `documents/product-manager/mvp-tech-work-hub.md`
 - **Estado:** Plan Estratégico y Backlog del MVP estructurado bajo el estándar de Ruta Crítica (P1 a P5) y subordinación técnica brownfield, con el registro 001-HU_registro_elementos_backlog_multitipo actualizado en el Product State Ledger specs/README.md.
 - **⚠️ Puntos Abiertos:** Catálogo formal de estados por tipo de ítem en Backlog Multitipo, reglas de cálculo para tarjetas retrasadas/en riesgo y flujo de estados para la bitácora de incidentes.
 - **Handoff:** @HUMANO: El Plan Estratégico del MVP ha sido definido. La próxima épica a delegar es 001-HU_registro_elementos_backlog_multitipo. Por favor, valida las Épicas y ejecuta el script de aprobación para autorizar la transición hacia el Business Analyst (@BA).
@@ -23,7 +23,7 @@
 - **Hora:** 09:53:23
 - **Estado:** APPROVE
 - **Handoff:** @WATCHER: GITOPS-BRANCH-CREATE feat/001-HU_registro_elementos_backlog_multitipo
-@BA: El MVP y Backlog han sido aprobados en el archivo mvp_tech_work_hub.md. La rama feat/001-HU_registro_elementos_backlog_multitipo ha sido creada. Procede con el análisis de negocio y redacción de Historias de Usuario para la épica 001-HU_registro_elementos_backlog_multitipo. Usa el identificador universal estricto para crear el archivo físico en documents/business-analyst.
+@BA: El MVP y Backlog han sido aprobados en el archivo mvp-tech-work-hub.md. La rama feat/001-HU_registro_elementos_backlog_multitipo ha sido creada. Procede con el análisis de negocio y redacción de Historias de Usuario para la épica 001-HU_registro_elementos_backlog_multitipo. Usa el identificador universal estricto para crear el archivo físico en documents/business-analyst.
 
 
 ### [03-10-2026] Business Analyst
@@ -35,7 +35,7 @@
 
 ### [03-10-2026] QA Documental
 - **Hora:** 09:58:30
-- **Artefacto generado:** `documents/qa-documental/aprobado_qa_001_registro_elementos_backlog_multitipo.md`
+- **Artefacto generado:** `documents/qa-documental/aprobado-qa-001-registro-elementos-backlog-multitipo.md`
 - **Estado:** Auditoría documental completada exitosamente con dictamen APROBADO (100% de cumplimiento en las 6 dimensiones de la rúbrica BMAD: Trazabilidad y Fidelidad de Alcance contra el Product Brief, Atomicidad e INVEST, Cobertura BDD Gherkin pura, Consistencia Lógica, Separación Negocio/Técnica mediante Estrategia Dual-Output y Respeto al Ecosistema Brownfield según constitution.md).
 - **⚠️ Puntos Abiertos:** Ninguno.
 - **Handoff:** @UX: La Historia de Usuario 001-HU_registro_elementos_backlog_multitipo.md ha sido aprobada por QA. Por favor, procede a diseñar los wireframes y estados visuales.
@@ -85,10 +85,10 @@ Awaiting your response to the question above.
 
 ### [03-10-2026] Designer UX
 - **Hora:** 10:31:45
-- **Artefacto generado:** `documents/designer-ux/ux_001_registro_elementos_backlog_multitipo.md`
+- **Artefacto generado:** `documents/designer-ux/ux-001-registro-elementos-backlog-multitipo.md`
 - **Estado:** Especificación de diseño visual UX completada con éxito. Mapeo 1:1 de escenarios funcionales y BDD (Happy Paths y Sad Paths) a wireframes ASCII estructurados bajo el estándar de maquetación PrimeNG v22.1.1 y la Constitución Técnica Global (.specify/memory/constitution.md).
 - **⚠️ Puntos Abiertos:** Ninguno.
-- **Handoff:** @SA: El diseño visual de la HU 001-HU_registro_elementos_backlog_multitipo ha concluido exitosamente en documents/designer-ux/ux_001_registro_elementos_backlog_multitipo.md. Procede con el tech-design y arquitectura.
+- **Handoff:** @SA: El diseño visual de la HU 001-HU_registro_elementos_backlog_multitipo ha concluido exitosamente en documents/designer-ux/ux-001-registro-elementos-backlog-multitipo.md. Procede con el tech-design y arquitectura.
 
 ### [03-10-2026] Solutions Architect
 - **Hora:** 10:32:00
@@ -114,45 +114,45 @@ Awaiting your response to the question above.
 
 ### [03-10-2026] Data Architect
 - **Hora:** 10:43:05
-- **Artefacto generado:** `documents/data-architect/db_001_registro_elementos_backlog_multitipo.md`
-- **Estado:** Diseño del Modelo Entidad-Relación y Diccionario de Datos completado con éxito, garantizando subordinación estricta a la constitución y estructuración por módulos aislados (PostgreSQL schema `backlog`). Se realizó auditoría UI-Data contra ux_001_registro_elementos_backlog_multitipo.md asegurando cero campos huérfanos.
+- **Artefacto generado:** `documents/data-architect/db-001-registro-elementos-backlog-multitipo.md`
+- **Estado:** Diseño del Modelo Entidad-Relación y Diccionario de Datos completado con éxito, garantizando subordinación estricta a la constitución y estructuración por módulos aislados (PostgreSQL schema `backlog`). Se realizó auditoría UI-Data contra ux-001-registro-elementos-backlog-multitipo.md asegurando cero campos huérfanos.
 - **⚠️ Puntos Abiertos:** Ninguno.
 - **Handoff:** @API: El modelo de datos (MER) y la persistencia han sido definidos a partir de spec.md y tasks.md. Por favor, diseña los contratos de integración (Endpoints/Payloads) basados en estas tablas.
 
 ### [03-10-2026] API Architect
 - **Hora:** 10:44:00
-- **Artefacto generado:** `documents/api-architect/api_001_registro_elementos_backlog_multitipo.md`
+- **Artefacto generado:** `documents/api-architect/api-001-registro-elementos-backlog-multitipo.md`
 - **Estado:** Contratos de API (Endpoints y Payloads JSON) diseñados mapeando estrictamente `spec.md` y `tasks.md`, subordinados a la arquitectura base (Modulith .NET 8, Carter, Minimal APIs) según constitution.md y documentados como ADR en MADR.
 - **⚠️ Puntos Abiertos:** Ninguno.
-- **Handoff:** @QT: Los contratos de integración (API) y endpoints para Registro de Elementos en Backlog Multitipo han sido definidos en api_001_registro_elementos_backlog_multitipo.md basados en spec.md y db_001_registro_elementos_backlog_multitipo.md. Por favor, procede con la auditoría cruzada y la compilación del Tech Design (TDD).
+- **Handoff:** @QT: Los contratos de integración (API) y endpoints para Registro de Elementos en Backlog Multitipo han sido definidos en api-001-registro-elementos-backlog-multitipo.md basados en spec.md y db-001-registro-elementos-backlog-multitipo.md. Por favor, procede con la auditoría cruzada y la compilación del Tech Design (TDD).
 
 
 ### [03-10-2026] QA Tech
 - **Hora:** 10:46:00
-- **Artefacto generado:** `documents/qa-tech/feedback_tech_001_registro_elementos_backlog_multitipo.md`
-- **Estado:** ❌ RECHAZADO. Se detectó discrepancia estructural grave (campos huérfanos) entre la UI (`ux_001_registro_elementos_backlog_multitipo.md`) y los entregables de Datos y API. La interfaz gráfica requiere `Prioridad` y `Criterios de Aceptación`, los cuales fueron omitidos en el diccionario de datos y en los contratos REST.
+- **Artefacto generado:** `documents/qa-tech/feedback-tech-001-registro-elementos-backlog-multitipo.md`
+- **Estado:** ❌ RECHAZADO. Se detectó discrepancia estructural grave (campos huérfanos) entre la UI (`ux-001-registro-elementos-backlog-multitipo.md`) y los entregables de Datos y API. La interfaz gráfica requiere `Prioridad` y `Criterios de Aceptación`, los cuales fueron omitidos en el diccionario de datos y en los contratos REST.
 - **❓ Puntos Abiertos:** ¿Debe el Spec Kit (spec.md/tasks.md) ser actualizado por el BA/SA para reflejar estos campos formalmente? (Se asume que DA y API deben subsanar para alinearse a la UI).
-- **Handoff:** @DA: y @API: Se ha emitido feedback adversarial crítico en documents/qa-tech/feedback_tech_001_registro_elementos_backlog_multitipo.md. Por favor, subsana las inconsistencias señaladas (campos huérfanos 'Prioridad' y 'Criterios de Aceptación' presentes en la UI pero omitidos en el MER y Payload) para proceder con la re-auditoría.
+- **Handoff:** @DA: y @API: Se ha emitido feedback adversarial crítico en documents/qa-tech/feedback-tech-001-registro-elementos-backlog-multitipo.md. Por favor, subsana las inconsistencias señaladas (campos huérfanos 'Prioridad' y 'Criterios de Aceptación' presentes en la UI pero omitidos en el MER y Payload) para proceder con la re-auditoría.
 
 
 ### [03-10-2026] Data Architect
 - **Hora:** 10:48:30
-- **Artefacto generado:** `documents/data-architect/db_001_registro_elementos_backlog_multitipo.md`
-- **Estado:** ✅ Subsanación completada. Se incorporaron explícitamente los campos detectados como huérfanos (`Priority` como enumeración INT obligatoria y `AcceptanceCriteria` como TEXT opcional) tanto en el diagrama MER como en el Diccionario de Datos. Se logró alineación total con la UI (ux_001_registro_elementos_backlog_multitipo.md).
+- **Artefacto generado:** `documents/data-architect/db-001-registro-elementos-backlog-multitipo.md`
+- **Estado:** ✅ Subsanación completada. Se incorporaron explícitamente los campos detectados como huérfanos (`Priority` como enumeración INT obligatoria y `AcceptanceCriteria` como TEXT opcional) tanto en el diagrama MER como en el Diccionario de Datos. Se logró alineación total con la UI (ux-001-registro-elementos-backlog-multitipo.md).
 - **⚠️ Puntos Abiertos:** Ninguno.
 - **Handoff:** @API: El modelo de datos (MER) y la persistencia han sido actualizados con los campos faltantes (Prioridad y Criterios de Aceptación). Por favor, actualiza los contratos de integración (Endpoints/Payloads) correspondientes y notifica al @QT: para su re-auditoría.
 
 ### [03-10-2026] API Architect
 - **Hora:** 10:49:00
-- **Artefacto generado:** `documents/api-architect/api_001_registro_elementos_backlog_multitipo.md`
+- **Artefacto generado:** `documents/api-architect/api-001-registro-elementos-backlog-multitipo.md`
 - **Estado:** ✅ Subsanación completada. Se añadieron los campos huérfanos `priority` (INT) y `acceptanceCriteria` (TEXT) al payload JSON del endpoint `POST /api/backlog/items`, logrando alineación total con la persistencia (MER actualizado por el DA) y la UI.
 - **⚠️ Puntos Abiertos:** Ninguno.
-- **Handoff:** @QT: Las inconsistencias de los campos huérfanos han sido subsanadas tanto en persistencia como en contratos API. El payload en api_001_registro_elementos_backlog_multitipo.md refleja ahora 'priority' y 'acceptanceCriteria'. Por favor, procede con la re-auditoría y la compilación del Tech Design (TDD).
+- **Handoff:** @QT: Las inconsistencias de los campos huérfanos han sido subsanadas tanto en persistencia como en contratos API. El payload en api-001-registro-elementos-backlog-multitipo.md refleja ahora 'priority' y 'acceptanceCriteria'. Por favor, procede con la re-auditoría y la compilación del Tech Design (TDD).
 
 
 ### [03-10-2026] QA Tech
 - **Hora:** 10:49:50
-- **Artefacto generado:** `documents/qa-tech/tech-design_001_registro_elementos_backlog_multitipo.md`
+- **Artefacto generado:** `documents/qa-tech/tech-design-001-registro-elementos-backlog-multitipo.md`
 - **Estado:** ✅ AUDITADO Y APROBADO. Auditoría adversarial superada con éxito (0 hallazgos críticos). La discrepancia UI-Data ha sido subsanada; `Priority` y `AcceptanceCriteria` están debidamente integrados en MER y Contratos. Tech Design compilado y `specs/README.md` actualizado a `READY-FOR-DEV`.
 - **❓ Puntos Abiertos:** Ninguno.
 - **Handoff:** 
@@ -381,7 +381,7 @@ Awaiting your response to the question above.
 ### [03-10-2026] Product Manager
 - **Hora:** 20:19:00
 - **Artefacto generado:** `specs/README.md`
-- **Estado:** Ledger actualizado: la fila 002-HU_pruebas_integracion_keycloak_y_catalogo_application pasó de BACKLOG a IN-PROGRESS con la rama feat/002-HU_pruebas_integracion_keycloak_y_catalogo_application (verificado por lectura). La HU nace del riesgo residual aceptado en HU-001 (Keycloak real y catálogo real del módulo Application sin prueba) y se ubica en la épica P1 del plan `documents/product-manager/mvp_tech_work_hub.md`. Es una historia derivada de un riesgo de calidad, no una épica nueva; no se añade alcance fuera del Product Brief.
+- **Estado:** Ledger actualizado: la fila 002-HU_pruebas_integracion_keycloak_y_catalogo_application pasó de BACKLOG a IN-PROGRESS con la rama feat/002-HU_pruebas_integracion_keycloak_y_catalogo_application (verificado por lectura). La HU nace del riesgo residual aceptado en HU-001 (Keycloak real y catálogo real del módulo Application sin prueba) y se ubica en la épica P1 del plan `documents/product-manager/mvp-tech-work-hub.md`. Es una historia derivada de un riesgo de calidad, no una épica nueva; no se añade alcance fuera del Product Brief.
 - **⚠️ Puntos Abiertos:** ⚠️ [PROPUESTO]: la historia no figura como épica en el MVP y se trata como extensión de P1; el business analyst debe acotar su alcance y no asumir reglas de negocio no documentadas (roles de Keycloak, contenido de la semilla del catálogo). ❓ No documentado: criterio de aceptación del entorno de pruebas con Keycloak real (realm, usuarios y clientes de prueba).
 @WATCHER: GITOPS-BRANCH-CREATE feat/002-HU_pruebas_integracion_keycloak_y_catalogo_application
 - **Handoff:** @BA: Iniciar el análisis de negocio y redacción de Historias de Usuario para la épica seleccionada: 002-HU_pruebas_integracion_keycloak_y_catalogo_application, que cubre el riesgo residual de HU-001 (pruebas contra Keycloak real y catálogo real del módulo Application, más semilla del catálogo).
@@ -396,10 +396,10 @@ Awaiting your response to the question above.
 
 ### [03-10-2026] QA Documental
 - **Hora:** 20:22:30
-- **Artefacto generado:** `documents/qa-documental/feedback_qa_002_pruebas_integracion_keycloak_y_catalogo_application.md`
+- **Artefacto generado:** `documents/qa-documental/feedback-qa-002-pruebas-integracion-keycloak-y-catalogo-application.md`
 - **Estado:** Auditoría documental completada con dictamen ❌ RECHAZADO (modo Brownfield: Product Brief y constitution.md). 5 hallazgos: H-01 Bloqueante (la HU no es atómica: mezcla verificación de autenticación, consulta de catálogo, registro de ítem y semilla de datos); H-02 diagrama de secuencia no coincide uno a uno con los CA (omite SC-06 y CB-05); H-03 SC-04 es un escenario compuesto y CB-02 sin escenario; H-04 orden y campos de la respuesta sin fuente ni etiqueta; H-05 actor Product Owner ausente del Product Brief.
 - **⚠️ Puntos Abiertos:** Ninguno. Los ❓ No documentado de la HU (realm y usuarios de prueba, contenido de la semilla, política ante Keycloak caído) son válidos y no motivan rechazo.
-- **Handoff:** @BA: La Historia de Usuario 002-HU_pruebas_integracion_keycloak_y_catalogo_application.md fue rechazada por QA. Subsana los hallazgos H-01 a H-05 detallados en documents/qa-documental/feedback_qa_002_pruebas_integracion_keycloak_y_catalogo_application.md y vuelve a delegar la auditoría al QA.
+- **Handoff:** @BA: La Historia de Usuario 002-HU_pruebas_integracion_keycloak_y_catalogo_application.md fue rechazada por QA. Subsana los hallazgos H-01 a H-05 detallados en documents/qa-documental/feedback-qa-002-pruebas-integracion-keycloak-y-catalogo-application.md y vuelve a delegar la auditoría al QA.
 
 
 ### [03-10-2026] Business Analyst
@@ -411,7 +411,7 @@ Awaiting your response to the question above.
 
 ### [03-10-2026] QA Documental
 - **Hora:** 20:25:03
-- **Artefacto generado:** `documents/qa-documental/aprobado_qa_002_pruebas_integracion_keycloak_y_catalogo_application.md`
+- **Artefacto generado:** `documents/qa-documental/aprobado-qa-002-pruebas-integracion-keycloak-y-catalogo-application.md`
 - **Estado:** Re-auditoría completada con dictamen ✅ APROBADO (modo Brownfield, 6 dimensiones al 100%). Hallazgos H-01 a H-05 verificados como subsanados: semilla separada (HU atómica), diagrama con una rama por escenario, SC-04 como Scenario Outline, orden y campos con fuente en código, actor alineado al Product Brief. Se aplica bypass de UX porque la HU no tiene interfaz gráfica.
 - **⚠️ Puntos Abiertos:** Ninguno bloqueante. Pendiente para el product-manager: la semilla del catálogo figura en la fila 002 del Ledger pero salió de esta HU. ❓ No documentado: realm y usuarios de prueba de Keycloak, política ante Keycloak no disponible, roles con permiso sobre el backlog.
 - **Handoff:** @SA: La Historia de Usuario 002-HU_pruebas_integracion_keycloak_y_catalogo_application.md ha sido aprobada por QA. Al no tener esta historia interfaz gráfica, el diseño UX se omite. Por favor, formula tus preguntas para definir el stack tecnológico y la gobernanza.
@@ -462,7 +462,7 @@ You can reply with the option letter (e.g., "A"), accept the recommendation by s
 
 ### [03-10-2026] Designer UX
 - **Hora:** 20:33:16
-- **Artefacto generado:** `documents/designer-ux/ux_002_pruebas_integracion_keycloak_y_catalogo_application.md`
+- **Artefacto generado:** `documents/designer-ux/ux-002-pruebas-integracion-keycloak-y-catalogo-application.md`
 - **Estado:** Entregable UX completado con mapeo 1:1 de los escenarios SC-01..SC-04 (US1..US3) de spec.md y la HU: la historia es una suite de integración sin interfaz gráfica, por lo que no se dibujan wireframes (política anti-alucinación) y se documenta el dictamen de no aplicabilidad visual, coherente con el bypass de QA Documental. Auditoría de alcance: 1 épica diseñada (P1) de 6 en el backlog; el MVP continúa.
 - **⚠️ Puntos Abiertos:** Ninguno.
 - **Handoff:** @SA: Diseño visual de la HU 002-HU_pruebas_integracion_keycloak_y_catalogo_application completado (sin interfaz gráfica, cero wireframes). Procede con el tech-design.
@@ -492,23 +492,23 @@ You can reply with the option letter (e.g., "A"), accept the recommendation by s
 
 ### [03-10-2026] Data Architect
 - **Hora:** 20:45:20
-- **Artefacto generado:** `documents/data-architect/db_002_pruebas_integracion_keycloak_y_catalogo_application.md`
+- **Artefacto generado:** `documents/data-architect/db-002-pruebas-integracion-keycloak-y-catalogo-application.md`
 - **Estado:** Modelo de persistencia en modo Brownfield, subordinado a la constitución. La historia no añade tablas, columnas, índices ni migraciones (FR-013); se fijó el modelo físico vigente (`application."Applications"` y `backlog."BacklogItems"`), verificado contra las migraciones reales, y se trazó cada FR/SC a un dato (cero campos huérfanos; UX sin interfaz). ADR-01 y ADR-02 heredados; ADR-03 (base nueva por prueba), ADR-04 (sin semilla permanente) y ADR-05 (estado de identidad solo en Keycloak) nuevos, con alternativas y trade-offs.
-- **⚠️ Puntos Abiertos:** Deriva documental en db_001: declara Type y Priority como INT y promete CHECK (>= 0) en los puntos, pero la migración real usa varchar(50) y no define ningún CHECK; la fuente de verdad es la migración. No afecta a esta historia. Esta historia no define endpoints nuevos.
+- **⚠️ Puntos Abiertos:** Deriva documental en db-001: declara Type y Priority como INT y promete CHECK (>= 0) en los puntos, pero la migración real usa varchar(50) y no define ningún CHECK; la fuente de verdad es la migración. No afecta a esta historia. Esta historia no define endpoints nuevos.
 - **Handoff:** @API: El modelo de datos (MER) y la persistencia han sido definidos a partir de spec.md y tasks.md. Por favor, diseña los contratos de integración (Endpoints/Payloads) basados en estas tablas.
 
 ### [03-10-2026] API Architect
 - **Hora:** 20:47:09
-- **Artefacto generado:** `documents/api-architect/api_002_pruebas_integracion_keycloak_y_catalogo_application.md`
-- **Estado:** Contrato en modo Brownfield, subordinado a la constitución. La historia no define endpoints nuevos (FR-013): se formalizaron los contratos existentes `GET /api/applications` y `POST /api/backlog/items` verificados contra sus Endpoint.cs, con payloads mapeados columna a columna a db_002 y la matriz de rechazo 401 (5 credenciales x 2 rutas). ADR-01 y ADR-02 heredados; ADR-03 (401 uniforme sin cuerpo de negocio) nuevo con alternativas y trade-offs. Persistencia del archivo verificada por lectura.
-- **⚠️ Puntos Abiertos:** (1) Deriva: api_001 ilustra priority como entero y specs/001 contracts/api.md como texto; este contrato usa texto. (2) test-contract.md fija Keycloak:ssl-required=none mientras tasks.md (T008/T009) lo condiciona al spike; se contrata como excepción acotada. (3) Sin verificación de roles (no documentados).
-- **Handoff:** @QT: Los contratos de integración (API) y endpoints para Pruebas de Integración contra Keycloak Real y Catálogo Real del Módulo Application han sido definidos en api_002_pruebas_integracion_keycloak_y_catalogo_application.md basados en spec.md y db_002_pruebas_integracion_keycloak_y_catalogo_application.md. Por favor, procede con la auditoría cruzada y la compilación del Tech Design (TDD).
+- **Artefacto generado:** `documents/api-architect/api-002-pruebas-integracion-keycloak-y-catalogo-application.md`
+- **Estado:** Contrato en modo Brownfield, subordinado a la constitución. La historia no define endpoints nuevos (FR-013): se formalizaron los contratos existentes `GET /api/applications` y `POST /api/backlog/items` verificados contra sus Endpoint.cs, con payloads mapeados columna a columna a db-002 y la matriz de rechazo 401 (5 credenciales x 2 rutas). ADR-01 y ADR-02 heredados; ADR-03 (401 uniforme sin cuerpo de negocio) nuevo con alternativas y trade-offs. Persistencia del archivo verificada por lectura.
+- **⚠️ Puntos Abiertos:** (1) Deriva: api-001 ilustra priority como entero y specs/001 contracts/api.md como texto; este contrato usa texto. (2) test-contract.md fija Keycloak:ssl-required=none mientras tasks.md (T008/T009) lo condiciona al spike; se contrata como excepción acotada. (3) Sin verificación de roles (no documentados).
+- **Handoff:** @QT: Los contratos de integración (API) y endpoints para Pruebas de Integración contra Keycloak Real y Catálogo Real del Módulo Application han sido definidos en api-002-pruebas-integracion-keycloak-y-catalogo-application.md basados en spec.md y db-002-pruebas-integracion-keycloak-y-catalogo-application.md. Por favor, procede con la auditoría cruzada y la compilación del Tech Design (TDD).
 
 ### [03-10-2026] QA Tech
 - **Hora:** 20:53:07
-- **Artefacto generado:** `documents/qa-tech/tech-design_002_pruebas_integracion_keycloak_y_catalogo_application.md`
+- **Artefacto generado:** `documents/qa-tech/tech-design-002-pruebas-integracion-keycloak-y-catalogo-application.md`
 - **Estado:** ✅ **[APROBADO]** HU-002 en modo Brownfield. Auditoría cruzada verificada contra el código (`ListApplicationsEndpoint.cs`, `CreateBacklogItemEndpoint.cs`, `ApplicationModuleApi.cs`, `Program.cs`, `BacklogModule.cs`, `appsettings*.json`): sin discrepancias DB vs API vs spec/tasks, sin campos huérfanos (UX sin interfaz), ADRs con alternativas y trade-offs reales, sin Sycophancy Breach. 0 hallazgos críticos, 5 advertencias vinculantes en la sección 7.1 del TDD. Diagramas archify generados en `documents/qa-tech/diagrams/` (3 diagramas, showcase 9/9 checks) más bloques mermaid; sin `visual-check` de navegador. `specs/README.md` pasó a READY-FOR-DEV. Constitución no modificada (HU de verificación, sin cambios estructurales). No se emite GITOPS-MERGE-CLOSE: la rama aloja el código de Fase D.
-- **⚠️ Puntos Abiertos:** (D-01) `RealApiFactory` debe usar `UseEnvironment("Testing")`: por defecto el host carga `appsettings.Development.json` con `verify-token-audience=false`. (D-02) La credencial expirada puede seguir aceptándose durante el `ClockSkew` por defecto de 5 min de .NET (no confirmado para Keycloak.AuthServices 2.5.2); validar en el spike T008 y esperar `exp` más el skew sin tocar `src/**` ni usar `ConfigureTestServices`. (D-03) `ssl-required=none` condicionado al spike T008 y registrado en el PR (T030); `test-contract.md` §2 debe alinearse con `tasks.md`. (D-04) Deriva documental db_001/api_001. (D-05) Conteo de casos: 19, no ~16.
+- **⚠️ Puntos Abiertos:** (D-01) `RealApiFactory` debe usar `UseEnvironment("Testing")`: por defecto el host carga `appsettings.Development.json` con `verify-token-audience=false`. (D-02) La credencial expirada puede seguir aceptándose durante el `ClockSkew` por defecto de 5 min de .NET (no confirmado para Keycloak.AuthServices 2.5.2); validar en el spike T008 y esperar `exp` más el skew sin tocar `src/**` ni usar `ConfigureTestServices`. (D-03) `ssl-required=none` condicionado al spike T008 y registrado en el PR (T030); `test-contract.md` §2 debe alinearse con `tasks.md`. (D-04) Deriva documental db-001/api-001. (D-05) Conteo de casos: 19, no ~16.
 - **Handoff:** @DEV-BACK: La arquitectura técnica ha sido validada. Inicia la implementación del Backend.
 ### [03-10-2026] WATCHER
 - **Hora:** 20:53:39
@@ -573,7 +573,7 @@ Con el árbol limpio y esos commits hechos, procede al cierre de la rama y despi
 ### [04-10-2026] Product Manager
 - **Hora:** 00:58:27
 - **Artefacto generado:** `specs/README.md`
-- **Estado:** Ledger actualizado tras el cierre de HU-002: HU-001 y HU-002 promovidas a ACTIVE; descompuestas las seis épicas en 31 historias candidatas (003 a 033) registradas en BACKLOG con la marca ⚠️ [PROPUESTO]. Campo "Historias candidatas" añadido a cada épica de `documents/product-manager/mvp_tech_work_hub.md` sin tocar el resto del plan. No se abre rama ni se emite ninguna macro hasta tu respuesta.
+- **Estado:** Ledger actualizado tras el cierre de HU-002: HU-001 y HU-002 promovidas a ACTIVE; descompuestas las seis épicas en 31 historias candidatas (003 a 033) registradas en BACKLOG con la marca ⚠️ [PROPUESTO]. Campo "Historias candidatas" añadido a cada épica de `documents/product-manager/mvp-tech-work-hub.md` sin tocar el resto del plan. No se abre rama ni se emite ninguna macro hasta tu respuesta.
 - **⚠️ Puntos Abiertos:** Selección de la siguiente historia pendiente de decisión humana (ver opciones). Las historias con ❓ quedan registradas pero no elegibles hasta resolver el punto de negocio.
 - **Handoff:** @HUMANO: Elige la siguiente historia entre las opciones numeradas debajo; mi recomendación es la opción 1 (003-HU_asignacion_elementos_sprint).
 
@@ -603,10 +603,10 @@ Bloqueadas por ❓ y por tanto no elegibles ahora: 004 (catálogo de estados), 0
 
 ### [04-10-2026] QA Documental
 - **Hora:** 02:20:14
-- **Artefacto generado:** `documents/qa-documental/feedback_qa_003_gestion_sprint_dos_semanas.md`
-- **Estado:** Auditoría documental completada con dictamen RECHAZADO (modo Brownfield, contra pb_tech_work_hub.md y constitution.md). Trazabilidad, atomicidad, separación negocio/técnica y no-regresión conformes. 2 hallazgos: H-01 (Bloqueante) el Background con token válido contradice a SC-07 sin token; H-02 (Mayor) CB-07 fallo de persistencia sin escenario Gherkin ni rama de diagrama.
+- **Artefacto generado:** `documents/qa-documental/feedback-qa-003-gestion-sprint-dos-semanas.md`
+- **Estado:** Auditoría documental completada con dictamen RECHAZADO (modo Brownfield, contra pb-tech-work-hub.md y constitution.md). Trazabilidad, atomicidad, separación negocio/técnica y no-regresión conformes. 2 hallazgos: H-01 (Bloqueante) el Background con token válido contradice a SC-07 sin token; H-02 (Mayor) CB-07 fallo de persistencia sin escenario Gherkin ni rama de diagrama.
 - **⚠️ Puntos Abiertos:** Ninguno.
-- **Handoff:** @BA: La Historia de Usuario 003-HU_gestion_sprint_dos_semanas.md fue rechazada por QA. Subsana los hallazgos H-01 y H-02 detallados en documents/qa-documental/feedback_qa_003_gestion_sprint_dos_semanas.md y vuelve a delegar la auditoría al QA.
+- **Handoff:** @BA: La Historia de Usuario 003-HU_gestion_sprint_dos_semanas.md fue rechazada por QA. Subsana los hallazgos H-01 y H-02 detallados en documents/qa-documental/feedback-qa-003-gestion-sprint-dos-semanas.md y vuelve a delegar la auditoría al QA.
 
 
 ### [04-10-2026] Business Analyst
@@ -619,7 +619,7 @@ Bloqueadas por ❓ y por tanto no elegibles ahora: 004 (catálogo de estados), 0
 
 ### [04-10-2026] QA Documental
 - **Hora:** 02:21:25
-- **Artefacto generado:** `documents/qa-documental/aprobado_qa_003_gestion_sprint_dos_semanas.md`
+- **Artefacto generado:** `documents/qa-documental/aprobado-qa-003-gestion-sprint-dos-semanas.md`
 - **Estado:** Re-auditoría documental completada con dictamen APROBADO (modo Brownfield, 100% en las 6 dimensiones). H-01 subsanado (sin Background; cada escenario declara su autenticación) y H-02 subsanado (escenario SC-08 y rama de diagrama para el fallo de persistencia; CA-06 en la versión de stakeholders). Sin regresiones.
 - **⚠️ Puntos Abiertos:** Ninguno.
 - **Handoff:** @UX: La Historia de Usuario 003-HU_gestion_sprint_dos_semanas.md ha sido aprobada por QA. Por favor, procede a diseñar los wireframes y estados visuales.
@@ -637,10 +637,10 @@ Bloqueadas por ❓ y por tanto no elegibles ahora: 004 (catálogo de estados), 0
 
 ### [04-10-2026] Designer UX
 - **Hora:** 02:27:30
-- **Artefacto generado:** `documents/designer-ux/ux_003_gestion_sprint_dos_semanas.md`
+- **Artefacto generado:** `documents/designer-ux/ux-003-gestion-sprint-dos-semanas.md`
 - **Estado:** Especificación de diseño visual UX completada. Mapeo 1:1 de SC-01..SC-08 de la HU y spec.md a 10 estados visuales ASCII (3 Happy Path, vista vacía y 6 Sad Path: ventana inválida, datos obligatorios, 404, 401, 500), bajo PrimeNG v22.1.1 y la Constitución Técnica Global (Brownfield, módulo embebido). Sin estados, apertura/cierre, edición, eliminación ni relación Sprint-tarjeta; listado sin paginación ni filtros por no estar definidos en la HU.
 - **⚠️ Puntos Abiertos:** Ninguno bloqueante. Informativos: ventana de 2 semanas (14 días inclusivos, supuesto propuesto), formato y unicidad de la identificación, orden y paginación del listado; IDs Task-UI y ruta /api/sprints provisionales hasta que exista tasks.md.
-- **Handoff:** @SA: Diseño visual de la HU 003-HU_gestion_sprint_dos_semanas completado en documents/designer-ux/ux_003_gestion_sprint_dos_semanas.md. Procede con el tech-design.
+- **Handoff:** @SA: Diseño visual de la HU 003-HU_gestion_sprint_dos_semanas completado en documents/designer-ux/ux-003-gestion-sprint-dos-semanas.md. Procede con el tech-design.
 
 
 ### [04-10-2026] Solutions Architect
@@ -668,7 +668,7 @@ Bloqueadas por ❓ y por tanto no elegibles ahora: 004 (catálogo de estados), 0
 
 ### [04-10-2026] Data Architect
 - **Hora:** 02:39:18
-- **Artefacto generado:** `documents/data-architect/db_003_gestion_sprint_dos_semanas.md`
+- **Artefacto generado:** `documents/data-architect/db-003-gestion-sprint-dos-semanas.md`
 - **Estado:** Diseño de persistencia completado en modo Brownfield a partir de spec.md, data-model.md, tasks.md, la HU 003 y el diseño UX (cero campos huérfanos). Una tabla nueva sprints."Sprints" en el schema sprints (SprintsDbContext, migración InitialSprintsSchema) con Id uuid, Identification varchar(100), StartDate y EndDate date, y auditoría por AuditableEntityInterceptor. Invariante de ventana con CHECK CK_Sprints_Window (EndDate - StartDate = 13) como tercera capa. Sin unicidad, solapamiento, estado, FK cross-schema ni Outbox. 6 ADR registrados.
 - **⚠️ Puntos Abiertos:** Discrepancia técnica: data-model.md y T011 definen CreatedBy y LastModifiedBy como varchar sin longitud, mientras Backlog usa varchar(255); el diseño fija varchar(255) y debe reconciliarse al implementar T011. Informativos: el CHECK codifica el supuesto de 14 días inclusivos (punto abierto 3 de la HU), y duplicados, solapamiento y fecha pasada quedan sin restricción en BD (puntos 4, 5 y 6).
 - **Handoff:** @API: El modelo de datos (MER) y la persistencia han sido definidos a partir de spec.md y tasks.md. Por favor, diseña los contratos de integración (Endpoints/Payloads) basados en estas tablas.
@@ -676,10 +676,10 @@ Bloqueadas por ❓ y por tanto no elegibles ahora: 004 (catálogo de estados), 0
 
 ### [04-10-2026] API Architect
 - **Hora:** 02:46:10
-- **Artefacto generado:** `documents/api-architect/api_003_gestion_sprint_dos_semanas.md`
-- **Estado:** Contratos REST definidos en modo Brownfield (Carter, Keycloak, ProblemDetails) a partir de spec.md, tasks.md, el OpenAPI de la HU-003 y db_003: POST /api/sprints (201/400/401/500), GET /api/sprints (200/401) y GET /api/sprints/{id} (200/401/404). Respuestas con id, identification, startDate y endDate; CreatedAt y CreatedBy no se exponen. Mapeo payload-columnas verificado contra sprints."Sprints", sin bloqueos. 6 ADR registrados y archivo verificado en disco.
+- **Artefacto generado:** `documents/api-architect/api-003-gestion-sprint-dos-semanas.md`
+- **Estado:** Contratos REST definidos en modo Brownfield (Carter, Keycloak, ProblemDetails) a partir de spec.md, tasks.md, el OpenAPI de la HU-003 y db-003: POST /api/sprints (201/400/401/500), GET /api/sprints (200/401) y GET /api/sprints/{id} (200/401/404). Respuestas con id, identification, startDate y endDate; CreatedAt y CreatedBy no se exponen. Mapeo payload-columnas verificado contra sprints."Sprints", sin bloqueos. 6 ADR registrados y archivo verificado en disco.
 - **⚠️ Puntos Abiertos:** El formato de error es ProblemDetails con errors por campo (distinto del sobre error/message de la HU-001); depende de que CustomExceptionHandler de Shared lo emita en camelCase y mapee UnauthorizedAccessException a 401 (T023 y T027 solo verifican). Informativos: sin 409 por duplicados ni paginación (puntos abiertos 4, 5 y 9 de la HU), sin política por rol (punto 7), y el 404 por id no GUID lo resuelve el enrutador.
-- **Handoff:** @QT: Los contratos de integración (API) y endpoints para Gestión de Sprint de Dos Semanas (Crear y Consultar) han sido definidos en api_003_gestion_sprint_dos_semanas.md basados en spec.md y db_003_gestion_sprint_dos_semanas.md. Por favor, procede con la auditoría cruzada y la compilación del Tech Design (TDD).
+- **Handoff:** @QT: Los contratos de integración (API) y endpoints para Gestión de Sprint de Dos Semanas (Crear y Consultar) han sido definidos en api-003-gestion-sprint-dos-semanas.md basados en spec.md y db-003-gestion-sprint-dos-semanas.md. Por favor, procede con la auditoría cruzada y la compilación del Tech Design (TDD).
 
 ### [04-10-2026] WATCHER
 - **Hora:** 02:47:20
@@ -688,8 +688,8 @@ Bloqueadas por ❓ y por tanto no elegibles ahora: 004 (catálogo de estados), 0
 
 ### [04-10-2026] QA Tech
 - **Hora:** 09:32:41
-- **Artefacto generado:** `documents/qa-tech/tech-design_003_gestion_sprint_dos_semanas.md`
-- **Estado:** ✅ AUDITADO Y APROBADO. Auditoría adversarial superada (0 hallazgos críticos): DB, API, spec.md, tasks.md y UX consistentes, cero campos huérfanos, ADR sin alternativas falsas ni sycophancy, y afirmaciones de api_003 verificadas contra el código de Shared (ProblemDetails con errors, 401, 404). Tech Design compilado con 3 diagramas archify (9/9 checks) más Mermaid, specs/README.md actualizado a READY-FOR-DEV. constitution.md no se modificó (sin cambios estructurales globales). 6 advertencias vinculantes para Fase D: CreatedBy varchar(255) vs T011, shell de navegación inexistente, trade-offs cosméticos en ADR heredados, formato ProblemDetails vs api_001, duplicados y migración encadenada, textos UX de ventana.
+- **Artefacto generado:** `documents/qa-tech/tech-design-003-gestion-sprint-dos-semanas.md`
+- **Estado:** ✅ AUDITADO Y APROBADO. Auditoría adversarial superada (0 hallazgos críticos): DB, API, spec.md, tasks.md y UX consistentes, cero campos huérfanos, ADR sin alternativas falsas ni sycophancy, y afirmaciones de api-003 verificadas contra el código de Shared (ProblemDetails con errors, 401, 404). Tech Design compilado con 3 diagramas archify (9/9 checks) más Mermaid, specs/README.md actualizado a READY-FOR-DEV. constitution.md no se modificó (sin cambios estructurales globales). 6 advertencias vinculantes para Fase D: CreatedBy varchar(255) vs T011, shell de navegación inexistente, trade-offs cosméticos en ADR heredados, formato ProblemDetails vs api-001, duplicados y migración encadenada, textos UX de ventana.
 - **⚠️ Puntos Abiertos:** Ninguno bloqueante. Informativos: puntos abiertos de negocio 1, 3 a 9 de la HU siguen sin definir; visual-check de los diagramas no ejecutado.
 - **Handoff:** @DEV-BACK: La arquitectura técnica ha sido validada. Inicia la implementación del Backend.
 @DEV-FRONT: La arquitectura técnica ha sido validada. Inicia la implementación del Frontend.
@@ -750,7 +750,7 @@ Bloqueadas por ❓ y por tanto no elegibles ahora: 004 (catálogo de estados), 0
 
 ### [04-10-2026] QA Documental
 - **Hora:** 10:21:30
-- **Artefacto generado:** `documents/qa-documental/aprobado_qa_004_asignacion_elementos_sprint.md`
+- **Artefacto generado:** `documents/qa-documental/aprobado-qa-004-asignacion-elementos-sprint.md`
 - **Estado:** ✅ [APROBADO] HU-004 en modo Brownfield, auditadas la versión técnica y la de stakeholders contra el Product Brief y la Constitución. Las 6 dimensiones cumplen: 4 Happy Paths y 6 Sad Paths, supuestos tipificados como PROPUESTO (consulta de lo asignado, códigos HTTP, auditoría, fallo de persistencia), pregunta abierta 9 y demás vacíos catalogados como No documentado sin reglas inventadas, DoD con ítem de no-regresión.
 - **⚠️ Puntos Abiertos:** Ninguno bloqueante. Informativo para fases posteriores: pregunta abierta 9 del Product Brief (pertenencia a uno o varios Sprints), asignación repetida, estado del elemento al asignar, restricciones por estado o fecha del Sprint, roles con permiso y formato de la consulta quedan sin definir en la HU.
 - **Handoff:** @UX: La Historia de Usuario 004-HU_asignacion_elementos_sprint.md ha sido aprobada por QA. Por favor, procede a diseñar los wireframes y estados visuales.
@@ -806,10 +806,10 @@ You can reply with the option letter (e.g., "A"), accept the recommendation by s
 
 ### [04-10-2026] Designer UX
 - **Hora:** 10:36:36
-- **Artefacto generado:** `documents/designer-ux/ux_004_asignacion_elementos_sprint.md`
+- **Artefacto generado:** `documents/designer-ux/ux-004-asignacion-elementos-sprint.md`
 - **Estado:** Especificación de diseño visual UX completada. Mapeo 1:1 de los 10 escenarios Gherkin (SC-01 a SC-10) y de la resolución humana de la clarificación (409 por elemento ya asignado) a 12 estados visuales con wireframes ASCII bajo el estándar de maquetación PrimeNG v22.1.1 y la Constitución Técnica Global (.specify/memory/constitution.md). Auditoría de alcance: MVP de 6 épicas (P1 a P6), P1 en curso, MVP no concluido.
 - **⚠️ Puntos Abiertos:** (1) spec.md y la HU aún tratan como no documentado el caso de elemento ya asignado que el humano resolvió con 409 (Estado 12 diseñado según la decisión humana; hay que reconciliar spec, HU y FR-015). (2) El identificador del elemento se captura como texto porque no hay listado ni buscador de elementos definido en la HU. (3) Los IDs Task-UI-xx y las rutas son provisionales hasta que exista tasks.md.
-- **Handoff:** @SA: Diseño visual de la HU 004-HU_asignacion_elementos_sprint completado en documents/designer-ux/ux_004_asignacion_elementos_sprint.md. Procede con el tech-design.
+- **Handoff:** @SA: Diseño visual de la HU 004-HU_asignacion_elementos_sprint completado en documents/designer-ux/ux-004-asignacion-elementos-sprint.md. Procede con el tech-design.
 
 
 ### [04-10-2026] Solutions Architect
@@ -837,7 +837,7 @@ You can reply with the option letter (e.g., "A"), accept the recommendation by s
 
 ### [04-10-2026] Data Architect
 - **Hora:** 16:44:26
-- **Artefacto generado:** `documents/data-architect/db_004_asignacion_elementos_sprint.md`
+- **Artefacto generado:** `documents/data-architect/db-004-asignacion-elementos-sprint.md`
 - **Estado:** Modelo de persistencia de la HU-004 completado en modo Brownfield, subordinado a la constitución. Una sola tabla nueva `sprints."SprintItems"` en el schema existente `sprints` (migración aditiva `AddSprintItems`): FK real `SprintId` hacia `sprints."Sprints"` con `ON DELETE RESTRICT`, `ItemId` sin FK (referencia lógica hacia backlog por contrato in-process, sin consultas cross-schema), índice único `UX_SprintItems_ItemId` que materializa la regla humana A (un elemento, un Sprint; 409 y concurrencia resueltas en el motor) e índice `IX_SprintItems_SprintId` para la consulta. Auditoría por interceptor, sin estado, sin Outbox. 6 ADR (4 heredados, 2 nuevos con alternativas). Trazabilidad spec y UX a datos sin campos huérfanos.
 - **⚠️ Puntos Abiertos:** (1) DevPoints y QAPoints son decimal nullable en BacklogItem pero tasks.md T005 define BacklogItemSummary con int: truncaría decimales y fallaría o falsearía con 0 el QA nulo que la UX muestra como guion; hay que reconciliar T005, T036 y T041 antes de implementar. (2) data-model.md y T010 dejan CreatedBy sin longitud; se fija varchar(255) con SprintRules.UserMaxLength por coherencia con HU-001 y HU-003. (3) La traducción 409 frente a 500 depende del nombre del índice único. (4) spec.md aún conserva FR-015, contradicho por la decisión humana A; el BA debe reconciliarlo.
 - **Handoff:** @API: El modelo de datos (MER) y la persistencia han sido definidos a partir de spec.md y tasks.md. Por favor, diseña los contratos de integración (Endpoints/Payloads) basados en estas tablas.
@@ -845,15 +845,15 @@ You can reply with the option letter (e.g., "A"), accept the recommendation by s
 
 ### [04-10-2026] API Architect
 - **Hora:** 17:02:10
-- **Artefacto generado:** `documents/api-architect/api_004_asignacion_elementos_sprint.md`
-- **Estado:** Contrato de integración de la HU-004 completado en modo Brownfield, subordinado a la constitución (Carter, VSA, MediatR, FluentValidation, Keycloak, ProblemDetails). Dos endpoints bajo /api/sprints/{sprintId}/items: POST asigna (201 con sprintId e itemId y Location; 400 por campo, 401, 404 diferenciado Sprint/elemento, 409 por pertenencia única sin revelar el Sprint dueño, 500 sin traza) y GET consulta (200 con arreglo o vacío, 401, 404). Payloads mapeados a db_004 (SprintId, ItemId, índice único UX_SprintItems_ItemId) y a BacklogItemSummary por contrato in-process. Sin exponer auditoría ni estado. 8 ADR (3 heredados, 5 nuevos con alternativas y trade-offs).
+- **Artefacto generado:** `documents/api-architect/api-004-asignacion-elementos-sprint.md`
+- **Estado:** Contrato de integración de la HU-004 completado en modo Brownfield, subordinado a la constitución (Carter, VSA, MediatR, FluentValidation, Keycloak, ProblemDetails). Dos endpoints bajo /api/sprints/{sprintId}/items: POST asigna (201 con sprintId e itemId y Location; 400 por campo, 401, 404 diferenciado Sprint/elemento, 409 por pertenencia única sin revelar el Sprint dueño, 500 sin traza) y GET consulta (200 con arreglo o vacío, 401, 404). Payloads mapeados a db-004 (SprintId, ItemId, índice único UX_SprintItems_ItemId) y a BacklogItemSummary por contrato in-process. Sin exponer auditoría ni estado. 8 ADR (3 heredados, 5 nuevos con alternativas y trade-offs).
 - **⚠️ Puntos Abiertos:** (1) devPoints y qaPoints se contratan como número anulable (decimal) y no entero, porque BacklogItem los define decimal nullable; el OpenAPI de Spec Kit y tasks.md T005, T036 y T041 deben reconciliarse antes de implementar. (2) spec.md aún conserva FR-015, contradicho por el 409 de la resolución humana A. (3) Permisos por rol sin definir: basta token válido; un rol futuro añadiría 403. (4) Sin idempotencia: un reintento tras un 201 perdido recibe 409. (5) El GET puede devolver menos elementos que filas si Backlog omite ids.
-- **Handoff:** @QT: Los contratos de integración (API) y endpoints para Asignación de Elementos del Backlog a un Sprint han sido definidos en api_004_asignacion_elementos_sprint.md basados en spec.md y db_004_asignacion_elementos_sprint.md. Por favor, procede con la auditoría cruzada y la compilación del Tech Design (TDD).
+- **Handoff:** @QT: Los contratos de integración (API) y endpoints para Asignación de Elementos del Backlog a un Sprint han sido definidos en api-004-asignacion-elementos-sprint.md basados en spec.md y db-004-asignacion-elementos-sprint.md. Por favor, procede con la auditoría cruzada y la compilación del Tech Design (TDD).
 
 
 ### [04-10-2026] QA Tech
 - **Hora:** 17:40:00
-- **Artefacto generado:** `documents/qa-tech/tech-design_004_asignacion_elementos_sprint.md`
+- **Artefacto generado:** `documents/qa-tech/tech-design-004-asignacion-elementos-sprint.md`
 - **Estado:** ✅ AUDITADO Y APROBADO. Auditoría adversarial superada (0 hallazgos críticos): DB, API, spec.md, tasks.md y UX consistentes, cero campos huérfanos de datos, ADR sin alternativas falsas ni sycophancy (la regla humana A es cardinalidad de negocio y no contradice la constitución). Afirmaciones verificadas contra el código: BacklogItem.DevPoints y QAPoints son decimal nullable, Shared no tiene ConflictException ni rama 409 (cambio aditivo real), sin ciclo de proyectos entre Backlog y Sprints. Tech Design compilado con 3 diagramas archify (9/9 checks) más Mermaid, specs/README.md actualizado a READY-FOR-DEV. constitution.md no se modificó (sin cambios estructurales globales). 7 advertencias vinculantes para Fase D en la sección 7.1 del TDD: tipo decimal nullable frente a entero en T005, T036 y T041 y el OpenAPI (el TDD prevalece), FR-015 de spec.md obsoleto, acción Ver elemento sin ruta de destino, cabecera del Sprint vía GET /api/sprints/{id} de HU-003, 404 distinguido solo por detail, trade-offs cosméticos y orden contrato antes de lectura previa, riesgos operativos documentados.
 - **⚠️ Puntos Abiertos:** Ninguno bloqueante. Informativos: BA y Spec Kit deben reconciliar spec.md con la decisión humana A; visual-check de los diagramas no ejecutado.
 - **Handoff:** @DEV-BACK: La arquitectura técnica ha sido validada. Inicia la implementación del Backend.
@@ -966,7 +966,7 @@ You can reply with the option letter (e.g., "A"), accept the recommendation by s
 
 ### [04-10-2026] QA Documental
 - **Hora:** 19:21:25
-- **Artefacto generado:** `documents/qa-documental/aprobado_qa_012_miembros_equipo_y_roles_tecnicos.md`
+- **Artefacto generado:** `documents/qa-documental/aprobado-qa-012-miembros-equipo-y-roles-tecnicos.md`
 - **Estado:** [APROBADO] HU-012 auditada en modo Brownfield (versión técnica y de stakeholders) contra el Product Brief y la Constitución. 6 dimensiones conformes: 5 Happy Paths y 4 Sad Paths, supuestos marcados como PROPUESTO y puntos abiertos como No documentado, sin invasión de alcance, sin contradicción con la Constitución y con no-regresión en el DoD. Requiere interfaz: Sí, coherente con el proyecto fullstack.
 - **⚠️ Puntos Abiertos:** Ninguno bloqueante. Informativo: el origen de los datos del catálogo de roles (Desarrollo y QA) queda para Architecture (punto abierto 4 de la HU).
 - **Handoff:** @UX: La Historia de Usuario 012-HU_miembros_equipo_y_roles_tecnicos.md ha sido aprobada por QA. Por favor, procede a diseñar los wireframes y estados visuales.
@@ -984,10 +984,10 @@ You can reply with the option letter (e.g., "A"), accept the recommendation by s
 
 ### [04-10-2026] Designer UX
 - **Hora:** 19:31:00
-- **Artefacto generado:** `documents/designer-ux/ux_012_miembros_equipo_y_roles_tecnicos.md`
+- **Artefacto generado:** `documents/designer-ux/ux-012-miembros-equipo-y-roles-tecnicos.md`
 - **Estado:** Diseño visual de la HU 012 completado en modo Brownfield (Angular 22 Zoneless + PrimeNG, módulo embebido en el shell existente). 10 estados visuales con wireframes ASCII que cubren 1 a 1 los 9 escenarios de spec.md (SC-01 a SC-09; SC-07 en tres variantes): 5 Happy Paths y 5 estados Sad Path (rol inexistente, campos obligatorios, 401, 500). Sin funcionalidad fuera de alcance (sin modificar, desactivar ni eliminar miembros, sin administrar roles, sin paginación ni filtros). Persistencia del archivo verificada.
 - **⚠️ Puntos Abiertos:** Ninguno bloqueante. Informativos: nombre duplicado y longitud máxima, cardinalidad miembro-rol, ciclo de vida del miembro, administración del catálogo de roles, permisos por rol de acceso y estado de error de lectura distinto de 401 siguen sin documentar; rutas y IDs de tarea son provisionales para que los reconcilie la arquitectura.
-- **Handoff:** @SA: El diseño visual de la HU [012-HU_miembros_equipo_y_roles_tecnicos] ha concluido exitosamente en [documents/designer-ux/ux_012_miembros_equipo_y_roles_tecnicos.md]. Procede con el tech-design y arquitectura.
+- **Handoff:** @SA: El diseño visual de la HU [012-HU_miembros_equipo_y_roles_tecnicos] ha concluido exitosamente en [documents/designer-ux/ux-012-miembros-equipo-y-roles-tecnicos.md]. Procede con el tech-design y arquitectura.
 
 
 ### [04-10-2026] Solutions Architect
@@ -1015,7 +1015,7 @@ You can reply with the option letter (e.g., "A"), accept the recommendation by s
 
 ### [04-10-2026] Data Architect
 - **Hora:** 19:36:50
-- **Artefacto generado:** `documents/data-architect/db_012_miembros_equipo_y_roles_tecnicos.md`
+- **Artefacto generado:** `documents/data-architect/db-012-miembros-equipo-y-roles-tecnicos.md`
 - **Estado:** Modelo de persistencia de la HU 012 completado en modo Brownfield (constitución prevalece: PostgreSQL, schema propio teams, TeamsDbContext independiente, interceptores de Shared). 2 tablas nuevas (TechnicalRoles con semilla Desarrollo y QA, TeamMembers) con FK local RESTRICT, sin joins cross-schema, sin estado, sin tabla puente, sin Outbox. 6 ADRs (2 heredados), MER, diccionario de datos y trazabilidad spec/UX a datos sin campos huérfanos. Persistencia del archivo verificada.
 - **⚠️ Puntos Abiertos:** Discrepancia a reconciliar en T011/T014: CreatedBy y LastModifiedBy se fijan en varchar(255) por coherencia con Backlog y Sprints, mientras data-model.md y T014 indican text. Siguen sin documentar los puntos abiertos de la HU (cardinalidad miembro-rol, unicidad y longitud del nombre, ciclo de vida, catálogo ampliado); tasks.md cita contracts/teams-api.openapi.yaml que aún no existe y debe formalizar el api-architect.
 - **Handoff:** @API: El modelo de datos (MER) y la persistencia han sido definidos a partir de spec.md y tasks.md. Por favor, diseña los contratos de integración (Endpoints/Payloads) basados en estas tablas.
@@ -1023,16 +1023,16 @@ You can reply with the option letter (e.g., "A"), accept the recommendation by s
 
 ### [04-10-2026] API Architect
 - **Hora:** 19:39:00
-- **Artefacto generado:** `documents/api-architect/api_012_miembros_equipo_y_roles_tecnicos.md`
-- **Estado:** Contrato de integración de la HU 012 completado en modo Brownfield (Carter Minimal APIs, Keycloak JWT, ProblemDetails heredados de la constitución). 3 endpoints: POST /api/team-members (201, 400 por campo, 400 por rol inexistente, 401, 500), GET /api/team-members y GET /api/technical-roles (200, 401, 500). 8 ADRs (2 heredados), mapeo payload a columnas de db_012 sin exponer CreatedAt ni CreatedBy, orden de evaluación determinista y trazabilidad spec a contrato. Coherente con contracts/teams-api.openapi.yaml, que ya existe en disco. Persistencia del archivo verificada.
+- **Artefacto generado:** `documents/api-architect/api-012-miembros-equipo-y-roles-tecnicos.md`
+- **Estado:** Contrato de integración de la HU 012 completado en modo Brownfield (Carter Minimal APIs, Keycloak JWT, ProblemDetails heredados de la constitución). 3 endpoints: POST /api/team-members (201, 400 por campo, 400 por rol inexistente, 401, 500), GET /api/team-members y GET /api/technical-roles (200, 401, 500). 8 ADRs (2 heredados), mapeo payload a columnas de db-012 sin exponer CreatedAt ni CreatedBy, orden de evaluación determinista y trazabilidad spec a contrato. Coherente con contracts/teams-api.openapi.yaml, que ya existe en disco. Persistencia del archivo verificada.
 - **⚠️ Puntos Abiertos:** Código 201 y Location hacia la colección son PROPUESTOS (sin GET por id); rol enviado por nombre y sensible a mayúsculas; sin límite de nombre, unicidad ni idempotencia (doble registro posible); un rol por miembro (varios roles sería cambio incompatible). Siguen sin documentar los puntos abiertos 1 a 8 de la HU. Discrepancia documental: el DA daba por inexistente el OpenAPI de Spec Kit.
-- **Handoff:** @QT: Los contratos de integración (API) y endpoints para Miembros del Equipo y Roles Técnicos (Registrar y Consultar) han sido definidos en api_012_miembros_equipo_y_roles_tecnicos.md basados en spec.md y db_012_miembros_equipo_y_roles_tecnicos.md. Por favor, procede con la auditoría cruzada y la compilación del Tech Design (TDD).
+- **Handoff:** @QT: Los contratos de integración (API) y endpoints para Miembros del Equipo y Roles Técnicos (Registrar y Consultar) han sido definidos en api-012-miembros-equipo-y-roles-tecnicos.md basados en spec.md y db-012-miembros-equipo-y-roles-tecnicos.md. Por favor, procede con la auditoría cruzada y la compilación del Tech Design (TDD).
 
 
 ### [04-10-2026] QA Tech
 - **Hora:** 20:20:00
-- **Artefacto generado:** `documents/qa-tech/tech-design_012_miembros_equipo_y_roles_tecnicos.md`
-- **Estado:** ✅ AUDITADO Y APROBADO. Auditoría adversarial superada (0 hallazgos críticos): DB, API, spec.md, tasks.md y UX consistentes, cero campos huérfanos, ADR sin alternativas falsas ni sycophancy. Verificado contra el código de Shared: Entity<TId> no existe (TechnicalRole usa Aggregate<Guid>) y CustomExceptionHandler convierte BadRequestException en errors por campo sin detail, a diferencia de lo descrito en api_012 (A-01: el handler lanza BadRequestException con el campo role; prohibido modificar Shared). Tech Design compilado con 3 diagramas Mermaid (archify no ejecutable: Node.js no instalado), specs/README.md actualizado a READY-FOR-DEV. constitution.md no se modificó (sin cambios estructurales globales). 9 advertencias vinculantes para Fase D en la sección 7.4 del TDD.
+- **Artefacto generado:** `documents/qa-tech/tech-design-012-miembros-equipo-y-roles-tecnicos.md`
+- **Estado:** ✅ AUDITADO Y APROBADO. Auditoría adversarial superada (0 hallazgos críticos): DB, API, spec.md, tasks.md y UX consistentes, cero campos huérfanos, ADR sin alternativas falsas ni sycophancy. Verificado contra el código de Shared: Entity<TId> no existe (TechnicalRole usa Aggregate<Guid>) y CustomExceptionHandler convierte BadRequestException en errors por campo sin detail, a diferencia de lo descrito en api-012 (A-01: el handler lanza BadRequestException con el campo role; prohibido modificar Shared). Tech Design compilado con 3 diagramas Mermaid (archify no ejecutable: Node.js no instalado), specs/README.md actualizado a READY-FOR-DEV. constitution.md no se modificó (sin cambios estructurales globales). 9 advertencias vinculantes para Fase D en la sección 7.4 del TDD.
 - **⚠️ Puntos Abiertos:** Ninguno bloqueante. Informativos: OpenAPI y T036/T041 deben alinearse con A-01, CreatedBy/LastModifiedBy varchar(255) frente a text en T014, 201 y Location propuestos, puntos abiertos 1 a 8 de la HU sin definir; diagramas HTML interactivos y visual-check no generados.
 - **Handoff:** @DEV-BACK: La arquitectura técnica ha sido validada. Inicia la implementación del Backend.
 @DEV-FRONT: La arquitectura técnica ha sido validada. Inicia la implementación del Frontend.
@@ -1092,7 +1092,7 @@ You can reply with the option letter (e.g., "A"), accept the recommendation by s
 
 ### [04-10-2026] QA Documental
 - **Hora:** 20:30:00
-- **Artefacto generado:** `documents/qa-documental/aprobado_qa_015_relacion_personas_roles_elementos.md`
+- **Artefacto generado:** `documents/qa-documental/aprobado-qa-015-relacion-personas-roles-elementos.md`
 - **Estado:** [APROBADO] HU-015 auditada en modo Brownfield (versión técnica y de stakeholders) contra el Product Brief y la Constitución. 6 dimensiones conformes: 5 Happy Paths y 5 Sad Paths, supuestos marcados como PROPUESTO y puntos abiertos como No documentado, sin invasión de alcance, sin contradicción con la Constitución y con no-regresión en el DoD. Requiere interfaz: Sí, coherente con el proyecto fullstack.
 - **⚠️ Puntos Abiertos:** Ninguno bloqueante. Informativo: no se define la respuesta cuando miembro y elemento no existen a la vez (CA-05 de stakeholders frente a SC-06 y SC-07), y el formato de los identificadores queda para Architecture.
 - **Handoff:** @UX: La Historia de Usuario 015-HU_relacion_personas_roles_elementos.md ha sido aprobada por QA. Por favor, procede a diseñar los wireframes y estados visuales.
@@ -1144,10 +1144,10 @@ You can reply with the option letter (e.g., "A"), accept the recommendation by s
 
 ### [04-10-2026] Designer UX
 - **Hora:** 20:25:19
-- **Artefacto generado:** `documents/designer-ux/ux_015_relacion_personas_roles_elementos.md`
+- **Artefacto generado:** `documents/designer-ux/ux-015-relacion-personas-roles-elementos.md`
 - **Estado:** Diseño visual completado con 12 estados ASCII (mapeo 1 a 1 de SC-01 a SC-10 más el caso idempotente resuelto por el Humano); happy y sad paths cubiertos, brownfield Angular 22 + PrimeNG como pestaña Responsables embebida en Equipos y Roles; archivo verificado tras la escritura.
 - **⚠️ Puntos Abiertos:** spec.md no refleja la resolución humana de asignación duplicada idempotente como escenario (Estado 7 diseñado según el tracker); fuente de las listas de elementos y miembros para los selectores por confirmar en arquitectura; sin bloqueos para el BA.
-- **Handoff:** @SA: El diseño visual de la HU [015-HU_relacion_personas_roles_elementos] ha concluido exitosamente en [documents/designer-ux/ux_015_relacion_personas_roles_elementos.md]. Procede con el tech-design y arquitectura.
+- **Handoff:** @SA: El diseño visual de la HU [015-HU_relacion_personas_roles_elementos] ha concluido exitosamente en [documents/designer-ux/ux-015-relacion-personas-roles-elementos.md]. Procede con el tech-design y arquitectura.
 
 
 ### [04-10-2026] Solutions Architect
@@ -1175,7 +1175,7 @@ You can reply with the option letter (e.g., "A"), accept the recommendation by s
 
 ### [04-10-2026] Data Architect
 - **Hora:** 20:34:46
-- **Artefacto generado:** `documents/data-architect/db_015_relacion_personas_roles_elementos.md`
+- **Artefacto generado:** `documents/data-architect/db-015-relacion-personas-roles-elementos.md`
 - **Estado:** Modelo de persistencia Brownfield completado y verificado en disco: una tabla nueva `teams."ItemAssignments"` en `TeamsDbContext` (migración aditiva `AddItemAssignments`), FK local `MemberId` a `TeamMembers` con RESTRICT, `ItemId` como referencia lógica sin FK por la regla cross-schema, índice único (ItemId, MemberId) que garantiza la asignación idempotente también bajo concurrencia, índice por MemberId, rol derivado del miembro (no persistido), auditoría por interceptor, sin eventos ni Outbox. 6 ADR (4 heredados/aceptados con alternativas), trazabilidad spec/UX a datos sin campos huérfanos.
 - **⚠️ Puntos Abiertos:** (1) data-model.md y T010 dejan CreatedBy/LastModifiedBy como varchar sin longitud; este diseño fija varchar(255) por coherencia con backlog y sprints, a reconciliar en T008/T010 (teams.TeamMembers de HU-012 quedó en text y no se modifica). (2) contracts/item-assignments-api.openapi.yaml referenciado en tasks.md aún no existe. (3) spec.md sigue sin reflejar la resolución humana de asignación duplicada idempotente (pendiente del BA). (4) Sin FK hacia backlog: la existencia del elemento es verificada solo por contrato in-process.
 - **Handoff:** @API: El modelo de datos (MER) y la persistencia han sido definidos a partir de spec.md y tasks.md. Por favor, diseña los contratos de integración (Endpoints/Payloads) basados en estas tablas.
@@ -1183,17 +1183,17 @@ You can reply with the option letter (e.g., "A"), accept the recommendation by s
 
 ### [04-10-2026] API Architect
 - **Hora:** 20:37:13
-- **Artefacto generado:** `documents/api-architect/api_015_relacion_personas_roles_elementos.md`
+- **Artefacto generado:** `documents/api-architect/api-015-relacion-personas-roles-elementos.md`
 - **Estado:** Contrato HTTP completado y verificado en disco: 4 endpoints (POST y GET /api/backlog-items/{itemId}/assignees, GET /api/team-members/{memberId}/items y GET /api/backlog-items aditivo de Backlog), mapeados a teams.ItemAssignments y al contrato in-process IBacklogItemLookup, sin exponer auditoría, estimaciones, estado ni Sprint. POST idempotente: 201 con Location al crear y 200 con el mismo cuerpo si el par ya existía; 400 por campo (itemId, memberId), 404 con detail que distingue miembro de elemento (gana el miembro), 401 y 500 sin trazas; sin 409. 9 ADR MADR con alternativas y trade-offs; formato de errores verificado contra CustomExceptionHandler de Shared.
-- **⚠️ Puntos Abiertos:** (1) contracts/item-assignments-api.openapi.yaml referenciado por plan.md, quickstart.md y tasks.md no existe; este documento es la única definición HTTP y debe sincronizarse. (2) api_012 documenta un 500 con detail y title distinto del que emite CustomExceptionHandler; este contrato sigue el código. (3) spec.md sigue sin reflejar la resolución humana de duplicado idempotente (pendiente del BA). (4) Consultas con id inexistente devuelven 200 vacío (propuesto, D7) y el cliente distingue 404 de miembro y de elemento solo por el texto de detail.
-- **Handoff:** @QT: Los contratos de integración (API) y endpoints para Relación entre Personas, Roles y Elementos de Trabajo (Asignar y Consultar) han sido definidos en api_015_relacion_personas_roles_elementos.md basados en spec.md y db_015_relacion_personas_roles_elementos.md. Por favor, procede con la auditoría cruzada y la compilación del Tech Design (TDD).
+- **⚠️ Puntos Abiertos:** (1) contracts/item-assignments-api.openapi.yaml referenciado por plan.md, quickstart.md y tasks.md no existe; este documento es la única definición HTTP y debe sincronizarse. (2) api-012 documenta un 500 con detail y title distinto del que emite CustomExceptionHandler; este contrato sigue el código. (3) spec.md sigue sin reflejar la resolución humana de duplicado idempotente (pendiente del BA). (4) Consultas con id inexistente devuelven 200 vacío (propuesto, D7) y el cliente distingue 404 de miembro y de elemento solo por el texto de detail.
+- **Handoff:** @QT: Los contratos de integración (API) y endpoints para Relación entre Personas, Roles y Elementos de Trabajo (Asignar y Consultar) han sido definidos en api-015-relacion-personas-roles-elementos.md basados en spec.md y db-015-relacion-personas-roles-elementos.md. Por favor, procede con la auditoría cruzada y la compilación del Tech Design (TDD).
 
 
 ### [04-10-2026] QA Tech
 - **Hora:** 20:41:00
-- **Artefacto generado:** `documents/qa-tech/tech-design_015_relacion_personas_roles_elementos.md`
+- **Artefacto generado:** `documents/qa-tech/tech-design-015-relacion-personas-roles-elementos.md`
 - **Estado:** ✅ AUDITADO Y APROBADO. Auditoría adversarial superada (0 hallazgos críticos): DB, API, spec.md, tasks.md, OpenAPI y UX consistentes, cero campos huérfanos, ADR sin alternativas falsas relevantes ni sycophancy (la decisión humana B de asignación idempotente es regla de negocio, no contradice la constitución). Verificado contra el código: ValidationBehavior valida cualquier IRequest, NotFoundException y CustomExceptionHandler distinguen los 404 por detail, GET /api/backlog-items no colisiona con rutas existentes y el grafo de proyectos Backlog a Teams es acíclico. Tech Design compilado con 3 diagramas Mermaid (archify no ejecutable: Node.js no instalado), 23 ADR consolidados, specs/README.md actualizado a READY-FOR-DEV. constitution.md no se modificó (sin cambios estructurales globales). 12 advertencias vinculantes para Fase D en la sección 7.4 del TDD.
-- **⚠️ Puntos Abiertos:** Ninguno bloqueante. Informativos: CreatedBy/LastModifiedBy varchar(255) frente a varchar sin longitud en T008/T010 (prevalece db_015); el OpenAPI existe en disco aunque DA y API lo daban por inexistente y debe sincronizarse; spec.md aún no refleja la asignación duplicada idempotente (pendiente del BA); la carrera concurrente solo se prueba con PostgreSQL real; 201 y Location propuestos; consultas sin paginación ni tope; sin permisos por rol de acceso; diagramas HTML interactivos no generados.
+- **⚠️ Puntos Abiertos:** Ninguno bloqueante. Informativos: CreatedBy/LastModifiedBy varchar(255) frente a varchar sin longitud en T008/T010 (prevalece db-015); el OpenAPI existe en disco aunque DA y API lo daban por inexistente y debe sincronizarse; spec.md aún no refleja la asignación duplicada idempotente (pendiente del BA); la carrera concurrente solo se prueba con PostgreSQL real; 201 y Location propuestos; consultas sin paginación ni tope; sin permisos por rol de acceso; diagramas HTML interactivos no generados.
 - **Handoff:** @DEV-BACK: La arquitectura técnica ha sido validada. Inicia la implementación del Backend.
 @DEV-FRONT: La arquitectura técnica ha sido validada. Inicia la implementación del Frontend.
 
@@ -1286,21 +1286,21 @@ You can reply with the option letter (e.g., "A"), accept the recommendation by s
 
 ### [05-10-2026] QA Documental
 - **Hora:** 08:40:00
-- **Artefacto generado:** `documents/qa-documental/feedback_qa_035_refactorizacion_esqueleto_ui.md`
+- **Artefacto generado:** `documents/qa-documental/feedback-qa-035-refactorizacion-esqueleto-ui.md`
 - **Estado:** Auditoría contra app/skeleton.md y la Constitución (modo Brownfield) completada. Dictamen RECHAZADO: 9 hallazgos (4 bloqueantes: CA sin sintaxis Gherkin, sin Sad Paths, sin DoD con ítem de no-regresión, HU no atómica; 5 mayores: sin narrativa Como/Quiero/Para, criterios no testeables, incoherencia 3-4 campos por fila en CA-04, polución técnica, falta campo Requiere interfaz). Trazabilidad contra la directiva conforme.
 - **⚠️ Puntos Abiertos:** El contenido de la HU es copia exacta del bloque de la directiva app/skeleton.md, por lo que varios hallazgos nacen en la propia directiva. Si la subsanación exige apartarse de ese contenido exacto, el business-analyst debe registrarlo y coordinar con el humano.
-- **Handoff:** @BA: La HU 035-HU_refactorizacion_esqueleto_ui.md fue RECHAZADA por QA. Revisa y subsana los hallazgos H-01 a H-09 del reporte documents/qa-documental/feedback_qa_035_refactorizacion_esqueleto_ui.md y vuelve a delegar la auditoría a QA.
+- **Handoff:** @BA: La HU 035-HU_refactorizacion_esqueleto_ui.md fue RECHAZADA por QA. Revisa y subsana los hallazgos H-01 a H-09 del reporte documents/qa-documental/feedback-qa-035-refactorizacion-esqueleto-ui.md y vuelve a delegar la auditoría a QA.
 
 ### [05-10-2026] Business Analyst
 - **Hora:** 08:50:00
 - **Artefacto generado:** `documents/business-analyst/035-HU_refactorizacion_esqueleto_ui.md`
 - **Estado:** Subsanados H-01 a H-09 del reporte de QA: CA reescritos en Dado/Cuando/Entonces, sad paths y edge cases agregados con matriz de casos borde, narrativa Como/Quiero/Para, campo Requiere interfaz: Sí, Definition of Done con ítem de no-regresión Brownfield, términos ambiguos reemplazados por resultados medibles, regla 3 vs 4 campos por fila aclarada, detalle técnico movido a la sección 7 de restricciones trazables con verificación. H-04 (partición de la HU) NO ejecutada: se registró como propuesta pendiente de aprobación.
 - **⚠️ Puntos Abiertos:** (1) H-04: partición de la HU en unidades atómicas pendiente de aprobación del product-manager o del humano. (2) Umbral de texto de ayuda (12 px propuesto), breakpoints 3/4 campos por fila y comportamiento ante ruta inexistente, no documentados en la directiva. (3) Componente de navegación lateral equivalente a fijar en Arquitectura.
-- **Handoff:** @QA: La Historia de Usuario de deuda técnica Refactorización de Esqueleto UI (PrimeNG 22) fue subsanada y está lista en el archivo 035-HU_refactorizacion_esqueleto_ui.md. Por favor, procede con la nueva auditoría documental contra la directiva app/skeleton.md y el reporte feedback_qa_035_refactorizacion_esqueleto_ui.md para confirmar que los hallazgos H-01 a H-09 quedaron resueltos.
+- **Handoff:** @QA: La Historia de Usuario de deuda técnica Refactorización de Esqueleto UI (PrimeNG 22) fue subsanada y está lista en el archivo 035-HU_refactorizacion_esqueleto_ui.md. Por favor, procede con la nueva auditoría documental contra la directiva app/skeleton.md y el reporte feedback-qa-035-refactorizacion-esqueleto-ui.md para confirmar que los hallazgos H-01 a H-09 quedaron resueltos.
 
 ### [05-10-2026] QA Documental
 - **Hora:** 08:55:00
-- **Artefacto generado:** `documents/qa-documental/feedback_qa_035_refactorizacion_esqueleto_ui.md`
+- **Artefacto generado:** `documents/qa-documental/feedback-qa-035-refactorizacion-esqueleto-ui.md`
 - **Estado:** Segunda auditoría completada. Dictamen RECHAZADO. Resueltos H-01, H-02, H-03, H-05, H-08, H-09; parciales H-06 y H-07; NO resuelto H-04 (atomicidad: la partición sigue solo propuesta). Hallazgos vigentes: H-04 (bloqueante), H-10 (RT-03 contradice la regla 3/4 campos de CA-04) y H-11 (ancho máximo y espaciado sin valor verificable).
 - **⚠️ Puntos Abiertos:** H-04 exige una decisión que no corresponde al business-analyst ni al QA: partición de la HU o excepción formal aprobada.
 - **Handoff:** @HUMANO: Decide cómo cerrar H-04 para que el business-analyst pueda subsanar y volver a QA; responde con el número de opción.
@@ -1318,25 +1318,25 @@ You can reply with the option letter (e.g., "A"), accept the recommendation by s
 - **Artefacto generado:** `documents/business-analyst/035-HU_refactorizacion_esqueleto_ui.md`
 - **Estado:** Subsanados H-04, H-10 y H-11. H-04: la HU 035 se acotó a layout de aplicación + tipografía global (CA-01, CA-01.1 a CA-01.3, CA-06, CA-06.1, CA-10, CA-10.1) según la decisión humana; el resto del alcance quedó descrito como cuatro HUs derivadas en la sección 8, sin crear filas en el Ledger. H-10: la regla de 1/2/3/4 campos por fila y las clases de grilla quedaron en una sola definición coherente (sección 8). H-11: ancho máximo 1280 px y espaciado 1.5 rem definidos en CA-01.3 y RT-02; criterio de espaciado de formularios definido en la HU derivada.
 - **⚠️ Puntos Abiertos:** (1) Ancho máximo 1280 px y espaciado 1.5 rem son propuesta del BA, no vienen de la directiva. (2) Comportamiento ante ruta inexistente no documentado. (3) Componente de navegación lateral equivalente a fijar en Arquitectura. (4) Breakpoints 1024/1280 px de la grilla a confirmar antes de especificar su HU derivada. (5) El product-manager debe registrar las filas de las HUs derivadas cuando la 035 pase QA.
-- **Handoff:** @QA: La Historia de Usuario de deuda técnica Refactorización de Esqueleto UI (layout de aplicación y tipografía global) fue particionada por decisión humana y subsanada en los hallazgos H-04, H-10 y H-11, y está lista en el archivo 035-HU_refactorizacion_esqueleto_ui.md. Por favor, procede con la nueva auditoría documental contra la directiva app/skeleton.md y el reporte feedback_qa_035_refactorizacion_esqueleto_ui.md.
+- **Handoff:** @QA: La Historia de Usuario de deuda técnica Refactorización de Esqueleto UI (layout de aplicación y tipografía global) fue particionada por decisión humana y subsanada en los hallazgos H-04, H-10 y H-11, y está lista en el archivo 035-HU_refactorizacion_esqueleto_ui.md. Por favor, procede con la nueva auditoría documental contra la directiva app/skeleton.md y el reporte feedback-qa-035-refactorizacion-esqueleto-ui.md.
 
 ### [05-10-2026] QA Documental
 - **Hora:** 08:47:38
-- **Artefacto generado:** `documents/qa-documental/feedback_qa_035_refactorizacion_esqueleto_ui.md`
+- **Artefacto generado:** `documents/qa-documental/feedback-qa-035-refactorizacion-esqueleto-ui.md`
 - **Estado:** Tercera auditoría completada. Dictamen RECHAZADO por un único hallazgo mayor. Resueltos H-04 (partición aprobada por el humano, verificada en el tracker), H-10 y H-11. Nuevo H-12: el requisito de la directiva de una captura por cada pantalla (1920 y 768 px) quedó sin dueño tras la partición; 035 lo reduce a una pantalla por módulo y ninguna HU derivada de la sección 8 lo absorbe.
 - **⚠️ Puntos Abiertos:** Observación no bloqueante: la fila 035 del Ledger aún describe estructura de páginas y formularios, que ya no es el alcance de la HU; el product-manager debe actualizarla al registrar las HU derivadas.
-- **Handoff:** @BA: La HU 035-HU_refactorizacion_esqueleto_ui.md fue RECHAZADA por QA con un solo hallazgo vigente. Subsana H-12 según documents/qa-documental/feedback_qa_035_refactorizacion_esqueleto_ui.md y vuelve a delegar la auditoría a QA.
+- **Handoff:** @BA: La HU 035-HU_refactorizacion_esqueleto_ui.md fue RECHAZADA por QA con un solo hallazgo vigente. Subsana H-12 según documents/qa-documental/feedback-qa-035-refactorizacion-esqueleto-ui.md y vuelve a delegar la auditoría a QA.
 
 ### [05-10-2026] Business Analyst
 - **Hora:** 09:40:00
 - **Artefacto generado:** `documents/business-analyst/035-HU_refactorizacion_esqueleto_ui.md`
 - **Estado:** Subsanado H-12. La captura por cada pantalla del alcance (8 pantallas a 1920 px y 768 px) quedó asignada a una nueva HU derivada de verificación visual en la sección 8, con criterio Pasa/Falla y dependencia de las demás derivadas. La reducción a una captura por módulo en la 035 quedó registrada en la sección 2 y como punto abierto 6. El resto de la HU no se tocó.
 - **⚠️ Puntos Abiertos:** (1) La reducción de la captura a una por módulo en la 035 es consecuencia de la partición aprobada; confirmar que es aceptable. (2) Las HUs derivadas pasan a ser cinco; el product-manager debe registrarlas en el Ledger y actualizar la columna Qué aporta de la fila 035 (layout de aplicación y tipografía global). (3) Siguen vigentes: valores 1280 px y 1.5 rem propuestos, ruta inexistente no documentada, componente de navegación lateral equivalente y breakpoints de la grilla.
-- **Handoff:** @QA: La Historia de Usuario de deuda técnica Refactorización de Esqueleto UI (layout de aplicación y tipografía global) fue subsanada en el hallazgo H-12 y está lista en el archivo 035-HU_refactorizacion_esqueleto_ui.md. Por favor, procede con la nueva auditoría documental contra la directiva app/skeleton.md y el reporte feedback_qa_035_refactorizacion_esqueleto_ui.md.
+- **Handoff:** @QA: La Historia de Usuario de deuda técnica Refactorización de Esqueleto UI (layout de aplicación y tipografía global) fue subsanada en el hallazgo H-12 y está lista en el archivo 035-HU_refactorizacion_esqueleto_ui.md. Por favor, procede con la nueva auditoría documental contra la directiva app/skeleton.md y el reporte feedback-qa-035-refactorizacion-esqueleto-ui.md.
 
 ### [05-10-2026] QA Documental
 - **Hora:** 08:48:43
-- **Artefacto generado:** `documents/qa-documental/aprobado_qa_035_refactorizacion_esqueleto_ui.md`
+- **Artefacto generado:** `documents/qa-documental/aprobado-qa-035-refactorizacion-esqueleto-ui.md`
 - **Estado:** Cuarta auditoría completada. Dictamen APROBADO. Resuelto H-12 (la captura por cada pantalla tiene dueño en una HU derivada de verificación visual; la reducción a una por módulo en 035 quedó registrada). Las 5 dimensiones cumplen y el DoD incluye el ítem de no-regresión Brownfield. La HU declara Requiere interfaz: Sí.
 - **⚠️ Puntos Abiertos:** (1) Ancho máximo 1280 px y espaciado 1.5 rem son propuesta del BA; confirmar con el humano. (2) Comportamiento ante ruta inexistente no documentado. (3) Componente de navegación lateral equivalente a fijar en Arquitectura. (4) El product-manager debe registrar las cinco HU derivadas en el Ledger y actualizar la columna Qué aporta de la fila 035.
 - **Handoff:** @UX: La Historia de Usuario 035-HU_refactorizacion_esqueleto_ui.md ha sido aprobada por QA. Por favor, procede a diseñar los wireframes y estados visuales.
@@ -1390,18 +1390,18 @@ You can reply with the option letter (e.g., "A"), accept the recommendation by s
 
 ### [05-10-2026] Diseñador UX
 - **Hora:** 08:57:10
-- **Artefacto generado:** `documents/designer-ux/ux_035_refactorizacion_esqueleto_ui.md`
+- **Artefacto generado:** `documents/designer-ux/ux-035-refactorizacion-esqueleto-ui.md`
 - **Estado:** Diseño UX completado y verificado en disco: 9 estados visuales con wireframes ASCII (esqueleto de cuatro zonas, navegación activa, ruta inexistente, 768 px colapsada y abierta, colapso manual, medidas a 1920 px, tipografía, diálogo sobre el esqueleto) mapeados 1 a 1 con spec.md; resolución humana Opción B incorporada; sin superficie visual en US4-A2, US5-A1 y US5-A2 (verificaciones de código y proceso).
 - **⚠️ Puntos Abiertos:** Ninguno bloqueante; informativos: página de ruta inexistente no documentada (heurística D-05), contenido del menú de perfil, destino de la entrada Backlog (solo existe /backlog/nuevo), ruta de entrada de Equipo y componente de navegación lateral a decidir en arquitectura.
-- **Handoff:** @SA: El diseño visual de la HU [035-HU_refactorizacion_esqueleto_ui] ha concluido exitosamente en [documents/designer-ux/ux_035_refactorizacion_esqueleto_ui.md]. Procede con el tech-design y arquitectura.
+- **Handoff:** @SA: El diseño visual de la HU [035-HU_refactorizacion_esqueleto_ui] ha concluido exitosamente en [documents/designer-ux/ux-035-refactorizacion-esqueleto-ui.md]. Procede con el tech-design y arquitectura.
 
 
 ### [05-10-2026] Designer UX
 - **Hora:** 09:01:30
-- **Artefacto generado:** `documents/designer-ux/ux_035_refactorizacion_esqueleto_ui.md`
+- **Artefacto generado:** `documents/designer-ux/ux-035-refactorizacion-esqueleto-ui.md`
 - **Estado:** Diseño UX de la HU 035 completado y verificado en disco: 9 estados visuales con wireframes ASCII mapeados 1 a 1 con spec.md; resolución humana Opción B incorporada; US4-A2, US5-A1 y US5-A2 sin superficie visual (verificaciones de código y proceso).
 - **⚠️ Puntos Abiertos:** Ninguno bloqueante; informativos: página de ruta inexistente no documentada (heurística D-05), contenido del menú de perfil, destino de la entrada Backlog (solo existe /backlog/nuevo), ruta de entrada de Equipo y componente de navegación lateral a decidir en arquitectura.
-- **Handoff:** @SA: El diseño visual de la HU [035-HU_refactorizacion_esqueleto_ui] ha concluido exitosamente en [documents/designer-ux/ux_035_refactorizacion_esqueleto_ui.md]. Procede con el tech-design y arquitectura.
+- **Handoff:** @SA: El diseño visual de la HU [035-HU_refactorizacion_esqueleto_ui] ha concluido exitosamente en [documents/designer-ux/ux-035-refactorizacion-esqueleto-ui.md]. Procede con el tech-design y arquitectura.
 
 
 ### [05-10-2026] Solutions Architect
@@ -1428,8 +1428,8 @@ You can reply with the option letter (e.g., "A"), accept the recommendation by s
 
 ### [05-10-2026] Data Architect
 - **Hora:** 09:07:40
-- **Artefacto generado:** `documents/data-architect/db_035_refactorizacion_esqueleto_ui.md`
-- **Estado:** Diseño de persistencia completado y verificado en disco (88 líneas, 2 ADR heredados). Dictamen: la HU 035 es solo frontend y no introduce ni modifica tablas, columnas, índices, schemas ni migraciones (FR-012; tasks.md T001-T032 no tocan app/backend). El estado de navegación, el perfil (claims de Keycloak) y la entrada activa viven en memoria del cliente (Opción B, sin persistencia). Auditoría UI/Spec Kit a Data con cero campos huérfanos contra spec.md, data-model.md, tasks.md y ux_035.
+- **Artefacto generado:** `documents/data-architect/db-035-refactorizacion-esqueleto-ui.md`
+- **Estado:** Diseño de persistencia completado y verificado en disco (88 líneas, 2 ADR heredados). Dictamen: la HU 035 es solo frontend y no introduce ni modifica tablas, columnas, índices, schemas ni migraciones (FR-012; tasks.md T001-T032 no tocan app/backend). El estado de navegación, el perfil (claims de Keycloak) y la entrada activa viven en memoria del cliente (Opción B, sin persistencia). Auditoría UI/Spec Kit a Data con cero campos huérfanos contra spec.md, data-model.md, tasks.md y ux-035.
 - **⚠️ Puntos Abiertos:** Ninguno.
 - **Handoff:** @QT: El modelo de datos de la HU 035 fue dictaminado sin cambios de persistencia (solo frontend, FR-012) a partir de spec.md y tasks.md. Al no requerir capa de API, procede directamente con la auditoría y compilación del Tech Design Document (TDD).
 
@@ -1440,7 +1440,7 @@ You can reply with the option letter (e.g., "A"), accept the recommendation by s
 
 ### [05-10-2026] QA Tech
 - **Hora:** 09:30:00
-- **Artefacto generado:** `documents/qa-tech/tech-design_035_refactorizacion_esqueleto_ui.md`
+- **Artefacto generado:** `documents/qa-tech/tech-design-035-refactorizacion-esqueleto-ui.md`
 - **Estado:** ✅ AUDITADO Y APROBADO. Auditoría adversarial superada (0 hallazgos críticos): HU solo frontend sin persistencia ni API (FR-012), FR-001..FR-015 cubiertos por T001-T032, cero campos huérfanos UI-Data, sin sycophancy ni tecnologías ajenas a la constitución. Verificado contra el código: app.routes.ts actual usa authGuard por ruta y ** redirige a backlog/nuevo; font-family, ::ng-deep, !important y ed-grid dan 0 coincidencias en app/frontend/src. TDD compilado con 3 diagramas archify (9/9 checks) más Mermaid, 12 ADR consolidados, specs/README.md en READY-FOR-DEV. constitution.md enmendada con subsección mínima Shell de Aplicación (ruta padre, única font-family, Tailwind de tamaño acotado al shell). 8 advertencias vinculantes en la sección 7.4 del TDD.
 - **⚠️ Puntos Abiertos:** Ninguno bloqueante. Informativos: confirmar con el humano la acción Cerrar sesión y el umbral de 1024 px; i18n global pendiente (deuda de plataforma); el control de navegación no cierra la capa modal de p-drawer; verificar contra primeng 22.1.2 la entrada activa de p-menu y el foco de p-drawer; ADR-008 y ADR-010 con alternativas débiles; las 6 capturas de cierre requieren la app en ejecución.
 - **Handoff:** @DEV-FRONT: La arquitectura técnica ha sido validada. Inicia la implementación del Frontend.
@@ -1545,10 +1545,10 @@ You can reply with the option letter (e.g., "A"), accept the recommendation by s
 
 ### [06-10-2026] QA Documental
 - **Hora:** 09:51:07
-- **Artefacto generado:** `documents/qa-documental/feedback_qa_036_theming_claro_oscuro_ui.md`
+- **Artefacto generado:** `documents/qa-documental/feedback-qa-036-theming-claro-oscuro-ui.md`
 - **Estado:** HU 036 RECHAZADA. Se encontraron 5 hallazgos: 2 bloqueantes y 3 mayores. H-01: CA-03 contradice CA-01.2 y la tabla de tokens (peligro 3.81:1, secundario sobre navegación activa 3.91:1, bordes 1.24:1). H-02: CA-06 exige coincidir con la maqueta en el rol de enlace, que difiere por diseño. H-03: radio 0.5rem sin etiquetar en CA-01.1. H-04: etiqueta del botón primario oscuro sin definir (2.37:1). H-05: atomicidad dudosa por la gobernanza lint. Reporte verificado por lectura física.
 - **⚠️ Puntos Abiertos:** H-01, H-02 y H-04 requieren decisión humana, porque los valores y las excepciones de contraste provienen de la Constitución. H-05 requiere justificar la atomicidad o particionar.
-- **Handoff:** @BA: La Historia de Usuario 036-HU_theming_claro_oscuro_ui.md fue RECHAZADA por QA; subsana los hallazgos H-01 a H-05 del reporte documents/qa-documental/feedback_qa_036_theming_claro_oscuro_ui.md, consultando al humano los que dependen de la Constitución, y delega de nuevo la auditoría al QA.
+- **Handoff:** @BA: La Historia de Usuario 036-HU_theming_claro_oscuro_ui.md fue RECHAZADA por QA; subsana los hallazgos H-01 a H-05 del reporte documents/qa-documental/feedback-qa-036-theming-claro-oscuro-ui.md, consultando al humano los que dependen de la Constitución, y delega de nuevo la auditoría al QA.
 
 ### [06-10-2026] Business Analyst
 - **Hora:** 09:52:00
@@ -1576,10 +1576,10 @@ You can reply with the option letter (e.g., "A"), accept the recommendation by s
 
 ### [06-10-2026] QA Documental
 - **Hora:** 09:58:27
-- **Artefacto generado:** `documents/qa-documental/feedback_qa_036_theming_claro_oscuro_ui.md`
+- **Artefacto generado:** `documents/qa-documental/feedback-qa-036-theming-claro-oscuro-ui.md`
 - **Estado:** HU 036 RECHAZADA en segunda ronda. H-01 a H-05 quedaron subsanados conforme a la decisión humana. Hay 1 hallazgo nuevo (H-06, mayor): la excepción E-02 declara 2.60:1 para ambos modos, pero ese ratio solo existe sobre fondo blanco; en modo oscuro es al menos 3.96:1 y RT-08 fallaría por construcción. Reporte verificado por lectura física.
 - **⚠️ Puntos Abiertos:** Condición de arrastre, no es hallazgo: la Constitución lista 2 excepciones de contraste y la HU enumera 9 (E-03 a E-09 aprobadas por el humano); requiere ratificación humana en la Constitución antes del cierre de la HU.
-- **Handoff:** @BA: La Historia de Usuario 036-HU_theming_claro_oscuro_ui.md fue RECHAZADA por QA con un solo hallazgo, H-06 (excepción E-02 con ratio de modo claro declarado para ambos modos), descrito en documents/qa-documental/feedback_qa_036_theming_claro_oscuro_ui.md; subsánalo, solicitando al humano cualquier dato ausente, y delega de nuevo la auditoría al QA.
+- **Handoff:** @BA: La Historia de Usuario 036-HU_theming_claro_oscuro_ui.md fue RECHAZADA por QA con un solo hallazgo, H-06 (excepción E-02 con ratio de modo claro declarado para ambos modos), descrito en documents/qa-documental/feedback-qa-036-theming-claro-oscuro-ui.md; subsánalo, solicitando al humano cualquier dato ausente, y delega de nuevo la auditoría al QA.
 
 ### [06-10-2026] Business Analyst
 - **Hora:** 10:15:00
@@ -1591,7 +1591,7 @@ You can reply with the option letter (e.g., "A"), accept the recommendation by s
 
 ### [06-10-2026] QA Documental
 - **Hora:** 09:59:39
-- **Artefacto generado:** `documents/qa-documental/aprobado_qa_036_theming_claro_oscuro_ui.md`
+- **Artefacto generado:** `documents/qa-documental/aprobado-qa-036-theming-claro-oscuro-ui.md`
 - **Estado:** HU 036 APROBADA en tercera ronda. H-06 quedó subsanado: E-02 aplica solo a modo claro y el par oscuro del marcador de posición se tipificó como no documentado, sujeto a la regla general de 4.5:1. Las 6 dimensiones cumplen y la HU declara Requiere interfaz Sí. Certificado verificado por lectura física.
 - **⚠️ Puntos Abiertos:** Decisiones humanas pendientes, ya declaradas en la HU: (1) ratificar en la Constitución las excepciones de contraste E-03 a E-09, porque la Constitución lista solo 2 y prevalece sobre la HU; (2) definir el fondo del campo de formulario en modo oscuro (punto abierto 8); más los puntos abiertos 1, 3, 4, 5 y 6 de la sección 9.
 - **Handoff:** @UX: La Historia de Usuario 036-HU_theming_claro_oscuro_ui.md ha sido aprobada por QA. Por favor, procede a diseñar los wireframes y estados visuales.
@@ -1642,10 +1642,10 @@ Puedes responder con la letra de la opción (por ejemplo, "A"), aceptar la recom
 
 ### [06-10-2026] Designer UX
 - **Hora:** 10:06:30
-- **Artefacto generado:** `documents/designer-ux/ux_036_theming_claro_oscuro_ui.md`
+- **Artefacto generado:** `documents/designer-ux/ux-036-theming-claro-oscuro-ui.md`
 - **Estado:** Diseño visual de la HU 036 completado y verificado en disco: 13 estados ASCII con mapeo 1 a 1 de los escenarios de spec.md (modo claro, modo oscuro, conmutador, teclado, persistencia sin parpadeo, primera visita, almacenamiento inválido, contraste, pantallas existentes). Escenarios sin superficie visual (compuertas de proceso y gobernanza de código) documentados como tales. Modo Brownfield: capa de tema sobre el shell HU-035.
 - **⚠️ Puntos Abiertos:** Informativo: fondo del campo en modo oscuro asumido #1e2939 (punto abierto 8 de la HU) y ratificación en la Constitución de E-03 a E-09 y del color de enlace; ninguno bloquea el diseño.
-- **Handoff:** @SA: El diseño visual de la HU [036-HU_theming_claro_oscuro_ui] ha concluido exitosamente en [documents/designer-ux/ux_036_theming_claro_oscuro_ui.md]. Procede con el tech-design y arquitectura.
+- **Handoff:** @SA: El diseño visual de la HU [036-HU_theming_claro_oscuro_ui] ha concluido exitosamente en [documents/designer-ux/ux-036-theming-claro-oscuro-ui.md]. Procede con el tech-design y arquitectura.
 
 
 ### [06-10-2026] Solutions Architect
@@ -1672,7 +1672,7 @@ Puedes responder con la letra de la opción (por ejemplo, "A"), aceptar la recom
 
 ### [06-10-2026] Data Architect
 - **Hora:** 10:23:40
-- **Artefacto generado:** `documents/data-architect/db_036_theming_claro_oscuro_ui.md`
+- **Artefacto generado:** `documents/data-architect/db-036-theming-claro-oscuro-ui.md`
 - **Estado:** Diseño de persistencia de la HU 036 completado y verificado en disco (5 secciones de la plantilla, 2 ADRs MADR). Dictamen: solo frontend, sin tablas, columnas, schemas ni migraciones nuevas en PostgreSQL (FR-019, Constitución §3 heredada). Única persistencia: preferencia por navegador en localStorage con clave app-theme-mode (valores light o dark; inválido o inaccesible equivale a sin elección), registrada en ADR-02 con alternativas (tabla de preferencias, atributo Keycloak, cookie). Auditoría UI y Spec Kit hacia Data con cero campos huérfanos sobre los 13 estados del diseño UX y las tareas T001 a T045.
 - **⚠️ Puntos Abiertos:** Informativo: la Constitución marca la clave localStorage como propuesta, por lo que ADR-02 consta como Aceptado y no heredado; si el humano exigiera preferencia por cuenta, habría que reabrirlo con tabla de preferencias y contrato de API nuevos.
 - **Handoff:** @QT: El modelo de datos de la HU 036 fue dictaminado sin cambios de persistencia relacional (solo frontend, FR-019; la elección de tema vive en localStorage) a partir de spec.md y tasks.md. Al no requerir capa de API, procede directamente con la auditoría y compilación del Tech Design Document (TDD).
@@ -1680,10 +1680,10 @@ Puedes responder con la letra de la opción (por ejemplo, "A"), aceptar la recom
 
 ### [06-10-2026] QA Tech
 - **Hora:** 10:28:00
-- **Artefacto generado:** `documents/qa-tech/feedback_tech_036_theming_claro_oscuro_ui.md`
+- **Artefacto generado:** `documents/qa-tech/feedback-tech-036-theming-claro-oscuro-ui.md`
 - **Estado:** Auditoría adversarial de la HU 036 completada con dictamen RECHAZADO (modo Brownfield, solo frontend, sin api_*.md). 2 hallazgos críticos: (1) la regla 3 de lint-gobernanza prohíbe `.style.` con "color" y por lo tanto rechaza `style.colorScheme`, que exigen ThemeService e index.html, así que el DoD con lint en verde es inalcanzable; (2) las excepciones de contraste E-03 a E-09 no están en la Constitución (solo E-01 y E-02) y no hay enmienda física, pese a la aprobación humana del 06-10-2026 (H-01 y H-04, opción A). 4 advertencias y 2 sugerencias. No se compiló el tech-design ni se tocó constitution.md ni specs/README.md.
 - **⚠️ Puntos Abiertos:** El hallazgo 2 no lo puede subsanar el solutions-architect: requiere que el humano ratifique en la Constitución (Theme Visual, Contraste) las excepciones E-01 a E-09 y las utilidades `text-color` y `sr-only`; el texto propuesto está en la sección 4 del reporte de feedback.
-- **Handoff:** @SA: Se ha emitido feedback adversarial crítico en documents/qa-tech/feedback_tech_036_theming_claro_oscuro_ui.md. Por favor, subsana las inconsistencias señaladas para proceder con la re-auditoría.
+- **Handoff:** @SA: Se ha emitido feedback adversarial crítico en documents/qa-tech/feedback-tech-036-theming-claro-oscuro-ui.md. Por favor, subsana las inconsistencias señaladas para proceder con la re-auditoría.
 
 
 ### [06-10-2026] Solutions Architect
@@ -1710,18 +1710,18 @@ Puedes responder con la letra de la opción (por ejemplo, "A"), aceptar la recom
 
 ### [06-10-2026] Data Architect
 - **Hora:** 10:31:28
-- **Artefacto generado:** `documents/data-architect/db_036_theming_claro_oscuro_ui.md`
-- **Estado:** Revalidación tras la subsanación del solutions-architect y el nuevo congelamiento SDD. Se contrastaron data-model.md, plan.md y tasks.md (45 tareas) con el diseño de persistencia vigente: la persistencia no cambió (sin base de datos ni backend, única clave localStorage app-theme-mode con valores light o dark, tolerancia a valor inválido o almacenamiento bloqueado). La redefinición de la regla 3 del lint no afecta al modelo de datos. El artefacto db_036 permanece vigente sin modificaciones y verificado en disco.
+- **Artefacto generado:** `documents/data-architect/db-036-theming-claro-oscuro-ui.md`
+- **Estado:** Revalidación tras la subsanación del solutions-architect y el nuevo congelamiento SDD. Se contrastaron data-model.md, plan.md y tasks.md (45 tareas) con el diseño de persistencia vigente: la persistencia no cambió (sin base de datos ni backend, única clave localStorage app-theme-mode con valores light o dark, tolerancia a valor inválido o almacenamiento bloqueado). La redefinición de la regla 3 del lint no afecta al modelo de datos. El artefacto db-036 permanece vigente sin modificaciones y verificado en disco.
 - **⚠️ Puntos Abiertos:** Ninguno en persistencia. Informativo: la ratificación humana de E-03 a E-09, del enlace #007595 y de las utilidades text-color y sr-only en la Constitución sigue pendiente y es ajena al modelo de datos.
 - **Handoff:** @QT: El modelo de datos de la HU 036 fue revalidado sin cambios tras el nuevo congelamiento (solo frontend, FR-019; la elección de tema vive en localStorage) a partir de spec.md y tasks.md. Al no requerir capa de API, procede con la re-auditoría y compilación del Tech Design Document (TDD).
 
 
 ### [06-10-2026] QA Tech
 - **Hora:** 10:36:00
-- **Artefacto generado:** `documents/qa-tech/feedback_tech_036_theming_claro_oscuro_ui.md`
+- **Artefacto generado:** `documents/qa-tech/feedback-tech-036-theming-claro-oscuro-ui.md`
 - **Estado:** Re-auditoría 1 de la HU 036 con dictamen RECHAZADO. El documento del solutions-architect subsanó la regla 3 y la regla 1 del lint, ADR-012 y las alternativas débiles. Persisten 2 críticos: (1) contracts/lint-gobernanza.md y tasks.md no fueron regenerados y siguen reproduciendo la regla 3 original (rechaza style.colorScheme), la aserción de código real en T034 y sin ADR-012 en T008 y T018; (2) la Constitución sigue listando solo E-01 y E-02, sin enmienda física para E-03 a E-09, text-color ni sr-only. No se compiló el tech-design ni se tocó constitution.md ni specs/README.md.
 - **⚠️ Puntos Abiertos:** El humano debe ratificar en la Constitución (Theme Visual, Contraste) las excepciones E-01 a E-09 y las utilidades text-color y sr-only; texto propuesto en la sección 4 del reporte. Sin esa enmienda la re-auditoría no puede aprobarse.
-- **Handoff:** @SA: Se ha emitido feedback adversarial crítico en documents/qa-tech/feedback_tech_036_theming_claro_oscuro_ui.md. Por favor, subsana las inconsistencias señaladas para proceder con la re-auditoría.
+- **Handoff:** @SA: Se ha emitido feedback adversarial crítico en documents/qa-tech/feedback-tech-036-theming-claro-oscuro-ui.md. Por favor, subsana las inconsistencias señaladas para proceder con la re-auditoría.
 
 
 ### [06-10-2026] Solutions Architect
@@ -1748,29 +1748,29 @@ Puedes responder con la letra de la opción (por ejemplo, "A"), aceptar la recom
 
 ### [06-10-2026] Data Architect
 - **Hora:** 10:35:20
-- **Artefacto generado:** `documents/data-architect/db_036_theming_claro_oscuro_ui.md`
-- **Estado:** Segunda revalidación tras el congelamiento posterior a la re-auditoría 1. Solo cambiaron tasks.md y contracts/lint-gobernanza.md; data-model.md y plan.md no se modificaron. Las 45 tareas siguen sin tocar app/backend ni definir tablas, y la única persistencia continúa siendo la clave localStorage app-theme-mode (light o dark). El artefacto db_036 permanece vigente sin modificaciones.
+- **Artefacto generado:** `documents/data-architect/db-036-theming-claro-oscuro-ui.md`
+- **Estado:** Segunda revalidación tras el congelamiento posterior a la re-auditoría 1. Solo cambiaron tasks.md y contracts/lint-gobernanza.md; data-model.md y plan.md no se modificaron. Las 45 tareas siguen sin tocar app/backend ni definir tablas, y la única persistencia continúa siendo la clave localStorage app-theme-mode (light o dark). El artefacto db-036 permanece vigente sin modificaciones.
 - **⚠️ Puntos Abiertos:** Ninguno en persistencia. Informativo: sigue pendiente la enmienda humana de la Constitución (E-03 a E-09, enlace #007595, text-color y sr-only), ajena al modelo de datos.
 - **Handoff:** @QT: El modelo de datos de la HU 036 fue revalidado por segunda vez sin cambios (solo frontend, FR-019; la elección de tema vive en localStorage) a partir de spec.md y tasks.md. Al no requerir capa de API, procede con la re-auditoría y compilación del Tech Design Document (TDD).
 
 
 ### [06-10-2026] QA Tech
 - **Hora:** 10:41:00
-- **Artefacto generado:** `documents/qa-tech/feedback_tech_036_theming_claro_oscuro_ui.md`
+- **Artefacto generado:** `documents/qa-tech/feedback-tech-036-theming-claro-oscuro-ui.md`
 - **Estado:** Re-auditoría 2 de la HU 036 con dictamen RECHAZADO por un único bloqueo. Verificado en disco que tasks.md y contracts/lint-gobernanza.md ya reflejan el diseño corregido (regla 3 por propiedades con colorScheme exento, regla 1 con límite de palabra, ADR-012 en T008 y T018, T034 con casos positivos y negativos, aserción de código real en T043). Persiste el crítico de Lex Superior: la Constitución (línea 128) sigue listando solo E-01 y E-02, sin enmienda física para E-03 a E-09, text-color ni sr-only. El solutions-architect no puede subsanarlo. No se compiló el tech-design ni se tocó constitution.md ni specs/README.md.
 - **⚠️ Puntos Abiertos:** Única acción pendiente, de jurisdicción humana. Con la enmienda presente, la siguiente re-auditoría compila y aprueba sin más cambios de diseño.
 - **Handoff:** @HUMANO: Necesito tu decisión sobre la enmienda de la Constitución para poder aprobar la HU 036; responde con el número de opción.
-  1. ¿Quién formaliza la ratificación de las excepciones de contraste E-01 a E-09 y de las utilidades text-color y sr-only en la sección Theme Visual, punto Contraste, de .specify/memory/constitution.md? Opción A: la editas tú y vuelves a delegar la auditoría a QA Tech. Opción B (recomendada): autorizas a QA Tech a aplicar el texto propuesto en la sección 4 del reporte documents/qa-tech/feedback_tech_036_theming_claro_oscuro_ui.md, citando tu aprobación H-01 y H-04 opción A del 06-10-2026, y a aprobar de inmediato.
+  1. ¿Quién formaliza la ratificación de las excepciones de contraste E-01 a E-09 y de las utilidades text-color y sr-only en la sección Theme Visual, punto Contraste, de .specify/memory/constitution.md? Opción A: la editas tú y vuelves a delegar la auditoría a QA Tech. Opción B (recomendada): autorizas a QA Tech a aplicar el texto propuesto en la sección 4 del reporte documents/qa-tech/feedback-tech-036-theming-claro-oscuro-ui.md, citando tu aprobación H-01 y H-04 opción A del 06-10-2026, y a aprobar de inmediato.
 
 ### [06-10-2026] HUMANO
 - **Hora:** 11:00:00
 - **Estado:** APPROVE
 - **Feedback:** Opción B.
-- **Handoff:** @QT: El humano APROBÓ la Opción B. Queda autorizado a aplicar en .specify/memory/constitution.md, sección Theme Visual, punto Contraste, EXACTAMENTE el texto propuesto en la sección 4 (punto 2) de documents/qa-tech/feedback_tech_036_theming_claro_oscuro_ui.md, sin reformularlo ni ampliarlo. Cita como respaldo: aprobación H-01 y H-04 opción A (06-10-2026) para las excepciones E-01 a E-09, y esta aprobación humana (06-10-2026) para las utilidades text-color y sr-only. Esta autorización cubre solo esa edición; no modifiques nada más de la Constitución ni de specs/README.md. Tras aplicarla, ejecuta la re-auditoría y, si no quedan hallazgos, apruébala y compila el tech-design.
+- **Handoff:** @QT: El humano APROBÓ la Opción B. Queda autorizado a aplicar en .specify/memory/constitution.md, sección Theme Visual, punto Contraste, EXACTAMENTE el texto propuesto en la sección 4 (punto 2) de documents/qa-tech/feedback-tech-036-theming-claro-oscuro-ui.md, sin reformularlo ni ampliarlo. Cita como respaldo: aprobación H-01 y H-04 opción A (06-10-2026) para las excepciones E-01 a E-09, y esta aprobación humana (06-10-2026) para las utilidades text-color y sr-only. Esta autorización cubre solo esa edición; no modifiques nada más de la Constitución ni de specs/README.md. Tras aplicarla, ejecuta la re-auditoría y, si no quedan hallazgos, apruébala y compila el tech-design.
 
 ### [06-10-2026] QA Tech
 - **Hora:** 10:58:00
-- **Artefacto generado:** `documents/qa-tech/tech-design_036_theming_claro_oscuro_ui.md`
+- **Artefacto generado:** `documents/qa-tech/tech-design-036-theming-claro-oscuro-ui.md`
 - **Estado:** Re-auditoría 3 de la HU 036 con dictamen APROBADO (0 hallazgos críticos, 8 advertencias vinculantes y 2 sugerencias en la sección 7.4). Tasks.md y contracts/lint-gobernanza.md verificados en disco con el diseño corregido. Por autorización humana expresa (Opción B, respaldo H-01 y H-04 opción A del 06-10-2026) se aplicó en constitution.md, Theme Visual, punto Contraste, el texto exacto propuesto: ratificación de E-01 a E-09 y de las utilidades text-color y sr-only. Sin más cambios en la Constitución. Compilado el tech-design con 14 ADR (12 del solutions-architect, 2 del data-architect, sin API) y 3 diagramas archify más Mermaid (9/9 checks). HU solo frontend.
 - **⚠️ Puntos Abiertos:** specs/README.md no se modificó por restricción expresa de la autorización humana; el paso de la HU 036 a READY-FOR-DEV queda pendiente de instrucción. Verificación manual obligatoria en Fase D: barra a 768 px, ausencia de destello con modo oscuro guardado y diálogos y toast en ambos modos.
 - **Handoff:** @DEV-FRONT: La arquitectura técnica ha sido validada. Inicia la implementación del Frontend.
@@ -1873,4 +1873,4 @@ Puedes responder con la letra de la opción (por ejemplo, "A"), aceptar la recom
 - **Estado:** [APROBADO] - Lectura física completada: 9 archivos de producción (theme.service.ts, app-theme.ts, contrast.ts, theme-token-resolver.ts, layout.component.ts/html, layout-nav.ts, app.config.ts, index.html) más 2 plantillas de features y 2 specs QA. Lex Superior y VSA verificados: standalone, OnPush, signals, sin effect(), sin NgModule, colores literales solo en app-theme.ts. SecOps: sin innerHTML ni bypassSecurityTrust, almacenamiento en try/catch, backend sin cambios. Pruebas ejecutadas por Code Review: Jest 31 suites 417/417, lint:primeng sin violaciones, ng build OK; specs QA no tautológicas; 6 capturas presentes. Reserva no bloqueante [CAPA:CODE] layout.component.html:47 borde del aside sin utilidad de ancho.
 - **⚠️ Puntos Abiertos:** Ninguno bloqueante; quedan por ratificar en la Constitución E-03..E-09, #007595, borde de campo y fondo de campo oscuro (T045).
 @WATCHER: GITOPS-MERGE-CLOSE feat/036-HU_theming_claro_oscuro_ui
-- **Handoff:** @PM: Código certificado y rama consolidada en dev. Revisa el plan del PM contra el ledger: las épicas P1 a P6 tienen historias propuestas pendientes; asigna la siguiente historia del backlog.
+- **Handoff:** @PM: Código certificado y rama consolidada en dev. Procede con las épicas pendientes del plan MVP: P1 (historias 005 a 011), P2 (013 y 014), P3, P4, P5 y P6 sin historia registrada ni implementada.

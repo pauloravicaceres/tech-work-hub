@@ -86,7 +86,7 @@ for (const [label, hits] of [['font-family', fontFamilyHits], ['margen de body',
 }
 
 // Gobernanza del tema (HU-036): `app/core/theme/app-theme.ts` es la única fuente de colores; el resto
-// usa tokens semánticos. Contrato: specs/036-HU_theming_claro_oscuro_ui/contracts/lint-gobernanza.md.
+// usa tokens semánticos. Contrato: specs/036-theming-claro-oscuro-ui/contracts/lint-gobernanza.md.
 const posix = (p) => p.split('\\').join('/');
 const THEME_FILE = 'app/core/theme/app-theme.ts';
 const LAYOUT_DIR = 'app/core/layout/';

@@ -63,21 +63,21 @@ flowchart TB
 
 | Agente | Fase | Responsabilidad Principal | Entrada Principal | Entregable Canónico |
 |---|:---:|---|---|---|
-| `business-storyteller` | Business | Refina ideas crudas e inyecta métricas y actores. | Visión informal | `idea_*.md` |
-| `product-analyst` | Business | Transforma la idea en un Product Brief formal (PRD). Activa HITL. | `idea_*.md` | `pb_*.md` |
-| `product-manager` | Management | Define el MVP por Ruta Crítica y orquesta delegación de épicas. | `pb_*.md` (Aprobado) | `mvp_*.md` |
-| `business-analyst` | Management | Desglosa épicas en HU Técnica (Gherkin puro) y HU para Stakeholders. | `mvp_*.md` / `pb_*.md` | `hu_*.md` / `HUs/hu_*.md` |
-| `qa-documental` | Management | Audita trazabilidad BDD. Si aprueba, el orquestador lanza el Auto-Runner. | `hu_*.md` vs `pb_*.md` | `aprobado_qa_*.md` |
-| `designer-ux` | UX | Diseña wireframes ASCII mapeados a estados visuales. | `spec.md`, `tasks.md` | `ux_*.md` |
-| `solutions-architect` | Architecture | Consolida stack, gobernanza y formaliza ADRs MADR desde `plan.md`. | `plan.md`, `constitution.md` | `tech_guidelines.md` |
-| `data-architect` | Architecture | Modela persistencia física (MER, esquemas) mapeado a `spec.md`. | `spec.md`, `tasks.md` | `db_*.md` |
-| `api-architect` | Architecture | Diseña contratos REST/GraphQL mapeando endpoints. | `spec.md`, `db_*.md` | `api_*.md` |
-| `qa-tech` | Architecture | Auditoría cruzada TDD vs Spec Kit; compila TDD maestro. | `db_*.md`, `api_*.md` | `tech-design_*.md` |
-| `dev-backend` | Deployment | Construye backend vía CLI (`execute_command`) y realiza Commits Atómicos. | `tech-design_*.md` | Código fuente backend |
-| `dev-frontend` | Deployment | Construye frontend vía CLI (`execute_command`) y realiza Commits Atómicos. | `tech-design_*.md`, `ux_*.md` | Código fuente frontend |
-| `qa-auto` | QA | Diseña/ejecuta tests automáticos (`execute_command`) Zero-Tautology. | `hu_*.md`, código | Suites de pruebas |
+| `business-storyteller` | Business | Refina ideas crudas e inyecta métricas y actores. | Visión informal | `idea-*.md` |
+| `product-analyst` | Business | Transforma la idea en un Product Brief formal (PRD). Activa HITL. | `idea-*.md` | `pb-*.md` |
+| `product-manager` | Management | Define el MVP por Ruta Crítica y orquesta delegación de épicas. | `pb-*.md` (Aprobado) | `mvp-*.md` |
+| `business-analyst` | Management | Desglosa épicas en HU Técnica (Gherkin puro) y HU para Stakeholders. | `mvp-*.md` / `pb-*.md` | `NNN-*.md` / `HUs/NNN-*.md` |
+| `qa-documental` | Management | Audita trazabilidad BDD. Si aprueba, el orquestador lanza el Auto-Runner. | `NNN-*.md` vs `pb-*.md` | `aprobado-qa-*.md` |
+| `designer-ux` | UX | Diseña wireframes ASCII mapeados a estados visuales. | `spec.md`, `tasks.md` | `ux-*.md` |
+| `solutions-architect` | Architecture | Consolida stack, gobernanza y formaliza ADRs MADR desde `plan.md`. | `plan.md`, `constitution.md` | `tech-guidelines.md` |
+| `data-architect` | Architecture | Modela persistencia física (MER, esquemas) mapeado a `spec.md`. | `spec.md`, `tasks.md` | `db-*.md` |
+| `api-architect` | Architecture | Diseña contratos REST/GraphQL mapeando endpoints. | `spec.md`, `db-*.md` | `api-*.md` |
+| `qa-tech` | Architecture | Auditoría cruzada TDD vs Spec Kit; compila TDD maestro. | `db-*.md`, `api-*.md` | `tech-design-*.md` |
+| `dev-backend` | Deployment | Construye backend vía CLI (`execute_command`) y realiza Commits Atómicos. | `tech-design-*.md` | Código fuente backend |
+| `dev-frontend` | Deployment | Construye frontend vía CLI (`execute_command`) y realiza Commits Atómicos. | `tech-design-*.md`, `ux-*.md` | Código fuente frontend |
+| `qa-auto` | QA | Diseña/ejecuta tests automáticos (`execute_command`) Zero-Tautology. | `NNN-*.md`, código | Suites de pruebas |
 | `code-review` | SecOps | Quality Gatekeeper final. Audita físicamente el código fuente (OWASP). | Código fuente y tests | Dictamen `[APROBADO]` |
-| `devops` | SRE | Aprovisiona contenedores y CI/CD vía CLI (`execute_command`). | `tech-design_*.md` | Dockerfiles, Compose |
+| `devops` | SRE | Aprovisiona contenedores y CI/CD vía CLI (`execute_command`). | `tech-design-*.md` | Dockerfiles, Compose |
 
 ---
 
@@ -145,15 +145,15 @@ BMAD no utiliza bases de datos para su estado; el sistema de archivos local es l
 | Rutas Absolutas | `config_bmad.json` | `init_bmad.py` | Todos vía `read_file` |
 | Contexto Invariante | `.specify/memory/constitution.md` | Operador / `@QT` | Arquitectos (Lex Superior) |
 | Bus de Handoffs | `docs/tracker_bmad.md` | Todos | `watcher_bmad.py` y agentes |
-| Product Briefs (PRD) | `docs/product-analyst/pb_*.md` | `@PA` | `@PM`, `@BA`, `@QA`, `@SA` |
-| Planes MVP | `docs/product-manager/mvp_*.md` | `@PM` | `@BA`, `@UX`, `@SA` |
-| HUs Técnicas BDD | `docs/business-analyst/hu_*.md` | `@BA` | Spec Kit, `@QA`, `@QA-AUTO` |
+| Product Briefs (PRD) | `docs/product-analyst/pb-*.md` | `@PA` | `@PM`, `@BA`, `@QA`, `@SA` |
+| Planes MVP | `docs/product-manager/mvp-*.md` | `@PM` | `@BA`, `@UX`, `@SA` |
+| HUs Técnicas BDD | `docs/business-analyst/NNN-*.md` | `@BA` | Spec Kit, `@QA`, `@QA-AUTO` |
 | Certificados QA | `docs/qa-documental/qa_*.md` | `@QA` | Orquestador Python |
-| Wireframes | `docs/designer-ux/ux_*.md` | `@UX` | `@DEV-FRONT`, `@SA` |
-| Gobernanza Técnica | `docs/solutions-architect/tech_guidelines.md` | `@SA` | `@DA`, `@API`, `@QT`, Developers |
-| Diseño de Datos (MER) | `docs/data-architect/db_*.md` | `@DA` | `@API`, `@QT`, `@DEV-BACK` |
-| Contratos REST/GraphQL | `docs/api-architect/api_*.md` | `@API` | `@QT`, Developers |
-| TDD Maestro | `docs/qa-tech/tech-design_*.md` | `@QT` | Developers, `@DEVOPS` |
+| Wireframes | `docs/designer-ux/ux-*.md` | `@UX` | `@DEV-FRONT`, `@SA` |
+| Gobernanza Técnica | `docs/solutions-architect/tech-guidelines.md` | `@SA` | `@DA`, `@API`, `@QT`, Developers |
+| Diseño de Datos (MER) | `docs/data-architect/db-*.md` | `@DA` | `@API`, `@QT`, `@DEV-BACK` |
+| Contratos REST/GraphQL | `docs/api-architect/api-*.md` | `@API` | `@QT`, Developers |
+| TDD Maestro | `docs/qa-tech/tech-design-*.md` | `@QT` | Developers, `@DEVOPS` |
 | Código Fuente & Tests | Repositorio Raíz (Git) | Fase D | `@CODE-REVIEW`, CI/CD |
 
 ---
@@ -165,12 +165,12 @@ BMAD controla las transiciones del repositorio de código mediante un paradigma 
 ### Product State Ledger (`specs/README.md`)
 El estado macroscópico del producto (qué está en construcción, qué está listo para desarrollo, qué está en producción) se gobierna a través de un archivo de estado tabular inmutable llamado `Ledger`. Los agentes consultan obligatoriamente el Ledger para evitar solapamientos y lo mutan (`update-specs-map`) de `IN-PROGRESS` a `READY-FOR-DEV` conforme avanzan las aprobaciones.
 
-**Épica = varias HU.** Una épica es un bloque de valor del plan del PM y se materializa en **varias Historias de Usuario**; la HU es la unidad que se delega al BA y recorre el pipeline (una rama `feat/XXX-HU_...` por HU). Al crear el plan, el PM descompone cada épica en historias candidatas y las registra en el ledger como `BACKLOG` (marcadas `⚠️ [PROPUESTO]`); la primera pasa a `IN-PROGRESS` y el Stage-Gate pide al humano validar también la descomposición. Al cerrarse cada HU, el PM la promueve a `ACTIVE` y elige la siguiente **historia**: la siguiente de la misma épica, o la primera de la épica inmediata si aquella no tiene elegibles. Una épica está completa solo cuando todas sus HU funcionales están `ACTIVE` (las HU de calidad derivadas de un riesgo no cuentan), y el cierre final del MVP exige que todas lo estén. Si la elección implica adelantar una porción de otra épica por una dependencia, el PM no abre rama: pregunta al humano con opciones numeradas.
+**Épica = varias HU.** Una épica es un bloque de valor del plan del PM y se materializa en **varias Historias de Usuario**; la HU es la unidad que se delega al BA y recorre el pipeline (una rama `feat/XXX-...` por HU). Al crear el plan, el PM descompone cada épica en historias candidatas y las registra en el ledger como `BACKLOG` (marcadas `⚠️ [PROPUESTO]`); la primera pasa a `IN-PROGRESS` y el Stage-Gate pide al humano validar también la descomposición. Al cerrarse cada HU, el PM la promueve a `ACTIVE` y elige la siguiente **historia**: la siguiente de la misma épica, o la primera de la épica inmediata si aquella no tiene elegibles. Una épica está completa solo cuando todas sus HU funcionales están `ACTIVE` (las HU de calidad derivadas de un riesgo no cuentan), y el cierre final del MVP exige que todas lo estén. Si la elección implica adelantar una porción de otra épica por una dependencia, el PM no abre rama: pregunta al humano con opciones numeradas.
 
 ### Feature Branching Transaccional
 El ecosistema aísla por defecto todo el trabajo de Fase de Diseño de nuevas Historias de Usuario (HU).
-- **Creación Transaccional:** El PM inyecta la macro `@WATCHER: GITOPS-BRANCH-CREATE feat/HU_[nombre]` en el tracker, lo que hace que el Watcher síncronamente audite el directorio (`git status --porcelain`), aplique *commits* preventivos y salte a la rama aislada.
-- **Fusión (Auto-Merge) Segura:** Cuando el QT aprueba el diseño técnico y el Ledger, inyecta `@WATCHER: GITOPS-MERGE-CLOSE feat/HU_[nombre]`. El Watcher ejecuta un `git merge --no-ff`.
+- **Creación Transaccional:** El PM inyecta la macro `@WATCHER: GITOPS-BRANCH-CREATE feat/XXX-[nombre]` en el tracker, lo que hace que el Watcher síncronamente audite el directorio (`git status --porcelain`), aplique *commits* preventivos y salte a la rama aislada.
+- **Fusión (Auto-Merge) Segura:** Cuando el QT aprueba el diseño técnico y el Ledger, inyecta `@WATCHER: GITOPS-MERGE-CLOSE feat/XXX-[nombre]`. El Watcher ejecuta un `git merge --no-ff`.
 - **Degradación ante Conflictos:** Si el `git merge` falla por conflictos, el Watcher emite un `git merge --abort`, retorna a la rama *feat* y detiene la máquina enviando un token `@HUMANO:` al tracker con un Procedimiento Operativo Estándar. El sistema asume una "Amnesia Estratégica"; es decir, la resolución es de jurisdicción estrictamente humana, y tras completar el merge manualmente en la terminal, el usuario solo debe reiniciar el Watcher sin manipular el historial del tracker.
 - **State Hydration:** En caso de reinicio de la terminal, el Watcher recorre históricamente el tracker, identifica macros de apertura huérfanas y reanuda el estado de Git en la rama correcta automáticamente.
 
@@ -180,7 +180,7 @@ El ecosistema aísla por defecto todo el trabajo de Fase de Diseño de nuevas Hi
 
 1. **El Tracker como Event Sourcing Inmutable:** La comunicación fluye exclusivamente mediante adición (*Append-Only*) en `tracker_bmad.md`. Se penaliza la sobrescritura.
 2. **Backpressure en Watcher:** El orquestador sondea el estado de cada panel TTY en Herdr. Si el agente está ocupado (`working`), la tarea se retiene en memoria evitando colisiones.
-3. **Recuperación tras Reinicio (Crash Recovery):** Si el servidor se apaga, al reiniciar los agentes reconstruyen su contexto leyendo los entregables previos (ej. el PM lee el `mvp_*.md` para saber qué épica seguía).
+3. **Recuperación tras Reinicio (Crash Recovery):** Si el servidor se apaga, al reiniciar los agentes reconstruyen su contexto leyendo los entregables previos (ej. el PM lee el `mvp-*.md` para saber qué épica seguía).
 4. **Inyección Dinámica de Skills:** Mediante la sintaxis `[IMPORT_SKILL: skills/ruta/SKILL.md]`, el orquestador auto-ensambla los perfiles de los agentes en tiempo de ejecución, permitiendo actualizaciones globales de comportamiento (ej. reglas de Git) sin duplicar prompts.
 
 ---
@@ -212,19 +212,40 @@ El ecosistema BMAD v2.0 opera bajo un modelo de **Vertical Slicing Estricto** pa
 
 El ecosistema BMAD v2.0 impone una trazabilidad matemática exacta (1:1) entre el Product State Ledger, el control de versiones y el sistema de archivos físico mediante el uso de un **Identificador Universal Estricto**.
 
-1. **Formato Inmutable:** Todas las historias de usuario deben adoptar la nomenclatura `XXX-HU_nombre_en_snake_case` (ej. `001-HU_tarjeta_identidad_digital`).
+1. **Formato Inmutable:** Todas las historias de usuario deben adoptar la nomenclatura `XXX-nombre-en-kebab-case` (ej. `001-tarjeta-identidad-digital`, archivo `001-tarjeta-identidad-digital.md`). El nombre del archivo debe cumplir `^\d{3}-[a-z0-9]+(-[a-z0-9]+)*\.md$`: tres dígitos, un guion y palabras en minúsculas ASCII separadas por un único guion; sin prefijo `HU`, sin guiones bajos, sin espacios ni mayúsculas. El Watcher rechaza cualquier otro formato y nunca renombra archivos.
 2. **Columnas del Ledger:** La tabla del Ledger (`specs/README.md`) utiliza oficialmente la estructura: `| N° | Épica Origen | Nombre spec / HU | Qué aporta | Estado | Rama |`.
 3. **Uso Obligatorio Transversal:** Este identificador exacto y sin truncar se utiliza obligatoriamente para:
-   - Registrar la funcionalidad en la columna `Nombre spec / HU` y en la columna `Rama` (`feat/001-HU_...`) del Ledger.
-   - Orquestar la bifurcación GitOps (`@WATCHER: GITOPS-BRANCH-CREATE feat/XXX-HU_...`).
+   - Registrar la funcionalidad en la columna `Nombre spec / HU` y en la columna `Rama` (`feat/001-...`) del Ledger.
+   - Orquestar la bifurcación GitOps (`@WATCHER: GITOPS-BRANCH-CREATE feat/XXX-...`).
    - Nombrar los archivos físicos `.md` generados por los agentes (`@BA`, `@BS`, `@SA`, etc.). Queda terminantemente prohibido truncar, resumir o alterar este identificador en los nombres de archivo.
+4. **Estandarización Global de Artefactos de Agentes (Kebab-Case Estricto):**
+   TODOS los archivos y artefactos generados por agentes en `docs/` deben cumplir la convención kebab-case en minúsculas ASCII (`[a-z0-9]+(-[a-z0-9]+)*`) conservando sus extensiones originales (`.md`, `.json`, `.yaml`, etc.), prefijos funcionales y el identificador de HU cuando aplique. Se prohíbe el uso de snake_case, mayúsculas, espacios, tildes o guiones consecutivos.
+
+| Agente / Rol | Carpeta Destino | Convención de Nombre | Prefijo / Identificador | Ejemplo |
+| :--- | :--- | :--- | :--- | :--- |
+| **Business Storyteller** (`@BS`) | `docs/business-storyteller/` | `idea-[nombre-corto].md` | Prefijo `idea-` | `idea-tech-work-hub.md` |
+| **Product Analyst** (`@PA`) | `docs/product-analyst/` | `pb-[nombre-corto].md` | Prefijo `pb-` (Product Brief) | `pb-tech-work-hub.md` |
+| **Product Manager** (`@PM`) | `docs/product-manager/` | `mvp-[nombre-corto].md` | Prefijo `mvp-` (MVP Specs) | `mvp-tech-work-hub.md` |
+| **Business Analyst** (`@BA`) | `docs/business-analyst/` | `NNN-[nombre-de-la-historia].md` | `^\d{3}-[a-z0-9]+(-[a-z0-9]+)*\.md$` (sin prefijos HU ni BA) | `001-registro-elementos-backlog-multitipo.md` |
+| **Business Analyst (Stakeholders)** | `docs/business-analyst/HUs-stakeholders/` | `NNN-[nombre-de-la-historia].md` | Mismo identificador kebab-case que la HU técnica | `001-registro-elementos-backlog-multitipo.md` |
+| **Solutions Architect** (`@SA`) | `docs/solutions-architect/` | `tech-guidelines.md` (global) o `NNN-[nombre].md` (HU) | Nombre reservado o ID HU kebab-case | `tech-guidelines.md`, `001-registro-elementos-backlog-multitipo.md` |
+| **API Architect** (`@API`) | `docs/api-architect/` | `api-NNN-[nombre-de-la-historia].md` | Prefijo `api-` + ID HU | `api-001-registro-elementos-backlog-multitipo.md` |
+| **Data Architect** (`@DATA`) | `docs/data-architect/` | `db-NNN-[nombre-de-la-historia].md` | Prefijo `db-` + ID HU | `db-001-registro-elementos-backlog-multitipo.md` |
+| **Designer UX** (`@UX`) | `docs/designer-ux/` | `ux-NNN-[nombre-de-la-historia].md` | Prefijo `ux-` + ID HU | `ux-001-registro-elementos-backlog-multitipo.md` |
+| **QA Tech** (`@QT`) — Diseño | `docs/qa-tech/` | `tech-design-NNN-[nombre-de-la-historia].md` | Prefijo `tech-design-` + ID HU | `tech-design-001-registro-elementos-backlog-multitipo.md` |
+| **QA Tech** (`@QT`) — Feedback | `docs/qa-tech/` | `feedback-tech-NNN-[nombre-de-la-historia].md` | Prefijo `feedback-tech-` + ID HU | `feedback-tech-001-registro-elementos-backlog-multitipo.md` |
+| **QA Tech — Diagramas** | `docs/qa-tech/diagrams/` | `hu-NNN-[vista].[ext]` | Prefijo `hu-` + ID HU + sufijo de vista y extensión original (`.component.json`, `.html`, etc.) | `hu-001-arquitectura-componentes.component.json` |
+| **QA Auto** (`@QA-AUTO`) | `docs/qa-auto/` | `qa-report.md` | Reporte de automatización de pruebas | `qa-report.md` |
+| **QA Documental** (`@QA`) | `docs/qa-documental/` | `aprobado-qa-NNN-[nombre].md` o `feedback-qa-NNN-[nombre].md` | Prefijos `aprobado-qa-` / `feedback-qa-` + ID HU | `aprobado-qa-001-registro-elementos-backlog-multitipo.md` |
+| **Code Review** (`@CODE-REVIEW`) | `docs/code-review/` | `impact-analysis-report.md` | Reporte de análisis de impacto | `impact-analysis-report.md` |
+| **Devs** (Backend / Frontend / DevOps) | `docs/dev-*/` | `[capa]-architecture.md` | Arquitectura viva por capa | `backend-architecture.md`, `frontend-architecture.md` |
 
 ---
 
 ## 🚪 El Motor: "Doble Compuerta SDD" (Two-Stage Gatekeeper)
 El orquestador BMAD implementa un "Two-Stage Gatekeeper" para fraccionar la ejecución automática del puente **Spec Kit**. Esto evita la alucinación técnica y asegura que el modelo tecnológico propuesto por el orquestador obedezca a los arquitectos.
 
-*   **Compuerta 1 (Negocio):** Al recibir la aprobación del `@QA` (QA Documental), el Watcher intercepta la ejecución para lanzar de forma independiente `/speckit.specify` y `/speckit.clarify`. El Watcher fija de forma explícita la carpeta de la especificación (`specs/XXX-HU_nombre`, igual al identificador universal) y detiene la fase si Spec Kit no la respeta. Esto detalla funcionalmente el comportamiento sin inferir el stack.
+*   **Compuerta 1 (Negocio):** Al recibir la aprobación del `@QA` (QA Documental), el Watcher intercepta la ejecución para lanzar de forma independiente `/speckit.specify` y `/speckit.clarify`. El Watcher fija de forma explícita la carpeta de la especificación (`specs/XXX-nombre`, igual al identificador universal) y detiene la fase si Spec Kit no la respeta. Esto detalla funcionalmente el comportamiento sin inferir el stack.
 *   **Compuerta 2 (Arquitectura):** Tras el diseño de gobernanza del `@SA` (Solutions Architect), este agente emite la macro `@WATCHER: SDD-FREEZE`. El orquestador pausa el flujo nuevamente y ejecuta `/speckit.plan`, `/speckit.tasks` y `/speckit.analyze`. En esta fase, Spec-Kit asimila las guidelines inyectadas por el Arquitecto para generar un plan técnico realista y congelarlo (`[SPEC-FREEZE]`).
 *   **Compuerta 3 (Implementación):** Tras la compilación del Tech Design maestro por el `@QT` (QA Tech), este emite la señal `@SPEC-KIT:`. El Watcher intercepta esta señal y ejecuta de manera totalmente aislada y secuencial la Fase D. Mediante la inyección de la "Tarea Fantasma", SpecKit programa bajo la identidad del agente y, obligatoriamente, debe generar y actualizar la documentación de **Arquitectura Viva** y el **README del código de cada capa** (`app/backend/README.md`, `app/frontend/README.md`; se crea si falta y se actualiza solo lo alterado; configurable con `code_dirs` en `config_bmad.json`) antes de devolver el control y hacer handoff a `@QA-AUTO` (que, al aprobar, deriva a `@CODE-REVIEW`).
 *   **Compuerta 4 (Retrabajo):** Si `@CODE-REVIEW` o `@QA-AUTO` rechazan la implementación, el Watcher no despacha a un agente: ejecuta el ciclo de convergencia (`/speckit-analyze` → `/speckit-converge` → `/speckit-implement` acotado a las tareas `[fix:*]`) y devuelve el turno a `@QA-AUTO` y luego a `@CODE-REVIEW`, con tope de 2 iteraciones antes de escalar a `@HUMANO:`. Ver *Ciclo de Retrabajo SDD*.

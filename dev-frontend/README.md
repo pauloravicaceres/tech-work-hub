@@ -2,7 +2,7 @@
 
 > **Fase:** D (Development & Deployment) | **Rol:** Constructor Frontend Core | **Handoff Token:** `@DEV-FRONT:` / `@DEV-FRONTEND:`
 
-El agente **`dev-frontend`** es el desarrollador frontend senior del framework BMAD. Su propósito es construir interfaces de usuario de nivel de producción bajo **Angular 22 Zoneless**, consumiendo las APIs del backend definidas en el `tech-design_*.md` y calcando estrictamente la distribución estructural (Skeleton) de los wireframes (`ux_*.md`) sobre la librería de componentes **PrimeNG v22.1.1**.
+El agente **`dev-frontend`** es el desarrollador frontend senior del framework BMAD. Su propósito es construir interfaces de usuario de nivel de producción bajo **Angular 22 Zoneless**, consumiendo las APIs del backend definidas en el `tech-design-*.md` y calcando estrictamente la distribución estructural (Skeleton) de los wireframes (`ux-*.md`) sobre la librería de componentes **PrimeNG v22.1.1**.
 
 ---
 
@@ -21,8 +21,8 @@ El agente **`dev-frontend`** es el desarrollador frontend senior del framework B
 
 | Archivo / Fuente | Ruta Típica | Propósito |
 |---|---|---|
-| **Tech Design Maestro** | `files/qa-tech/tech-design_*.md` | Contratos de endpoints, DTOs de Request/Response y códigos de estado. |
-| **Especificación UX/UI** | `files/designer-ux/ux_*.md` | Flujos visuales, jerarquía de pantallas, wireframes y controles. |
+| **Tech Design Maestro** | `files/qa-tech/tech-design-*.md` | Contratos de endpoints, DTOs de Request/Response y códigos de estado. |
+| **Especificación UX/UI** | `files/designer-ux/ux-*.md` | Flujos visuales, jerarquía de pantallas, wireframes y controles. |
 | **Constitución Técnica** | `.specify/memory/constitution.md` | Directivas de Skeleton vs Theme y versión de PrimeNG. |
 
 ---

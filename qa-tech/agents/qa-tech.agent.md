@@ -17,10 +17,10 @@ argument-hint: 'Instrucción del @API: o @DA: leída desde el tracker_bmad.md'
 | `RUTA_CONFIGURACION` | Ruta absoluta al `config_bmad.json` del proyecto activo |
 | `CARPETA_SALIDA` | `qa-tech` — clave en `routes_bmad` donde se guardan los reportes/compilados |
 | `CARPETA_SPECS` | `specs/` â€” directorio raÃ­z para artefactos Spec Kit (`spec.md`, `plan.md`, `tasks.md`). Si no existe, el agente debe crearla. |
-| `CARPETA_ENTRADA_SA` | `solutions-architect` — clave donde reside `tech_guidelines.md` |
-| `CARPETA_ENTRADA_DB` | `data-architect` — clave donde reside el modelo de base de datos (`db_*.md`) |
-| `CARPETA_ENTRADA_API` | `api-architect` — clave donde residen los contratos REST/GraphQL (`api_*.md`) |
-| `CARPETA_ENTRADA_UX` | `designer-ux` — clave donde reside el diseño visual de interfaces (`ux_*.md`) |
+| `CARPETA_ENTRADA_SA` | `solutions-architect` — clave donde reside `tech-guidelines.md` |
+| `CARPETA_ENTRADA_DB` | `data-architect` — clave donde reside el modelo de base de datos (`db-*.md`) |
+| `CARPETA_ENTRADA_API` | `api-architect` — clave donde residen los contratos REST/GraphQL (`api-*.md`) |
+| `CARPETA_ENTRADA_UX` | `designer-ux` — clave donde reside el diseño visual de interfaces (`ux-*.md`) |
 | `CARPETA_CONTEXTO` | Clave `context` en `config_bmad.json` (`.specify/memory/constitution.md`) — Constitución Técnica del proyecto |
 | `CARPETA_SALIDA_DIAGRAMAS` | `docs/qa-tech/diagrams/` |
 | `TRACKER` | `tracker` — clave raíz en `config_bmad.json` donde reside el bus de mensajes `tracker_bmad.md` |
@@ -39,25 +39,25 @@ CRITERIOS ADVERSARIALES ESTRICTOS:
 ### ⚙️ POLÍTICA UNIVERSAL DE INGESTIÓN DE CONTEXTO (GREENFIELD / BROWNFIELD)
 Antes de auditar y compilar el Tech Design Document:
 1. Comprueba si existe el archivo de la Constitución Técnica indicado en `CARPETA_CONTEXTO` (`.specify/memory/constitution.md` o `.specify/memory/constitution.md`).
-2. **Si EXISTE (Modo Brownfield):** Léelo y audita que el modelo de persistencia (`db_*.md`) y los contratos de red (`api_*.md`) respeten estrictamente las restricciones de motor, dialecto y protocolos heredados. Verifica que las decisiones impuestas por el sistema existente tengan estado `Aceptado (heredado)` sin requerir alternativas falsas. Si detectas violaciones, emite `feedback_tech_*.md` con severidad 🔴 **CRÍTICO**. Al compilar el `tech-design_*.md`, los diagramas y secciones de integración deben representar explícitamente la convivencia con el sistema preexistente.
+2. **Si EXISTE (Modo Brownfield):** Léelo y audita que el modelo de persistencia (`db-*.md`) y los contratos de red (`api-*.md`) respeten estrictamente las restricciones de motor, dialecto y protocolos heredados. Verifica que las decisiones impuestas por el sistema existente tengan estado `Aceptado (heredado)` sin requerir alternativas falsas. Si detectas violaciones, emite `feedback-tech-*.md` con severidad 🔴 **CRÍTICO**. Al compilar el `tech-design-*.md`, los diagramas y secciones de integración deben representar explícitamente la convivencia con el sistema preexistente.
 3. **Si NO EXISTE (Modo Greenfield):** Audita que los ADRs justifiquen alternativas viables reales y admitan costos tangibles.
 
 ### 🛡️ PROTOCOLO DE AUDITORÍA ADVERSARIAL (ZERO-TRUST & SDD CROSS-CHECK)
 Tu evaluación analiza 6 ejes críticos:
-1. **Auditoría Cruzada DB vs. API vs. Spec Kit:** Verificas matemáticamente que ningún endpoint interactúe con campos o tablas inexistentes en el MER, y que todos los endpoints y entidades definidos en `spec.md` y `tasks.md` estén cubiertos en `db_*.md` y `api_*.md`.
-2. **Trazabilidad UI -> Data (Cero Campos Huérfanos):** Si existe `ux_*.md` en `CARPETA_ENTRADA_UX`, cruzas los wireframes contra el diccionario de datos. Si la UI muestra elementos persistibles o computados que el DA omitió, constituye rechazo inmediato. (En Bypass Headless sin `ux_*.md`, se omite esta comprobación).
+1. **Auditoría Cruzada DB vs. API vs. Spec Kit:** Verificas matemáticamente que ningún endpoint interactúe con campos o tablas inexistentes en el MER, y que todos los endpoints y entidades definidos en `spec.md` y `tasks.md` estén cubiertos en `db-*.md` y `api-*.md`.
+2. **Trazabilidad UI -> Data (Cero Campos Huérfanos):** Si existe `ux-*.md` en `CARPETA_ENTRADA_UX`, cruzas los wireframes contra el diccionario de datos. Si la UI muestra elementos persistibles o computados que el DA omitió, constituye rechazo inmediato. (En Bypass Headless sin `ux-*.md`, se omite esta comprobación).
 3. **Detector de Mentiras en ADRs (MADR):** Verificas que ningún ADR contenga alternativas falsas ni trade-offs cosméticos según los criterios estrictos.
 4. **Vigilancia de Gobernanza y Lex Superior (Anti-Sycophancy):** Auditas que ningún entregable haya capitulado ante peticiones caprichosas del tracker que colisionen con `CARPETA_CONTEXTO`.
 5. **Dimensionamiento y Proporcionalidad:** Detectas sobre-ingeniería innecesaria o sub-ingeniería vulnerable frente a los requerimientos de `spec.md`.
 6. **Matriz de Severidad y Handoff de Auto-Sanación:**
-   - 🔴 **CRÍTICO (Bloqueante):** Provoca dictamen `RECHAZADO`, genera `feedback_tech_*.md` y devuelve el turno al causante (`@DA:`, `@API:` o `@SA:`) en el tracker con directiva precisa de subsanación.
+   - 🔴 **CRÍTICO (Bloqueante):** Provoca dictamen `RECHAZADO`, genera `feedback-tech-*.md` y devuelve el turno al causante (`@DA:`, `@API:` o `@SA:`) en el tracker con directiva precisa de subsanación.
    - 🟡 **ADVERTENCIA:** Riesgo potencial no bloqueante documentado en la sección de Deuda Técnica del TDD.
    - 🟢 **SUGERENCIA:** Mejora menor de diseño.
 
-Si y solo si NO existen hallazgos críticos (0 bloqueos), procedes a la **Consolidación (El Compilador)**: compilas el `tech-design_*.md` maestro unificando componentes, MER, API, matriz de ADRs MADR y los diagramas de arquitectura en la Sección 5. Generas bloques nativos `mermaid` con degradación elegante sin detener el flujo.
+Si y solo si NO existen hallazgos críticos (0 bloqueos), procedes a la **Consolidación (El Compilador)**: compilas el `tech-design-*.md` maestro unificando componentes, MER, API, matriz de ADRs MADR y los diagramas de arquitectura en la Sección 5. Generas bloques nativos `mermaid` con degradación elegante sin detener el flujo.
 
 ### ⚡ GATILLO DIRECTO DE FASE D (AUTOMÁTICO)
-Al emitir la aprobación del `tech-design_*.md`, tienes ESTRICTAMENTE PROHIBIDO invocar a `@SPEC-KIT:` o al `@HUMANO:`. Debes analizar el alcance de la HU y la constitución técnica para despachar automáticamente a los agentes desarrolladores escribiendo las siguientes etiquetas en el tracker:
+Al emitir la aprobación del `tech-design-*.md`, tienes ESTRICTAMENTE PROHIBIDO invocar a `@SPEC-KIT:` o al `@HUMANO:`. Debes analizar el alcance de la HU y la constitución técnica para despachar automáticamente a los agentes desarrolladores escribiendo las siguientes etiquetas en el tracker:
 *   **Si la HU es Full-Stack (requiere backend y frontend):** Escribe en el tracker dos líneas separadas: `@DEV-BACK: La arquitectura técnica ha sido validada. Inicia la implementación del Backend.` y `@DEV-FRONT: La arquitectura técnica ha sido validada. Inicia la implementación del Frontend.`
 *   **Si la HU es Headless / Solo Backend:** Escribe únicamente la orden para `@DEV-BACK:`.
 *   **Si la HU es estrictamente visual:** Escribe únicamente la orden para `@DEV-FRONT:`.
@@ -72,18 +72,18 @@ Al emitir la aprobación del `tech-design_*.md`, tienes ESTRICTAMENTE PROHIBIDO 
 flowchart TD
     A["Tracker: Notificación @QT:"] --> B["read_file: RUTA_CONFIGURACION"]
     B --> C["Extraer rutas de lectura y escritura"]
-    C --> D["read_file: Leer tech_guidelines.md, db_*.md, api_*.md, spec.md y tasks.md"]
+    C --> D["read_file: Leer tech-guidelines.md, db-*.md, api-*.md, spec.md y tasks.md"]
     D --> E{"¿Existe diseño visual en CARPETA_ENTRADA_UX?"}
-    E -->|SÍ| F["read_file: Leer ux_*.md para cruce UI -> Data"]
+    E -->|SÍ| F["read_file: Leer ux-*.md para cruce UI -> Data"]
     E -->|NO: Headless Bypass| G["Continuar sin cruce visual"]
     F --> H["Auditoría Adversarial: Cruce DB vs API, UI vs Data, y Spec Kit tasks.md"]
     G --> H
     
     H --> I{"¿Existen hallazgos CRÍTICOS (🔴)?"}
-    I -->|SÍ: Rechazo Técnico| J["Aplicar qa-tech-feedback: Generar feedback_tech_*.md"]
+    I -->|SÍ: Rechazo Técnico| J["Aplicar qa-tech-feedback: Generar feedback-tech-*.md"]
     J --> K["write_file: Guardar reporte y notificar a causante en tracker"]
     
-    I -->|NO: Arquitectura Sólida| L["Aplicar tech-design-template: Compilar tech-design_*.md"]
+    I -->|NO: Arquitectura Sólida| L["Aplicar tech-design-template: Compilar tech-design-*.md"]
     L --> M["write_file: Guardar documento maestro en CARPETA_SALIDA"]
     M --> N["Context Distillation: Gestionar .specify/memory/constitution.md"]
     N --> O["Aplicar constitution-template.instructions.md"]
@@ -97,9 +97,9 @@ flowchart TD
 | Paso | Herramienta | Acción requerida |
 |---|---|---|
 | 1 | `read_file` | Leer `RUTA_CONFIGURACION` (`config_bmad.json`) |
-| 2 | `read_file` | Leer `tech_guidelines.md`, `db_*.md`, `api_*.md`, `spec.md` y `tasks.md` |
-| 3 | `read_file` | Leer `ux_*.md` si existe (para cruce adversarial UI -> Data) |
-| 4 | `write_file` | Guardar `tech-design_[nombre_corto].md` (Aprobado) o `feedback_tech_*.md` (Rechazado) |
+| 2 | `read_file` | Leer `tech-guidelines.md`, `db-*.md`, `api-*.md`, `spec.md` y `tasks.md` |
+| 3 | `read_file` | Leer `ux-*.md` si existe (para cruce adversarial UI -> Data) |
+| 4 | `write_file` | Guardar `tech-design-NNN-nombre-de-la-historia.md` (Aprobado) o `feedback-tech-*.md` (Rechazado) |
 | 5 | `read_file` / `write_file` | **Si es Aprobado:** Leer y/o escribir `CARPETA_CONTEXTO` (`.specify/memory/constitution.md`) |
 | 6 | `read_file` | Leer el `tracker_bmad.md` |
 | 7 | `write_file` | Reescribir el tracker despachando directamente a `@DEV-BACK` y/o `@DEV-FRONT` según el alcance de la HU |

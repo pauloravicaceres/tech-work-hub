@@ -1,5 +1,5 @@
 ---
-description: 'Usar para estructurar el reporte de salida del QA Documental. Define las dos únicas plantillas permitidas: Certificado de Aprobación (aprobado_qa_*.md) y Reporte de Observaciones (feedback_qa_*.md).'
+description: 'Usar para estructurar el reporte de salida del QA Documental. Define las dos únicas plantillas permitidas: Certificado de Aprobación (aprobado-qa-*.md) y Reporte de Observaciones (feedback-qa-*.md).'
 applyTo: '**'
 ---
 
@@ -16,8 +16,10 @@ El nombre del archivo de salida se construye tomando como base el nombre exacto 
 
 | Dictamen | Patrón de Nombre | Ejemplo de Entrada | Nombre del Archivo QA |
 |---|---|---|---|
-| **Aprobado** | `aprobado_qa_[ID]_[nombre_corto].md` | `hu_01_motor_reservas.md` | `aprobado_qa_01_motor_reservas.md` |
-| **Rechazado** | `feedback_qa_[ID]_[nombre_corto].md` | `hu_01_motor_reservas.md` | `feedback_qa_01_motor_reservas.md` |
+| **Aprobado** | `aprobado-qa-NNN-nombre-de-la-historia.md` | `001-motor-reservas.md` | `aprobado-qa-001-motor-reservas.md` |
+| **Rechazado** | `feedback-qa-NNN-nombre-de-la-historia.md` | `001-motor-reservas.md` | `feedback-qa-001-motor-reservas.md` |
+
+Todo el nombre va en kebab-case (minúsculas ASCII sin tildes, palabras separadas por un único guion medio (`-`); prohibidos guiones bajos, espacios, mayúsculas, guiones consecutivos y guiones al inicio o al final) y debe cumplir `^(aprobado|feedback)-qa-\d{3}-[a-z0-9]+(-[a-z0-9]+)*\.md$`.
 
 ---
 
@@ -96,7 +98,7 @@ La especificación de requerimientos contenida en el archivo `{{NOMBRE_ARCHIVO_H
 *(Analiza la naturaleza del proyecto leyendo el Product Brief y elige ÚNICAMENTE la instrucción que corresponda anexar al tracker_bmad.md)*
 
 > ⚠️ **REGLA ESTRICTA DE GITOPS Y SDD AUTO-RUNNER:**
-> Es OBLIGATORIO utilizar la variable `{{NOMBRE_ARCHIVO_HU}}` asegurando que incluya la extensión `.md` (ej. `hu_01_login.md`). ESTÁ ESTRICTAMENTE PROHIBIDO usar nombres naturales como "Login" u omitir la extensión. El motor orquestador (Watcher) utiliza una expresión regular sobre esta línea para desencadenar el SDD Auto-Runner; si fallas en el formato, romperás la autonomía del ecosistema.
+> Es OBLIGATORIO utilizar la variable `{{NOMBRE_ARCHIVO_HU}}` asegurando que incluya la extensión `.md` (ej. `001-login.md`, formato `NNN-nombre-en-kebab-case.md`). ESTÁ ESTRICTAMENTE PROHIBIDO usar nombres naturales como "Login" u omitir la extensión. El motor orquestador (Watcher) utiliza una expresión regular sobre esta línea para desencadenar el SDD Auto-Runner; si fallas en el formato, romperás la autonomía del ecosistema.
 
 > **La ruta real la decide el Watcher** (interruptor `ux_phase` de `config_bmad.json` y campo `Requiere interfaz` de la HU), por lo que el token que escribas aquí es informativo. Verifica que la HU declare `Requiere interfaz: Sí|No` y que sea coherente con su contenido; si falta o la contradice, regístralo como hallazgo.
 

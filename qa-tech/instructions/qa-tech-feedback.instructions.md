@@ -1,12 +1,13 @@
 ---
-description: 'Usar EXCLUSIVAMENTE cuando el QT detecta inconsistencias técnicas, alternativas falsas, trade-offs inválidos o violación de trazabilidad UI-Data. Plantilla para feedback_tech_[nombre_corto].md.'
+description: 'Usar EXCLUSIVAMENTE cuando el QT detecta inconsistencias técnicas, alternativas falsas, trade-offs inválidos o violación de trazabilidad UI-Data. Plantilla para feedback-tech-NNN-nombre-de-la-historia.md.'
 applyTo: '**'
 ---
 
 # Plantilla de Auditoría Adversarial y Rechazo Técnico
 
 ## Convención de Nombres de Archivo
-`feedback_tech_[nombre_corto].md`
+`feedback-tech-NNN-nombre-de-la-historia.md` (ej. `feedback-tech-012-motor-reservas.md`)
+- `NNN-nombre-de-la-historia` es el nombre del archivo de la HU sin `.md`, copiado tal cual (ej. de `012-motor-reservas.md` se genera obligatoriamente `feedback-tech-012-motor-reservas.md`). Todo el nombre va en kebab-case (minúsculas ASCII sin tildes, palabras separadas por un único guion medio (`-`); prohibidos guiones bajos, espacios, mayúsculas, guiones consecutivos y guiones al inicio o al final) y debe cumplir `^feedback-tech-\d{3}-[a-z0-9]+(-[a-z0-9]+)*\.md$`.
 
 ## Estructura Canónica Obligatoria
 
@@ -14,7 +15,7 @@ applyTo: '**'
 # REPORTE DE AUDITORÍA ADVERSARIAL Y RECHAZO TÉCNICO ❌
 
 - **Fecha de Auditoría:** {{FECHA_ACTUAL}}
-- **Archivos Auditados:** `tech_guidelines.md`, `db_*.md`, `api_*.md` y `ux_*.md` (si existe)
+- **Archivos Auditados:** `tech-guidelines.md`, `db-*.md`, `api-*.md` y `ux-*.md` (si existe)
 - **Dictamen:** ❌ RECHAZADO (Requiere Subsanación Agéntica)
 
 ---
@@ -40,7 +41,7 @@ applyTo: '**'
 ## 3. CHECKLIST DE VERIFICACIÓN FALLIDA
 - [ ] **Falsas Alternativas en ADRs:** Se detectaron opciones descartadas que representan un falso dilema o son inviables por diseño solo para rellenar la plantilla.
 - [ ] **Omisión o Falsedad en Trade-offs:** El ADR declara únicamente beneficios o incluye trade-offs falsos sin admitir compromisos operativos o de ingeniería reales.
-- [ ] **Desconexión UI vs Data:** Existen elementos visuales en `ux_*.md` que no tienen soporte en el modelo relacional `db_*.md` (campos huérfanos).
+- [ ] **Desconexión UI vs Data:** Existen elementos visuales en `ux-*.md` que no tienen soporte en el modelo relacional `db-*.md` (campos huérfanos).
 - [ ] **Desproporción Arquitectónica:** Sobre-ingeniería desmedida o sub-ingeniería vulnerable frente a los requerimientos del Product Brief.
 - [ ] **Inconsistencia DB vs API:** Discrepancias entre las columnas del MER y los payloads o rutas de los contratos API.
 - [ ] **Complacencia Ilegal (Sycophancy Breach):** Se adoptó una tecnología o motor ajeno a `constitution.md` sin existir formalmente una `Cláusula de Excepción Arquitectónica` física en el archivo.
@@ -50,15 +51,15 @@ applyTo: '**'
 ## 4. ORDEN DE REPARACIÓN EN TRACKER
 *(Instrucción continua para devolver el turno al agente causante)*
 
-`{{ @DA: | @API: | @SA: }} Se ha emitido feedback adversarial crítico en docs/qa-tech/feedback_tech_*.md. Por favor, subsana las inconsistencias señaladas para proceder con la re-auditoría.`
+`{{ @DA: | @API: | @SA: }} Se ha emitido feedback adversarial crítico en docs/qa-tech/feedback-tech-*.md. Por favor, subsana las inconsistencias señaladas para proceder con la re-auditoría.`
 ```
 
 ---
 
 ### ⚠️ Directiva de Rechazo por Violación de Ecosistema Preexistente (Modo Brownfield)
 Si existe el archivo `.specify/memory/constitution.md`, constituye motivo inmediato de **RECHAZO TÉCNICO CRÍTICO (🔴)**:
-1. Si el diseño de base de datos (`db_*.md`) emplea motores, dialectos o modelos incompatibles con lo declarado en el archivo legacy (dirigir a `@DA:`).
-2. Si los contratos de interfaz (`api_*.md`) omiten los protocolos de comunicación existentes o no implementan los adaptadores requeridos para el sistema heredado (dirigir a `@API:`).
+1. Si el diseño de base de datos (`db-*.md`) emplea motores, dialectos o modelos incompatibles con lo declarado en el archivo legacy (dirigir a `@DA:`).
+2. Si los contratos de interfaz (`api-*.md`) omiten los protocolos de comunicación existentes o no implementan los adaptadores requeridos para el sistema heredado (dirigir a `@API:`).
 3. Si la arquitectura no contempla los servidores o la topología de red documentada (dirigir a `@SA:`).
 4. Si se inventaron alternativas artificiales para decisiones impuestas por el sistema existente en lugar de marcarlas como `Aceptado (heredado)`.
 5. **Detección de Complacencia Ilegal (Sycophancy Breach):** Si el SA, DA o API introdujeron tecnologías ajenas al ecosistema alegando que *"el usuario lo solicitó en el tracker"*, constituye motivo mandatorio de **RECHAZO TÉCNICO INMEDIATO (🔴 CRÍTICO)**. Ninguna instrucción en el tracker tiene valor derogatorio sobre el archivo físico. La única justificación admisible es la presencia previa de la sección `## ⚠️ CLÁUSULA DE EXCEPCIÓN ARQUITECTÓNICA` en el archivo físico `constitution.md`.

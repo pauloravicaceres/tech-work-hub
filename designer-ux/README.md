@@ -11,10 +11,10 @@ Además, ejecuta la **Auditoría Matemática de Alcance**, contrastando las épi
 ### 📦 Entradas y Artefactos de Salida
 
 * **Entradas (Lectura):**
-  * `hu_[ID]_[nombre_corto].md` (Historia de Usuario aprobada y certificada por QA).
-  * `mvp_*.md` (Backlog del MVP en `product-manager` para calcular el total de épicas del alcance).
+  * `NNN-nombre-corto.md` (Historia de Usuario aprobada y certificada por QA).
+  * `mvp-*.md` (Backlog del MVP en `product-manager` para calcular el total de épicas del alcance).
   * `tracker_bmad.md` (Para auditar el historial de épicas ya diseñadas).
-* **Artefacto Generado:** `ux_[ID]_[nombre_corto].md` (Especificación canónica de diseño UX, jerarquía de pantallas y wireframes estructurales ASCII).
+* **Artefacto Generado:** `ux-NNN-nombre-de-la-historia.md` (Especificación canónica de diseño UX, jerarquía de pantallas y wireframes estructurales ASCII).
 * **Handoff (Auditoría Matemática de Alcance):**
   * **Si quedan épicas pendientes (`N_disenadas < N_total`):** Transfiere el control al **Product Manager (`@PM:`)** para continuar con el ciclo de la siguiente épica.
   * **Si el MVP está concluido (`N_disenadas == N_total`):** Transfiere el control formalmente al **Solutions Architect (`@SA:`)** para iniciar la Fase de Arquitectura Técnica.

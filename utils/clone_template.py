@@ -33,7 +33,8 @@ def copy_template(target_dir):
     archivos_permitidos = [
         "watcher_bmad.py", "init_bmad.py", "config_bmad.json", 
         "README.md", "SETUP.md", "framework_bmad.md",
-        "GUIDE.md", "PLUGGABLE_PHASE_D.md", "ARCHITECTURE.md"
+        "GUIDE.md", "PLUGGABLE_PHASE_D.md", "ARCHITECTURE.md",
+        "hu_naming.py", "ux_routing.py"
     ]
 
     print(f"\n🚀 Clonando Motor BMAD v2.0 hacia: {target_path}")

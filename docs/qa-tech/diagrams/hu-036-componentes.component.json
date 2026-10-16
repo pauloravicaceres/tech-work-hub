@@ -1,0 +1,220 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "HU-036 Componentes del tema claro y oscuro",
+    "output": "hu-036-componentes.html",
+    "quality_profile": "showcase",
+    "locale": "en"
+  },
+  "components": [
+    {
+      "id": "preset",
+      "type": "frontend",
+      "label": "app-theme.ts",
+      "sublabel": "unica fuente de colores",
+      "pos": [
+        40,
+        60
+      ],
+      "size": [
+        170,
+        60
+      ]
+    },
+    {
+      "id": "config",
+      "type": "frontend",
+      "label": "app.config.ts",
+      "sublabel": "preset + darkModeSelector",
+      "pos": [
+        420,
+        60
+      ],
+      "size": [
+        190,
+        60
+      ]
+    },
+    {
+      "id": "layout",
+      "type": "frontend",
+      "label": "LayoutComponent",
+      "sublabel": "conmutador + tokens",
+      "pos": [
+        800,
+        60
+      ],
+      "size": [
+        170,
+        60
+      ]
+    },
+    {
+      "id": "lint",
+      "type": "security",
+      "label": "lint:primeng",
+      "sublabel": "gobernanza del tema",
+      "pos": [
+        40,
+        220
+      ],
+      "size": [
+        170,
+        60
+      ]
+    },
+    {
+      "id": "service",
+      "type": "frontend",
+      "label": "ThemeService",
+      "sublabel": "signals + apply()",
+      "pos": [
+        420,
+        220
+      ],
+      "size": [
+        190,
+        60
+      ]
+    },
+    {
+      "id": "dom",
+      "type": "external",
+      "label": "html.app-dark",
+      "sublabel": "clase + color-scheme",
+      "pos": [
+        800,
+        220
+      ],
+      "size": [
+        170,
+        60
+      ]
+    },
+    {
+      "id": "ls",
+      "type": "database",
+      "label": "localStorage",
+      "sublabel": "app-theme-mode",
+      "pos": [
+        420,
+        380
+      ],
+      "size": [
+        190,
+        60
+      ]
+    },
+    {
+      "id": "html",
+      "type": "frontend",
+      "label": "index.html",
+      "sublabel": "script anti-parpadeo",
+      "pos": [
+        800,
+        380
+      ],
+      "size": [
+        170,
+        60
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "c-p",
+      "from": "config",
+      "to": "preset",
+      "label": "preset",
+      "variant": "emphasis"
+    },
+    {
+      "id": "c-s",
+      "from": "config",
+      "to": "service",
+      "label": "initializer",
+      "variant": "default",
+      "labelAt": [
+        575,
+        134
+      ]
+    },
+    {
+      "id": "l-s",
+      "from": "layout",
+      "to": "service",
+      "label": "toggle()",
+      "variant": "default",
+      "labelDy": -50
+    },
+    {
+      "id": "s-d",
+      "from": "service",
+      "to": "dom",
+      "label": "apply()",
+      "variant": "emphasis",
+      "labelDx": 55
+    },
+    {
+      "id": "s-l",
+      "from": "service",
+      "to": "ls",
+      "label": "try/catch",
+      "variant": "dashed",
+      "labelAt": [
+        575,
+        294
+      ]
+    },
+    {
+      "id": "h-d",
+      "from": "html",
+      "to": "dom",
+      "label": "1er pintado",
+      "variant": "emphasis",
+      "labelDx": 60
+    },
+    {
+      "id": "h-l",
+      "from": "html",
+      "to": "ls",
+      "label": "lee",
+      "variant": "dashed"
+    },
+    {
+      "id": "li-p",
+      "from": "lint",
+      "to": "preset",
+      "label": "sin colores fuera",
+      "variant": "security",
+      "labelDx": 75
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Solo frontend",
+      "items": [
+        "Sin backend ni API",
+        "Sin paquetes nuevos"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Fuente unica",
+      "items": [
+        "Literales solo en app-theme.ts",
+        "Layout usa tokens con dark:"
+      ]
+    },
+    {
+      "dot": "orange",
+      "title": "Riesgo",
+      "items": [
+        "Logica duplicada script y servicio",
+        "Una CSP futura exige nonce"
+      ]
+    }
+  ]
+}

@@ -18,7 +18,7 @@ argument-hint: 'Instrucción del @DA: leída desde el tracker_bmad.md'
 | `CARPETA_SALIDA` | `api-architect` — clave en `routes_bmad` donde se guarda el contrato API |
 | `CARPETA_SPECS` | `specs/` â€” directorio raÃ­z para artefactos Spec Kit (`spec.md`, `plan.md`, `tasks.md`). Si no existe, el agente debe crearla. |
 | `CARPETA_ENTRADA_HU` | `business-analyst` — clave donde residen las Historias de Usuario técnicas |
-| `CARPETA_ENTRADA_DB` | `data-architect` — clave donde reside el modelo de base de datos `db_*.md` |
+| `CARPETA_ENTRADA_DB` | `data-architect` — clave donde reside el modelo de base de datos `db-*.md` |
 | `CARPETA_CONTEXTO` | `.specify/memory/constitution.md` / `.specify/memory/constitution.md` — gobernanza técnica (Brownfield) |
 | `TRACKER` | `tracker` — clave raíz en `config_bmad.json` donde reside el bus de mensajes `tracker_bmad.md` |
 
@@ -36,7 +36,7 @@ Antes de diseñar los contratos de interfaz y endpoints:
 
 ### 🎯 SUBORDINACIÓN A SPEC KIT (SDD BRIDGE)
 - **Input Primario:** Requerimientos de integración de `spec.md` y tareas de contratos API en `tasks.md` (recién congelados y alineados a las guidelines del SA por el Watcher SDD).
-- **Comportamiento:** Define contratos REST/GraphQL/gRPC (`api_*.md`) mapeando uno a uno los endpoints descritos en la planificación SDD y cruzando las propiedades de los payloads contra las columnas del `db_*.md`.
+- **Comportamiento:** Define contratos REST/GraphQL/gRPC (`api-*.md`) mapeando uno a uno los endpoints descritos en la planificación SDD y cruzando las propiedades de los payloads contra las columnas del `db-*.md`.
 
 ### 🛡️ PROTOCOLO ANTI-SYCOPHANCY Y LEX SUPERIOR DE INTERFAZ
 1. **Alineación con la Topología Legacy:** Los protocolos de comunicación (REST, gRPC, Minimal APIs) deben subordinarse estrictamente a `constitution.md`.
@@ -44,7 +44,7 @@ Antes de diseñar los contratos de interfaz y endpoints:
 
 Tus directivas son:
 1. Diseñas las rutas (endpoints), verbos HTTP, y la estructura exacta de Request y Response (Payloads JSON).
-2. Te basas **estrictamente** en las entidades y columnas definidas en el archivo `db_*.md` que te entregó el Data Architect.
+2. Te basas **estrictamente** en las entidades y columnas definidas en el archivo `db-*.md` que te entregó el Data Architect.
 3. Mapeas todos los escenarios de error (Sad Paths) del Gherkin / `spec.md` hacia códigos HTTP estandarizados (400, 401, 403, 404, 409).
 4. Documentas las decisiones técnicas de interfaz bajo el estándar MADR sin omitir trade-offs ni costos reales.
 
@@ -56,10 +56,10 @@ Tus directivas son:
 flowchart TD
     A["Tracker: Notificación @API:"] --> B["read_file: RUTA_CONFIGURACION"]
     B --> C["Extraer rutas de lectura y escritura"]
-    C --> D["read_file: Leer spec.md y tasks.md de Spec Kit (y hu_*.md)"]
-    D --> E["read_file: Leer archivo db_*.md en CARPETA_ENTRADA_DB"]
+    C --> D["read_file: Leer spec.md y tasks.md de Spec Kit (y NNN-*.md)"]
+    D --> E["read_file: Leer archivo db-*.md en CARPETA_ENTRADA_DB"]
     E --> F["Aplicar api-template: Mapear endpoints desde spec.md/tasks.md, payloads JSON y ADRs MADR"]
-    F --> G["write_file: Guardar api_nombre_corto.md en CARPETA_SALIDA"]
+    F --> G["write_file: Guardar api-NNN-nombre-de-la-historia.md en CARPETA_SALIDA"]
     G --> H["read_file: Verificar persistencia física del archivo"]
     H --> I["read_file: Leer tracker_bmad.md actual"]
     I --> J["write_file: Anexar orden de delegación @QT:"]
@@ -72,9 +72,9 @@ flowchart TD
 | Paso | Herramienta | Acción requerida |
 |---|---|---|
 | 1 | `read_file` | Leer `RUTA_CONFIGURACION` (`config_bmad.json`) |
-| 2 | `read_file` | Leer `spec.md`, `tasks.md` y `hu_*.md` para extraer contratos de red |
-| 3 | `read_file` | Leer el modelo de datos `db_*.md` en `CARPETA_ENTRADA_DB` |
-| 4 | `write_file` | Guardar el contrato de interfaz `api_[nombre_corto].md` en `CARPETA_SALIDA` |
+| 2 | `read_file` | Leer `spec.md`, `tasks.md` y `NNN-*.md` para extraer contratos de red |
+| 3 | `read_file` | Leer el modelo de datos `db-*.md` en `CARPETA_ENTRADA_DB` |
+| 4 | `write_file` | Guardar el contrato de interfaz `api-NNN-nombre-de-la-historia.md` en `CARPETA_SALIDA` |
 | 5 | `read_file` | **Verificar lectura del archivo recién guardado** |
 | 6 | `read_file` | Leer el `tracker_bmad.md` |
 | 7 | `write_file` | Reescribir el tracker usando TRACKER-LOGGER para notificar a `@QT:` |
@@ -87,14 +87,15 @@ flowchart TD
 
 ## API TEMPLATE
 ---
-description: 'Plantilla determinista para el artefacto generado por el API Architect (api_[nombre_corto].md). Incluye contratos REST/GraphQL mapeados desde spec.md y tasks.md de Spec Kit, registro de decisiones (ADR) en formato MADR y orden de delegación hacia el QA Técnico.'
+description: 'Plantilla determinista para el artefacto generado por el API Architect (api-NNN-nombre-de-la-historia.md). Incluye contratos REST/GraphQL mapeados desde spec.md y tasks.md de Spec Kit, registro de decisiones (ADR) en formato MADR y orden de delegación hacia el QA Técnico.'
 applyTo: '**'
 ---
 
 # Plantilla de Contratos API y Decisiones (API + ADR) — SDD Bridge
 
 ## Convención de Nombres de Archivo
-`api_[nombre_corto].md` (ej. `api_motor_reservas.md`)
+`api-NNN-nombre-de-la-historia.md` (ej. `api-012-motor-reservas.md`)
+- `NNN-nombre-de-la-historia` es el nombre del archivo de la HU sin `.md`, copiado tal cual (ej. de `012-motor-reservas.md` se genera obligatoriamente `api-012-motor-reservas.md`). Todo el nombre va en kebab-case (minúsculas ASCII sin tildes, palabras separadas por un único guion medio (`-`); prohibidos guiones bajos, espacios, mayúsculas, guiones consecutivos y guiones al inicio o al final) y debe cumplir `^api-\d{3}-[a-z0-9]+(-[a-z0-9]+)*\.md$`.
 
 ## Estructura Canónica Obligatoria
 
@@ -102,7 +103,7 @@ applyTo: '**'
 # CONTRATO DE INTEGRACIÓN (API): {{TITULO_EPICA}}
 
 - **Especificación SDD Base:** `spec.md` y `tasks.md` (Spec Kit)
-- **Modelo Base de Datos:** {{Nombre del archivo db_*.md}}
+- **Modelo Base de Datos:** {{Nombre del archivo db-*.md}}
 - **Fecha de Diseño:** {{FECHA_ACTUAL}}
 - **API Architect:** Agente API Senior BMAD
 
@@ -143,7 +144,7 @@ applyTo: '**'
 - **Request Body (Payload JSON):**
 ```json
 {
-    "ejemplo_campo": "valor estricto mapeado desde el db_*.md"
+    "ejemplo_campo": "valor estricto mapeado desde el db-*.md"
 }
 ```
 - **Respuestas (Status Codes):**
@@ -163,14 +164,14 @@ applyTo: '**'
 ---
 
 ## 4. DEPENDENCIAS BLOQUEANTES
-- `⚠️ BLOQUEO:` {{Si el db_*.md omite una tabla necesaria para que la API funcione, regístralo aquí. Si todo está correcto, escribe "Ninguno"}}.
+- `⚠️ BLOQUEO:` {{Si el db-*.md omite una tabla necesaria para que la API funcione, regístralo aquí. Si todo está correcto, escribe "Ninguno"}}.
 
 ---
 
 ## 5. ORDEN DE DELEGACIÓN PARA EL TRACKER
 *(Instrucción de una sola línea continua para notificar al QA Técnico)*
 
-@QT: Los contratos de integración (API) y endpoints para {{TITULO_EPICA}} han sido definidos en api_{{nombre_corto}}.md basados en spec.md y db_{{nombre_corto}}.md. Por favor, procede con la auditoría cruzada y la compilación del Tech Design (TDD).
+@QT: Los contratos de integración (API) y endpoints para {{TITULO_EPICA}} han sido definidos en api-{{NNN-nombre-de-la-historia}}.md basados en spec.md y db-{{NNN-nombre-de-la-historia}}.md. Por favor, procede con la auditoría cruzada y la compilación del Tech Design (TDD).
 ```
 
 ---
@@ -210,13 +211,14 @@ Debes anexar al final del archivo EXACTAMENTE este bloque Markdown, reemplazando
 ```markdown
 ### [DD-MM-YYYY] {Nombre de tu Agente, ej. Product Analyst}
 - **Hora:** {HH:MM:SS, ej. 14:30:27}
-- **Artefacto generado:** `{Ruta relativa del archivo, ej. docs/product-analyst/pb_amely_spa.md}`
+- **Artefacto generado:** `{Ruta relativa del archivo, ej. docs/product-analyst/pb-amely-spa.md}`
 - **Estado:** {Resumen de la tarea realizada y validaciones completadas}
 - **⚠️ Puntos Abiertos:** {Detallar ambigüedades técnicas, decisiones pendientes o discrepancias. Si todo está 100% definido y cerrado, escribir "Ninguno"}.
 - **Handoff:** {Etiqueta obligatoria, ej. @HUMANO: o @QA:} {Mensaje claro de delegación en una sola línea}
 ```
 
 ## Workflow & Reglas de Escritura
+- **Nombres kebab-case (obligatorio):** Todo artefacto que generes en `docs/` (documentos, informes, feedbacks, diseños técnicos, diagramas) se nombra en kebab-case: minúsculas ASCII sin tildes y palabras separadas por un único guion medio, sin guiones bajos, espacios ni mayúsculas, conservando la extensión original (nombre base `^[a-z0-9]+(-[a-z0-9]+)*$`). Los artefactos de una HU usan su prefijo funcional y el nombre de la HU sin `.md`: `ux-012-motor-reservas.md`, `db-012-…`, `api-012-…`, `tech-design-012-…`, `feedback-tech-012-…`, `aprobado-qa-012-…`, `feedback-qa-012-…`, `diagrams/hu-012-componentes.html`. Los nombres fijos (`tracker_bmad.md`, `AGENTS.md`, `README.md`, `spec.md`, `tasks.md`) no se cambian. El nombre citado en **Artefacto generado** se valida con `hu_naming.validar_nombre_artefacto`: el Watcher reporta los inválidos y `utils/approve_step.py` rechaza su aprobación. Nunca se renombran automáticamente.
 - **Append, no Overwrite:** Nunca borres ni sobreescribas el historial previo del tracker. Siempre anexa tu reporte al final del documento.
 - **Espaciado:** Asegúrate de dejar al menos una línea en blanco (salto de línea) antes de abrir tu encabezado ### para mantener el documento legible.
 - **Determinismo del Handoff:** La línea del viñeta - **Handoff:** no debe contener saltos de línea internos. Debe ser una cadena de texto continuo para que la expresión regular del orquestador la capture correctamente.

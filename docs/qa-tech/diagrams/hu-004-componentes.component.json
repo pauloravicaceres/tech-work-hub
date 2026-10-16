@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": { "title": "HU-004 Componentes Sprints y Backlog", "output": "hu-004-componentes.html", "quality_profile": "showcase", "locale": "en" },
+  "components": [
+    { "id": "spa", "type": "frontend", "label": "SPA Angular 22", "sublabel": "sprint-assigned-items", "pos": [40, 220], "size": [160, 60] },
+    { "id": "keycloak", "type": "security", "label": "Keycloak 24", "sublabel": "JWT Bearer", "pos": [300, 60], "size": [150, 60] },
+    { "id": "host", "type": "backend", "label": "Bootstrapper Api", "sublabel": "Program.cs + Carter", "pos": [300, 220], "size": [160, 60] },
+    { "id": "sprints", "type": "backend", "label": "Módulo Sprints", "sublabel": "AssignItem | ListItems", "pos": [600, 220], "size": [170, 60] },
+    { "id": "shared", "type": "backend", "label": "BuildingBlocks Shared", "sublabel": "ConflictException 409", "pos": [600, 60], "size": [180, 60] },
+    { "id": "backlog", "type": "backend", "label": "Módulo Backlog", "sublabel": "BacklogModuleApi", "pos": [600, 380], "size": [170, 60] },
+    { "id": "postgres", "type": "database", "label": "PostgreSQL", "sublabel": "sprints.SprintItems", "pos": [920, 220], "size": [160, 60] }
+  ],
+  "connections": [
+    { "id": "spa-host", "from": "spa", "to": "host", "label": "HTTP + Bearer", "variant": "emphasis" },
+    { "id": "host-kc", "from": "host", "to": "keycloak", "label": "valida JWT", "variant": "security", "fromSide": "top", "toSide": "bottom" },
+    { "id": "host-sprints", "from": "host", "to": "sprints", "label": "/sprints/{id}/items" },
+    { "id": "sprints-shared", "from": "sprints", "to": "shared", "label": "reutiliza", "variant": "dashed", "fromSide": "top", "toSide": "bottom" },
+    { "id": "sprints-pg", "from": "sprints", "to": "postgres", "label": "EF Core" },
+    { "id": "sprints-backlog", "from": "sprints", "to": "backlog", "label": "IBacklogModuleApi", "variant": "dashed", "fromSide": "bottom", "toSide": "top", "labelAt": [685, 330] }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "Sin módulo nuevo", "items": ["SprintItems en schema sprints", "Backlog solo lectura por contrato"] },
+    { "dot": "emerald", "title": "Un elemento, un Sprint", "items": ["UX_SprintItems_ItemId único", "Carrera resuelta en el motor"] },
+    { "dot": "rose", "title": "Acoplamiento", "items": ["Backlog referencia Sprints", "Sin FK ni JOIN cross-schema"] }
+  ]
+}

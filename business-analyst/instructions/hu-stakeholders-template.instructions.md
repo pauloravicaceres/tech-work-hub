@@ -25,10 +25,10 @@ Toda HU de Stakeholders generada por el agente BA usa esta estructura. Enfatiza 
 
 ## Convención de Nombres de Archivo y Ruta
 ```
-docs/business-analyst/HUs-stakeholders/XXX-HU_[nombre_corto].md
+docs/business-analyst/HUs-stakeholders/XXX-[nombre-corto].md
 ```
-- `XXX`: Identificador secuencial de 3 dígitos provisto exactamente por el `@PM` en el Handoff. El nombre debe ser EXACTAMENTE el mismo que el archivo técnico para asegurar simetría, preservando el prefijo numérico ordenado (ej. `002-HU_login.md`).
-- `nombre_corto`: snake_case, máximo 4 palabras, agnóstico al dominio.
+- `XXX`: Identificador secuencial de 3 dígitos provisto exactamente por el `@PM` en el Handoff. El nombre debe ser EXACTAMENTE el mismo que el archivo técnico para asegurar simetría, preservando el prefijo numérico ordenado (ej. `002-login.md`).
+- `nombre-corto`: kebab-case (minúsculas ASCII sin tildes, palabras separadas por un único guion medio; sin guiones bajos, espacios ni prefijo `HU`), máximo 4 palabras, agnóstico al dominio. El nombre completo del archivo debe cumplir `^\d{3}-[a-z0-9]+(-[a-z0-9]+)*\.md$` (ej. `001-registro-de-clientes.md`); el Watcher rechaza cualquier otro formato.
 
 ## Esqueleto Completo (rellenar desde el Product Brief; nunca inventar)
 

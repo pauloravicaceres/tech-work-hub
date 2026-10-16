@@ -1,12 +1,12 @@
 ---
-description: 'Plantilla determinista para el artefacto generado por el Solutions Architect (tech_guidelines.md). Estructura corporativa de 12 puntos con MADR, enriquecida desde plan.md de Spec Kit, manejo de estado y resiliencia para guiar a la Fase A y D.'
+description: 'Plantilla determinista para el artefacto generado por el Solutions Architect (tech-guidelines.md). Estructura corporativa de 12 puntos con MADR, enriquecida desde plan.md de Spec Kit, manejo de estado y resiliencia para guiar a la Fase A y D.'
 applyTo: '**'
 ---
 
 # Plantilla de Tech Guidelines (Gobernanza y Puente SDD)
 
 ## Convención de Nombres de Archivo
-`tech_guidelines.md` (Este archivo es único y global por proyecto).
+`tech-guidelines.md` (Este archivo es único y global por proyecto).
 
 ## Estructura Canónica Obligatoria
 

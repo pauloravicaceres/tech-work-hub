@@ -1,5 +1,5 @@
 ---
-description: 'Usar EXCLUSIVAMENTE cuando el QT aprueba la arquitectura. Plantilla determinista para consolidar db_*.md, api_*.md y artefactos Spec Kit en el documento maestro tech-design_[nombre_corto].md con diagramación híbrida, matriz consolidada MADR y orden hacia /speckit.implement.'
+description: 'Usar EXCLUSIVAMENTE cuando el QT aprueba la arquitectura. Plantilla determinista para consolidar db-*.md, api-*.md y artefactos Spec Kit en el documento maestro tech-design-NNN-nombre-de-la-historia.md con diagramación híbrida, matriz consolidada MADR y orden hacia /speckit.implement.'
 applyTo: '**'
 ---
 
@@ -8,7 +8,9 @@ applyTo: '**'
 > Este documento unifica la visión de componentes, el MER, la API, los diagramas de arquitectura, valida la correspondencia con `spec.md` y `tasks.md`, y centraliza todos los ADRs generados bajo el formato MADR.
 
 ## Convención de Nombres de Archivo
-`tech-design_[nombre_corto].md` (ej. `tech-design_motor_reservas.md`)
+`tech-design-NNN-nombre-de-la-historia.md` (ej. `tech-design-012-motor-reservas.md`)
+- `NNN-nombre-de-la-historia` es el nombre del archivo de la HU sin `.md`, copiado tal cual (ej. de `012-motor-reservas.md` se genera obligatoriamente `tech-design-012-motor-reservas.md`). Todo el nombre va en kebab-case (minúsculas ASCII sin tildes, palabras separadas por un único guion medio (`-`); prohibidos guiones bajos, espacios, mayúsculas, guiones consecutivos y guiones al inicio o al final) y debe cumplir `^tech-design-\d{3}-[a-z0-9]+(-[a-z0-9]+)*\.md$`.
+- Diagramas en `{{CARPETA_SALIDA_DIAGRAMAS}}`: `hu-NNN-[vista].html` y `hu-NNN-[vista].[tipo].json` (ej. `hu-012-componentes.html`, `hu-012-componentes.component.json`, `hu-012-secuencia-reserva.sequence.json`). `NNN` es el correlativo de la HU y `[vista]` describe el diagrama en kebab-case (minúsculas ASCII sin tildes, palabras separadas por un único guion medio (`-`); prohibidos guiones bajos, espacios, mayúsculas, guiones consecutivos y guiones al inicio o al final); el sufijo `.[tipo].json` se conserva tal cual. El nombre base debe cumplir `^hu-\d{3}-[a-z0-9]+(-[a-z0-9]+)*$`.
 
 ## Estructura Canónica Obligatoria
 
@@ -33,12 +35,12 @@ applyTo: '**'
 ---
 
 ## 3. Data Model
-*(Integrar aquí el contenido completo y exacto de la sección Modelo Entidad-Relación y Diccionario de Datos extraído del archivo `db_*.md`, incluyendo la validación de no-orfandad frente al diseño UX y contratos de spec.md).*
+*(Integrar aquí el contenido completo y exacto de la sección Modelo Entidad-Relación y Diccionario de Datos extraído del archivo `db-*.md`, incluyendo la validación de no-orfandad frente al diseño UX y contratos de spec.md).*
 
 ---
 
 ## 4. Integrations
-*(Integrar aquí el contenido completo y exacto de los Contratos REST/GraphQL y endpoints extraídos del archivo `api_*.md`).*
+*(Integrar aquí el contenido completo y exacto de los Contratos REST/GraphQL y endpoints extraídos del archivo `api-*.md`).*
 
 ---
 
@@ -52,8 +54,8 @@ applyTo: '**'
     2. Incrusta obligatoriamente debajo de las referencias a los artefactos el bloque nativo en sintaxis `mermaid` correspondiente, garantizando visualización inmediata tanto en visores Markdown estándar como en navegadores web interactivos.
   - **Formato canónico obligatorio por diagrama en Escenario A:**
     ### 5.X. [Título del Diagrama] (`[tipo: sequence | workflow | component]`)
-    - 🌐 **Visor Interactivo HTML:** [`diagrams/[nombre].html`]({{CARPETA_SALIDA_DIAGRAMAS}}/[nombre].html)
-    - 📄 **Especificación Fuente JSON:** [`diagrams/[nombre].[tipo].json`]({{CARPETA_SALIDA_DIAGRAMAS}}/[nombre].[tipo].json)
+    - 🌐 **Visor Interactivo HTML:** [`diagrams/hu-NNN-[vista].html`]({{CARPETA_SALIDA_DIAGRAMAS}}/hu-NNN-[vista].html)
+    - 📄 **Especificación Fuente JSON:** [`diagrams/hu-NNN-[vista].[tipo].json`]({{CARPETA_SALIDA_DIAGRAMAS}}/hu-NNN-[vista].[tipo].json)
     - **Estado de Validación:** ✅ *Showcase Pass (N/N checks)*
 
     ```mermaid
@@ -112,15 +114,15 @@ applyTo: '**'
 
 Obligatorio inyectar la macro de cierre de rama antes de gatillar Spec Kit, en líneas separadas:
 ```markdown
-@WATCHER: GITOPS-MERGE-CLOSE feat/HU_{{nombre_corto}}
-@SPEC-KIT: La arquitectura técnica consolidada ha sido verificada y aprobada en tech-design_{{nombre_corto}}.md. Gatillar /speckit.implement para despacho de tareas a la Fase D (@DEV-BACK, @DEV-FRONT, @DEVOPS).
+@WATCHER: GITOPS-MERGE-CLOSE feat/{{NNN-nombre-de-la-hu}}
+@SPEC-KIT: La arquitectura técnica consolidada ha sido verificada y aprobada en tech-design-{{NNN-nombre-de-la-historia}}.md. Gatillar /speckit.implement para despacho de tareas a la Fase D (@DEV-BACK, @DEV-FRONT, @DEVOPS).
 ```
 
 ---
 
 ### ⚠️ Directiva de Compilación para Ecosistemas Preexistentes (Modo Brownfield)
 Si existe el archivo `.specify/memory/constitution.md` o `.specify/memory/constitution.md`:
-1. **Auditoría Cruzada de Restricciones Legacy:** Verificar que el modelo de persistencia (`db_*.md`) y los contratos de red (`api_*.md`) respeten estrictamente las tecnologías, protocolos y motores especificados en la constitución.
+1. **Auditoría Cruzada de Restricciones Legacy:** Verificar que el modelo de persistencia (`db-*.md`) y los contratos de red (`api-*.md`) respeten estrictamente las tecnologías, protocolos y motores especificados en la constitución.
 2. **Registro MADR Heredado:** Asegurar que las decisiones técnicas provenientes del sistema existente estén registradas con estado `Aceptado (heredado)`.
 3. **Diagramas de Arquitectura (Sección 5):** Los diagramas de componentes y despliegue deben representar explícitamente la convivencia entre la nueva solución y la infraestructura heredada.
 4. **Sección de Integraciones (Sección 4):** Consignar formalmente los mecanismos de adaptación y protocolos de interoperabilidad con el sistema preexistente.

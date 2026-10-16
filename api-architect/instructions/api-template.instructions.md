@@ -1,12 +1,13 @@
 ---
-description: 'Plantilla determinista para el artefacto generado por el API Architect (api_[nombre_corto].md). Incluye contratos REST/GraphQL mapeados desde spec.md y tasks.md de Spec Kit, registro de decisiones (ADR) en formato MADR y orden de delegación hacia el QA Técnico.'
+description: 'Plantilla determinista para el artefacto generado por el API Architect (api-NNN-nombre-de-la-historia.md). Incluye contratos REST/GraphQL mapeados desde spec.md y tasks.md de Spec Kit, registro de decisiones (ADR) en formato MADR y orden de delegación hacia el QA Técnico.'
 applyTo: '**'
 ---
 
 # Plantilla de Contratos API y Decisiones (API + ADR) — SDD Bridge
 
 ## Convención de Nombres de Archivo
-`api_[nombre_corto].md` (ej. `api_motor_reservas.md`)
+`api-NNN-nombre-de-la-historia.md` (ej. `api-012-motor-reservas.md`)
+- `NNN-nombre-de-la-historia` es el nombre del archivo de la HU sin `.md`, copiado tal cual (ej. de `012-motor-reservas.md` se genera obligatoriamente `api-012-motor-reservas.md`). Todo el nombre va en kebab-case (minúsculas ASCII sin tildes, palabras separadas por un único guion medio (`-`); prohibidos guiones bajos, espacios, mayúsculas, guiones consecutivos y guiones al inicio o al final) y debe cumplir `^api-\d{3}-[a-z0-9]+(-[a-z0-9]+)*\.md$`.
 
 ## Estructura Canónica Obligatoria
 
@@ -14,7 +15,7 @@ applyTo: '**'
 # CONTRATO DE INTEGRACIÓN (API): {{TITULO_EPICA}}
 
 - **Especificación SDD Base:** `spec.md` y `tasks.md` (Spec Kit)
-- **Modelo Base de Datos:** {{Nombre del archivo db_*.md}}
+- **Modelo Base de Datos:** {{Nombre del archivo db-*.md}}
 - **Fecha de Diseño:** {{FECHA_ACTUAL}}
 - **API Architect:** Agente API Senior BMAD
 
@@ -55,7 +56,7 @@ applyTo: '**'
 - **Request Body (Payload JSON):**
 ```json
 {
-    "ejemplo_campo": "valor estricto mapeado desde el db_*.md"
+    "ejemplo_campo": "valor estricto mapeado desde el db-*.md"
 }
 ```
 - **Respuestas (Status Codes):**
@@ -75,14 +76,14 @@ applyTo: '**'
 ---
 
 ## 4. DEPENDENCIAS BLOQUEANTES
-- `⚠️ BLOQUEO:` {{Si el db_*.md omite una tabla necesaria para que la API funcione, regístralo aquí. Si todo está correcto, escribe "Ninguno"}}.
+- `⚠️ BLOQUEO:` {{Si el db-*.md omite una tabla necesaria para que la API funcione, regístralo aquí. Si todo está correcto, escribe "Ninguno"}}.
 
 ---
 
 ## 5. ORDEN DE DELEGACIÓN PARA EL TRACKER
 *(Instrucción de una sola línea continua para notificar al QA Técnico)*
 
-@QT: Los contratos de integración (API) y endpoints para {{TITULO_EPICA}} han sido definidos en api_{{nombre_corto}}.md basados en spec.md y db_{{nombre_corto}}.md. Por favor, procede con la auditoría cruzada y la compilación del Tech Design (TDD).
+@QT: Los contratos de integración (API) y endpoints para {{TITULO_EPICA}} han sido definidos en api-{{NNN-nombre-de-la-historia}}.md basados en spec.md y db-{{NNN-nombre-de-la-historia}}.md. Por favor, procede con la auditoría cruzada y la compilación del Tech Design (TDD).
 ```
 
 ---

@@ -47,12 +47,12 @@ Determinas con criterio quirúrgico e imparcial si la especificación es matemá
 flowchart TD
     A["Tracker: Instrucción QA"] --> B["read_file: RUTA_CONFIGURACION"]
     B --> C["Extraer rutas: CARPETA_ENTRADA_PB y CARPETA_ENTRADA_HU"]
-    C --> D["read_file: Product Brief pb_*.md"]
-    C --> E["read_file: Historia de Usuario hu_*.md"]
+    C --> D["read_file: Product Brief pb-*.md"]
+    C --> E["read_file: Historia de Usuario NNN-*.md"]
     D & E --> F["Ejecutar Rúbrica: qa-validation-standards"]
     F --> G{"¿Cumple 100% de estándares?"}
-    G -->|NO: Brechas o Alucinación| H["Generar Reporte RECHAZADO: feedback_qa_*.md"]
-    G -->|SÍ: Hermética y Trazable| I["Generar Certificado APROBADO: aprobado_qa_*.md"]
+    G -->|NO: Brechas o Alucinación| H["Generar Reporte RECHAZADO: feedback-qa-*.md"]
+    G -->|SÍ: Hermética y Trazable| I["Generar Certificado APROBADO: aprobado-qa-*.md"]
     H --> J["write_file: Guardar en qa-documental/"]
     I --> J
     J --> K["read_file: Verificar persistencia física del reporte"]
@@ -72,9 +72,9 @@ flowchart TD
 | Paso | Herramienta | Acción requerida |
 |---|---|---|
 | 1 | `read_file` | Leer `RUTA_CONFIGURACION` (`config_bmad.json`) |
-| 2 | `read_file` | Leer el archivo Product Brief (`pb_*.md`) en `CARPETA_ENTRADA_PB` |
-| 3 | `read_file` | Leer la Historia de Usuario (`hu_*.md`) en `CARPETA_ENTRADA_HU` |
-| 4 | `write_file` | Guardar el reporte (`aprobado_qa_*.md` o `feedback_qa_*.md`) en `CARPETA_SALIDA` |
+| 2 | `read_file` | Leer el archivo Product Brief (`pb-*.md`) en `CARPETA_ENTRADA_PB` |
+| 3 | `read_file` | Leer la Historia de Usuario (`NNN-*.md`) en `CARPETA_ENTRADA_HU` |
+| 4 | `write_file` | Guardar el reporte (`aprobado-qa-*.md` o `feedback-qa-*.md`) en `CARPETA_SALIDA` |
 | 5 | `read_file` | **Verificar lectura del reporte recién escrito** (comprobación post-escritura obligatoria) |
 | 6 | `read_file` | Leer el contenido completo actual de `tracker_bmad.md` |
 | 7 | `write_file` | Reescribir el tracker anexando la orden `@BA:` , `@UX:` o `@SA:` al final |

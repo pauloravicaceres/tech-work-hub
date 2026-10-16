@@ -2,7 +2,7 @@
 
 > **Fase:** D (Development & Deployment) | **Rol:** Auditor de Calidad y Destructor de Código | **Handoff Token:** `@QA-AUTO:`
 
-El agente **`qa-auto`** es el ingeniero de automatización de pruebas de élite del framework BMAD. Actúa como un destructor de código riguroso y adversarial: su objetivo no es "confirmar que compila", sino encontrar fallos lógicos, condiciones límite no contempladas y verificar el cumplimiento exacto de los Criterios de Aceptación (CA) de las Historias de Usuario (`hu_*.md`).
+El agente **`qa-auto`** es el ingeniero de automatización de pruebas de élite del framework BMAD. Actúa como un destructor de código riguroso y adversarial: su objetivo no es "confirmar que compila", sino encontrar fallos lógicos, condiciones límite no contempladas y verificar el cumplimiento exacto de los Criterios de Aceptación (CA) de las Historias de Usuario (`NNN-*.md`).
 
 ---
 
@@ -21,10 +21,10 @@ El agente **`qa-auto`** es el ingeniero de automatización de pruebas de élite 
 
 | Archivo / Fuente | Ruta Típica | Propósito |
 |---|---|---|
-| **Historia de Usuario** | `docs/business-analyst/hu_*.md` | Criterios de Aceptación (Gherkin/BDD) que deben automatizarse. |
+| **Historia de Usuario** | `docs/business-analyst/NNN-*.md` | Criterios de Aceptación (Gherkin/BDD) que deben automatizarse. |
 | **Código Fuente Backend** | `src/backend-modulith-template/` | Features, Handlers, Validadores y Endpoints recién programados. |
 | **Código Fuente Frontend** | `src/template-base/` | Componentes, Signals y servicios HTTP implementados. |
-| **Tech Design Maestro** | `docs/qa-tech/tech-design_*.md` | Contratos esperados y reglas de negocio. |
+| **Tech Design Maestro** | `docs/qa-tech/tech-design-*.md` | Contratos esperados y reglas de negocio. |
 
 ---
 

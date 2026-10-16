@@ -8,6 +8,7 @@ import re
 import shutil
 from pathlib import Path
 
+import hu_naming
 import ux_routing
 
 # Configuración de codificación UTF-8 para stdout/stderr en Windows
@@ -162,6 +163,28 @@ def actualizar_contexto_bloque(linea):
     h = re.search(r"\*\*Hora:\*\*\s+([\d:]+)", linea)
     if h:
         contexto_bloque["hora"] = h.group(1)
+
+def vigilar_nombre_artefacto(linea):
+    """
+    Detecta los artefactos en docs/ citados en '**Artefacto generado:**' cuyo nombre no cumple kebab-case
+    (hu_naming.validar_nombre_artefacto). Solo avisa por consola: no renombra ni escribe en el tracker, para no
+    alterar el último bloque del que dependen las pausas HITL. approve_step.py rechaza el nombre en la aprobación.
+    """
+    m = re.search(r"\*\*Artefacto generado:\*\*\s*(.+)", linea)
+    if not m:
+        return []
+    invalidos = []
+    for ruta in re.findall(r"`([^`]+)`", m.group(1)) or [m.group(1)]:
+        ruta = ruta.strip().replace("\\", "/")
+        inicio = ruta.find("docs/")
+        if inicio == -1 or ruta.endswith("/"):
+            continue
+        try:
+            hu_naming.validar_nombre_artefacto(ruta[inicio:])
+        except hu_naming.NombreArtefactoInvalido as e:
+            invalidos.append(ruta[inicio:])
+            print(f"🚨 [Nombres] {contexto_bloque.get('autor') or 'Agente'}: {e}")
+    return invalidos
 
 def buscar_bloque_tracker(autor=None, hora=None):
     """Devuelve (autor, hora, texto) del bloque indicado, o del último bloque si autor es None."""
@@ -636,12 +659,11 @@ def registrar_traspaso_fase_a(ruta_hu=None, resuelta_por_humano=False):
 def carpeta_spec_para_hu(ruta_hu):
     """
     Carpeta de Spec Kit para una HU: specs/<identificador universal>, derivada del nombre del archivo del BA
-    (docs/business-analyst/012-HU_nombre.md -> specs/012-HU_nombre). Así la carpeta lleva el mismo número y
-    nombre que el ledger y la rama, en lugar del "NNN-nombre-corto" que Spec Kit inventaría por su cuenta.
-    Devuelve None si el nombre no lleva el correlativo (formato heredado sin número).
+    (docs/business-analyst/012-nombre-de-la-hu.md -> specs/012-nombre-de-la-hu). Así la carpeta lleva el mismo
+    número y nombre que el ledger y la rama, en lugar del nombre que Spec Kit inventaría por su cuenta.
+    Lanza hu_naming.NombreHUInvalido si el archivo no cumple NNN-nombre-en-kebab-case.md.
     """
-    stem = Path(str(ruta_hu).replace("\\", "/")).stem
-    return f"specs/{stem}" if re.match(r"^\d{3}-HU_[\w-]+$", stem, re.IGNORECASE) else None
+    return hu_naming.carpeta_spec_hu(ruta_hu)
 
 def verificar_carpeta_spec(carpeta_esperada):
     """Comprueba que Spec Kit usó la carpeta fijada: .specify/feature.json la apunta y contiene spec.md."""
@@ -669,24 +691,24 @@ def ejecutar_sdd_fase_negocio(ruta_hu: str):
     try:
         # 1. Specify
         write_watcher_log("⚙️ [SDD Auto-Runner] Ejecutando análisis funcional (/speckit.specify)...")
-        carpeta = carpeta_spec_para_hu(ruta_hu)
-        if carpeta:
-            argumentos = (f"{ruta_hu} SPECIFY_FEATURE_DIRECTORY={carpeta} (usa EXACTAMENTE esa carpeta: no generes otro "
-                          "nombre ni otro número; esta indicación no forma parte de la descripción de la funcionalidad)")
-            entorno = {"SPECIFY_FEATURE_DIRECTORY": carpeta}
-        else:
-            print(f"⚠️ [SDD Negocio] '{ruta_hu}' no lleva el correlativo NNN-HU_: Spec Kit elegirá la carpeta por su cuenta.")
-            argumentos, entorno = ruta_hu, None
-        if ejecutar_speckit("specify", argumentos, entorno=entorno).returncode != 0:
+        try:
+            carpeta = carpeta_spec_para_hu(ruta_hu)
+        except hu_naming.NombreHUInvalido as e:
+            msg = f"🚨 ERROR [SDD Negocio]: {e} Se detiene la fase: la HU no se renombra automáticamente."
+            print(f"❌ {msg}")
+            write_watcher_log(msg)
             return False
-        if carpeta:
-            ok, detalle = verificar_carpeta_spec(carpeta)
-            if not ok:
-                msg = (f"🚨 ERROR [SDD Negocio]: Spec Kit no respetó la carpeta fijada '{carpeta}' ({detalle}). "
-                       "Se detiene la fase: revisa specs/ y .specify/feature.json y reintenta.")
-                print(f"❌ {msg}")
-                write_watcher_log(msg)
-                return False
+        argumentos = (f"{ruta_hu} SPECIFY_FEATURE_DIRECTORY={carpeta} (usa EXACTAMENTE esa carpeta: no generes otro "
+                      "nombre ni otro número; esta indicación no forma parte de la descripción de la funcionalidad)")
+        if ejecutar_speckit("specify", argumentos, entorno={"SPECIFY_FEATURE_DIRECTORY": carpeta}).returncode != 0:
+            return False
+        ok, detalle = verificar_carpeta_spec(carpeta)
+        if not ok:
+            msg = (f"🚨 ERROR [SDD Negocio]: Spec Kit no respetó la carpeta fijada '{carpeta}' ({detalle}). "
+                   "Se detiene la fase: revisa specs/ y .specify/feature.json y reintenta.")
+            print(f"❌ {msg}")
+            write_watcher_log(msg)
+            return False
 
         # 2. Clarify (HITL por Excepción)
         write_watcher_log("⚙️ [SDD Auto-Runner] Verificando ambigüedades (/speckit.clarify)...")
@@ -1090,7 +1112,9 @@ def extraer_instrucciones(linea):
     # ==========================================
     es_transicion_a_arquitectura = "@UX:" in linea or "@SA:" in linea
     es_aprobacion_qa = (
-        "aprobado_qa_" in linea_lower
+        # aprobado-qa- es el nombre vigente; aprobado_qa_ se sigue reconociendo como intención de aprobación para
+        # no saltarse la fase SDD si un agente usa el nombre antiguo (vigilar_nombre_artefacto lo reporta aparte).
+        re.search(r"aprobado[-_]qa[-_]", linea_lower)
         or "aprobada por qa" in linea_lower
         or "aprobado por qa" in linea_lower
         or ("@qa:" in linea_lower and "aprobad" in linea_lower)
@@ -1103,9 +1127,14 @@ def extraer_instrucciones(linea):
         print("=" * 80)
         
         # Buscar la ruta de la HU en el mensaje
-        match_hu = re.search(r'(?:docs[/\\]business-analyst[/\\])?((?:[0-9]{3}-HU_|hu_)[a-zA-Z0-9_-]+\.md)', linea, re.IGNORECASE)
-        if match_hu:
-            nombre_hu = match_hu.group(1)
+        try:
+            nombre_hu = hu_naming.extraer_nombre_hu(linea)
+        except hu_naming.NombreHUInvalido as e:
+            nombre_hu = None
+            msg = f"🚨 ERROR [SDD Negocio]: {e} La HU no se renombra automáticamente."
+            print(f"❌ {msg}")
+            write_watcher_log(msg)
+        if nombre_hu:
             ruta_hu = f"docs/business-analyst/{nombre_hu}"
             print(f"Iniciando SDD Fase de Negocio para: {ruta_hu}\n")
             
@@ -1128,8 +1157,11 @@ def extraer_instrucciones(linea):
         print("🛑 [PAUSA SDD INTERCEPTADA - ARQUITECTURA] GUIDELINES SA REGISTRADOS")
         print("=" * 80)
         
-        match_hu = re.search(r'((?:[0-9]{3}-HU_|hu_)[a-zA-Z0-9_-]+\.md)', linea, re.IGNORECASE)
-        ruta_hu = match_hu.group(1) if match_hu else ""
+        try:
+            ruta_hu = hu_naming.extraer_nombre_hu(linea) or ""
+        except hu_naming.NombreHUInvalido as e:
+            print(f"⚠️ [SDD Arquitectura] {e}")
+            ruta_hu = ""
         
         print(f"Iniciando SDD Fase de Arquitectura...\n")
         exito = ejecutar_sdd_fase_arquitectura(ruta_hu)
@@ -1395,6 +1427,7 @@ def iniciar_watcher():
                                 gitops_merge_close(rama_cerrar)
 
                             actualizar_contexto_bloque(linea)
+                            vigilar_nombre_artefacto(linea)
                             nuevas_tareas = extraer_instrucciones(linea)
                             numero_linea_absoluta = num_lineas_leidas + idx
                             

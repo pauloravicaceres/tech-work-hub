@@ -1,26 +1,26 @@
 ---
-description: 'Usar para estructurar el contenido que se guarda físicamente en el archivo idea_[Nombre_Corto].md en la carpeta business-storyteller. Establece el formato de texto plano puro sin XML ni bloques de código.'
+description: 'Usar para estructurar el contenido que se guarda físicamente en el archivo idea-[nombre-corto].md en la carpeta business-storyteller. Establece el formato de texto plano puro sin XML ni bloques de código.'
 applyTo: '**'
 ---
 
 # Plantilla y Reglas del Entregable Físico (Archivo de Idea)
 
-> Contrato determinista para la persistencia física del archivo `idea_[Nombre_Corto].md`.
+> Contrato determinista para la persistencia física del archivo `idea-[nombre-corto].md`.
 
 ---
 
 ## Convención de Nombres de Archivo
 ```
-idea_[Nombre_Corto].md
+idea-[nombre-corto].md
 ```
-- `Nombre_Corto`: snake_case, máximo 4 palabras, representativo del producto o iniciativa (ej. `idea_reserva_citas.md`, `idea_gestion_pedidos.md`).
+- `nombre-corto`: kebab-case (minúsculas ASCII sin tildes, palabras separadas por un único guion medio (`-`); prohibidos guiones bajos, espacios, mayúsculas, guiones consecutivos y guiones al inicio o al final), máximo 4 palabras, representativo del producto o iniciativa (ej. `idea-reserva-citas.md`, `idea-gestion-pedidos.md`). El nombre completo debe cumplir `^idea-[a-z0-9]+(-[a-z0-9]+)*\.md$`.
 
 ---
 
 ## Regla Crítica del Formato Físico en Disco
 
 > [!CRITICAL]
-> El archivo `idea_[Nombre_Corto].md` guardado físicamente en disco debe contener **ÚNICA Y EXCLUSIVAMENTE EL TEXTO NARRATIVO PURO**.
+> El archivo `idea-[nombre-corto].md` guardado físicamente en disco debe contener **ÚNICA Y EXCLUSIVAMENTE EL TEXTO NARRATIVO PURO**.
 
 ### Restricciones Absolutas del Archivo `.md` en Disco:
 - ❌ **NO incluir etiquetas XML:** Tienes estrictamente prohibido incluir `<idea_usuario>` o `</idea_usuario>` dentro del archivo guardado en disco (esas etiquetas son exclusivas de la salida visual en pantalla).

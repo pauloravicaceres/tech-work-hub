@@ -11,19 +11,19 @@ Este Theme gobernará de forma obligatoria a todas las HUs futuras. La regla ya 
 ### 🛠️ TAREAS A EJECUTAR (MODO MÁQUINA)
 
 **1. Rama GitOps (NO la emites tú):**
-   - Los agentes no escriben en `tracker_bmad.md` ni ejecutan Git. El humano emite `@WATCHER: GITOPS-BRANCH-CREATE feat/036-HU_theming_claro_oscuro_ui` antes de despacharte. No escribas esa macro.
+   - Los agentes no escriben en `tracker_bmad.md` ni ejecutan Git. El humano emite `@WATCHER: GITOPS-BRANCH-CREATE feat/036-theming-claro-oscuro-ui` antes de despacharte. No escribas esa macro.
 
 **2. Actualización del Product Ledger (`specs/README.md`):**
    - N°: `036`
    - Épica Origen: `Deuda Técnica / UI Core`
-   - Nombre spec / HU: `036-HU_theming_claro_oscuro_ui`
+   - Nombre spec / HU: `036-theming-claro-oscuro-ui`
    - Qué aporta: `Theme visual de la aplicación (paleta, radios y modo claro/oscuro con conmutador) calcado de las evidencias; estándar visual inmutable para las HUs futuras`
    - Estado: `BACKLOG`
-   - Rama: `feat/036-HU_theming_claro_oscuro_ui`
+   - Rama: `feat/036-theming-claro-oscuro-ui`
    - No registres otras filas. Las HUs derivadas de la 035 las registra el product-manager.
 
 **3. Creación del FSaaDB (Documento en `documents/business-analyst/`):**
-   - Crea físicamente `documents/business-analyst/036-HU_theming_claro_oscuro_ui.md`.
+   - Crea físicamente `documents/business-analyst/036-theming-claro-oscuro-ui.md`.
    - Dentro del archivo, inyecta EXACTAMENTE el siguiente contenido (ya cumple la rúbrica de QA Documental: Gherkin, Sad Paths, DoD, narrativa, atomicidad y valores medibles). No lo reformules; no añadas alcance:
 
 ```markdown
@@ -34,7 +34,7 @@ Este Theme gobernará de forma obligatoria a todas las HUs futuras. La regla ya 
 - **Épica:** Deuda Técnica / UI Core
 - **Tipo:** Enhancement (deuda técnica)
 - **Requiere interfaz:** Sí
-- **Consumo SDD:** `/speckit.specify documents/business-analyst/036-HU_theming_claro_oscuro_ui.md`
+- **Consumo SDD:** `/speckit.specify documents/business-analyst/036-theming-claro-oscuro-ui.md`
 - **Dependencia:** HU-035 (layout de aplicación) fusionada en la rama base. Enmienda "🎨 Theme Visual (HU-036)" vigente en `.specify/memory/constitution.md`.
 - **Decisión de atomicidad:** una sola HU porque la paleta de ambos modos y el conmutador son inseparables: sin conmutador el modo oscuro no se puede ver ni verificar, y sin los tokens de ambos modos el conmutador no tiene efecto. El entregable único y verificable es "la aplicación se ve con la identidad de las maquetas en claro y en oscuro".
 
@@ -192,7 +192,7 @@ Los valores son los de la Constitución; si difieren, prevalece la Constitución
 | RT-07 | `scripts/lint-primeng.mjs` incorpora reglas que fallan ante: literales `#hex`, `rgb()`, `hsl()`, `oklch()` fuera de `app-theme.ts`; clases de paleta de Tailwind (`bg-cyan-600`, `text-gray-500`, etc.); estilos de color en línea; `.scss` de componente con color, borde o sombra. Se mantienen `::ng-deep`, `!important` y la declaración tipográfica única. | Constitución, Theme Visual | `npm run lint:primeng` sin violaciones; caso de prueba con una violación inyectada falla (CA-04.1) |
 | RT-08 | Contraste: texto normal ≥ 4.5:1, componentes ≥ 3:1 (WCAG 2.1 AA) en ambos modos, salvo las dos excepciones de CA-03. | Constitución, Theme Visual | Prueba que calcula el contraste de los pares de la tabla de tokens |
 | RT-09 | Sin fuentes externas, logotipos ni nombres de marca de la maqueta; sin copiar de `./app/template-primeng/`. | Constitución, Theme Visual | Búsqueda sin coincidencias de `preline` y de importaciones de fuentes externas en `app/frontend/src` |
-| RT-10 | Verificación de cierre: `npm run lint:primeng`, `npm run build` y `npm test` en `app/frontend`; 6 capturas en `specs/036-HU_theming_claro_oscuro_ui/evidence/` con nombre `{modulo}-{modo}.png` (`backlog`, `sprints`, `equipo` × `claro`, `oscuro`) a 1920 px. | CA-06 | Salida de los tres comandos sin errores; existencia de las 6 capturas |
+| RT-10 | Verificación de cierre: `npm run lint:primeng`, `npm run build` y `npm test` en `app/frontend`; 6 capturas en `specs/036-theming-claro-oscuro-ui/evidence/` con nombre `{modulo}-{modo}.png` (`backlog`, `sprints`, `equipo` × `claro`, `oscuro`) a 1920 px. | CA-06 | Salida de los tres comandos sin errores; existencia de las 6 capturas |
 | RT-11 | Sin cambios en `app/backend`, rutas ni contenido de las pantallas existentes (solo se elimina estilo propio de color, CA-05.1). | Alcance | `git diff` de `app/backend` vacío; tests existentes en verde |
 
 ## 8. FUERA DE ALCANCE (HUs FUTURAS, SIN FILA EN EL LEDGER)
@@ -214,10 +214,10 @@ Los números y filas los asigna el product-manager; el BA no registra filas nuev
 6. **Numeración:** esta HU toma el 036; las HUs derivadas de la 035 se registran después con números posteriores.
 
 ---
-> **Origen:** `app/theme.md` (directiva de negocio para @BA), `specs/evidences/claro.png` y `specs/evidences/oscuro.png` (valores medidos de los píxeles), `.specify/memory/constitution.md` (enmienda Theme Visual, modo Brownfield) y `documents/business-analyst/035-HU_refactorizacion_esqueleto_ui.md` (layout existente). Todo contenido generado que no esté explícito en la fuente se marca como `⚠️ [PROPUESTO]`.
+> **Origen:** `app/theme.md` (directiva de negocio para @BA), `specs/evidences/claro.png` y `specs/evidences/oscuro.png` (valores medidos de los píxeles), `.specify/memory/constitution.md` (enmienda Theme Visual, modo Brownfield) y `documents/business-analyst/035-refactorizacion-esqueleto-ui.md` (layout existente). Todo contenido generado que no esté explícito en la fuente se marca como `⚠️ [PROPUESTO]`.
 
 ## 10. ORDEN DE DELEGACIÓN PARA EL QA
 *(Una sola línea de texto continuo)*
 
-@QA: La Historia de Usuario de deuda técnica Theming de la Aplicación en modo claro y oscuro está lista en el archivo 036-HU_theming_claro_oscuro_ui.md. Por favor, procede con la auditoría documental contra la directiva app/theme.md y la enmienda Theme Visual de la Constitución para asegurar que la historia cumple con los requerimientos originales.
+@QA: La Historia de Usuario de deuda técnica Theming de la Aplicación en modo claro y oscuro está lista en el archivo 036-theming-claro-oscuro-ui.md. Por favor, procede con la auditoría documental contra la directiva app/theme.md y la enmienda Theme Visual de la Constitución para asegurar que la historia cumple con los requerimientos originales.
 ```

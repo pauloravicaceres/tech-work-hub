@@ -5,7 +5,7 @@
 
 ---
 
-# ▶ Iteración actual: HU-036 (`specs/036-HU_theming_claro_oscuro_ui`)
+# ▶ Iteración actual: HU-036 (`specs/036-theming-claro-oscuro-ui`)
 
 Solo frontend (FR-019: sin backend). Barrera Fork-Join: el tracker despacha únicamente a DEV-FRONT (backend omitido por el watcher: sin tareas). Sin `skip`/`xit`. No se modificó código de producción.
 
@@ -91,7 +91,7 @@ Recorrido probado en Jest (jsdom). El recorrido real en navegador (T041) y las c
 
 ---
 
-# Iteración previa: HU-035 (`specs/035-HU_refactorizacion_esqueleto_ui`)
+# Iteración previa: HU-035 (`specs/035-refactorizacion-esqueleto-ui`)
 
 Solo frontend (FR-012: sin backend, API ni BD). Barrera Fork-Join: el tracker registra cierre de DEV-BACK (sin cambios de servidor) y de DEV-FRONT. Sin `skip`/`xit`/`describe.skip`. No se modificó código de producción.
 
@@ -127,7 +127,7 @@ flowchart LR
 
 ## 3. Failure Impact Diagram (HU-035)
 
-0 fallos críticos detectados. Brecha de proceso (no de código): no existe `specs/035-HU_refactorizacion_esqueleto_ui/evidence/` (SC-008 / FR-014 sin cumplir); T001, T021, T029 y T031 siguen `[ ]` en `tasks.md` (honestamente sin marcar).
+0 fallos críticos detectados. Brecha de proceso (no de código): no existe `specs/035-refactorizacion-esqueleto-ui/evidence/` (SC-008 / FR-014 sin cumplir); T001, T021, T029 y T031 siguen `[ ]` en `tasks.md` (honestamente sin marcar).
 
 ## 4. State Transition / User Journey (HU-035)
 
@@ -176,7 +176,7 @@ Hotspots: sin defectos. Riesgo residual: jsdom no mide layout real (ancho 1280 p
 
 ---
 
-# Iteración previa: HU-015 (`specs/015-HU_relacion_personas_roles_elementos`)
+# Iteración previa: HU-015 (`specs/015-relacion-personas-roles-elementos`)
 
 Barrera Fork-Join satisfecha (DEV-BACK y DEV-FRONT finalizaron). QA-AUTO auditó las suites entregadas, sin `Skip`/`xit`/`describe.skip`, y completó el hueco T019/T020 (Backlog unit). No se modificó código de producción.
 
@@ -254,7 +254,7 @@ Ninguno.
 
 ---
 
-# ▶ Iteración previa: HU-012 (`specs/012-HU_miembros_equipo_y_roles_tecnicos`)
+# ▶ Iteración previa: HU-012 (`specs/012-miembros-equipo-y-roles-tecnicos`)
 
 Barrera Fork-Join satisfecha (DEV-BACK y DEV-FRONT finalizaron). QA-AUTO auditó las suites entregadas (`tests/Unit/Teams`, `tests/Integration/Teams` con Testcontainers PostgreSQL y specs Jest de `features/teams`), sin `Skip`/`xit`. No se modificó código de producción.
 
@@ -324,7 +324,7 @@ Ninguno.
 
 ---
 
-# Iteración anterior: HU-004 (`specs/004-HU_asignacion_elementos_sprint`)
+# Iteración anterior: HU-004 (`specs/004-asignacion-elementos-sprint`)
 
 Barrera Fork-Join satisfecha (DEV-BACK y DEV-FRONT finalizaron). QA-AUTO auditó las suites entregadas (`tests/Unit/Sprints`, `tests/Integration/Sprints`, specs Jest de `features/sprints`) y añadió pruebas adversariales propias. Sin `Skip`/`xit`. No se modificó código de producción.
 
@@ -406,7 +406,7 @@ flowchart LR
 
 ---
 
-# Iteración anterior: HU-003 (`specs/003-HU_gestion_sprint_dos_semanas`)
+# Iteración anterior: HU-003 (`specs/003-gestion-sprint-dos-semanas`)
 
 Barrera Fork-Join satisfecha (DEV-BACK y DEV-FRONT finalizaron). QA-AUTO auditó adversarialmente las suites entregadas (`tests/Unit/Sprints`, `tests/Integration/Sprints`, specs Jest de `features/sprints`): AAA, nomenclatura BDD, sin `Skip`/`xit` ni mocks tautológicos. Las ejecutó con PostgreSQL real (Testcontainers) y `WebApplicationFactory<Program>`. No se modificó código de producción.
 
@@ -510,7 +510,7 @@ Pruebas adversariales destacadas: ventana 7/13/15/21 en tres capas, `CreatedBy` 
 
 ---
 
-# Iteración anterior: HU-002 (`specs/002-pruebas-integracion-keycloak-catalogo`)
+# Iteración anterior: HU-002 (`specs/002-pruebas-integracion-keycloak-y-catalogo-application`)
 
 La HU entrega una suite (`app/backend/tests/Integration/Identity`, 19 casos). QA-AUTO la auditó de forma adversarial, la ejecutó contra Keycloak 24.0 y PostgreSQL 16 reales (Testcontainers, un contenedor por suite, BD nueva por prueba) y verificó que puede fallar. No se escribió ni modificó código de producción (`git diff main -- app/backend/src` sin cambios fuente).
 

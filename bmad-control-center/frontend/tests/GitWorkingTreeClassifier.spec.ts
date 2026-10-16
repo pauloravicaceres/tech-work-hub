@@ -23,7 +23,7 @@ describe('GitWorkingTreeClassifier Component', () => {
     ],
     untracked: [
       {
-        relative_path: 'docs/qa-documental/aprobado_qa.md',
+        relative_path: 'docs/qa-documental/aprobado-qa.md',
         category: 'untracked',
         status_code: '??',
       },
@@ -61,7 +61,7 @@ describe('GitWorkingTreeClassifier Component', () => {
     expect(wrapper.text()).toContain('004-HU_panel_telemetria.md')
     expect(wrapper.text()).toContain('+144')
     expect(wrapper.text()).toContain('tracker_bmad.md')
-    expect(wrapper.text()).toContain('aprobado_qa.md')
+    expect(wrapper.text()).toContain('aprobado-qa.md')
   })
 
   it('AlHaberConflictos_DebeRenderizarSeccionDeConflictos', () => {

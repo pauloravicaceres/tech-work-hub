@@ -23,6 +23,14 @@ if sys.platform.startswith('win'):
 DIRECTORIO_RAIZ = Path(__file__).resolve().parent.parent
 TRACKER_PATH = DIRECTORIO_RAIZ / "docs" / "tracker_bmad.md"
 
+if str(DIRECTORIO_RAIZ) not in sys.path:
+    sys.path.insert(0, str(DIRECTORIO_RAIZ))
+import hu_naming
+
+# Nombres kebab-case de los artefactos (hu_naming.py): los de HU llevan prefijo + identificador NNN-nombre.
+_K = hu_naming.KEBAB
+_ID = hu_naming.ID_HU
+
 # ==========================================
 # MATRIZ DE APROBACIÓN Y HANDOFF (HITL & SDD BRIDGE)
 # ==========================================
@@ -30,79 +38,79 @@ APPROVAL_CONFIG = {
     "1": {
         "name": "Business Storyteller (BS) -> PA",
         "folder": "business-storyteller",
-        "file_regex": r"(idea_[\w_]+\.md)",
+        "file_regex": rf"(?<![\w-])(idea-{_K}\.md)",
         "message": "@PA: La idea de usuario ha sido auditada y aprobada por negocio en el archivo {file}. Procede con la creación del PRODUCT BRIEF."
     },
     "2": {
         "name": "Product Analyst (PA) -> PM [Pausa HITL Canónica]",
         "folder": "product-analyst",
-        "file_regex": r"(pb_[\w_]+\.md)",
+        "file_regex": rf"(?<![\w-])(pb-{_K}\.md)",
         "message": "@PM: El Product Brief ha sido auditado y aprobado formalmente en el archivo {file}. Procede con el análisis estratégico y la creación del Backlog del MVP."
     },
     "3": {
         "name": "Product Manager (PM) -> BA [Pausa HITL de Estrategia]",
         "folder": "product-manager",
-        "file_regex": r"(mvp_[\w_]+\.md)",
+        "file_regex": rf"(?<![\w-])(mvp-{_K}\.md)",
         "message": "@WATCHER: GITOPS-BRANCH-CREATE feat/{branch_name}\n@BA: El MVP y Backlog han sido aprobados en el archivo {file}. La rama feat/{branch_name} ha sido creada. Procede con el análisis de negocio y redacción de Historias de Usuario para la épica {branch_name}. Usa el identificador universal estricto para crear el archivo físico en docs/business-analyst."
     },
     "4": {
         "name": "Business Analyst (BA) -> QA",
         "folder": "business-analyst",
-        "file_regex": r"(hu_[\w_]+\.md)",
+        "file_regex": hu_naming.PATRON_HU_EN_TEXTO,
         "message": "@QA: La Historia de Usuario ha sido revisada en el archivo {file}. Por favor, procede con la auditoría documental contra el Product Brief."
     },
     "5": {
         "name": "Spec Kit (SDD Bridge / clarify) -> UX [Diseño de Interfaces]",
         "folder": "qa-documental",
-        "file_regex": r"(requirements\.md|spec\.md|aprobado_qa_[\w_]+\.md)",
+        "file_regex": rf"(?<![\w-])(requirements\.md|spec\.md|aprobado-qa-{_ID}\.md)",
         "message": "@UX: El ciclo SDD (/specify -> /clarify) ha concluido con éxito. Procede con el diseño visual y wireframes tomando como Fuente de la Verdad los artefactos spec.md y requirements.md."
     },
     "6": {
         "name": "Spec Kit (SDD Bridge / clarify) -> SA [Bypass Headless]",
         "folder": "qa-documental",
-        "file_regex": r"(requirements\.md|spec\.md|aprobado_qa_[\w_]+\.md)",
+        "file_regex": rf"(?<![\w-])(requirements\.md|spec\.md|aprobado-qa-{_ID}\.md)",
         "message": "@SA: El ciclo SDD (/specify -> /clarify) ha concluido con éxito. Al ser un proyecto Headless, el diseño UX se omite. Procede con las directrices de arquitectura técnica basadas en spec.md y requirements.md."
     },
     "7": {
         "name": "Designer UX (UX) -> Siguiente Épica hacia PM",
         "folder": "designer-ux",
-        "file_regex": r"(ux_[\w_]+\.md)",
+        "file_regex": rf"(?<![\w-])(ux-{_ID}\.md)",
         "message": "@PM: Los wireframes para la HU han sido revisados y aprobados en {file}. Por favor, identifica la siguiente Épica pendiente en el backlog y asígnala al BA."
     },
     "8": {
         "name": "Designer UX (UX) -> Conclusión de MVP hacia Solutions Architect",
         "folder": "designer-ux",
-        "file_regex": r"(ux_[\w_]+\.md)",
+        "file_regex": rf"(?<![\w-])(ux-{_ID}\.md)",
         "message": "@SA: El diseño visual del MVP ha concluido exitosamente y ha sido aprobado en {file}. Por favor, lee el Product Brief y el MVP, y define el stack tecnológico y las reglas arquitectónicas del proyecto."
     },
     "9": {
         "name": "Solutions Architect (SA) -> DA [Gobernanza Aprobada]",
         "folder": "solutions-architect",
-        "file_regex": r"(tech_guidelines\.md)",
+        "file_regex": rf"(?<![\w-])(tech-guidelines\.md|{_ID}\.md)",
         "message": "@DA: Las directrices de arquitectura técnica han sido aprobadas en {file}. Procede con el diseño del Modelo Entidad-Relación (MER)."
     },
     "10": {
         "name": "QA Técnico (QT) -> Gatillo Spec Kit Implement (/speckit.implement)",
         "folder": "qa-tech",
-        "file_regex": r"(tech-design_[\w_]+\.md)",
+        "file_regex": rf"(?<![\w-])(tech-design-{_ID}\.md)",
         "message": "@SPEC-KIT: La arquitectura técnica ha sido compilada y aprobada en {file}. Gatillar /speckit.implement para despacho de tareas a la Fase D (@DEV-BACK, @DEV-FRONT, @DEVOPS)."
     },
     "11": {
         "name": "QA Técnico (QT) -> Despacho Directo Backend (@DEV-BACK:) [Enjambre Clásico BMAD]",
         "folder": "qa-tech",
-        "file_regex": r"(tech-design_[\w_]+\.md)",
+        "file_regex": rf"(?<![\w-])(tech-design-{_ID}\.md)",
         "message": "@DEV-BACK: La arquitectura técnica consolidada ha sido verificada y aprobada formalmente en el archivo {file}. Procede con la implementación del Backend según los contratos y directrices arquitectónicas vigentes."
     },
     "11b": {
         "name": "QA Técnico (QT) -> Despacho Paralelo Full-Stack (@DEV-BACK y @DEV-FRONT) [Fork-Join BMAD]",
         "folder": "qa-tech",
-        "file_regex": r"(tech-design_[\w_]+\.md)",
+        "file_regex": rf"(?<![\w-])(tech-design-{_ID}\.md)",
         "message": "@DEV-BACK: La arquitectura técnica ha sido validada. Inicia la implementación del Backend.\n@DEV-FRONT: La arquitectura técnica ha sido validada. Inicia la implementación del Frontend."
     },
     "12": {
         "name": "QA Técnico (QT) -> Despacho Directo Frontend (@DEV-FRONT:) [Enjambre Clásico BMAD]",
         "folder": "qa-tech",
-        "file_regex": r"(tech-design_[\w_]+\.md)",
+        "file_regex": rf"(?<![\w-])(tech-design-{_ID}\.md)",
         "message": "@DEV-FRONT: La arquitectura técnica consolidada ha sido verificada y aprobada formalmente en el archivo {file}. Procede con la implementación del Frontend según el diseño UX y los contratos de integración vigentes."
     },
     "13": {
@@ -124,6 +132,9 @@ APPROVAL_CONFIG = {
         "message": "@DEVOPS: El código y las pruebas han sido aprobados con éxito en la compuerta de Code Review. Procede con el aprovisionamiento de infraestructura, contenedores y pipelines CI/CD."
     }
 }
+
+# Transiciones cuyo archivo puede ser código fuente (no un artefacto documental en docs/).
+OPCIONES_CODIGO_FUENTE = {"13", "14"}
 
 def extract_latest_file(regex_pattern):
     """Lee el tracker y extrae la última ocurrencia del archivo buscado."""
@@ -174,17 +185,24 @@ def main():
     config = APPROVAL_CONFIG[opcion]
     
     if opcion == "3":
-        import re
-        branch_name = "001-HU_epic_generica"
+        branch_name = None
         if TRACKER_PATH.exists():
             with open(TRACKER_PATH, 'r', encoding='utf-8', errors='replace') as f:
                 content = f.read()
-            match = re.search(r"delegar es\s+(\d{3}-HU_[\w_]+)", content)
-            if match:
-                branch_name = match.group(1)
-                print(f"\n⚡ Identificador extraído automáticamente del Tracker: {branch_name}")
-            else:
-                print(f"\n⚠️ No se pudo extraer el identificador automáticamente. Usando fallback: {branch_name}")
+            try:
+                branch_name = hu_naming.extraer_identificador_delegado(content)
+            except hu_naming.NombreHUInvalido as e:
+                print(f"\n❌ {e}")
+        if branch_name:
+            print(f"\n⚡ Identificador extraído automáticamente del Tracker: {branch_name}")
+        else:
+            print(f"\n⚠️ No se pudo extraer un identificador válido del Tracker (formato {hu_naming.FORMATO_HU[:-3]}).")
+            branch_name = input(f"✍️ Ingrese el identificador de la HU (ej. {hu_naming.EJEMPLO_HU[:-3]}): ").strip()
+            try:
+                hu_naming.validar_identificador_hu(branch_name)
+            except hu_naming.NombreHUInvalido as e:
+                print(f"❌ {e}")
+                sys.exit(1)
         config['message'] = config['message'].replace("{branch_name}", branch_name)
     
     # 1. Extraer el nombre del archivo inteligentemente
@@ -192,13 +210,27 @@ def main():
     
     if not archivo_detectado:
         print(f"\n⚠️ No se encontró ningún archivo asociado al {config['name']} en el tracker.")
-        archivo_detectado = input("✍️ Ingrese el nombre del archivo manualmente (ej. tasks.md, spec.md o pb_proyecto.md): ").strip()
+        archivo_detectado = input("✍️ Ingrese el nombre del archivo manualmente (ej. tasks.md, spec.md o pb-proyecto.md): ").strip()
         if not archivo_detectado:
             print("Operación cancelada.")
             sys.exit(1)
     else:
         print(f"\n📄 Archivo detectado en el tracker: {archivo_detectado}")
-        
+
+    if opcion == "4":
+        try:
+            hu_naming.validar_nombre_hu(archivo_detectado)
+        except hu_naming.NombreHUInvalido as e:
+            print(f"❌ {e}")
+            sys.exit(1)
+    elif opcion not in OPCIONES_CODIGO_FUENTE:
+        # Los artefactos documentales se aprueban solo con nombre kebab-case; nunca se renombran aquí.
+        try:
+            hu_naming.validar_nombre_artefacto(archivo_detectado)
+        except hu_naming.NombreArtefactoInvalido as e:
+            print(f"❌ {e}")
+            sys.exit(1)
+
     # 2. APERTURA AUTOMÁTICA DEL ARCHIVO (Búsqueda multi-ruta resiliente)
     candidatos_ruta = [
         DIRECTORIO_RAIZ / "docs" / config["folder"] / archivo_detectado,

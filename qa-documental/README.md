@@ -8,9 +8,9 @@ Su misión es auditar con precisión quirúrgica las Historias de Usuario genera
 
 ### 📦 Entradas y Artefactos de Salida
 
-* **Entradas (Lectura):** `pb_*.md` (Product Brief original) y `hu_[ID]_[nombre_corto].md` (Historia de Usuario en evaluación).
-* **Salida de Rechazo:** `feedback_qa_[ID]_[nombre_corto].md` (Reporte de incidencias que detiene el flujo y obliga al BA a subsanar la historia).
-* **Salida de Aprobación:** `aprobado_qa_[ID]_[nombre_corto].md` (Certificado formal de cumplimiento).
+* **Entradas (Lectura):** `pb-*.md` (Product Brief original) y `NNN-nombre-corto.md` (Historia de Usuario en evaluación).
+* **Salida de Rechazo:** `feedback-qa-NNN-nombre-de-la-historia.md` (Reporte de incidencias que detiene el flujo y obliga al BA a subsanar la historia).
+* **Salida de Aprobación:** `aprobado-qa-NNN-nombre-de-la-historia.md` (Certificado formal de cumplimiento).
 * **Handoff (Enrutamiento de Topología):**
   * **Si la HU es Rechazada:** Devuelve el turno al **Business Analyst (`@BA:`)** indicando la ruta del reporte de feedback.
   * **Si la HU es Aprobada:** escribe el token `@UX:` o `@SA:` en su certificado, pero es informativo: la ruta real la decide el Watcher (`ux_routing.py`) con `project_type`, `ux_phase` y el campo `Requiere interfaz` de la HU.

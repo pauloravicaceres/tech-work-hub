@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": { "title": "HU-036 Secuencia del conmutador de modo", "output": "hu-036-secuencia-conmutador.html", "viewBox": [980, 640], "column_fit": "spread", "quality_profile": "showcase", "locale": "en" },
+  "participants": [
+    { "id": "user", "type": "external", "label": "Usuario", "sublabel": "navegador" },
+    { "id": "layout", "type": "frontend", "label": "Layout", "sublabel": "p-button" },
+    { "id": "theme", "type": "frontend", "label": "ThemeService", "sublabel": "signals" },
+    { "id": "dom", "type": "external", "label": "html", "sublabel": "app-dark" },
+    { "id": "ls", "type": "database", "label": "localStorage", "sublabel": "app-theme-mode" }
+  ],
+  "messages": [
+    { "from": "user", "to": "layout", "y": 180, "label": "activa el conmutador", "variant": "emphasis" },
+    { "from": "layout", "to": "theme", "y": 230, "label": "toggle()", "variant": "emphasis" },
+    { "from": "theme", "to": "dom", "y": 280, "label": "classList y colorScheme", "variant": "emphasis" },
+    { "from": "theme", "to": "ls", "y": 330, "label": "setItem (try/catch)", "variant": "dashed" },
+    { "from": "ls", "to": "theme", "y": 380, "label": "ok o fallo silencioso", "variant": "return" },
+    { "from": "theme", "to": "layout", "y": 430, "label": "mode() cambia icono", "variant": "return" },
+    { "from": "layout", "to": "user", "y": 480, "label": "anuncia el modo", "variant": "return" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "Cambio sincrono", "items": ["Sin recarga ni cambio de ruta", "El shell no se remonta"] },
+    { "dot": "orange", "title": "Fallo de almacenamiento", "items": ["Sin mensaje al usuario", "El modo vive en memoria"] }
+  ]
+}
