@@ -46,19 +46,23 @@ def write_watcher_log(mensaje):
 SKILLS_DIR = DIRECTORIO_RAIZ / "skills"  # NUEVO: Directorio global de habilidades
 
 # ==========================================
-# SPEC KIT SOBRE CLAUDE CODE
+# SPEC KIT MULTI-PROVEEDOR (CLAUDE CODE & AGY)
 # Spec Kit está instalado con la integración copilot (.github/skills/speckit-*),
-# pero Claude Code solo carga skills desde .claude/skills/.
+# Claude Code carga skills desde .claude/skills/ y Antigravity (Agy) desde .agents/skills/.
 # ==========================================
 def sincronizar_skills_speckit():
     origen = DIRECTORIO_RAIZ / ".github" / "skills"
-    destino = DIRECTORIO_RAIZ / ".claude" / "skills"
+    destinos = [
+        DIRECTORIO_RAIZ / ".claude" / "skills",
+        DIRECTORIO_RAIZ / ".agents" / "skills",
+    ]
     if not origen.exists():
         return
-    destino.mkdir(parents=True, exist_ok=True)
-    for skill_dir in origen.glob("speckit-*"):
-        if skill_dir.is_dir():
-            shutil.copytree(skill_dir, destino / skill_dir.name, dirs_exist_ok=True)
+    for destino in destinos:
+        destino.mkdir(parents=True, exist_ok=True)
+        for skill_dir in origen.glob("speckit-*"):
+            if skill_dir.is_dir():
+                shutil.copytree(skill_dir, destino / skill_dir.name, dirs_exist_ok=True)
 
 def obtener_config_proveedor(nombre_clave: str = "default") -> dict:
     """
